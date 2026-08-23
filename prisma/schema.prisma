@@ -17,3 +17,33 @@ model VerificacaoSaude {
 
   @@map("verificacao_saude")
 }
+
+// Catálogo de cabos condutores (piloto F1 — origem DB_CAL).
+// Identidade e versões separadas: editar um item cria uma nova versão com
+// vigência; versões existentes nunca são alteradas (RNF-05, design D1).
+// Campos numéricos anuláveis: null = não informado, distinto de zero (RNF-09).
+model CaboCondutor {
+  id      Int                  @id @default(autoincrement())
+  codigo  String               @unique
+  versoes CaboCondutorVersao[]
+
+  @@map("cabo_condutor")
+}
+
+model CaboCondutorVersao {
+  id             Int          @id @default(autoincrement())
+  caboCondutorId Int          @map("cabo_condutor_id")
+  caboCondutor   CaboCondutor @relation(fields: [caboCondutorId], references: [id])
+  descricao      String?
+  pesoTonKm      Decimal?     @map("peso_ton_km") @db.Decimal(12, 4)
+  bobinaM        Decimal?     @map("bobina_m") @db.Decimal(12, 2)
+  diametroMm     Decimal?     @map("diametro_mm") @db.Decimal(10, 3)
+  utsKn          Decimal?     @map("uts_kn") @db.Decimal(12, 2)
+  vigenciaInicio DateTime     @map("vigencia_inicio") @db.Date
+  criadoPor      String       @map("criado_por")
+  criadoEm       DateTime     @default(now()) @map("criado_em")
+
+  @@unique([caboCondutorId, vigenciaInicio])
+  @@index([caboCondutorId, vigenciaInicio(sort: Desc)])
+  @@map("cabo_condutor_versao")
+}

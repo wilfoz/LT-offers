@@ -8,8 +8,8 @@
 
 ## 2. Modelo de dados
 
-- [ ] 2.1 Modelar `cabo_condutor` e `cabo_condutor_versao` no `schema.prisma` conforme design D1 (código único, campos Decimal anuláveis para distinguir não informado de zero — RNF-09, `vigencia_inicio`, `criado_por`, `criado_em`) e gerar a migration
-- [ ] 2.2 Aplicar a migration no Postgres local e regenerar o Prisma Client, confirmando os tipos Decimal no client
+- [x] 2.1 Modelar `cabo_condutor` e `cabo_condutor_versao` no `schema.prisma` conforme design D1 (código único, campos Decimal anuláveis para distinguir não informado de zero — RNF-09, `vigencia_inicio`, `criado_por`, `criado_em`) e gerar a migration
+- [x] 2.2 Aplicar a migration no Postgres local e regenerar o Prisma Client, confirmando os tipos Decimal no client
 
 ## 3. API de cabos condutores
 
