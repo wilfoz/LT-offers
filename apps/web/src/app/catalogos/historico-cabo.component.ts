@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HistoricoCaboCondutor } from '@lt-offers/dominio';
+import { HistoricoCaboCondutor } from '@lt-offers/domain';
 import { CabosCondutoresApi } from './cabos-condutores-api.service';
 
 @Component({

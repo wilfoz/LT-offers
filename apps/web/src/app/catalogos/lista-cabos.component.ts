@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CaboCondutorResumo } from '@lt-offers/dominio';
+import { CaboCondutorResumo } from '@lt-offers/domain';
 import { CabosCondutoresApi } from './cabos-condutores-api.service';
 
 @Component({

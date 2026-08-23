@@ -5,7 +5,7 @@ import {
   DadosNovaVersaoCaboCondutor,
   DadosNovoCaboCondutor,
   HistoricoCaboCondutor,
-} from '@lt-offers/dominio';
+} from '@lt-offers/domain';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

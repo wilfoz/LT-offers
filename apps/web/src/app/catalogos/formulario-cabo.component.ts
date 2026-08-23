@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DadosVersaoCaboCondutor } from '@lt-offers/dominio';
+import { DadosVersaoCaboCondutor } from '@lt-offers/domain';
 import { CabosCondutoresApi } from './cabos-condutores-api.service';
 
 const PADRAO_DECIMAL = /^\d+(\.\d+)?$/;

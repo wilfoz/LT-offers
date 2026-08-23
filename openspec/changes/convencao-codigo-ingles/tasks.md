@@ -1,4 +1,4 @@
-﻿# Tasks: convencao-codigo-ingles
+# Tasks: convencao-codigo-ingles
 
 ## 1. Convenções e documentação
 
@@ -8,10 +8,10 @@
 
 ## 2. Bibliotecas
 
-- [ ] 2.1 Mover `libs/dominio` → `libs/domain` com `nx g @nx/workspace:move`, ajustando `importPath` `@lt-offers/domain`, tag `scope:domain` e renomeando os tipos exportados (ex.: `Identificador` → `Identifier`, contratos de cabos em inglês conforme D1)
-- [ ] 2.2 Mover `libs/motor-calculo` → `libs/calc-engine` (`@lt-offers/calc-engine`, tag `scope:engine`): `ValorDecimal` → `DecimalValue`, `GrafoDependencias` → `DependencyGraph`, `RoundingPolicy` `'half-up'|'half-even'`; comentários e mensagens de lint permanecem pt-BR
-- [ ] 2.3 Atualizar as tags e `depConstraints` do `eslint.config.mjs` raiz (`escopo:*` → `scope:*`) e as regras anti-relógio do escopo do motor; provar com arquivo de violação temporário que as fronteiras continuam ativas
-- [ ] 2.4 Rodar a suíte das libs e grep por nomes antigos (`dominio|motor-calculo|ValorDecimal|GrafoDependencias|escopo:`) sem ocorrências em código ativo
+- [x] 2.1 Mover `libs/dominio` → `libs/domain` com `nx g @nx/workspace:move`, ajustando `importPath` `@lt-offers/domain`, tag `scope:domain` e renomeando os tipos exportados (ex.: `Identificador` → `Identifier`, contratos de cabos em inglês conforme D1)
+- [x] 2.2 Mover `libs/motor-calculo` → `libs/calc-engine` (`@lt-offers/calc-engine`, tag `scope:engine`): `ValorDecimal` → `DecimalValue`, `GrafoDependencias` → `DependencyGraph`, `RoundingPolicy` `'half-up'|'half-even'`; comentários e mensagens de lint permanecem pt-BR
+- [x] 2.3 Atualizar as tags e `depConstraints` do `eslint.config.mjs` raiz (`escopo:*` → `scope:*`) e as regras anti-relógio do escopo do motor; provar com arquivo de violação temporário que as fronteiras continuam ativas
+- [x] 2.4 Rodar a suíte das libs e grep por nomes antigos (`dominio|motor-calculo|ValorDecimal|GrafoDependencias|escopo:`) sem ocorrências em código ativo
 
 ## 3. Banco de dados
 

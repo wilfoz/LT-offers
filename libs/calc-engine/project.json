@@ -1,0 +1,9 @@
+{
+  "name": "calc-engine",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/calc-engine/src",
+  "projectType": "library",
+  "tags": ["scope:engine"],
+  "// targets": "to see all targets run: nx show project calc-engine --web",
+  "targets": {}
+}

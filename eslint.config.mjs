@@ -21,12 +21,12 @@ export default [
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
           depConstraints: [
             {
-              sourceTag: 'escopo:dominio',
-              onlyDependOnLibsWithTags: ['escopo:dominio'],
+              sourceTag: 'scope:domain',
+              onlyDependOnLibsWithTags: ['scope:domain'],
             },
             {
-              sourceTag: 'escopo:motor',
-              onlyDependOnLibsWithTags: ['escopo:motor', 'escopo:dominio'],
+              sourceTag: 'scope:engine',
+              onlyDependOnLibsWithTags: ['scope:engine', 'scope:domain'],
               bannedExternalImports: [
                 '@nestjs/*',
                 '@angular/*',
@@ -41,11 +41,11 @@ export default [
               ],
             },
             {
-              sourceTag: 'escopo:app',
+              sourceTag: 'scope:app',
               onlyDependOnLibsWithTags: [
-                'escopo:app',
-                'escopo:motor',
-                'escopo:dominio',
+                'scope:app',
+                'scope:engine',
+                'scope:domain',
               ],
             },
           ],

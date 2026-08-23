@@ -14,8 +14,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@lt-offers/dominio": ["./libs/dominio/src/index.ts"],
-      "@lt-offers/motor-calculo": ["./libs/motor-calculo/src/index.ts"]
+      "@lt-offers/domain": ["./libs/domain/src/index.ts"],
+      "@lt-offers/calc-engine": ["./libs/calc-engine/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
