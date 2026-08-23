@@ -95,6 +95,9 @@ import { CabosCondutoresApi } from './cabos-condutores-api.service';
       padding: 0.4rem 0.6rem;
       border-bottom: 1px solid #ddd;
     }
+    td a + a {
+      margin-left: 0.6rem;
+    }
     form {
       display: flex;
       gap: 0.5rem;

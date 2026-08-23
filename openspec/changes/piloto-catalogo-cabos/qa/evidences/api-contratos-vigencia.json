@@ -1,0 +1,52 @@
+{
+  "vigenteEm_2026_08_23": {
+    "id": 5,
+    "codigo": "QA-E2E-001",
+    "versaoVigente": {
+      "id": 6,
+      "caboCondutorId": 5,
+      "descricao": "Cabo QA Grosbeak",
+      "pesoTonKm": "1.3026",
+      "bobinaM": "2500",
+      "diametroMm": "25.16",
+      "utsKn": "124.9",
+      "vigenciaInicio": "2026-08-23T00:00:00.000Z",
+      "criadoPor": "sistema",
+      "criadoEm": "2026-08-23T20:38:44.281Z"
+    },
+    "camposPendentes": []
+  },
+  "vigenteEm_2026_12_01": {
+    "id": 5,
+    "codigo": "QA-E2E-001",
+    "versaoVigente": {
+      "id": 8,
+      "caboCondutorId": 5,
+      "descricao": "Cabo QA Grosbeak",
+      "pesoTonKm": "1.31",
+      "bobinaM": "2500",
+      "diametroMm": "25.16",
+      "utsKn": "124.9",
+      "vigenciaInicio": "2026-09-01T00:00:00.000Z",
+      "criadoPor": "sistema",
+      "criadoEm": "2026-08-23T20:38:45.046Z"
+    },
+    "camposPendentes": []
+  },
+  "vigenteEm_2020_01_01": {
+    "status": 404,
+    "corpo": {
+      "message": "Não há versão vigente para a data de referência informada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  "patch_versao": {
+    "status": 405,
+    "corpo": {
+      "message": "Versões são imutáveis; para alterar valores, crie uma nova versão com data de vigência",
+      "error": "Method Not Allowed",
+      "statusCode": 405
+    }
+  }
+}
