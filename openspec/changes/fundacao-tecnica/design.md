@@ -22,7 +22,7 @@ Ver `proposal.md — Why`. O repositório hoje contém apenas o levantamento de 
 
 ### D1 — Workspace Nx integrado, npm como package manager
 
-Nx no modo integrado (single `package.json` na raiz, tsconfig paths para as libs), gerado com os plugins oficiais `@nx/angular` e `@nx/nest`. **npm** como package manager: menor atrito no Windows e zero configuração extra; pnpm fica como otimização futura se o install pesar. Alternativa considerada: repositórios separados front/back — rejeitada porque o motor e o domínio precisam ser compartilhados com type-safety entre API e web, e a paridade numérica (§14) pede uma suíte única.
+Nx no modo integrado (single `package.json` na raiz, tsconfig paths para as libs), gerado com os plugins oficiais `@nx/angular` e `@nx/nest`. *(Confirmado na implementação: o preset `ts` do Nx 23 gera o setup de project references, que o Angular não suporta — o workspace foi criado a partir do template `angular-monorepo`, que produz exatamente o modo integrado clássico deste design.)* **npm** como package manager: menor atrito no Windows e zero configuração extra; pnpm fica como otimização futura se o install pesar. Alternativa considerada: repositórios separados front/back — rejeitada porque o motor e o domínio precisam ser compartilhados com type-safety entre API e web, e a paridade numérica (§14) pede uma suíte única.
 
 ### D2 — Layout do workspace
 
@@ -61,9 +61,9 @@ O esqueleto do motor já nasce com dois testes-sentinela: (1) mesma entrada ⇒ 
 
 `schema.prisma` apontando para o Postgres do Compose, com uma única tabela de infraestrutura (`_healthcheck` ou equivalente) apenas para provar o ciclo migrate → generate → query no CI. Nenhuma entidade de negócio. Alternativa: já esboçar tabelas de catálogo — rejeitada; o modelo de dados de M02/M03 merece design próprio na change F1.
 
-### D7 — Testes com Jest, CI com GitHub Actions + `nx affected`
+### D7 — Testes com os defaults dos generators, CI com GitHub Actions + `nx affected`
 
-Jest é o default dos generators `@nx/angular` e `@nx/nest` — adotado sem customização para minimizar manutenção. CI em GitHub Actions (o repositório já tem `.github/`): workflow único com `nx affected -t lint,test,build` em push/PR, mais um job com serviço Postgres para validar `prisma migrate deploy`. Node 22 LTS fixado via `.nvmrc`/`engines`.
+Adotar os defaults dos generators para minimizar manutenção. *(Atualizado na implementação: no Nx 23 o default do Angular passou a ser Vitest; o resultado é Vitest no `web` e Jest no `api` e nas libs — a racional se mantém.)* CI em GitHub Actions (o repositório já tem `.github/`): workflow único com `nx affected -t lint,test,build` em push/PR, mais um job com serviço Postgres para validar `prisma migrate deploy`. Node 22 LTS fixado via `.nvmrc`/`engines`.
 
 ### D8 — Git inicializado nesta change
 
