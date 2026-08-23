@@ -13,11 +13,11 @@
 
 ## 3. API de cabos condutores
 
-- [ ] 3.1 Criar o módulo `catalogos` no `apps/api` com endpoints: criar item (primeira versão), editar (nova versão com vigência), listar vigentes com busca, obter item com `?vigenteEm=`, histórico de versões — datas de referência resolvidas na borda (design D2)
-- [ ] 3.2 Implementar DTOs com class-validator e mensagens em pt-BR: código obrigatório/único, numéricos como string decimal positiva, `null` para não informado; rejeição de código duplicado com erro claro
-- [ ] 3.3 Registrar `criado_por` via cabeçalho `X-Usuario` com fallback `"sistema"` (design D6) e expor autor/instante no histórico
-- [ ] 3.4 Escrever testes do service e do controller cobrindo os cenários dos dois specs: nova versão preserva anterior, versão histórica imutável, resolução de vigência (atual, passada, anterior à primeira), duplicidade, validação numérica
-- [ ] 3.5 Verificar os endpoints ao vivo contra o Postgres do Compose (criar, editar, consultar com `vigenteEm`, histórico)
+- [x] 3.1 Criar o módulo `catalogos` no `apps/api` com endpoints: criar item (primeira versão), editar (nova versão com vigência), listar vigentes com busca, obter item com `?vigenteEm=`, histórico de versões — datas de referência resolvidas na borda (design D2)
+- [x] 3.2 Implementar DTOs com class-validator e mensagens em pt-BR: código obrigatório/único, numéricos como string decimal positiva, `null` para não informado; rejeição de código duplicado com erro claro
+- [x] 3.3 Registrar `criado_por` via cabeçalho `X-Usuario` com fallback `"sistema"` (design D6) e expor autor/instante no histórico
+- [x] 3.4 Escrever testes do service e do controller cobrindo os cenários dos dois specs: nova versão preserva anterior, versão histórica imutável, resolução de vigência (atual, passada, anterior à primeira), duplicidade, validação numérica
+- [x] 3.5 Verificar os endpoints ao vivo contra o Postgres do Compose (criar, editar, consultar com `vigenteEm`, histórico)
 
 ## 4. Interface de manutenção
 
