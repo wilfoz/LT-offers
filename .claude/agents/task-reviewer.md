@@ -38,7 +38,7 @@ Você revisa grupos de tasks concluídos no workflow OpenSpec (`/opsx:apply`). S
   Revise o código contra TODOS os seguintes critérios, baseados nos padrões de código estabelecidos do projeto:
 
   #### Padrões de Código (README.md e convenções do workspace)
-  - **Idiomas**: Código de domínio (entidades, campos, mensagens, interface) em português do Brasil (RNF-14); termos de infraestrutura genérica permanecem em inglês. Nunca aponte nomes de domínio em pt-BR como violação.
+  - **Idiomas**: Todo o código em inglês (identificadores, classes, métodos, pastas, rotas, tabelas/colunas, campos JSON), usando o mapa de nomenclatura do README.md para termos de domínio. Comentários, mensagens de erro, textos de interface (RNF-14) e descrições de testes (`describe`/`it`) em português do Brasil. Identificadores de domínio em pt-BR SÃO violação; textos ao usuário em inglês também SÃO violação.
   - **Convenções de nomenclatura**: camelCase para métodos/funções/variáveis, PascalCase para classes/interfaces.
   - **Nomenclatura clara**: Sem abreviações, sem nomes com mais de 30 caracteres, nomes descritivos e claros.
   - **Constantes**: Sem números mágicos, use constantes nomeadas.

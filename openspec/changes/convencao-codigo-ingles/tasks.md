@@ -1,10 +1,10 @@
-# Tasks: convencao-codigo-ingles
+﻿# Tasks: convencao-codigo-ingles
 
 ## 1. Convenções e documentação
 
-- [ ] 1.1 Atualizar o `context` e o `guidance` do `openspec/config.yaml`: código/pastas/nomes em inglês com o mapa D1 como referência, comentários/mensagens/tests-descriptions em pt-BR, interface pt-BR (RNF-14)
-- [ ] 1.2 Atualizar a seção de convenções do `README.md` com a nova regra de idiomas e o mapa de nomenclatura D1
-- [ ] 1.3 Atualizar o padrão de idiomas do agente `.claude/agents/task-reviewer.md`: identificadores em inglês são a regra; nomes de domínio em pt-BR passam a ser apontados como violação
+- [x] 1.1 Atualizar o `context` e o `guidance` do `openspec/config.yaml`: código/pastas/nomes em inglês com o mapa D1 como referência, comentários/mensagens/tests-descriptions em pt-BR, interface pt-BR (RNF-14)
+- [x] 1.2 Atualizar a seção de convenções do `README.md` com a nova regra de idiomas e o mapa de nomenclatura D1
+- [x] 1.3 Atualizar o padrão de idiomas do agente `.claude/agents/task-reviewer.md`: identificadores em inglês são a regra; nomes de domínio em pt-BR passam a ser apontados como violação
 
 ## 2. Bibliotecas
 

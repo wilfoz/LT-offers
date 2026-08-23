@@ -20,13 +20,13 @@ O planejamento por mudança fica em [`openspec/`](./openspec/).
 
 ```
 apps/
-  web/            Angular — apresentação
-  api/            NestJS — API REST (GET /api/health)
+  web/           Angular — apresentação
+  api/           NestJS — API REST (GET /api/health)
 libs/
-  motor-calculo/  Motor determinístico: ValorDecimal (decimal.js),
-                  grafo de dependências de cálculo. Sem framework, sem I/O.
-  dominio/        Tipos e contratos compartilhados
-prisma/           schema.prisma + migrations
+  calc-engine/   Motor determinístico: DecimalValue (decimal.js),
+                 grafo de dependências de cálculo. Sem framework, sem I/O.
+  domain/        Tipos e contratos compartilhados
+prisma/          schema.prisma + migrations
 ```
 
 As fronteiras entre projetos são **impostas por lint** (`@nx/enforce-module-boundaries`):
@@ -66,18 +66,51 @@ Comando canônico — o mesmo que o CI executa:
 npx nx run-many -t lint test build
 ```
 
-Testes de um projeto específico: `npx nx test motor-calculo` (ou `api`,
-`web`, `dominio`). O CI (GitHub Actions) roda lint, testes e build dos
+Testes de um projeto específico: `npx nx test calc-engine` (ou `api`,
+`web`, `domain`). O CI (GitHub Actions) roda lint, testes e build dos
 projetos afetados em todo push/PR, mais um job que valida as migrations
 contra um Postgres real.
 
 ## Convenções
 
-- Código de domínio, mensagens e interface em **português do Brasil** (RNF-14);
-  termos técnicos de infraestrutura permanecem em inglês.
-- Valores monetários **nunca** usam `number`/float: sempre `ValorDecimal`
+### Idiomas
+
+- **Inglês**: todo o código — identificadores, classes, métodos, pastas,
+  arquivos, rotas de API, URLs, tabelas/colunas do banco e campos JSON.
+- **Português do Brasil**: comentários, mensagens de erro, todo texto exibido
+  ao usuário (RNF-14), descrições de testes (`describe`/`it`), cenários de
+  specs, artefatos OpenSpec e mensagens de commit.
+
+### Mapa de nomenclatura (pt-BR → inglês)
+
+Referência canônica para os termos de domínio; termos novos entram aqui antes
+de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
+
+| pt-BR (domínio)       | Inglês (código/banco/API)                                 |
+| --------------------- | --------------------------------------------------------- |
+| cabo condutor         | `ConductorCable` / `conductor_cable` / `conductor-cables` |
+| versão (de catálogo)  | `Version` / `_version`                                    |
+| vigência (início de)  | `effectiveFrom` / `effective_from`                        |
+| vigente em (consulta) | `effectiveOn` (query param)                               |
+| peso (ton/km)         | `weightTonPerKm` / `weight_ton_per_km`                    |
+| bobina (m)            | `reelLengthM` / `reel_length_m`                           |
+| diâmetro (mm)         | `diameterMm` / `diameter_mm`                              |
+| UTS (kN)              | `utsKn` / `uts_kn`                                        |
+| criado por / em       | `createdBy` / `createdAt`                                 |
+| campos pendentes      | `pendingFields`                                           |
+| busca                 | `search`                                                  |
+| catálogo              | `catalogs`                                                |
+| motor de cálculo      | `calc-engine` / `DecimalValue`, `DependencyGraph`         |
+| domínio               | `domain`                                                  |
+| arredondamento        | `RoundingPolicy`: `'half-up'` \| `'half-even'`            |
+
+### Demais convenções
+
+- Valores monetários **nunca** usam `number`/float: sempre `DecimalValue`
   do motor, com política de arredondamento explícita (RNF-08).
 - Toda regra de negócio implementada referencia seu ID (`RN-xx`) do documento
   de requisitos e tem testes próprios (§14).
 - O motor de cálculo é determinístico (RNF-04): datas e qualquer entrada
   variável chegam sempre como parâmetro.
+- Ausência de valor é estado de primeira classe: `null` = não informado,
+  distinto de zero (RNF-09).

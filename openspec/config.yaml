@@ -37,9 +37,17 @@ context: |
   - Excel apenas como formato de intercâmbio: importação de estaqueamento
     PLS-CADD e cotações; exportação de BOQ CIP e planilha do edital
 
-  Convenções:
-  - Idioma da interface, dos artefatos e do código de domínio: português do
-    Brasil (RNF-14); usar os termos do glossário §15 do requisitos-calculo-lt.md
+  Convenções de idioma:
+  - Código em inglês: identificadores, classes, métodos, pastas, arquivos,
+    rotas de API e URLs, tabelas e colunas do banco, campos JSON. O mapa
+    canônico de nomenclatura pt-BR -> inglês está no README.md (termos novos
+    entram no mapa antes de usar; siglas do setor como UTS/OPGW/LT não se
+    traduzem).
+  - Português do Brasil: comentários, mensagens de erro e todo texto exibido
+    ao usuário (RNF-14), descrições de testes (describe/it), cenários de
+    specs, artefatos OpenSpec e mensagens de commit.
+
+  Demais convenções:
   - Toda regra de negócio implementada referencia seu ID (RN-xx) e tem testes
     próprios, incluindo casos limite (§14)
   - Validação de cada fase por paridade numérica contra ofertas históricas
@@ -66,7 +74,8 @@ operations:
         as dependências das tasks anteriores; formule um plano curto antes de
         implementar.
       - Implemente sem gambiarras, seguindo os padrões do workspace (fronteiras
-        por lint, Decimal para valores numéricos de negócio, domínio em pt-BR).
+        por lint, Decimal para valores numéricos de negócio, código em inglês
+        com comentários e textos de interface em pt-BR).
       - Ao concluir cada grupo de tasks, execute o agente task-reviewer sobre as
         alterações do grupo e corrija os apontamentos antes de marcar o grupo
         como completo.
