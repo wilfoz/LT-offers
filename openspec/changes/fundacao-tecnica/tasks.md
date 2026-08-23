@@ -31,9 +31,9 @@
 
 - [x] 5.1 Criar workflow GitHub Actions com `nx affected -t lint,test,build` em push/PR, cache de npm e do Nx
 - [x] 5.2 Adicionar job com serviço Postgres validando `prisma migrate deploy` e os testes que tocam banco
-- [ ] 5.3 Confirmar o workflow verde em um push real (ou via `act`/execução local documentada, se o remoto ainda não existir)
+- [x] 5.3 Confirmar o workflow verde em um push real (ou via `act`/execução local documentada, se o remoto ainda não existir)
 
 ## 6. Documentação e fechamento
 
-- [ ] 6.1 Escrever `README.md`: pré-requisitos (Node 22, Docker ou Postgres local), subir ambiente, rodar testes, estrutura do workspace e link para `requisitos-calculo-lt.md`
-- [ ] 6.2 Rodar a suíte completa (`nx run-many -t lint,test,build`) limpa e registrar no README o comando canônico de verificação
+- [x] 6.1 Escrever `README.md`: pré-requisitos (Node 22, Docker ou Postgres local), subir ambiente, rodar testes, estrutura do workspace e link para `requisitos-calculo-lt.md`
+- [x] 6.2 Rodar a suíte completa (`nx run-many -t lint,test,build`) limpa e registrar no README o comando canônico de verificação
