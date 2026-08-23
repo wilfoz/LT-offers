@@ -1,0 +1,19 @@
+# Add files here to ignore them from prettier formatting
+/dist
+/coverage
+/.nx/cache
+/.nx/workspace-data
+.nx/self-healing
+
+# Documentos de requisitos e artefatos de planejamento — não reformatar
+/requisitos-calculo-lt.md
+/requisitos-calculo-lt.html
+/openspec
+/ref
+
+# Configurações de ferramentas de IA — não reformatar
+/.claude
+/.agents
+/.gemini
+/.kilocode
+/.github

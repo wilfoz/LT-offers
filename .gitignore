@@ -27,3 +27,12 @@ Thumbs.db
 # Logs
 npm-debug.log*
 *.log
+
+# Nx internos adicionais
+.nx/polygraph
+.nx/self-healing
+.nx/migrate-runs
+
+# Configurações locais do Claude Code
+.claude/settings.local.json
+.claude/worktrees

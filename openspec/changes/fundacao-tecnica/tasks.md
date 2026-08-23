@@ -2,9 +2,9 @@
 
 ## 1. Repositório e workspace
 
-- [ ] 1.1 Inicializar git na raiz com `.gitignore` para Node/Nx/Prisma (node_modules, dist, .nx, .env) e fazer o commit inicial com o conteúdo existente (requisitos, openspec, ref)
-- [ ] 1.2 Criar o workspace Nx integrado na raiz com `create-nx-workspace@latest` (preset TypeScript, npm), Node 22 LTS fixado em `.nvmrc` e `engines` do `package.json`
-- [ ] 1.3 Configurar Prettier e ESLint na raiz conforme defaults do Nx, verificando que `npx nx format:check` e lint rodam limpos
+- [x] 1.1 Inicializar git na raiz com `.gitignore` para Node/Nx/Prisma (node_modules, dist, .nx, .env) e fazer o commit inicial com o conteúdo existente (requisitos, openspec, ref)
+- [x] 1.2 Criar o workspace Nx integrado na raiz com `create-nx-workspace@latest` (preset TypeScript, npm), Node 22 LTS fixado em `.nvmrc` e `engines` do `package.json`
+- [x] 1.3 Configurar Prettier e ESLint na raiz conforme defaults do Nx, verificando que `npx nx format:check` e lint rodam limpos
 
 ## 2. Aplicações
 
