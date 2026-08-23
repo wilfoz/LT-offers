@@ -1,2 +1,2 @@
 export * from './lib/identifier';
-export * from './lib/catalogos/cabos-condutores';
+export * from './lib/catalogs/conductor-cables';

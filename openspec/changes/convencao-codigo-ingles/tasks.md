@@ -21,9 +21,9 @@
 
 ## 4. API
 
-- [ ] 4.1 Renomear `apps/api/src/catalogos` → `catalogs`: `ConductorCablesController/Service`, DTOs (`CreateConductorCableDto`, `CreateVersionDto`), helpers (`civil-date.ts`, `effectiveness.ts`), métodos em inglês; mensagens de validação/erro permanecem pt-BR
-- [ ] 4.2 Alterar rota para `/api/catalogs/conductor-cables` com campos JSON em inglês (`effectiveOn` como query param) e atualizar todos os testes (identificadores em inglês, descrições `it()` em pt-BR)
-- [ ] 4.3 Verificar os endpoints ao vivo contra o Postgres (criar, nova versão, `effectiveOn` passado/atual/inválido, histórico, PATCH 405, dados antigos preservados pela migration)
+- [x] 4.1 Renomear `apps/api/src/catalogos` → `catalogs`: `ConductorCablesController/Service`, DTOs (`CreateConductorCableDto`, `CreateVersionDto`), helpers (`civil-date.ts`, `effectiveness.ts`), métodos em inglês; mensagens de validação/erro permanecem pt-BR
+- [x] 4.2 Alterar rota para `/api/catalogs/conductor-cables` com campos JSON em inglês (`effectiveOn` como query param) e atualizar todos os testes (identificadores em inglês, descrições `it()` em pt-BR)
+- [x] 4.3 Verificar os endpoints ao vivo contra o Postgres (criar, nova versão, `effectiveOn` passado/atual/inválido, histórico, PATCH 405, dados antigos preservados pela migration)
 
 ## 5. Web
 
