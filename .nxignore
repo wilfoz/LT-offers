@@ -1,0 +1,7 @@
+# Pastas de configuração de ferramentas de IA — não são projetos do workspace
+.claude
+.agents
+.gemini
+.kilocode
+ref
+openspec

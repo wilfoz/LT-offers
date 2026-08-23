@@ -1,0 +1,9 @@
+{
+  "name": "motor-calculo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/motor-calculo/src",
+  "projectType": "library",
+  "tags": ["escopo:motor"],
+  "// targets": "to see all targets run: nx show project motor-calculo --web",
+  "targets": {}
+}

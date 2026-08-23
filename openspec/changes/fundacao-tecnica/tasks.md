@@ -14,11 +14,11 @@
 
 ## 3. Bibliotecas e fronteiras
 
-- [ ] 3.1 Gerar a lib `libs/dominio` (TS puro, tag `escopo:dominio`) com um tipo/contrato placeholder exportado
-- [ ] 3.2 Gerar a lib `libs/motor-calculo` (TS puro, tag `escopo:motor`) com `decimal.js` como dependência e o wrapper `ValorDecimal` expondo criação, soma, multiplicação e arredondamento com política explícita (design D4, RNF-08)
-- [ ] 3.3 Implementar o esqueleto do grafo de dependências no motor: tipos de nó/aresta e ordenação topológica mínima, sem regra de negócio (arquitetura §12)
-- [ ] 3.4 Configurar `@nx/enforce-module-boundaries` com as tags do design D3 e provar com um teste de lint que import de NestJS/Prisma dentro de `motor-calculo` falha o build
-- [ ] 3.5 Adicionar regra de lint no escopo `escopo:motor` proibindo `Date.now`, `new Date` sem argumento e `Math.random` (design D5, RNF-04)
+- [x] 3.1 Gerar a lib `libs/dominio` (TS puro, tag `escopo:dominio`) com um tipo/contrato placeholder exportado
+- [x] 3.2 Gerar a lib `libs/motor-calculo` (TS puro, tag `escopo:motor`) com `decimal.js` como dependência e o wrapper `ValorDecimal` expondo criação, soma, multiplicação e arredondamento com política explícita (design D4, RNF-08)
+- [x] 3.3 Implementar o esqueleto do grafo de dependências no motor: tipos de nó/aresta e ordenação topológica mínima, sem regra de negócio (arquitetura §12)
+- [x] 3.4 Configurar `@nx/enforce-module-boundaries` com as tags do design D3 e provar com um teste de lint que import de NestJS/Prisma dentro de `motor-calculo` falha o build
+- [x] 3.5 Adicionar regra de lint no escopo `escopo:motor` proibindo `Date.now`, `new Date` sem argumento e `Math.random` (design D5, RNF-04)
 - [ ] 3.6 Escrever os testes-sentinela de determinismo do motor: mesma entrada produz resultado idêntico em execuções repetidas (design D5)
 
 ## 4. Persistência

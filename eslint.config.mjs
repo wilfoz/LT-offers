@@ -27,6 +27,18 @@ export default [
             {
               sourceTag: 'escopo:motor',
               onlyDependOnLibsWithTags: ['escopo:motor', 'escopo:dominio'],
+              bannedExternalImports: [
+                '@nestjs/*',
+                '@angular/*',
+                '@prisma/*',
+                'prisma',
+                'express',
+                'fs',
+                'http',
+                'https',
+                'child_process',
+                'node:*',
+              ],
             },
             {
               sourceTag: 'escopo:app',
