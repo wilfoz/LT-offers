@@ -30,4 +30,4 @@
 ## 5. QA e fechamento
 
 - [x] 5.1 Executar a skill `/executar-qa` para a change: validar cada cenário dos specs com evidências, corrigir bugs na causa raiz com testes de regressão, gerar `qa.md`
-- [ ] 5.2 Rodar a suíte completa (`npx nx run-many -t lint test build`) limpa e confirmar o CI verde no push
+- [x] 5.2 Rodar a suíte completa (`npx nx run-many -t lint test build`) limpa e confirmar o CI verde no push
