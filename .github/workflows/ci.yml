@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  verificacao:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache do Nx
+        uses: actions/cache@v4
+        with:
+          path: .nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            nx-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - run: npm ci
+
+      - name: Gerar Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: 'postgresql://ci:ci@localhost:5432/ci'
+
+      - name: Definir base do nx affected
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Formatação
+        run: npx nx format:check
+
+      - name: Lint, testes e build (afetados)
+        run: npx nx affected -t lint test build
+
+  banco:
+    name: Migrations no Postgres
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: 'postgresql://ci:ci@localhost:5432/ci'
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Aplicar migrations
+        run: npx prisma migrate deploy
+
+      - name: Confirmar migrations aplicadas
+        run: npx prisma migrate status

@@ -29,8 +29,8 @@
 
 ## 5. CI
 
-- [ ] 5.1 Criar workflow GitHub Actions com `nx affected -t lint,test,build` em push/PR, cache de npm e do Nx
-- [ ] 5.2 Adicionar job com serviço Postgres validando `prisma migrate deploy` e os testes que tocam banco
+- [x] 5.1 Criar workflow GitHub Actions com `nx affected -t lint,test,build` em push/PR, cache de npm e do Nx
+- [x] 5.2 Adicionar job com serviço Postgres validando `prisma migrate deploy` e os testes que tocam banco
 - [ ] 5.3 Confirmar o workflow verde em um push real (ou via `act`/execução local documentada, se o remoto ainda não existir)
 
 ## 6. Documentação e fechamento
