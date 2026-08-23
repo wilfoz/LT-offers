@@ -1,0 +1,29 @@
+# Dependências
+node_modules/
+
+# Builds
+dist/
+tmp/
+out-tsc/
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Ambiente — nunca versionar segredos
+.env
+.env.local
+
+# Testes e cobertura
+coverage/
+
+# IDEs e SO
+.idea/
+*.launch
+.settings/
+Thumbs.db
+.DS_Store
+
+# Logs
+npm-debug.log*
+*.log
