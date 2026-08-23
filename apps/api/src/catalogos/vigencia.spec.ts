@@ -25,7 +25,9 @@ describe('resolverVersaoVigente', () => {
   });
 
   it('retorna indefinido para data anterior à primeira vigência', () => {
-    expect(resolverVersaoVigente(versoes, new Date('2025-12-31'))).toBeUndefined();
+    expect(
+      resolverVersaoVigente(versoes, new Date('2025-12-31')),
+    ).toBeUndefined();
   });
 
   it('não modifica a lista de versões recebida', () => {

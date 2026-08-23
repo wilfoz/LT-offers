@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import { CamposVersaoDto, PADRAO_DATA } from './campos-versao.dto';
 
 export class CriarCaboCondutorDto extends CamposVersaoDto {

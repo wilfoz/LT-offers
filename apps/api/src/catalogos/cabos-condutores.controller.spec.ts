@@ -1,7 +1,4 @@
-import {
-  BadRequestException,
-  MethodNotAllowedException,
-} from '@nestjs/common';
+import { BadRequestException, MethodNotAllowedException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { validate } from 'class-validator';
 import { CabosCondutoresController } from './cabos-condutores.controller';
@@ -23,9 +20,7 @@ describe('CabosCondutoresController', () => {
     jest.clearAllMocks();
     const moduleRef = await Test.createTestingModule({
       controllers: [CabosCondutoresController],
-      providers: [
-        { provide: CabosCondutoresService, useValue: serviceMock },
-      ],
+      providers: [{ provide: CabosCondutoresService, useValue: serviceMock }],
     }).compile();
     controller = moduleRef.get(CabosCondutoresController);
   });
@@ -93,17 +88,13 @@ describe('CriarCaboCondutorDto (validação)', () => {
     const erros = await validate(
       dto({ codigo: 'CAA-636', pesoTonKm: '-1', utsKn: 'abc' }),
     );
-    const mensagens = erros.flatMap((e) =>
-      Object.values(e.constraints ?? {}),
-    );
+    const mensagens = erros.flatMap((e) => Object.values(e.constraints ?? {}));
     expect(mensagens.some((m) => m.includes('peso (ton/km)'))).toBe(true);
     expect(mensagens.some((m) => m.includes('UTS (kN)'))).toBe(true);
   });
 
   it('rejeita código ausente', async () => {
     const erros = await validate(dto({ pesoTonKm: '1.2' }));
-    expect(
-      erros.some((e) => e.property === 'codigo'),
-    ).toBe(true);
+    expect(erros.some((e) => e.property === 'codigo')).toBe(true);
   });
 });

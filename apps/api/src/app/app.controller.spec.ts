@@ -13,7 +13,9 @@ describe('AppController', () => {
     })
       .useMocker((token) => {
         if (token === PrismaService) {
-          return { $queryRaw: jest.fn().mockResolvedValue([{ '?column?': 1 }]) };
+          return {
+            $queryRaw: jest.fn().mockResolvedValue([{ '?column?': 1 }]),
+          };
         }
         return undefined;
       })

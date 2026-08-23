@@ -29,7 +29,9 @@ const MODO_POR_POLITICA: Record<PoliticaArredondamento, Decimal.Rounding> = {
  * Imutável: toda operação retorna um novo ValorDecimal.
  */
 export class ValorDecimal {
-  private constructor(private readonly valor: InstanceType<typeof DecimalMotor>) {}
+  private constructor(
+    private readonly valor: InstanceType<typeof DecimalMotor>,
+  ) {}
 
   /** Cria a partir de texto ou número. Prefira texto para valores monetários. */
   static de(entrada: string | number): ValorDecimal {

@@ -7,7 +7,8 @@ import { Test } from '@nestjs/testing';
 import { PrismaService } from '../app/prisma.service';
 import { CabosCondutoresService } from './cabos-condutores.service';
 
-const erroUnicidade = () => Object.assign(new Error('unique'), { code: 'P2002' });
+const erroUnicidade = () =>
+  Object.assign(new Error('unique'), { code: 'P2002' });
 
 describe('CabosCondutoresService', () => {
   const hoje = new Date('2026-08-23T00:00:00.000Z');
@@ -41,11 +42,7 @@ describe('CabosCondutoresService', () => {
     it('cria item com primeira versão quando o código é inédito', async () => {
       prismaMock.caboCondutor.create.mockResolvedValue({ id: 1 });
 
-      await service.criar(
-        { codigo: 'CAA-636', pesoTonKm: '1.2' },
-        'ana',
-        hoje,
-      );
+      await service.criar({ codigo: 'CAA-636', pesoTonKm: '1.2' }, 'ana', hoje);
 
       const dados = prismaMock.caboCondutor.create.mock.calls[0][0].data;
       expect(dados.codigo).toBe('CAA-636');
@@ -120,8 +117,22 @@ describe('CabosCondutoresService', () => {
         id: 1,
         codigo: 'CAA-636',
         versoes: [
-          { vigenciaInicio: new Date('2026-01-01'), pesoTonKm: '1.2', descricao: 'v1', bobinaM: '2000', diametroMm: '25', utsKn: '120' },
-          { vigenciaInicio: new Date('2026-06-01'), pesoTonKm: '1.3', descricao: 'v2', bobinaM: '2000', diametroMm: '25', utsKn: '125' },
+          {
+            vigenciaInicio: new Date('2026-01-01'),
+            pesoTonKm: '1.2',
+            descricao: 'v1',
+            bobinaM: '2000',
+            diametroMm: '25',
+            utsKn: '120',
+          },
+          {
+            vigenciaInicio: new Date('2026-06-01'),
+            pesoTonKm: '1.3',
+            descricao: 'v2',
+            bobinaM: '2000',
+            diametroMm: '25',
+            utsKn: '125',
+          },
         ],
       });
 
