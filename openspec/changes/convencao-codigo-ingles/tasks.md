@@ -15,9 +15,9 @@
 
 ## 3. Banco de dados
 
-- [ ] 3.1 Renomear modelos e campos no `schema.prisma` conforme D1 (`ConductorCable`, `ConductorCableVersion`, `effective_from`, `weight_ton_per_km`, `reel_length_m`, `diameter_mm`, `created_by`, `created_at`)
-- [ ] 3.2 Gerar migration com `--create-only`, editar para `ALTER TABLE/COLUMN RENAME` (D3), aplicar e confirmar `prisma migrate status` limpo e dados preservados
-- [ ] 3.3 Regenerar o Prisma Client e confirmar os novos tipos
+- [x] 3.1 Renomear modelos e campos no `schema.prisma` conforme D1 (`ConductorCable`, `ConductorCableVersion`, `effective_from`, `weight_ton_per_km`, `reel_length_m`, `diameter_mm`, `created_by`, `created_at`)
+- [x] 3.2 Gerar migration com `--create-only`, editar para `ALTER TABLE/COLUMN RENAME` (D3), aplicar e confirmar `prisma migrate status` limpo e dados preservados
+- [x] 3.3 Regenerar o Prisma Client e confirmar os novos tipos
 
 ## 4. API
 
