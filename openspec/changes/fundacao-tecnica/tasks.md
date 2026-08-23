@@ -19,13 +19,13 @@
 - [x] 3.3 Implementar o esqueleto do grafo de dependências no motor: tipos de nó/aresta e ordenação topológica mínima, sem regra de negócio (arquitetura §12)
 - [x] 3.4 Configurar `@nx/enforce-module-boundaries` com as tags do design D3 e provar com um teste de lint que import de NestJS/Prisma dentro de `motor-calculo` falha o build
 - [x] 3.5 Adicionar regra de lint no escopo `escopo:motor` proibindo `Date.now`, `new Date` sem argumento e `Math.random` (design D5, RNF-04)
-- [ ] 3.6 Escrever os testes-sentinela de determinismo do motor: mesma entrada produz resultado idêntico em execuções repetidas (design D5)
+- [x] 3.6 Escrever os testes-sentinela de determinismo do motor: mesma entrada produz resultado idêntico em execuções repetidas (design D5)
 
 ## 4. Persistência
 
-- [ ] 4.1 Criar `docker-compose.yml` com Postgres 16, volume nomeado e variáveis em `.env.example` (nunca `.env` versionado)
-- [ ] 4.2 Configurar Prisma no `apps/api` (`schema.prisma`, `DATABASE_URL`) com a migration inicial mínima do design D6
-- [ ] 4.3 Integrar o ciclo completo: `prisma migrate dev` + `prisma generate` + query de health do banco exposta no `GET /health`; testar contra o Postgres do Compose
+- [x] 4.1 Criar `docker-compose.yml` com Postgres 16, volume nomeado e variáveis em `.env.example` (nunca `.env` versionado)
+- [x] 4.2 Configurar Prisma no `apps/api` (`schema.prisma`, `DATABASE_URL`) com a migration inicial mínima do design D6
+- [x] 4.3 Integrar o ciclo completo: `prisma migrate dev` + `prisma generate` + query de health do banco exposta no `GET /health`; testar contra o Postgres do Compose
 
 ## 5. CI
 

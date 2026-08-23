@@ -1,0 +1,19 @@
+// Schema Prisma do app api (design D6).
+// Nesta fase existe apenas a tabela mínima de infraestrutura que prova o
+// ciclo migrate → generate → query. As entidades de negócio (catálogos,
+// ofertas) chegam na fase F1 com design de dados próprio.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model VerificacaoSaude {
+  id       Int      @id @default(autoincrement())
+  criadoEm DateTime @default(now()) @map("criado_em")
+
+  @@map("verificacao_saude")
+}
