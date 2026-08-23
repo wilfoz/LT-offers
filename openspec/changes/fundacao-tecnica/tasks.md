@@ -8,9 +8,9 @@
 
 ## 2. Aplicações
 
-- [ ] 2.1 Gerar o app `apps/api` com `@nx/nest`, com endpoint `GET /health` retornando status e versão; teste unitário do endpoint passando
-- [ ] 2.2 Gerar o app `apps/web` com `@nx/angular`, com página inicial mínima em português do Brasil (RNF-14); teste unitário default passando
-- [ ] 2.3 Verificar `nx serve api` e `nx serve web` subindo localmente sem erros
+- [x] 2.1 Gerar o app `apps/api` com `@nx/nest`, com endpoint `GET /health` retornando status e versão; teste unitário do endpoint passando
+- [x] 2.2 Gerar o app `apps/web` com `@nx/angular`, com página inicial mínima em português do Brasil (RNF-14); teste unitário default passando
+- [x] 2.3 Verificar `nx serve api` e `nx serve web` subindo localmente sem erros
 
 ## 3. Bibliotecas e fronteiras
 

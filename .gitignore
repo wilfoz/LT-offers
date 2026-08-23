@@ -36,3 +36,9 @@ npm-debug.log*
 # Configurações locais do Claude Code
 .claude/settings.local.json
 .claude/worktrees
+
+test-output
+
+.angular
+
+vitest.config.*.timestamp*
