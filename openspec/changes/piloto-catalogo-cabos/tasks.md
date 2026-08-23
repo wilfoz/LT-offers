@@ -1,4 +1,4 @@
-# Tasks: piloto-catalogo-cabos
+﻿# Tasks: piloto-catalogo-cabos
 
 ## 1. Rotina de implementação (setup, vale para esta e as próximas changes)
 
@@ -21,11 +21,11 @@
 
 ## 4. Interface de manutenção
 
-- [ ] 4.1 Criar a feature `catalogos` no `apps/web` com rota `/catalogos/cabos-condutores` e navegação a partir da página inicial
-- [ ] 4.2 Implementar a listagem com busca por código/descrição e sinalização visível de itens com dados obrigatórios ausentes, distinguindo vazio de zero (RNF-09)
-- [ ] 4.3 Implementar o formulário de criação/edição gerando nova versão com data de vigência, validação em pt-BR espelhando a API
-- [ ] 4.4 Implementar a tela de histórico de versões (vigência, autor, valores por versão)
-- [ ] 4.5 Escrever testes de componente cobrindo listagem com pendências, validação do formulário e exibição do histórico
+- [x] 4.1 Criar a feature `catalogos` no `apps/web` com rota `/catalogos/cabos-condutores` e navegação a partir da página inicial
+- [x] 4.2 Implementar a listagem com busca por código/descrição e sinalização visível de itens com dados obrigatórios ausentes, distinguindo vazio de zero (RNF-09)
+- [x] 4.3 Implementar o formulário de criação/edição gerando nova versão com data de vigência, validação em pt-BR espelhando a API
+- [x] 4.4 Implementar a tela de histórico de versões (vigência, autor, valores por versão)
+- [x] 4.5 Escrever testes de componente cobrindo listagem com pendências, validação do formulário e exibição do histórico
 
 ## 5. QA e fechamento
 
