@@ -58,3 +58,18 @@ rules:
   specs:
     - Escrever em português do Brasil, usando os termos do glossário §15
     - Toda regra derivada da planilha cita o ID RN-xx de origem
+
+operations:
+  apply:
+    guidance:
+      - Antes de cada task, leia a definição, os specs e o design relacionados e
+        as dependências das tasks anteriores; formule um plano curto antes de
+        implementar.
+      - Implemente sem gambiarras, seguindo os padrões do workspace (fronteiras
+        por lint, Decimal para valores numéricos de negócio, domínio em pt-BR).
+      - Ao concluir cada grupo de tasks, execute o agente task-reviewer sobre as
+        alterações do grupo e corrija os apontamentos antes de marcar o grupo
+        como completo.
+      - Faça um commit por grupo de tasks concluído, com mensagem descritiva.
+      - Ao final da implementação da change, execute a skill executar-qa e só
+        proponha o archive com o QA aprovado.
