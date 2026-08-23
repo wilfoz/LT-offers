@@ -1,0 +1,60 @@
+schema: spec-driven
+githubCopilot:
+  cloudAgent: true
+
+context: |
+  Projeto: substituir a planilha "Calculo LT" (orçamentação de propostas EPC de
+  linhas de transmissão no Brasil) por uma aplicação web.
+  Fonte de requisitos: requisitos-calculo-lt.md na raiz do repositório —
+  regras de negócio RN-01..RN-26 (§07), requisitos funcionais RF-01..RF-65 em
+  12 módulos M01..M12 (§08), não funcionais RNF-01..RNF-18 (§09), integrações
+  (§10), arquitetura-alvo (§12), roadmap F0..F7 (§13), critério de aceite por
+  paridade numérica (§14), glossário de domínio (§15).
+
+  Stack:
+  - Frontend: Angular (TypeScript)
+  - Backend: NestJS (TypeScript)
+  - Banco de dados: PostgreSQL
+  - ORM: Prisma (suporte nativo a Decimal, migrations versionadas)
+  - Monorepo: Nx (apps angular + nestjs, libs compartilhadas)
+  - Motor de cálculo: biblioteca TypeScript pura (lib do monorepo), sem
+    dependência de NestJS/Angular, executável sem interface (RNF-16),
+    determinística (RNF-04), com aritmética decimal — nunca float para
+    valores monetários (RNF-08)
+
+  Decisões de arquitetura já fixadas pelo levantamento (§12):
+  - Separação estrita entre dado (banco), regra (motor de cálculo) e
+    apresentação (web)
+  - Grafo de dependência explícito no motor; recálculo incremental apenas do
+    subgrafo afetado
+  - Sem replicação estrutural: uma única implementação parametrizada por linha
+    de transmissão (sem limite fixo de 10 linhas — RNF-03)
+  - Ausência de dado é estado de primeira classe: distinguir zero, não
+    informado e não aplicável; nunca converter pendência em zero silencioso
+    (RNF-09)
+  - Catálogos versionados por vigência: uma oferta fechada reproduz seus
+    números originais mesmo após atualização de catálogos (RNF-05)
+  - Excel apenas como formato de intercâmbio: importação de estaqueamento
+    PLS-CADD e cotações; exportação de BOQ CIP e planilha do edital
+
+  Convenções:
+  - Idioma da interface, dos artefatos e do código de domínio: português do
+    Brasil (RNF-14); usar os termos do glossário §15 do requisitos-calculo-lt.md
+  - Toda regra de negócio implementada referencia seu ID (RN-xx) e tem testes
+    próprios, incluindo casos limite (§14)
+  - Validação de cada fase por paridade numérica contra ofertas históricas
+    reais, com tolerância declarada (exata em quantitativos discretos; 0,01%
+    em monetários agregados)
+
+  Decisões em aberto (não assumir sem confirmar com o usuário):
+  - Estratégia de autenticação corporativa e perfis de acesso (RNF-17, RF-64)
+  - Constantes, produtividades e coeficientes extraídos da planilha ainda não
+    foram confirmados com os autores (§02) — tratar como hipótese, não regra
+
+rules:
+  proposal:
+    - Referenciar os IDs (RF/RN/RNF) do requisitos-calculo-lt.md que a change cobre
+    - Indicar a fase do roadmap (F0..F7) em que a change se encaixa
+  specs:
+    - Escrever em português do Brasil, usando os termos do glossário §15
+    - Toda regra derivada da planilha cita o ID RN-xx de origem

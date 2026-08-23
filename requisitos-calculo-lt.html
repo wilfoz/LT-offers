@@ -1,0 +1,1247 @@
+<title>Requisitos Calculo LT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+:root{
+  --bg:#F1F4F3;
+  --surface:#FFFFFF;
+  --surface-2:#E7EDEB;
+  --ink:#0E1614;
+  --ink-2:#374441;
+  --muted:#66756F;
+  --line:#D3DCD9;
+  --line-2:#B4C2BE;
+  --accent:#0A6A5F;
+  --accent-2:#08544B;
+  --accent-soft:#DBEDE9;
+  --ok:#2C6B40;
+  --ok-soft:#DDEEE1;
+  --warn:#8E5406;
+  --warn-soft:#F6E9D3;
+  --crit:#9E2A22;
+  --crit-soft:#F6DEDB;
+  --code-bg:#EDF2F0;
+  --shadow:0 1px 2px rgba(14,22,20,.05), 0 8px 24px -18px rgba(14,22,20,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B100F;
+    --surface:#121A18;
+    --surface-2:#18211F;
+    --ink:#E3ECE9;
+    --ink-2:#B5C4BF;
+    --muted:#87968F;
+    --line:#243230;
+    --line-2:#33443F;
+    --accent:#4FC3B2;
+    --accent-2:#7BD6C8;
+    --accent-soft:#10302C;
+    --ok:#63BE7F;
+    --ok-soft:#14291B;
+    --warn:#D69B3F;
+    --warn-soft:#2C2213;
+    --crit:#E77E72;
+    --crit-soft:#2E1815;
+    --code-bg:#182320;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -20px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B100F; --surface:#121A18; --surface-2:#18211F;
+  --ink:#E3ECE9; --ink-2:#B5C4BF; --muted:#87968F;
+  --line:#243230; --line-2:#33443F;
+  --accent:#4FC3B2; --accent-2:#7BD6C8; --accent-soft:#10302C;
+  --ok:#63BE7F; --ok-soft:#14291B;
+  --warn:#D69B3F; --warn-soft:#2C2213;
+  --crit:#E77E72; --crit-soft:#2E1815;
+  --code-bg:#182320;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -20px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+code,.mono,pre{font-family:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace}
+h1,h2,h3,h4,.ui{font-family:"Archivo","Helvetica Neue",Arial,sans-serif}
+
+/* ---------- shell ---------- */
+.shell{
+  max-width:1220px;
+  margin:0 auto;
+  padding:0 24px 120px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+}
+@media (min-width:1040px){
+  .shell{grid-template-columns:216px minmax(0,1fr); gap:52px; align-items:start}
+}
+
+/* ---------- masthead ---------- */
+.mast{
+  grid-column:1/-1;
+  border-bottom:1px solid var(--line-2);
+  padding:56px 0 30px;
+  margin-bottom:44px;
+}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 16px;
+  margin-bottom:20px;
+}
+.eyebrow span::before{content:"";display:inline-block;width:14px;height:1px;background:currentColor;vertical-align:middle;margin-right:8px}
+h1{
+  font-size:clamp(34px,5.4vw,58px);
+  line-height:1.02;
+  letter-spacing:-.028em;
+  font-weight:700;
+  margin:0 0 18px;
+  text-wrap:balance;
+  max-width:19ch;
+}
+.dek{
+  font-size:19px;
+  color:var(--ink-2);
+  max-width:64ch;
+  margin:0 0 26px;
+}
+.filebar{
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;color:var(--muted);
+}
+.filebar b{color:var(--ink-2);font-weight:500}
+
+/* ---------- nav ---------- */
+nav.toc{display:none}
+@media (min-width:1040px){
+  nav.toc{
+    display:block;position:sticky;top:24px;
+    padding-top:4px;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+  }
+}
+nav.toc ol{list-style:none;margin:0;padding:0}
+nav.toc a{
+  display:flex;gap:10px;
+  font-family:"Archivo",sans-serif;
+  font-size:13px;line-height:1.35;
+  color:var(--muted);text-decoration:none;
+  padding:6px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;margin-left:-14px;
+}
+nav.toc a:hover{color:var(--accent);border-left-color:var(--accent)}
+nav.toc a .k{font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.65;min-width:16px}
+
+/* ---------- sections ---------- */
+main{min-width:0}
+section{scroll-margin-top:20px;margin-bottom:76px}
+h2{
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;color:var(--accent);
+  margin:0 0 10px;
+  display:flex;align-items:baseline;gap:12px;
+}
+h2 .num{font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:12px;letter-spacing:0}
+h3{
+  font-size:clamp(24px,3vw,32px);line-height:1.14;letter-spacing:-.02em;
+  font-weight:700;margin:0 0 20px;text-wrap:balance;max-width:24ch;
+}
+h4{
+  font-size:15px;font-weight:600;letter-spacing:-.005em;
+  margin:34px 0 12px;color:var(--ink);
+}
+p{margin:0 0 18px;max-width:68ch}
+ul,ol{max-width:68ch;padding-left:22px;margin:0 0 18px}
+li{margin-bottom:7px}
+strong{font-weight:600}
+a{color:var(--accent);text-underline-offset:2px}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+
+.lede{font-size:19px;color:var(--ink-2)}
+
+/* ---------- metrics ---------- */
+.metrics{
+  display:grid;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:3px;overflow:hidden;
+  grid-template-columns:repeat(2,1fr);
+  margin:0 0 28px;
+}
+@media (min-width:660px){.metrics{grid-template-columns:repeat(4,1fr)}}
+.metric{background:var(--surface);padding:16px 16px 14px}
+.metric .v{
+  font-family:"Archivo",sans-serif;font-weight:700;
+  font-size:clamp(21px,2.6vw,28px);letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;line-height:1.05;
+}
+.metric .l{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  margin-top:6px;line-height:1.35;
+}
+.metric.alert .v{color:var(--crit)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface);margin:0 0 24px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-family:"Archivo",sans-serif}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;
+  background:var(--surface-2);position:sticky;top:0;
+  border-bottom:1px solid var(--line-2);
+  white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",monospace;font-size:12px;white-space:nowrap}
+td.n{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);text-align:right;width:38px}
+td.sn code{font-size:12px}
+td.st{font-size:11.5px;color:var(--muted);white-space:nowrap}
+td.pp{color:var(--ink-2);min-width:280px}
+td.id{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--accent);white-space:nowrap;font-weight:500}
+code{
+  background:var(--code-bg);padding:1px 5px;border-radius:2px;
+  font-size:.86em;color:var(--ink-2);
+}
+.compact th,.compact td{padding:7px 10px}
+
+/* ---------- badges ---------- */
+.dom{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:2px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;
+  background:var(--accent-soft);color:var(--accent-2);
+}
+:root[data-theme="dark"] .dom{color:var(--accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dom{color:var(--accent)}}
+.tag{
+  display:inline-block;padding:1.5px 7px;border-radius:2px;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;
+}
+.t-must{background:var(--crit-soft);color:var(--crit)}
+.t-should{background:var(--warn-soft);color:var(--warn)}
+.t-could{background:var(--surface-2);color:var(--muted)}
+.t-ok{background:var(--ok-soft);color:var(--ok)}
+
+/* ---------- severity rows ---------- */
+.finding{
+  border:1px solid var(--line);border-left-width:3px;border-radius:3px;
+  background:var(--surface);padding:16px 18px;margin:0 0 12px;
+  box-shadow:var(--shadow);
+}
+.finding.sev-crit{border-left-color:var(--crit)}
+.finding.sev-high{border-left-color:var(--warn)}
+.finding.sev-med{border-left-color:var(--accent)}
+.finding h4{margin:0 0 6px;font-size:15.5px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.finding h4 .fid{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);font-weight:400}
+.finding p{margin:0;font-size:15px;color:var(--ink-2);max-width:none}
+.finding .ev{
+  margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+  color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;
+}
+
+/* ---------- pipeline ---------- */
+.pipe{margin:0 0 24px}
+.pipe svg{display:block;width:100%;height:auto}
+.pipewrap{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface);padding:22px 18px;box-shadow:var(--shadow)}
+
+/* ---------- callout ---------- */
+.callout{
+  border:1px solid var(--line);border-radius:3px;
+  background:var(--surface);padding:18px 20px;margin:0 0 24px;
+  box-shadow:var(--shadow);
+}
+.callout .h{
+  font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;
+}
+.callout p:last-child{margin-bottom:0}
+
+/* ---------- module block ---------- */
+.mod{margin-bottom:40px}
+.mod .modhead{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line-2);padding-bottom:8px;margin-bottom:14px;
+}
+.mod .modhead .mid{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;
+  color:var(--surface);background:var(--accent);
+  padding:2px 7px;border-radius:2px;font-weight:500;
+}
+.mod .modhead h4{margin:0;font-size:18px;letter-spacing:-.01em}
+.mod .modhead .src{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+  margin-left:auto;
+}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--ink-2);margin:0 0 22px;font-family:"Archivo",sans-serif}
+.legend span{display:flex;align-items:center;gap:7px}
+
+footer{
+  grid-column:1/-1;border-top:1px solid var(--line-2);
+  padding-top:22px;margin-top:20px;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:8px 28px;
+}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="shell">
+
+<header class="mast">
+  <div class="eyebrow">
+    <span>Engenharia reversa de planilha</span>
+    <span>Orçamentação de linhas de transmissão</span>
+    <span>Setembro de 2026</span>
+  </div>
+  <h1>Requisitos para substituir a planilha Calculo LT</h1>
+  <p class="dek">Levantamento de requisitos derivado da leitura completa, aba a aba, do modelo de orçamentação usado nas propostas EPC de linhas de transmissão no Brasil. O documento descreve o que a planilha faz hoje, as regras de negócio que ela codifica, os requisitos de um sistema que a substitua e as evidências técnicas que justificam a substituição.</p>
+  <div class="filebar">
+    <span><b>Arquivo</b> Calculo LT &ndash; AXIA &ndash; INSTALACAO DE PR &ndash; OPGW&#8209;2025&#8209;029_R2.xlsm</span>
+    <span><b>Origem</b> criado em 07/02/2000 &middot; revisado em 22/06/2026</span>
+    <span><b>Base</b> OOXML integral (150 planilhas, VBA, nomes definidos, validações)</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sumário">
+  <ol>
+    <li><a href="#s1"><span class="k">01</span> Sumário executivo</a></li>
+    <li><a href="#s2"><span class="k">02</span> Método da análise</a></li>
+    <li><a href="#s3"><span class="k">03</span> Anatomia do artefato</a></li>
+    <li><a href="#s4"><span class="k">04</span> Mapa de domínios</a></li>
+    <li><a href="#s5"><span class="k">05</span> Modelo de domínio</a></li>
+    <li><a href="#s6"><span class="k">06</span> Cadeia de cálculo</a></li>
+    <li><a href="#s7"><span class="k">07</span> Regras de negócio</a></li>
+    <li><a href="#s8"><span class="k">08</span> Requisitos funcionais</a></li>
+    <li><a href="#s9"><span class="k">09</span> Requisitos não funcionais</a></li>
+    <li><a href="#s10"><span class="k">10</span> Integrações</a></li>
+    <li><a href="#s11"><span class="k">11</span> Achados de qualidade</a></li>
+    <li><a href="#s12"><span class="k">12</span> Arquitetura&#8209;alvo</a></li>
+    <li><a href="#s13"><span class="k">13</span> Roadmap</a></li>
+    <li><a href="#s14"><span class="k">14</span> Validação e aceite</a></li>
+    <li><a href="#s15"><span class="k">15</span> Glossário</a></li>
+    <li><a href="#s16"><span class="k">16</span> Anexo: 150 abas</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="num">01</span> Sumário executivo</h2>
+  <h3>Uma plataforma de estimativa disfarçada de planilha</h3>
+  <p class="lede">O arquivo não é um orçamento. É um <strong>sistema de estimativa paramétrica completo</strong> para propostas EPC de linhas de transmissão no Brasil: parte da lista de estruturas exportada do PLS&#8209;CADD, calcula quantitativos de engenharia, aplica um motor tributário brasileiro por unidade federativa, monta cronograma físico mês a mês, dimensiona equipes e equipamentos, gera histogramas de recursos, projeta o desembolso e fecha com preço de venda por linha e por lote.</p>
+
+  <div class="metrics">
+    <div class="metric"><div class="v">150</div><div class="l">planilhas<br>70 visíveis / 80 ocultas</div></div>
+    <div class="metric"><div class="v">1,88 M</div><div class="l">fórmulas<br>em 3,1 M de células</div></div>
+    <div class="metric"><div class="v">37,2 MB</div><div class="l">compactado<br>~400 MB em XML</div></div>
+    <div class="metric alert"><div class="v">15.665</div><div class="l">células em erro<br>no estado salvo</div></div>
+  </div>
+
+  <p>O modelo cobre <strong>até 10 linhas de transmissão simultâneas</strong> dentro de um mesmo lote de leilão, replicando o mesmo bloco de cálculo dez vezes (<code>E1..E10</code>, <code>CR1..CR10</code>, <code>S1..S10</code>, <code>H1..H10</code>, <code>R1..R10</code>, <code>D1..D10</code>, <code>Risk1..Risk10</code>) e consolidando em abas totalizadoras (<code>HT</code>, <code>RT</code>, <code>DT</code>). Essa replicação por cópia é a principal causa estrutural do tamanho, da lentidão e da fragilidade do arquivo.</p>
+
+  <p>A conclusão da análise é direta: <strong>o conhecimento de engenharia e comercial embutido no arquivo tem alto valor e deve ser preservado; o veículo Excel chegou ao fim da vida útil.</strong> Há 888 mil ocorrências de funções voláteis (<code>OFFSET</code>, <code>INDIRECT</code>, <code>TODAY</code>), 26.320 nomes definidos &mdash; dos quais 18.217 apontam para <code>#REF!</code> &mdash; e uma cadeia de cálculo (<code>calcChain.xml</code>) de 52 MB. O modelo já opera com cálculo manual forçado por macro para permanecer utilizável.</p>
+
+  <div class="callout">
+    <div class="h">Recomendação</div>
+    <p>Migrar para uma aplicação web com motor de cálculo em servidor e banco relacional, preservando a planilha como formato de entrada e saída (importação de estaqueamento, exportação de BOQ e planilha de preços do edital). A migração deve ser faseada e validada por paridade numérica contra revisões históricas reais, não por reescrita de uma vez só.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="num">02</span> Método da análise</h2>
+  <h3>O que foi lido e como</h3>
+  <p>A análise foi feita sobre o pacote OOXML descompactado, sem abrir o arquivo no Excel &mdash; o que evita recálculo, preserva os valores em cache e permite inspecionar partes que a interface esconde.</p>
+  <ul>
+    <li><strong>Estrutura</strong> &mdash; <code>workbook.xml</code>, relações e estado de visibilidade das 150 abas.</li>
+    <li><strong>Conteúdo</strong> &mdash; as 150 planilhas foram parseadas célula a célula (fórmula + valor em cache + strings compartilhadas), gerando um dump legível de cabeçalhos, primeiras linhas de dados e amostras de fórmulas.</li>
+    <li><strong>Grafo de dependências</strong> &mdash; contagem de referências entre abas extraída das fórmulas, usada para inferir a ordem real do pipeline de cálculo.</li>
+    <li><strong>Semântica</strong> &mdash; nomes definidos, tabelas estruturadas, validações de dados (listas suspensas) e formatação condicional.</li>
+    <li><strong>Automação</strong> &mdash; extração de strings do <code>vbaProject.bin</code> para identificar módulos, formulários e gatilhos.</li>
+    <li><strong>Saúde</strong> &mdash; contagem de erros em cache por aba, funções voláteis e nomes quebrados.</li>
+  </ul>
+  <p>As abas replicadas por linha foram amostradas pelos representantes de cada família (<code>E1</code>, <code>CR1</code>, <code>S1</code>, <code>H1</code>, <code>R1</code>, <code>D1</code>, <code>Risk1</code>, <code>M1</code>, <code>PU1</code>) e comparadas com as demais para confirmar que são cópias estruturais.</p>
+  <div class="callout">
+    <div class="h">Limite do levantamento</div>
+    <p>Este documento descreve <em>o que o modelo faz</em>, extraído do próprio modelo. Não substitui a validação com os autores: parte das constantes (produtividades, preços de referência, coeficientes de venda) carrega premissas de obras anteriores &mdash; Solaris, Tucano, leilões de 2021&ndash;2025 &mdash; que precisam ser confirmadas antes de virarem regra de sistema.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="num">03</span> Anatomia do artefato</h2>
+  <h3>Números que definem o problema</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Dimensão</th><th class="num">Valor</th><th>Leitura</th></tr></thead>
+      <tbody>
+        <tr><td>Planilhas</td><td class="num">150</td><td>70 visíveis, 80 ocultas &mdash; metade da complexidade é invisível ao usuário</td></tr>
+        <tr><td>Células materializadas</td><td class="num">3.101.572</td><td>inclui células formatadas vazias, que também pesam no arquivo</td></tr>
+        <tr><td>Fórmulas</td><td class="num">1.877.471</td><td>a lógica de negócio está distribuída em quase 1,9 milhão de pontos</td></tr>
+        <tr><td>Células mescladas</td><td class="num">52.764</td><td>principal obstáculo a leitura programática e a validação</td></tr>
+        <tr><td>Formatações condicionais</td><td class="num">7.220</td><td>regras visuais que carregam significado de negócio não documentado</td></tr>
+        <tr><td>Nomes definidos</td><td class="num">26.320</td><td>15.160 únicos; apenas ~360 tem semântica de negócio</td></tr>
+        <tr><td>Nomes apontando para <code>#REF!</code></td><td class="num">18.217</td><td>69% do catálogo de nomes está quebrado</td></tr>
+        <tr><td>Funções voláteis</td><td class="num">888.198</td><td><code>OFFSET</code>, <code>INDIRECT</code>, <code>TODAY</code> &mdash; recalculam a cada edição</td></tr>
+        <tr><td>Células em erro (estado salvo)</td><td class="num">15.665</td><td>6.058 <code>#N/A</code>, 4.199 <code>#DIV/0!</code>, 3.854 <code>#VALUE!</code>, 1.554 <code>#REF!</code></td></tr>
+        <tr><td>Gráficos incorporados</td><td class="num">264</td><td>histogramas de recursos e curvas de desembolso</td></tr>
+        <tr><td>Tabelas estruturadas</td><td class="num">24</td><td>as únicas areas com contrato de dados explícito</td></tr>
+        <tr><td>Validações de dados</td><td class="num">201</td><td>listas suspensas &mdash; o domínio controlado de entrada</td></tr>
+        <tr><td>Cadeia de cálculo</td><td class="num">52 MB</td><td><code>calcChain.xml</code> sozinho &mdash; indicador direto do custo de recálculo</td></tr>
+        <tr><td>Proteção de planilha</td><td class="num">1 aba</td><td>praticamente nenhuma célula de fórmula está protegida contra sobrescrita</td></tr>
+        <tr><td>Vínculos externos</td><td class="num">0</td><td>o arquivo é autocontido &mdash; ponto favorável a migração</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Automação VBA existente</h4>
+  <p>O projeto VBA contém três módulos (<code>Codigo</code>, <code>Histogramas</code>, <code>Cronogramas</code>), seis formulários (<code>FormResumen</code>, <code>FormHistogramaPersonal</code>, <code>FormHistogramaEquipamentos</code>, <code>FormSeleccionFila</code>, <code>FormBorradoEquipo</code>, <code>FormCronoChange</code>) e uma faixa de opções customizada. As funções identificadas revelam requisitos implícitos que precisam existir no sistema novo:</p>
+  <ul>
+    <li>carimbo automático de <strong>usuário e data da última modificação</strong> no salvamento;</li>
+    <li>modo <strong>&ldquo;mostrar apenas abas em uso&rdquo;</strong>, que oculta as linhas não utilizadas do lote;</li>
+    <li>alternância de <strong>cálculo manual</strong> para tornar a edição viável;</li>
+    <li>propagação em cascata da <strong>renomeação de cargos e equipamentos</strong> para a aba de composições;</li>
+    <li>navegação guiada entre cronograma, histograma e resumo;</li>
+    <li>uso de <strong>atingir meta</strong> para fechar preço de venda a partir de margem alvo.</li>
+  </ul>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="num">04</span> Mapa de domínios</h2>
+  <h3>As 150 abas em doze domínios funcionais</h3>
+  <p>Toda aba do arquivo pertence a um destes doze domínios. A coluna &ldquo;replicação&rdquo; indica onde a estrutura foi copiada por linha de transmissão &mdash; e portanto onde o sistema novo deve usar uma única implementação parametrizada.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>&nbsp;</th><th>Domínio</th><th class="num">Abas</th><th>Replicação</th><th>Responsabilidade</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dom dA">A</span></td><td>Configuração da oferta</td><td class="num">5</td><td>&mdash;</td><td>Identificação do leilão, prazos ANEEL, matriz de responsabilidade escopo &times; contratante, câmbio, tributos e listas derivadas</td></tr>
+        <tr><td><span class="dom dB">B</span></td><td>Bases de dados de engenharia</td><td class="num">10</td><td>&mdash;</td><td>Catálogos mestres: cabos, torres, isoladores, solos e fundações, mão de obra, equipamentos, custos fixos</td></tr>
+        <tr><td><span class="dom dC">C</span></td><td>Equipes e composições</td><td class="num">2</td><td>&mdash;</td><td>Catálogo de equipes com produção teórica e composição analítica de pessoal e equipamento</td></tr>
+        <tr><td><span class="dom dD">D</span></td><td>Estaqueamento</td><td class="num">10</td><td><code>E1..E10</code></td><td>Lista de estruturas importada do PLS&#8209;CADD com solo, fundação, acesso e cabo por torre</td></tr>
+        <tr><td><span class="dom dE">E</span></td><td>Quantitativos de engenharia</td><td class="num">15</td><td>&mdash;</td><td>Condutores, cabos de guarda, torres, tirantes, cadeias, aterramento, fundações, acessos, limpeza, travessias</td></tr>
+        <tr><td><span class="dom dF">F</span></td><td>Preços e tributos de materiais</td><td class="num">9</td><td>&mdash;</td><td>Preços por fornecedor e moeda, curva de commodities, motor ICMS/IPI/PIS&#8209;COFINS/DIFAL/FECOEP</td></tr>
+        <tr><td><span class="dom dG">G</span></td><td>Indiretos e canteiros</td><td class="num">7</td><td>&mdash;</td><td>Estrutura de obra, canteiros, insumos, engenharia, clima, meio ambiente e fundiário</td></tr>
+        <tr><td><span class="dom dH">H</span></td><td>Cronograma e recursos</td><td class="num">21</td><td><code>CR1..CR10</code>, <code>H1..H10</code>, <code>HT</code></td><td>Cronograma físico mensal por atividade e histograma de pessoal e equipamentos</td></tr>
+        <tr><td><span class="dom dI">I</span></td><td>Serviços e orçamento contratual</td><td class="num">25</td><td><code>S1..S10</code>, <code>M/PU</code>, <code>BOQ</code></td><td>Consolidação de serviços, decisão própria &times; subcontratada, planilhas no formato do edital</td></tr>
+        <tr><td><span class="dom dJ">J</span></td><td>Resultado econômico</td><td class="num">19</td><td><code>R1..R10</code>, <code>RT</code></td><td>Custo, impostos, coeficientes de venda, BDI, margem e simulações de preço</td></tr>
+        <tr><td><span class="dom dK">K</span></td><td>Desembolso e fluxo de caixa</td><td class="num">15</td><td><code>D1..D10</code>, <code>DT</code></td><td>Distribuição mensal de custo e faturamento, entregas de materiais, cashflow do contratante</td></tr>
+        <tr><td><span class="dom dL">L</span></td><td>Risco e controle de qualidade</td><td class="num">12</td><td><code>Risk1..Risk10</code></td><td>Matriz de riscos ponderada e painéis de verificação de consistência interna</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;color:var(--muted);max-width:68ch">O inventário completo, aba por aba, com contagem de células e fórmulas, esta no <a href="#s16">anexo</a>.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="num">05</span> Modelo de domínio</h2>
+  <h3>As entidades que o sistema precisa persistir</h3>
+  <p>O modelo conceitual abaixo foi inferido das tabelas estruturadas, das listas de validação e dos padrões de <code>INDEX/MATCH</code> entre abas. Ele separa <strong>catálogo</strong> (dados corporativos, compartilhados entre ofertas) de <strong>oferta</strong> (dados de uma proposta específica).</p>
+
+  <h4>Catálogo corporativo &mdash; versionado, compartilhado</h4>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Entidade</th><th>Atributos&#8209;chave</th><th>Origem</th></tr></thead>
+      <tbody>
+        <tr><td>Cabo condutor</td><td>codigo, peso ton/km, bobina, diâmetro, UTS</td><td><code>DB_CAL</code></td></tr>
+        <tr><td>Cabo de guarda (aço / OPGW / aço para tirante)</td><td>codigo, classe de galvanização, resistência, fios, I&sup2;t, fibras, peso, bobina, UTS</td><td><code>DB_CGA</code>, <code>DB_OPGW</code>, <code>DB_CTI</code></td></tr>
+        <tr><td>Série de estrutura</td><td>nome, projetista, tensão, circuitos, cabos por fase, vento de projeto, tipo de isolador, SIL</td><td><code>DB_TOR</code></td></tr>
+        <tr><td>Tipo de torre</td><td>série, sigla, função (suspensão / ancoragem), peso por altura, quantidade de estais</td><td><code>DB_TOR</code>, <code>DB_Estructuras</code></td></tr>
+        <tr><td>Isolador</td><td>tipo, fabricante, perfil, ruptura kN, diâmetro, passo, linha de fuga</td><td><code>DB_AIS</code></td></tr>
+        <tr><td>Tipo de solo</td><td>codigo (I, II, III, IV, IVS, R, E, IA...), tensão admissível, peso específico, ângulo de atrito, coesão, faixa NSPT, submerso</td><td><code>DB_FUN</code></td></tr>
+        <tr><td>Tipo de fundação</td><td>sapata, tubulão, pré-moldado, ancoragem em rocha, estaca (helicoidal / metálica / concreto / raiz), hélice continua, micropilote</td><td><code>DB_TPF</code>, <code>DB_VOL</code></td></tr>
+        <tr><td>Cargo</td><td>nome, salário base, periculosidade, hora extra, DSR, encargos, alimentação, tipo de alojamento, folgas, viagem, plano de saúde, seguro de vida</td><td><code>DB_MO</code> (280 cargos)</td></tr>
+        <tr><td>Equipamento</td><td>codigo, aluguel externo, aluguel interno, preço de compra, anos de amortização, disponibilidade própria, combustível, manutenção</td><td><code>DB_EQ</code> (~295 itens)</td></tr>
+        <tr><td>Custo fixo</td><td>item, tipo (EPI, exames, mob/demob, roupa, viagens), custo, descrição</td><td><code>DB_FI</code></td></tr>
+        <tr><td>Equipe de trabalho</td><td>descrição, produção máxima teórica por unidade e período, composição de cargos e equipamentos com quantidades</td><td><code>Equipos</code> + <code>DesEquipos</code></td></tr>
+        <tr><td>Alíquota tributária</td><td>ICMS intra e interestadual por par origem&ndash;destino, base dupla DIFAL, FECOEP, IPI por NCM, PIS/COFINS</td><td><code>Datos</code>, <code>Aux_ICMS</code>, <code>Aux_IPI</code></td></tr>
+        <tr><td>Parâmetro regional</td><td>cesta básica e salário&#8209;teto por UF, custo de alojamento por categoria, custo de viagem</td><td><code>Datos</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Oferta &mdash; escopo de uma proposta</h4>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Entidade</th><th>Atributos&#8209;chave</th><th>Cardinalidade</th></tr></thead>
+      <tbody>
+        <tr><td>Oferta / Lote</td><td>leilão, lote, cliente, data da oferta, data do leilão, início do cronograma, entrada em operação (edital), CAPEX ANEEL, RAP máxima e vencedora, moeda</td><td>1</td></tr>
+        <tr><td>Revisão</td><td>número, data de fechamento, data de entrega, observações, autor</td><td>1..n por oferta</td></tr>
+        <tr><td>Matriz de responsabilidade</td><td>por item de escopo: responsável (cliente / contratada), aceita faturamento direto, risco cambial, risco LME/Midwest</td><td>~22 itens</td></tr>
+        <tr><td>Linha de transmissão</td><td>tensão, extensão, circuitos, cabos por fase, UF de destino 1 e 2 com percentual, função de transmissão, prazo de LI, prazo de construção, % RAP</td><td>1..10 por oferta</td></tr>
+        <tr><td>Estrutura (torre)</td><td>número, estaca, coordenadas E/N, cota, tipo, altura, extensão de perna, solo, tipo de fundação, tipo de acesso, vão</td><td>centenas a milhares por linha</td></tr>
+        <tr><td>Quantitativo de material</td><td>codigo, artigo, unidade, quantidade teórica, extra (%), sobressalente, por linha</td><td>~330 itens por linha</td></tr>
+        <tr><td>Cotação de material</td><td>fornecedor, moeda, fator de conversão, preço, UF de origem</td><td>1..n por item</td></tr>
+        <tr><td>Atividade de cronograma</td><td>grupo, atividade, quantidade, unidade, equipe alocada, produção, duração, mês de início, custo mensal</td><td>~900 linhas por linha de LT</td></tr>
+        <tr><td>Item de serviço</td><td>codigo, descrição, unidade, quantidade, custo próprio, custo subcontratado, resultado final, codigo CIP do contratante</td><td>~175 por linha</td></tr>
+        <tr><td>Risco</td><td>categoria, situação na proposta, consideração, impacto sobre custo, ponderação, extra&#8209;custo</td><td>~35 por linha</td></tr>
+        <tr><td>Coeficiente de venda</td><td>garantias, seguros, produção, IDDE, risco país, financeiros, contingências, estrutura, margem</td><td>por linha e consolidado</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="num">06</span> Cadeia de cálculo</h2>
+  <h3>Do estaqueamento ao preço de venda</h3>
+  <p>O grafo de dependências entre abas revela um pipeline de nove estágios. Cada seta representa referências reais medidas nas fórmulas &mdash; não um fluxo idealizado.</p>
+
+  <div class="pipewrap">
+  <svg viewBox="0 0 980 470" role="img" aria-label="Diagrama do pipeline de cálculo em nove estágios, do estaqueamento ao preço de venda">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+      </marker>
+      <style>
+        .bx{fill:var(--surface-2);stroke:var(--line-2);stroke-width:1}
+        .bxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+        .tt{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;fill:var(--ink)}
+        .ss{font-family:"IBM Plex Mono",monospace;font-size:9.5px;fill:var(--muted)}
+        .st{font-family:"IBM Plex Mono",monospace;font-size:9px;fill:var(--accent);letter-spacing:.06em}
+        .ln{stroke:var(--line-2);stroke-width:1.4;fill:none;color:var(--line-2)}
+        .lna{stroke:var(--accent);stroke-width:1.6;fill:none;color:var(--accent)}
+      </style>
+    </defs>
+
+    <!-- row 1 -->
+    <text class="st" x="14" y="22">ENTRADA</text>
+    <rect class="bxa" x="14" y="32" width="196" height="58" rx="3"/>
+    <text class="tt" x="26" y="54">1 &middot; Estaqueamento</text>
+    <text class="ss" x="26" y="72">E1..E10 &larr; PLS-CADD</text>
+
+    <rect class="bx" x="240" y="32" width="196" height="58" rx="3"/>
+    <text class="tt" x="252" y="54">2 &middot; Configuração</text>
+    <text class="ss" x="252" y="72">Info&amp;Cond &middot; Datos &middot; Aux</text>
+
+    <rect class="bx" x="466" y="32" width="196" height="58" rx="3"/>
+    <text class="tt" x="478" y="54">3 &middot; Catálogos</text>
+    <text class="ss" x="478" y="72">DB_* &middot; Equipos &middot; DesEquipos</text>
+
+    <rect class="bx" x="692" y="32" width="274" height="58" rx="3"/>
+    <text class="tt" x="704" y="54">Camada de listas derivadas</text>
+    <text class="ss" x="704" y="72">LU &middot; Aux &mdash; UNIQUE / FILTER / INDIRECT</text>
+
+    <!-- arrows to row2 -->
+    <path class="ln" d="M112 90 L112 118" marker-end="url(#ar)"/>
+    <path class="ln" d="M338 90 L338 118" marker-end="url(#ar)"/>
+    <path class="ln" d="M564 90 L564 118" marker-end="url(#ar)"/>
+    <path class="ln" d="M829 90 L829 104 L620 104 L620 118" marker-end="url(#ar)"/>
+
+    <!-- row 2 -->
+    <text class="st" x="14" y="140">QUANTITATIVOS</text>
+    <rect class="bxa" x="14" y="150" width="422" height="58" rx="3"/>
+    <text class="tt" x="26" y="172">4 &middot; Quantitativos de engenharia</text>
+    <text class="ss" x="26" y="190">Torres &middot; Conductores &middot; CG &middot; Cadenas &middot; Suelos &middot; Fundaciones &middot; Accesos</text>
+
+    <rect class="bx" x="466" y="150" width="500" height="58" rx="3"/>
+    <text class="tt" x="478" y="172">5 &middot; Consolidação de materiais</text>
+    <text class="ss" x="478" y="190">Cantidades &rarr; Precios &rarr; Impuestos &rarr; Materiales</text>
+
+    <path class="ln" d="M436 179 L458 179" marker-end="url(#ar)"/>
+
+    <path class="ln" d="M225 208 L225 236" marker-end="url(#ar)"/>
+    <path class="ln" d="M716 208 L716 340" marker-end="url(#ar)"/>
+
+    <!-- row 3 -->
+    <text class="st" x="14" y="258">PLANEJAMENTO</text>
+    <rect class="bxa" x="14" y="268" width="300" height="58" rx="3"/>
+    <text class="tt" x="26" y="290">6 &middot; Cronograma físico</text>
+    <text class="ss" x="26" y="308">CR1..CR10 &mdash; atividade &times; equipe &times; mês</text>
+
+    <rect class="bx" x="344" y="268" width="300" height="58" rx="3"/>
+    <text class="tt" x="356" y="290">7 &middot; Histograma de recursos</text>
+    <text class="ss" x="356" y="308">H1..H10 &rarr; HT &mdash; pessoal e equipamentos</text>
+
+    <path class="ln" d="M314 297 L336 297" marker-end="url(#ar)"/>
+    <path class="ln" d="M164 326 L164 354" marker-end="url(#ar)"/>
+    <path class="ln" d="M494 326 L494 340 L360 340 L360 354" marker-end="url(#ar)"/>
+
+    <!-- row 4 -->
+    <text class="st" x="14" y="376">FECHAMENTO</text>
+    <rect class="bxa" x="14" y="386" width="300" height="58" rx="3"/>
+    <text class="tt" x="26" y="408">8 &middot; Serviços e resultado</text>
+    <text class="ss" x="26" y="426">S1..S10 &rarr; R1..R10 &rarr; RT &middot; K &middot; BDI</text>
+
+    <rect class="bx" x="344" y="386" width="300" height="58" rx="3"/>
+    <text class="tt" x="356" y="408">9 &middot; Desembolso e caixa</text>
+    <text class="ss" x="356" y="426">D1..D10 &rarr; DT &middot; ENTREGAS &middot; Cashflow</text>
+
+    <path class="lna" d="M314 415 L336 415" marker-end="url(#ar)"/>
+
+    <rect class="bx" x="692" y="386" width="274" height="58" rx="3"/>
+    <text class="tt" x="704" y="408">Saídas contratuais</text>
+    <text class="ss" x="704" y="426">BOQ CIP &middot; Planilha com BDI &middot; Medição</text>
+    <path class="ln" d="M644 415 L684 415" marker-end="url(#ar)"/>
+
+    <!-- feedback loop -->
+    <path class="lna" stroke-dasharray="4 4" d="M966 415 L974 415 L974 128 L680 128 L680 150" marker-end="url(#ar)"/>
+    <text class="ss" x="700" y="122" text-anchor="start" fill="var(--accent)">realimentação: entregas ponderam a curva de commodities</text>
+  </svg>
+  </div>
+
+  <h4>Dependências mais pesadas medidas</h4>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Aba</th><th>Depende de</th><th class="num">Referências</th><th>Natureza do acoplamento</th></tr></thead>
+      <tbody>
+        <tr><td><code>DesEquipos</code></td><td><code>CR1</code>, <code>CR2</code>, <code>CR3</code></td><td class="num">~2,9 M</td><td><code>OFFSET</code> + <code>COUNTIFS</code> por equipe e por mês &mdash; o ponto mais caro do arquivo</td></tr>
+        <tr><td><code>HT</code></td><td><code>H1..H10</code></td><td class="num">~485 k</td><td>soma dos histogramas de todas as linhas com deslocamento por mês</td></tr>
+        <tr><td><code>H1</code></td><td><code>DesEquipos</code>, <code>Indirectos</code></td><td class="num">~121 k</td><td><code>SUMIFS</code> sobre janela deslizante de 4.036 linhas</td></tr>
+        <tr><td><code>DT</code></td><td><code>D1..D10</code></td><td class="num">~47 k</td><td>consolidação linha a linha do desembolso</td></tr>
+        <tr><td><code>Materiales</code></td><td><code>Impuestos</code>, <code>Cantidades</code></td><td class="num">~25 k</td><td>aplicação do resultado tributário sobre o quantitativo</td></tr>
+        <tr><td><code>Equipos</code></td><td><code>DesEquipos</code></td><td class="num">9.000</td><td><code>INDEX/MATCH</code> por equipe para trazer o custo diário</td></tr>
+        <tr><td><code>Aux</code></td><td><code>Torres</code>, <code>Cadenas</code>, <code>CG</code>, <code>Conductores</code></td><td class="num">~12 k</td><td>montagem das listas usadas nas validações de entrada</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="num">07</span> Regras de negócio</h2>
+  <h3>O conhecimento a preservar</h3>
+  <p>Regras extraídas diretamente das fórmulas. Cada uma precisa ser confirmada com os autores e depois implementada como regra explícita, testável e versionada &mdash; não como fórmula em célula.</p>
+
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>ID</th><th>Regra</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RN&#8209;01</td><td>Um lote comporta até 10 linhas de transmissão. Cada linha tem tensão, extensão, circuitos, cabos por fase e até duas UFs de destino com percentual de rateio.</td><td><code>Datos!B6:V15</code></td></tr>
+        <tr><td class="id">RN&#8209;02</td><td>O prazo contratual é contado da assinatura do contrato de concessão; a data de entrada em operação do edital define o limite. O sistema alerta quando o prazo de construção ultrapassa a concessão ou quando a antecipação ocorre antes da necessidade.</td><td><code>Datos!N27</code></td></tr>
+        <tr><td class="id">RN&#8209;03</td><td>Para cada item de escopo define&#8209;se o responsável (cliente ou contratada). Itens de responsabilidade do cliente entram com custo zero, mas permanecem visíveis na estrutura de resultado marcados como &ldquo;(Cliente)&rdquo;.</td><td><code>Info&amp;Cond!Q57:Q105</code>, <code>R1!C9</code></td></tr>
+        <tr><td class="id">RN&#8209;04</td><td>O faturamento direto ao cliente altera a base tributária: PIS/COFINS só não incide quando o cliente detém REIDI <em>e</em> aceita faturamento direto, ou quando a contratada é cohabilitada no REIDI.</td><td><code>Impuestos!E6:E11</code></td></tr>
+        <tr><td class="id">RN&#8209;05</td><td>ICMS é calculado por par UF de origem &times; UF de destino, com tratamento de base dupla para DIFAL onde a UF exige, adicional FECOEP quando aplicável e alíquota de 4% para importados.</td><td><code>Datos!D133:AE160</code>, <code>Aux_ICMS</code></td></tr>
+        <tr><td class="id">RN&#8209;06</td><td>IPI é definido por NCM segundo a TIPI, com registro paralelo do valor do leilão anterior para comparação entre revisões.</td><td><code>Datos!C102:I126</code>, <code>Aux_IPI</code></td></tr>
+        <tr><td class="id">RN&#8209;07</td><td>O preço do condutor e do cabo de guarda de alumínio é formado por (LME + Midwest ou RTDU) &times; câmbio + prêmio do fabricante, e não por preço de tabela.</td><td><code>Datos!I46</code>, <code>LMEUSD</code></td></tr>
+        <tr><td class="id">RN&#8209;08</td><td>A escolha entre cotação spot e curva de futuros depende de quem assume o risco de commodity e de câmbio: se o risco é da contratada usa&#8209;se futuro; se e do cliente, spot.</td><td><code>Datos!N42:N45</code></td></tr>
+        <tr><td class="id">RN&#8209;09</td><td>A curva de futuros é ponderada pelas toneladas efetivamente entregues em cada mês, extraídas do cronograma de entregas &mdash; não pela média simples do período.</td><td><code>Futuros!D6</code> (<code>SUMPRODUCT</code>)</td></tr>
+        <tr><td class="id">RN&#8209;10</td><td>Cada material recebe percentual de quantidade extra por linha, cobrindo quebras, perdas e desperdício (torres 0,5%; ferragens 1&ndash;2%; cabos de aço 3%).</td><td><code>Datos!C56:O79</code></td></tr>
+        <tr><td class="id">RN&#8209;11</td><td>Cabos recebem incremento adicional por flecha e, no OPGW, por descidas até a caixa de emenda.</td><td><code>Datos!D88:O91</code></td></tr>
+        <tr><td class="id">RN&#8209;12</td><td>O volume de escavação recebe sobre&#8209;escavação por tipo de terreno (duro 10%, normal 5%, com água 20%, tubulão 5%); concreto recebe 5%; aço de reforço 10% e aço de tubulão 3% de desperdício.</td><td><code>Datos!C259:O276</code></td></tr>
+        <tr><td class="id">RN&#8209;13</td><td>O tipo de fundação de cada torre resulta do cruzamento entre solo classificado e tipo de estrutura; volumes e armaduras vêm de tabela paramétrica por combinação.</td><td><code>Suelos</code>, <code>DB_FUN</code>, <code>Fundaciones</code></td></tr>
+        <tr><td class="id">RN&#8209;14</td><td>O custo mensal de um cargo agrega salário, periculosidade, hora extra, DSR sobre extras, encargos, cesta básica (apenas abaixo do salário&#8209;teto da UF), alimentação, alojamento por categoria, folgas com viagem, plano de saúde e seguro de vida.</td><td><code>DB_MO!D:Q</code></td></tr>
+        <tr><td class="id">RN&#8209;15</td><td>Cada equipe tem produção máxima teórica declarada em três unidades e períodos diferentes; a produção efetiva do cronograma não pode exceder a máxima, e a violação gera erro explícito.</td><td><code>Equipos!D:L</code>, <code>CR1!K3</code></td></tr>
+        <tr><td class="id">RN&#8209;16</td><td>A produtividade mensal é reduzida por faixa de precipitação da UF, classificada em cinco níveis de chuva.</td><td><code>Precip</code>, <code>CR1!AR5</code></td></tr>
+        <tr><td class="id">RN&#8209;17</td><td>Equipamentos podem ser precificados por aluguel externo, aluguel interno (fator sobre o externo), ou compra amortizada; a estratégia considera a disponibilidade própria por mês contra o pico do histograma.</td><td><code>DB_EQ!D:S</code></td></tr>
+        <tr><td class="id">RN&#8209;18</td><td>Os indiretos de projeto são rateados entre linhas por critério configurável (por padrão, extensão) e distribuídos no tempo pelo mês de início e fim de cada função.</td><td><code>Indirectos!AI5:AR7</code></td></tr>
+        <tr><td class="id">RN&#8209;19</td><td>Cada item de serviço pode ser executado por meios próprios, por subcontratado cotado, ou por custo de cronograma ajustado por fator; o resultado final é a combinação escolhida, com verificação de que as quantidades somam o total.</td><td><code>S1!G:R</code></td></tr>
+        <tr><td class="id">RN&#8209;20</td><td>Todo item de serviço e materiais carrega o codigo CIP do contratante, permitindo emitir a planilha de preços no formato exigido pelo edital.</td><td><code>S1!Y</code>, <code>BOQ-EdoB-*</code></td></tr>
+        <tr><td class="id">RN&#8209;21</td><td>O preço de venda é formado por coeficientes aplicados sobre a venda: garantias (adiantamento, cumprimento, qualidade), seguros, imposto sobre produção, risco país, financeiros, contingências e estrutura, além da margem.</td><td><code>K</code>, <code>BDI</code>, <code>Sim</code></td></tr>
+        <tr><td class="id">RN&#8209;22</td><td>Garantias são calculadas sobre percentual do contrato pelo período de LI mais construção, com opção de tratamento global ou por linha.</td><td><code>K!E8:E15</code></td></tr>
+        <tr><td class="id">RN&#8209;23</td><td>A contingência total resulta da matriz de riscos ponderada por categoria (fundiário, ambiental, prazo, clima, terceiros), gerando extra&#8209;custo somado ao coeficiente base.</td><td><code>Risk1!G:L</code></td></tr>
+        <tr><td class="id">RN&#8209;24</td><td>O desembolso de suprimentos segue curva percentual por item ao longo dos meses; o de serviços acompanha a curva física do cronograma. Marcos de LI e LO por função de transmissão ancoram o faturamento.</td><td><code>D1!M9</code>, <code>ENTREGAS</code></td></tr>
+        <tr><td class="id">RN&#8209;25</td><td>Quando o lote é tratado como &ldquo;linhas independentes&rdquo;, engenharia e ensaios de torre não são compartilhados entre linhas; caso contrário, o projeto de torres é rateado.</td><td><code>Datos!G18</code>, <code>Ingenieria!N14</code></td></tr>
+        <tr><td class="id">RN&#8209;26</td><td>O preço de torres é reajustado anualmente ao longo do cronograma, aplicando índice sobre a parcela ainda não entregue.</td><td><code>Precio torre rev. anual</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="num">08</span> Requisitos funcionais</h2>
+  <h3>O que o sistema deve fazer</h3>
+  <div class="legend">
+    <span><span class="tag t-must">obrigatório</span> paridade com a planilha atual</span>
+    <span><span class="tag t-should">importante</span> resolve limitação conhecida</span>
+    <span><span class="tag t-could">desejável</span> ganho incremental</span>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M01</span><h4>Cadastro e versionamento de oferta</h4><span class="src">Info&amp;Cond &middot; Datos &middot; Aux</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;01</td><td>Criar oferta com leilão, lote, cliente, datas de oferta e leilão, início de cronograma, entrada em operação do edital, CAPEX estimado e RAP máxima e vencedora.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;02</td><td>Manter histórico de revisões com número, data de fechamento, data de entrega, autor e observações, permitindo comparar duas revisões item a item.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;03</td><td>Registrar automaticamente autor e data da última alteração de cada entidade.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;04</td><td>Editar a matriz de responsabilidade por item de escopo, com os quatro eixos: responsável, aceite de faturamento direto, risco cambial e risco de commodity.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;05</td><td>Configurar linhas do lote (1 a n, sem o limite artificial de 10) com tensão, extensão refinada e de relatório, circuitos, cabos por fase e UFs de destino com rateio.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;06</td><td>Clonar uma oferta inteira como ponto de partida de nova proposta, preservando rastreabilidade da origem.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M02</span><h4>Catálogos de engenharia</h4><span class="src">DB_CAL &middot; DB_CGA &middot; DB_OPGW &middot; DB_CTI &middot; DB_TOR &middot; DB_AIS &middot; DB_FUN</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;07</td><td>Manter catálogos de cabos (condutor, guarda de aço, OPGW, aço para tirante) com peso, bobina, diâmetro e UTS.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;08</td><td>Manter catálogo de séries de estruturas com projetista, tensão, circuitos, cabos por fase, vento de projeto e tipo de isolamento, e o detalhamento de tipos de torre com peso por altura.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;09</td><td>Manter catálogo de tipos de solo com parâmetros geotécnicos e faixa de NSPT, e a matriz solo &times; tipo de fundação com volumes e armaduras.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;10</td><td>Versionar cada catálogo com data de vigência, de modo que uma oferta fechada continue reproduzindo os valores usados na época.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;11</td><td>Impedir exclusão de item de catálogo referenciado por oferta ativa e sinalizar itens sem dados obrigatórios.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M03</span><h4>Recursos: mão de obra, equipamentos e equipes</h4><span class="src">DB_MO &middot; DB_EQ &middot; DB_FI &middot; Equipos &middot; DesEquipos</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;12</td><td>Calcular o custo mensal de empresa por cargo conforme RN&#8209;14, com parâmetros regionais de cesta básica, alojamento e viagem por UF.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;13</td><td>Manter equipamentos com as três estratégias de precificação (aluguel externo, aluguel interno, compra amortizada) e recomendar a estratégia por comparação com a disponibilidade própria.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;14</td><td>Compor equipes de trabalho a partir de cargos e equipamentos com quantidades, calculando custo diário, hora&#8209;homem e hora&#8209;máquina.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;15</td><td>Declarar produção máxima teórica de cada equipe em múltiplas unidades e períodos, com conversão automática entre hora, dia, semana e mês.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;16</td><td>Renomear cargo ou equipamento propagando a alteração para todas as composições, sem quebra de vínculo.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;17</td><td>Reajustar salários em lote por índice ou percentual, registrando a data e a origem do reajuste.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M04</span><h4>Estaqueamento e dados por torre</h4><span class="src">E1..E10</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;18</td><td>Importar a lista de estruturas exportada do PLS&#8209;CADD (número, estaca, ajuste de altura, offset, ângulo, coordenadas E/N, cota) validando tipos e duplicidades.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;19</td><td>Atribuir a cada torre solo, tipo de fundação, tipo de acesso e cabo, por seleção individual ou por regra em lote (faixa de estacas, trecho, tipo de estrutura).</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;20</td><td>Validar que a quantidade de torres do estaqueamento coincide com a quantidade declarada na linha e que toda combinação solo &times; fundação existe no catálogo.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;21</td><td>Suportar entrada manual quando o estaqueamento ainda não existe, com distribuição percentual estimada de solos e tipos de fundação.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;22</td><td>Reimportar um estaqueamento revisado preservando as atribuições já feitas nas torres que não mudaram.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M05</span><h4>Quantitativos de engenharia</h4><span class="src">Torres &middot; Conductores &middot; CG &middot; Cadenas &middot; Fundaciones &middot; Cantidades</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;23</td><td>Calcular quantitativos de torres por tipo e peso, condutores e cabos de guarda em toneladas e km, tirantes, cross&#8209;rope, cadeias, amortecedores, sinalização e aterramento.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;24</td><td>Calcular volumes de escavação, concreto, aço e reaterro por tipo de fundação, aplicando sobre&#8209;escavação, incrementos e desperdícios (RN&#8209;12).</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;25</td><td>Calcular acessos por grau de dificuldade, limpeza de faixa por tipo de vegetação e travessias.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;26</td><td>Consolidar o quantitativo por item de material separando teórico, extra e sobressalente, por linha e no total.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;27</td><td>Rastrear, para qualquer quantidade consolidada, a lista de torres e a regra que a originaram.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M06</span><h4>Preços, commodities e tributos</h4><span class="src">Precios &middot; Futuros &middot; LMEUSD &middot; Impuestos &middot; Materiales</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;28</td><td>Registrar cotações por item, fornecedor, moeda e UF de origem, com conversão pela tabela de câmbio da oferta e seleção do fornecedor vencedor.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;29</td><td>Sinalizar todo item com quantidade e sem preço, bloqueando o fechamento da revisão enquanto houver pendência.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;30</td><td>Formar preço de alumínio por LME + Midwest/RTDU + prêmio, com escolha entre spot e curva de futuros conforme a alocação de risco (RN&#8209;07, RN&#8209;08).</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;31</td><td>Ponderar a curva de commodities pelas toneladas entregues por mês, a partir do cronograma de entregas (RN&#8209;09).</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;32</td><td>Calcular ICMS de origem e destino, DIFAL com base dupla quando aplicável, FECOEP, IPI por NCM e PIS/COFINS, respeitando REIDI e faturamento direto.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;33</td><td>Manter as tabelas tributárias como dado versionado com vigência e base legal, atualizável sem alterar o motor de cálculo.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;34</td><td>Demonstrar, para qualquer item, a memória de cálculo tributário tributo a tributo.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M07</span><h4>Cronograma físico</h4><span class="src">CR1..CR10 &middot; Precip &middot; Canteiros</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;35</td><td>Montar cronograma por linha com a estrutura de grupos: indiretos, pátios e canteiros, preliminares, obras civis, montagem de torres, lançamento de cabos e comissionamento.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;36</td><td>Alocar equipes a cada atividade, calcular duração a partir da quantidade e da produção, e distribuir custo mês a mês com mobilização, custo recorrente, anual e desmobilização.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;37</td><td>Aplicar fator de produtividade por precipitação mensal da região (RN&#8209;16).</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;38</td><td>Sinalizar atividade cuja produção exigida excede a produção máxima da equipe ou cuja quantidade não é cumprida no prazo.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;39</td><td>Marcar no cronograma os marcos de licença de instalação e entrada em operação de cada função de transmissão.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;40</td><td>Permitir escala de tempo em dia, semana ou mês sem refazer o cronograma.</td><td><span class="tag t-could">desejável</span></td></tr>
+        <tr><td class="id">RF&#8209;41</td><td>Modelar canteiros (principal e avançados) com quadro de pessoal, mobilização, custo mensal e desmobilização.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M08</span><h4>Histograma de recursos</h4><span class="src">H1..H10 &middot; HT</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;42</td><td>Gerar histograma mensal de pessoal por função e de equipamentos por tipo, por linha e consolidado no projeto.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;43</td><td>Separar no histograma o pessoal direto do pessoal indireto e identificar a atividade que gera cada pico.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;44</td><td>Comparar o pico de cada equipamento com a disponibilidade própria e apontar o déficit a contratar por mês.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;45</td><td>Exportar histogramas em gráfico e em tabela para uso na proposta técnica.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M09</span><h4>Serviços e orçamento contratual</h4><span class="src">S1..S10 &middot; BOQ &middot; M/PU &middot; planilhas do edital</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;46</td><td>Consolidar cada item de serviço com as três origens de custo (cronograma próprio, cronograma ajustado por fator, subcontratado cotado) e validar que as quantidades fecham com o total.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;47</td><td>Associar cada item ao codigo CIP do contratante e emitir a planilha de preços no layout do edital, com BDI e subtotais hierárquicos.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;48</td><td>Gerar folha de medição e folha de preços unitários por linha a partir do mesmo orçamento.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;49</td><td>Calcular indicadores de custo por km e por torre por grupo de serviço, comparáveis entre linhas e entre ofertas históricas.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;50</td><td>Suportar múltiplos layouts de planilha do edital sem alterar o motor de cálculo.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M10</span><h4>Resultado econômico e formação de preço</h4><span class="src">R1..R10 &middot; RT &middot; K &middot; BDI &middot; Sim</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;51</td><td>Apresentar o resultado por linha e consolidado com as colunas custo líquido, PIS/COFINS, IPI, ICMS origem, DIFAL, FECOEP, custo com impostos, faturamento direto, custo próprio, sobressalentes e venda.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;52</td><td>Parametrizar coeficientes de venda por linha: garantias, seguros, imposto sobre produção, IDDE, risco país, financeiros, contingências, estrutura e margem.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;53</td><td>Simular preço de venda a partir de margem alvo e, inversamente, calcular a margem resultante de um preço imposto, comparando com revisões anteriores.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;54</td><td>Projetar a corrosão do resultado pelo IPCA acumulado ao longo do contrato.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;55</td><td>Avaliar contingências construtivas (troca de tipo de torre, de fundação ou de solo) e medir o impacto no resultado.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;56</td><td>Comparar duas revisões da mesma oferta mostrando a variação por grupo e a causa raiz (quantidade, preço unitário, tributo ou coeficiente).</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M11</span><h4>Desembolso e fluxo de caixa</h4><span class="src">D1..D10 &middot; DT &middot; ENTREGAS &middot; Cashflow</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;57</td><td>Distribuir custo e faturamento mês a mês por item, com curva percentual editável para suprimentos e curva física para serviços.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;58</td><td>Gerar cronograma de entregas de materiais em percentual por mês, realimentando a ponderação da curva de commodities.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;59</td><td>Consolidar o fluxo de caixa do projeto com marcos contratuais e apontar o pico de exposição financeira.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;60</td><td>Exportar o cronograma de faturamento no formato exigido pelo contratante.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="mod">
+    <div class="modhead"><span class="mid">M12</span><h4>Risco, verificação e governança</h4><span class="src">Risk1..Risk10 &middot; Checks &middot; ToDo</span></div>
+    <div class="tw"><table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RF&#8209;61</td><td>Manter matriz de riscos por linha com categoria, situação na proposta, consideração adotada, impacto sobre o custo, ponderação e extra&#8209;custo resultante.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;62</td><td>Executar uma bateria de verificações de consistência e exibir o resultado em painel único, com link direto para o dado que falhou.</td><td><span class="tag t-must">obrigatório</span></td></tr>
+        <tr><td class="id">RF&#8209;63</td><td>Bloquear o fechamento de uma revisão enquanto houver verificação crítica em falha, permitindo exceção justificada e registrada.</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;64</td><td>Controlar acesso por perfil: engenharia (quantitativos), suprimentos (preços), planejamento (cronograma), comercial (coeficientes e margem), administrador (catálogos).</td><td><span class="tag t-should">importante</span></td></tr>
+        <tr><td class="id">RF&#8209;65</td><td>Registrar trilha de auditoria de toda alteração em dado de oferta e em catálogo.</td><td><span class="tag t-should">importante</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="num">09</span> Requisitos não funcionais</h2>
+  <h3>As restrições que decidem a arquitetura</h3>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>ID</th><th>Requisito</th><th>Critério de aceite</th></tr></thead>
+      <tbody>
+        <tr><td class="id">RNF&#8209;01</td><td>Recálculo completo de uma oferta com 2 linhas e ~500 torres</td><td>abaixo de 30 s; recálculo incremental após edição pontual abaixo de 2 s</td></tr>
+        <tr><td class="id">RNF&#8209;02</td><td>Capacidade de estaqueamento</td><td>suportar ao menos 5.000 torres por linha sem degradação perceptível</td></tr>
+        <tr><td class="id">RNF&#8209;03</td><td>Número de linhas por lote</td><td>sem limite fixo de 10; o limite passa a ser de dados, não de estrutura</td></tr>
+        <tr><td class="id">RNF&#8209;04</td><td>Determinismo</td><td>a mesma oferta com os mesmos catálogos produz exatamente o mesmo resultado, em qualquer máquina e em qualquer data</td></tr>
+        <tr><td class="id">RNF&#8209;05</td><td>Reprodutibilidade histórica</td><td>reabrir uma oferta fechada há dois anos reproduz seus números originais, mesmo com catálogos já atualizados</td></tr>
+        <tr><td class="id">RNF&#8209;06</td><td>Rastreabilidade</td><td>qualquer valor exibido permite abrir a memória de cálculo até os dados de entrada</td></tr>
+        <tr><td class="id">RNF&#8209;07</td><td>Colaboração</td><td>vários usuários editando módulos distintos da mesma oferta simultaneamente, sem bloqueio de arquivo</td></tr>
+        <tr><td class="id">RNF&#8209;08</td><td>Precisão numérica</td><td>aritmética decimal em valores monetários; arredondamento explícito e documentado por tipo de valor</td></tr>
+        <tr><td class="id">RNF&#8209;09</td><td>Ausência de estados de erro</td><td>nenhum valor propagado pode ser indefinido; toda ausência de dado é tratada e sinalizada, nunca convertida em zero silencioso</td></tr>
+        <tr><td class="id">RNF&#8209;10</td><td>Importação</td><td>aceitar arquivo PLS&#8209;CADD e planilhas de cotação com relatório de erros linha a linha antes de gravar</td></tr>
+        <tr><td class="id">RNF&#8209;11</td><td>Exportação</td><td>gerar XLSX no layout do edital e do contratante, com formatação e hierarquia preservadas</td></tr>
+        <tr><td class="id">RNF&#8209;12</td><td>Auditabilidade</td><td>trilha imutável com autor, data, valor anterior e novo</td></tr>
+        <tr><td class="id">RNF&#8209;13</td><td>Backup e retenção</td><td>ponto de recuperação diário e retenção das ofertas por, no mínimo, o prazo de garantia dos contratos</td></tr>
+        <tr><td class="id">RNF&#8209;14</td><td>Idioma e localização</td><td>interface em português do Brasil, com dicionário de equivalência para os termos em espanhol herdados do modelo</td></tr>
+        <tr><td class="id">RNF&#8209;15</td><td>Portabilidade das regras</td><td>regras tributárias, coeficientes e produtividades são configuração versionada, alteráveis sem novo deploy</td></tr>
+        <tr><td class="id">RNF&#8209;16</td><td>Testabilidade</td><td>o motor de cálculo executa sem interface, permitindo suite automatizada por regra de negócio</td></tr>
+        <tr><td class="id">RNF&#8209;17</td><td>Segurança</td><td>autenticação corporativa, autorização por perfil e por oferta; dados de custo e margem restritos</td></tr>
+        <tr><td class="id">RNF&#8209;18</td><td>Continuidade</td><td>exportação integral de uma oferta em formato aberto, garantindo que o dado não fique preso ao novo sistema</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2><span class="num">10</span> Integrações</h2>
+  <h3>As fronteiras do sistema</h3>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Interface</th><th>Direção</th><th>Conteúdo</th><th>Situação hoje</th></tr></thead>
+      <tbody>
+        <tr><td>PLS&#8209;CADD</td><td>entrada</td><td>lista de estruturas com estaca, coordenadas, cotas, tipo e altura</td><td>copiar e colar manual nas abas <code>E1..E10</code></td></tr>
+        <tr><td>Projeto de fundações</td><td>entrada</td><td>volumes e armaduras por combinação solo &times; fundação</td><td>tabela paramétrica em <code>DB_FUN</code>, atualizada a mão</td></tr>
+        <tr><td>Cotações de fornecedores</td><td>entrada</td><td>preço por item, moeda, UF de origem, condição</td><td>digitação em <code>Precios</code>, uma coluna por fornecedor</td></tr>
+        <tr><td>Cotações de commodities</td><td>entrada</td><td>curva LME, Midwest/RTDU e câmbio futuro</td><td>colagem manual em <code>Futuros</code>, sem carimbo de origem</td></tr>
+        <tr><td>Tabelas tributárias</td><td>entrada</td><td>ICMS por par de UF, TIPI por NCM, FECOEP, base dupla</td><td>abas auxiliares atualizadas manualmente (TIPI de 13/06/2025)</td></tr>
+        <tr><td>Planilha de preços do edital</td><td>saída</td><td>itens com BDI no layout do contratante</td><td>abas dedicadas por lote, montadas a mão</td></tr>
+        <tr><td>BOQ padrão CIP</td><td>saída</td><td>orçamento por codigo CIP do contratante</td><td><code>BOQ-EdoB-*</code>, com fórmulas em erro</td></tr>
+        <tr><td>Cronograma de faturamento</td><td>saída</td><td>desembolso mensal por função de transmissão</td><td><code>SIMULACAO CELEO</code>, <code>CASHFLOW</code></td></tr>
+        <tr><td>Proposta técnica</td><td>saída</td><td>histogramas, cronograma físico, plano de canteiros</td><td>gráficos incorporados, copiados manualmente</td></tr>
+        <tr><td>ERP corporativo</td><td>bidirecional</td><td>orçamento aprovado vira baseline de execução</td><td><strong>inexistente</strong> &mdash; há reinício completo do dado ao ganhar a obra</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <div class="h">Oportunidade de maior retorno</div>
+    <p>A ausência de ponte entre a proposta e a execução é a lacuna mais cara do processo atual. O modelo já produz, na proposta, a estrutura analítica, o cronograma, o histograma de recursos e a curva de desembolso &mdash; exatamente os artefatos que a obra reconstrói do zero. Persistir esse dado em banco torna a baseline de execução uma consequência da proposta, e não um novo trabalho.</p>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2><span class="num">11</span> Achados de qualidade</h2>
+  <h3>Evidências que sustentam a decisão de migrar</h3>
+
+  <div class="finding sev-crit">
+    <h4>Catálogo de nomes corrompido <span class="fid">AQ&#8209;01 &middot; crítico</span></h4>
+    <p>Dos 26.320 nomes definidos, 18.217 apontam para <code>#REF!</code>. O catálogo acumulou lixo de décadas: nomes legados do Lotus 1&#8209;2&#8209;3 (<code>__123Graph_*</code>) replicados com prefixos de sublinhado crescentes, nomes de ferramentas de BI antigas e centenas de nomes de teste (<code>asdf</code>, <code>aaaa</code>, <code>abc</code>). Além do peso, há risco funcional real: nomes com escopo de planilha apontando para <code>#REF!</code> podem sombrear o nome global correspondente dentro daquela aba.</p>
+    <div class="ev">evidência &middot; 15.160 nomes únicos, 11.215 com escopo de planilha, ~360 com semântica de negócio</div>
+  </div>
+
+  <div class="finding sev-crit">
+    <h4>Volatilidade que inviabiliza o recálculo <span class="fid">AQ&#8209;02 &middot; crítico</span></h4>
+    <p>888.198 ocorrências de <code>OFFSET</code>, <code>INDIRECT</code> e <code>TODAY</code>. Funções voláteis recalculam a cada alteração de qualquer célula, independentemente de dependência. A aba <code>DesEquipos</code> concentra 726 mil pares <code>OFFSET</code>+<code>COUNTIFS</code>. O uso de <code>TODAY()</code> em <code>LMEUSD</code> e em datas padrão significa que <strong>abrir o arquivo em outro dia pode mudar o resultado</strong>.</p>
+    <div class="ev">evidência &middot; calcChain.xml de 52 MB; macro de cálculo manual presente no VBA &ldquo;para ganhar rapidez&rdquo;</div>
+  </div>
+
+  <div class="finding sev-crit">
+    <h4>Erros propagados no estado salvo <span class="fid">AQ&#8209;03 &middot; crítico</span></h4>
+    <p>15.665 células gravadas em erro. Concentrações relevantes: <code>Impuestos</code> com 3.410 <code>#N/A</code>, <code>Torres</code> com 1.633 <code>#VALUE!</code>, <code>Tirantes</code> com 1.334 <code>#VALUE!</code>, <code>Materiales</code> com 670 erros mistos. A aba <code>IPCa</code> tem <code>VLOOKUP</code> apontando para <code>'D1'!#REF!</code>. O painel <code>Checks</code> exibe 300 <code>#REF!</code> &mdash; ou seja, <strong>o mecanismo de verificação está ele próprio quebrado</strong>.</p>
+    <div class="ev">evidência &middot; #N/A 6.058 &middot; #DIV/0! 4.199 &middot; #VALUE! 3.854 &middot; #REF! 1.554</div>
+  </div>
+
+  <div class="finding sev-high">
+    <h4>Verificações reportando falha sem bloqueio <span class="fid">AQ&#8209;04 &middot; alto</span></h4>
+    <p>A aba <code>Check cantid. TOTAL y canteiros</code> mostra <code>ERROR</code> em várias linhas de comparação entre as abas de serviço e o total esperado; <code>Fundaciones</code> reporta <code>Error qtd.</code> em múltiplos blocos; <code>E1</code> alerta que o número de torres não coincide com a lista. Nada disso impede o fechamento da oferta &mdash; a validação é informativa, e sua leitura depende de o usuário abrir abas ocultas.</p>
+    <div class="ev">evidência &middot; 80 das 150 abas estão ocultas, incluindo os dois painéis de verificação</div>
+  </div>
+
+  <div class="finding sev-high">
+    <h4>Replicação por cópia como mecanismo de escala <span class="fid">AQ&#8209;05 &middot; alto</span></h4>
+    <p>Sete famílias de abas replicadas dez vezes cada. Uma correção de regra exige dez edições idênticas, e as cópias já divergiram: <code>H7</code> tem 6.259 fórmulas contra 6.499 das demais; <code>Tabla_HistogramaPorActividad7</code> aponta para <code>'H7'!$C$64:$BK$637</code> enquanto todas as outras apontam para <code>$C$637:$BK$642</code>. São divergências silenciosas que produzem números errados sem qualquer sinal.</p>
+    <div class="ev">evidência &middot; E, CR, S, H, R, D e Risk &mdash; 70 abas geradas por cópia</div>
+  </div>
+
+  <div class="finding sev-high">
+    <h4>Ausência de proteção das fórmulas <span class="fid">AQ&#8209;06 &middot; alto</span></h4>
+    <p>Apenas uma das 150 abas tem proteção de planilha. Qualquer usuário pode sobrescrever uma fórmula com um valor digitado, e o modelo continuará operando e produzindo um número &mdash; errado, mas plausível. Não há separação visual ou técnica confiável entre célula de entrada e célula calculada.</p>
+    <div class="ev">evidência &middot; 1 aba protegida &middot; 201 validações de dados para ~3,1 M de células</div>
+  </div>
+
+  <div class="finding sev-med">
+    <h4>Regra de negócio embutida em constante literal <span class="fid">AQ&#8209;07 &middot; médio</span></h4>
+    <p>Valores de negócio aparecem escritos dentro de fórmulas: <code>N11 = 2172685,19</code> em <code>S1</code>, <code>(45*180)/10000</code> como produção de limpeza em <code>Equipos</code>, <code>D34 = 250000</code> como custo por travessia. São decisões comerciais sem data, sem autor e sem justificativa, invisíveis a qualquer revisão.</p>
+    <div class="ev">evidência &middot; notas de origem espalhadas: &ldquo;Solaris MG&rdquo;, &ldquo;marzo 2022&rdquo;, &ldquo;Mail de Frank 02/07/2025&rdquo;</div>
+  </div>
+
+  <div class="finding sev-med">
+    <h4>Bilinguismo estrutural <span class="fid">AQ&#8209;08 &middot; médio</span></h4>
+    <p>O modelo mistura espanhol (estrutura e nomes: <code>Cantidades</code>, <code>Suelos</code>, <code>Fundaciones</code>) e português (dados operacionais: cargos, canteiros, tributos), com termos equivalentes coexistindo &mdash; <code>Tipos_Suelo</code> e <code>Tipos_Solo</code>, <code>Lista_TiposSuelo</code> e <code>Lista_TiposSuelos</code>. Isso aumenta o erro de digitação em campos com correspondência exata e dificulta a manutenção por equipe local.</p>
+    <div class="ev">evidência &middot; nomes duplicados com grafias divergentes no catálogo de listas</div>
+  </div>
+
+  <div class="finding sev-med">
+    <h4>Conhecimento concentrado <span class="fid">AQ&#8209;09 &middot; médio</span></h4>
+    <p>A aba <code>ToDo</code> registra pendências estruturais em aberto pelo próprio autor. O VBA credita &ldquo;Funciones básicas. Por Igor Salazar&rdquo;. A propriedade de criação aponta um autor de 2000 e a última modificação um usuário atual. Não há documentação do modelo além das notas em células.</p>
+    <div class="ev">evidência &middot; 26 anos de evolução acumulada, sem especificação escrita</div>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <h2><span class="num">12</span> Arquitetura&#8209;alvo</h2>
+  <h3>Separar dado, regra e apresentação</h3>
+  <p>A planilha falha porque mistura as três camadas na mesma célula. A arquitetura proposta as separa, mantendo o Excel apenas como formato de intercâmbio.</p>
+
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Camada</th><th>Responsabilidade</th><th>Consequência para os requisitos</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dados</strong> &mdash; banco relacional</td><td>catálogos versionados por vigência, ofertas, revisões, estaqueamento, cotações, trilha de auditoria</td><td>atende RNF&#8209;05, RNF&#8209;07, RNF&#8209;12</td></tr>
+        <tr><td><strong>Regras</strong> &mdash; motor de cálculo em servidor</td><td>quantitativos, tributos, cronograma, histograma, resultado; cada regra é uma unidade testável com identificador</td><td>atende RNF&#8209;04, RNF&#8209;08, RNF&#8209;16</td></tr>
+        <tr><td><strong>Configuração</strong> &mdash; parâmetros versionados</td><td>alíquotas, coeficientes, produtividades, percentuais de extra e desperdício, curvas de desembolso</td><td>atende RNF&#8209;15, remove AQ&#8209;07</td></tr>
+        <tr><td><strong>Apresentação</strong> &mdash; aplicação web</td><td>edição por módulo, painel de verificações, memória de cálculo, comparação de revisões</td><td>atende RF&#8209;62, RNF&#8209;06</td></tr>
+        <tr><td><strong>Intercâmbio</strong> &mdash; importadores e exportadores</td><td>PLS&#8209;CADD, cotações, planilha do edital, BOQ CIP, cronograma de faturamento</td><td>atende RNF&#8209;10, RNF&#8209;11, RNF&#8209;18</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Decisões de projeto que a análise já permite fixar</h4>
+  <ul>
+    <li><strong>Grafo de dependência explícito.</strong> O motor deve declarar dependências entre cálculos e recalcular apenas o subgrafo afetado &mdash; o oposto do modelo volátil atual.</li>
+    <li><strong>Sem replicação estrutural.</strong> Uma única implementação de cada módulo, parametrizada por linha. Elimina AQ&#8209;05 na origem.</li>
+    <li><strong>Ausência de dado é estado de primeira classe.</strong> Distinguir &ldquo;zero&rdquo; de &ldquo;não informado&rdquo; e de &ldquo;não aplicável&rdquo;, propagando a pendência até o painel de verificações em vez de convertê&#8209;la em zero.</li>
+    <li><strong>Catálogos com vigência.</strong> Toda oferta referência a versão de catálogo vigente na data da revisão, garantindo reprodutibilidade histórica.</li>
+    <li><strong>Aritmética decimal.</strong> Valores monetários em decimal de precisão fixa, com política de arredondamento declarada por tipo de valor.</li>
+  </ul>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+  <h2><span class="num">13</span> Roadmap</h2>
+  <h3>Migração por fatias verificáveis</h3>
+  <p>Reescrever 1,9 milhão de fórmulas de uma vez é inviável. A sequência abaixo entrega valor em cada fase e mantém a planilha operando até a fase final.</p>
+
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Fase</th><th>Entrega</th><th>Módulos</th><th>Como se prova</th></tr></thead>
+      <tbody>
+        <tr><td class="id">F0</td><td>Estabilização da planilha atual: limpeza do catálogo de nomes, correção dos erros propagados, proteção das células de fórmula, painel de verificações visível e bloqueante</td><td>&mdash;</td><td>zero <code>#REF!</code> em nomes; zero erro em célula que alimenta resultado</td></tr>
+        <tr><td class="id">F1</td><td>Catálogos corporativos em banco, com versionamento por vigência e interface de manutenção</td><td>M02, M03</td><td>a planilha passa a consumir os catálogos exportados do sistema</td></tr>
+        <tr><td class="id">F2</td><td>Estaqueamento e quantitativos de engenharia</td><td>M04, M05</td><td>paridade numérica com <code>Cantidades</code> em três ofertas históricas</td></tr>
+        <tr><td class="id">F3</td><td>Motor de preços e tributos</td><td>M06</td><td>paridade com <code>Materiales</code>, item a item, incluindo DIFAL e FECOEP</td></tr>
+        <tr><td class="id">F4</td><td>Cronograma, histograma e canteiros</td><td>M07, M08</td><td>paridade de duração, custo mensal e pico de recursos</td></tr>
+        <tr><td class="id">F5</td><td>Serviços, resultado econômico e desembolso</td><td>M09, M10, M11</td><td>paridade de venda total e de fluxo de caixa</td></tr>
+        <tr><td class="id">F6</td><td>Risco, governança, perfis de acesso e exportadores contratuais</td><td>M12</td><td>oferta completa emitida pelo sistema, sem uso da planilha</td></tr>
+        <tr><td class="id">F7</td><td>Ponte com a execução: baseline de obra derivada da proposta ganha</td><td>&mdash;</td><td>primeira obra iniciada com cronograma e curva vindos da proposta</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <div class="h">Sobre a fase F0</div>
+    <p>A estabilização não é trabalho jogado fora. Ela reduz o risco das propostas em andamento durante toda a migração e, ao forçar a correção dos erros, revela regras que hoje estão mascaradas por células em <code>#N/A</code> &mdash; informação necessária para especificar as fases seguintes.</p>
+  </div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section id="s14">
+  <h2><span class="num">14</span> Validação e aceite</h2>
+  <h3>Paridade numérica como critério</h3>
+  <p>Nenhuma fase é aceita por inspeção visual. O critério é a reprodução dos números de ofertas reais já fechadas.</p>
+  <ul>
+    <li><strong>Conjunto de referência</strong> &mdash; selecionar de três a cinco ofertas históricas de perfis distintos: uma linha única, um lote com múltiplas linhas, uma com predominância de estrutura estaiada e uma com fundação especial.</li>
+    <li><strong>Congelamento de entradas</strong> &mdash; para cada oferta, extrair e versionar as entradas (estaqueamento, cotações, parâmetros, coeficientes) como fixtures de teste.</li>
+    <li><strong>Tolerância declarada</strong> &mdash; paridade exata em quantitativos discretos (torres, bobinas, cadeias); tolerância de 0,01% em valores monetários agregados, sempre com justificativa da diferença.</li>
+    <li><strong>Teste por regra</strong> &mdash; cada regra RN recebe casos de teste próprios, incluindo os limites: linha com duas UFs de destino, cliente com REIDI, risco de commodity do cliente, torre em rocha, mês com precipitação máxima.</li>
+    <li><strong>Teste de reprodução histórica</strong> &mdash; reabrir oferta antiga após atualização de catálogos e confirmar que os números não mudaram.</li>
+    <li><strong>Teste de não regressão de desempenho</strong> &mdash; medir o tempo de recálculo a cada fase contra RNF&#8209;01.</li>
+  </ul>
+  <div class="callout">
+    <div class="h">Cuidado necessário na comparação</div>
+    <p>As ofertas de referência contém, elas próprias, células em erro e verificações em falha. Antes de usar uma oferta como baseline é preciso decidir, caso a caso, se o número da planilha é o valor correto ou o valor histórico. Divergências em que o sistema novo estiver certo devem ser registradas como correções, não como falhas de paridade.</p>
+  </div>
+</section>
+
+<!-- ============ 15 ============ -->
+<section id="s15">
+  <h2><span class="num">15</span> Glossário</h2>
+  <h3>Termos do modelo</h3>
+  <div class="tw">
+    <table class="compact">
+      <thead><tr><th>Termo</th><th>No modelo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>BDI</td><td><code>BDI</code></td><td>Beneficios e despesas indiretas &mdash; percentual sobre o custo que forma o preço de venda</td></tr>
+        <tr><td>Canteiro</td><td><code>Canteiros</code></td><td>Base de apoio a obra; principal ou avançado, com alojamento e pátio de materiais</td></tr>
+        <tr><td>Cesta básica</td><td><code>Datos</code></td><td>Beneficio alimentar por convenção coletiva, devido abaixo de um salário&#8209;teto por UF</td></tr>
+        <tr><td>CIP</td><td><code>S1!Y</code></td><td>Codigo de item padronizado do contratante, usado no BOQ (ex.: <code>GR02.04.05</code>)</td></tr>
+        <tr><td>Cross&#8209;rope</td><td><code>Crossrope</code></td><td>Estrutura estaiada com mastros interligados por cabo, sem treliça convencional</td></tr>
+        <tr><td>DIFAL</td><td><code>Impuestos</code></td><td>Diferencial de alíquota de ICMS entre origem e destino em operação interestadual</td></tr>
+        <tr><td>Estaiada</td><td><code>Torres</code></td><td>Torre sustentada por tirantes ancorados no solo</td></tr>
+        <tr><td>FECOEP</td><td><code>Impuestos</code></td><td>Fundo estadual de combate a pobreza &mdash; adicional de ICMS em algumas UFs</td></tr>
+        <tr><td>Folgas</td><td><code>DB_MO</code></td><td>Período de descanso do trabalhador alojado, com custo de viagem associado</td></tr>
+        <tr><td>Fundiário</td><td><code>Fundiario</code></td><td>Liberação de faixa de servidão e indenização a proprietários</td></tr>
+        <tr><td>Histograma</td><td><code>H1..HT</code></td><td>Curva de pessoal ou equipamento ao longo dos meses de obra</td></tr>
+        <tr><td>LI / LO</td><td><code>Datos</code></td><td>Licença de instalação / entrada em operação &mdash; marcos contratuais</td></tr>
+        <tr><td>LME / Midwest / RTDU</td><td><code>Futuros</code></td><td>Referências de preço do alumínio: bolsa de metais e prêmios regionais</td></tr>
+        <tr><td>OPGW</td><td><code>DB_OPGW</code></td><td>Cabo de guarda com fibras ópticas embutidas</td></tr>
+        <tr><td>RAP</td><td><code>Info&amp;Cond</code></td><td>Receita anual permitida &mdash; remuneração da concessão definida no leilão</td></tr>
+        <tr><td>REIDI</td><td><code>Impuestos</code></td><td>Regime especial que suspende PIS/COFINS em obras de infraestrutura</td></tr>
+        <tr><td>Sobre&#8209;escavação</td><td><code>Datos</code></td><td>Volume escavado acima do teórico, por folga construtiva</td></tr>
+        <tr><td>Tirante</td><td><code>Tirantes</code></td><td>Cabo de aço que estaia a torre, ancorado em fundação própria</td></tr>
+        <tr><td>UTS</td><td><code>DB_CAL</code></td><td>Carga de ruptura do cabo</td></tr>
+        <tr><td>Vão médio</td><td><code>Torres</code></td><td>Distância média entre estruturas consecutivas</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 16 ============ -->
+<section id="s16">
+  <h2><span class="num">16</span> Anexo</h2>
+  <h3>Inventário completo das 150 abas</h3>
+  <p>Ordem original do arquivo. A coluna de domínio remete a <a href="#s4">seção 04</a>. Contagens medidas diretamente no XML.</p>
+  <div class="tw" style="max-height:none">
+    <table class="compact">
+      <thead><tr><th class="num">#</th><th>Aba</th><th>Dom.</th><th>Estado</th><th class="num">Células</th><th class="num">Fórmulas</th><th>Papel no modelo</th></tr></thead>
+      <tbody>
+<tr><td class="n">1</td><td class="sn"><code>Info&amp;Cond</code></td><td><span class="dom dA">A</span></td><td class="st">visível</td><td class="num">1.232</td><td class="num">9</td><td class="pp">Cabeçalho da oferta, revisões e matriz de responsabilidade escopo x contratante</td></tr>
+<tr><td class="n">2</td><td class="sn"><code>Datos</code></td><td><span class="dom dA">A</span></td><td class="st">visível</td><td class="num">3.685</td><td class="num">282</td><td class="pp">Parâmetros globais: linhas, prazos, câmbio, ICMS/IPI/PIS-COFINS, cesta básica, alojamento, sobre-escavações</td></tr>
+<tr><td class="n">3</td><td class="sn"><code>Futuros</code></td><td><span class="dom dF">F</span></td><td class="st">visível</td><td class="num">1.211</td><td class="num">865</td><td class="pp">Curva de futuros LME / Midwest / RTDU / dólar ponderada pelas toneladas entregues por mês</td></tr>
+<tr><td class="n">4</td><td class="sn"><code>Equipos</code></td><td><span class="dom dC">C</span></td><td class="st">visível</td><td class="num">6.536</td><td class="num">4.698</td><td class="pp">Catálogo de equipes de trabalho com produções teóricas e custo diário consolidado</td></tr>
+<tr><td class="n">5</td><td class="sn"><code>DesEquipos</code></td><td><span class="dom dC">C</span></td><td class="st">visível</td><td class="num">920.009</td><td class="num">795.339</td><td class="pp">Composição analítica de cada equipe (mão de obra por cargo + equipamentos por codigo)</td></tr>
+<tr><td class="n">6</td><td class="sn"><code>DB_CAL</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">2.109</td><td class="num">351</td><td class="pp">Base de cabos de alumínio (peso, bobina, diâmetro, UTS)</td></tr>
+<tr><td class="n">7</td><td class="sn"><code>DB_CGA</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">461</td><td class="num">49</td><td class="pp">Base de cabos de guarda de aço (classe de galvanização, resistência, fios)</td></tr>
+<tr><td class="n">8</td><td class="sn"><code>DB_OPGW</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">461</td><td class="num">49</td><td class="pp">Base de cabos OPGW (fabricante, I2t, fibras, bobina)</td></tr>
+<tr><td class="n">9</td><td class="sn"><code>DB_CTI</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">911</td><td class="num">99</td><td class="pp">Base de cabos de aço para tirantes e interligação</td></tr>
+<tr><td class="n">10</td><td class="sn"><code>DB_TOR</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">35.429</td><td class="num">15.007</td><td class="pp">Base de séries de estruturas e torres (projetista, tensão, circuitos, vento, isolador)</td></tr>
+<tr><td class="n">11</td><td class="sn"><code>DB_AIS</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">410</td><td class="num">49</td><td class="pp">Base de isoladores (fabricante, ruptura, passo, linha de fuga)</td></tr>
+<tr><td class="n">12</td><td class="sn"><code>DB_FUN</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">87.502</td><td class="num">12.724</td><td class="pp">Base de fundações: solos, tipos, volumes e armaduras paramétricas</td></tr>
+<tr><td class="n">13</td><td class="sn"><code>DB_MO</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">4.954</td><td class="num">2.027</td><td class="pp">Base de mão de obra: salário, periculosidade, HE, encargos, alimentação, alojamento, folgas, saúde</td></tr>
+<tr><td class="n">14</td><td class="sn"><code>DB_EQ</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">9.849</td><td class="num">4.191</td><td class="pp">Base de equipamentos: aluguel externo/interno, compra, amortização, disponibilidade</td></tr>
+<tr><td class="n">15</td><td class="sn"><code>DB_FI</code></td><td><span class="dom dB">B</span></td><td class="st">visível</td><td class="num">515</td><td class="num">100</td><td class="pp">Base de custos fixos (EPI, exames, mob/demob, roupa, viagens)</td></tr>
+<tr><td class="n">16</td><td class="sn"><code>E4</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">35.438</td><td class="num">3.026</td><td class="pp">Tabela de estaqueamento da linha 4 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">17</td><td class="sn"><code>E5</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">39.374</td><td class="num">3.005</td><td class="pp">Tabela de estaqueamento da linha 5 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">18</td><td class="sn"><code>E6</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">34.598</td><td class="num">3.005</td><td class="pp">Tabela de estaqueamento da linha 6 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">19</td><td class="sn"><code>E7</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">34.598</td><td class="num">1.505</td><td class="pp">Tabela de estaqueamento da linha 7 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">20</td><td class="sn"><code>E8</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">34.573</td><td class="num">1.505</td><td class="pp">Tabela de estaqueamento da linha 8 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">21</td><td class="sn"><code>E9</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">34.573</td><td class="num">1.505</td><td class="pp">Tabela de estaqueamento da linha 9 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">22</td><td class="sn"><code>E10</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">34.573</td><td class="num">1.505</td><td class="pp">Tabela de estaqueamento da linha 10 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">23</td><td class="sn"><code>Conductores</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">2.055</td><td class="num">730</td><td class="pp">Consolidação de condutores por linha e toneladas totais</td></tr>
+<tr><td class="n">24</td><td class="sn"><code>CG</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">4.528</td><td class="num">2.390</td><td class="pp">Consolidação de cabos de guarda (aço, alumínio, OPGW) e sobressalentes</td></tr>
+<tr><td class="n">25</td><td class="sn"><code>Torres</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">42.374</td><td class="num">27.107</td><td class="pp">Inventário de torres por linha: tipo, quantidade, peso, vão médio, sobressalentes</td></tr>
+<tr><td class="n">26</td><td class="sn"><code>E1</code></td><td><span class="dom dD">D</span></td><td class="st">visível</td><td class="num">35.365</td><td class="num">2.937</td><td class="pp">Tabela de estaqueamento da linha 1 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">27</td><td class="sn"><code>E2</code></td><td><span class="dom dD">D</span></td><td class="st">visível</td><td class="num">39.060</td><td class="num">2.548</td><td class="pp">Tabela de estaqueamento da linha 2 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">28</td><td class="sn"><code>E3</code></td><td><span class="dom dD">D</span></td><td class="st">oculta</td><td class="num">39.214</td><td class="num">3.005</td><td class="pp">Tabela de estaqueamento da linha 3 (saída PLS-CADD): estrutura, estaca, coordenadas, solo, fundação, acesso</td></tr>
+<tr><td class="n">29</td><td class="sn"><code>Tirantes</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">9.674</td><td class="num">6.427</td><td class="pp">Tirantes por linha e por tipo de cabo</td></tr>
+<tr><td class="n">30</td><td class="sn"><code>Crossrope</code></td><td><span class="dom dE">E</span></td><td class="st">oculta</td><td class="num">3.672</td><td class="num">1.899</td><td class="pp">Cabos de cross-rope (interligação de mastros e suspensão de fases)</td></tr>
+<tr><td class="n">31</td><td class="sn"><code>Cadenas</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">9.978</td><td class="num">3.943</td><td class="pp">Cadeias e isoladores por tipo de torre e por cabo</td></tr>
+<tr><td class="n">32</td><td class="sn"><code>Amortiguacion</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">3.047</td><td class="num">840</td><td class="pp">Sistema de amortecimento por condutor e vão médio</td></tr>
+<tr><td class="n">33</td><td class="sn"><code>Señalizacion</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">245</td><td class="num">176</td><td class="pp">Sinalização (esferas, balizadores, placas) por linha</td></tr>
+<tr><td class="n">34</td><td class="sn"><code>Tierras</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">1.102</td><td class="num">275</td><td class="pp">Malha de aterramento, hastes e cercas</td></tr>
+<tr><td class="n">35</td><td class="sn"><code>Impuestos</code></td><td><span class="dom dF">F</span></td><td class="st">visível</td><td class="num">49.043</td><td class="num">38.408</td><td class="pp">Motor tributário sobre materiais: ICMS origem/destino, DIFAL, FECOEP, IPI, PIS/COFINS, REIDI</td></tr>
+<tr><td class="n">36</td><td class="sn"><code>Precio torre rev. anual</code></td><td><span class="dom dF">F</span></td><td class="st">oculta</td><td class="num">1.568</td><td class="num">1.446</td><td class="pp">Reajuste anual do preço de torres ao longo do cronograma</td></tr>
+<tr><td class="n">37</td><td class="sn"><code>Cantidades</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">13.693</td><td class="num">10.301</td><td class="pp">Quantitativos consolidados de materiais: teórico + extra + sobressalente por linha</td></tr>
+<tr><td class="n">38</td><td class="sn"><code>Precios</code></td><td><span class="dom dF">F</span></td><td class="st">visível</td><td class="num">7.502</td><td class="num">2.682</td><td class="pp">Preços unitários de materiais por fornecedor, moeda e estado de origem</td></tr>
+<tr><td class="n">39</td><td class="sn"><code>Materiales</code></td><td><span class="dom dF">F</span></td><td class="st">visível</td><td class="num">49.974</td><td class="num">33.543</td><td class="pp">Resumo de materiais por linha: quantidade, líquido, impostos, valor final</td></tr>
+<tr><td class="n">40</td><td class="sn"><code>Suelos</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">2.783</td><td class="num">1.386</td><td class="pp">Distribuição de solos x tipo de fundação por linha e compactação</td></tr>
+<tr><td class="n">41</td><td class="sn"><code>Fundaciones</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">222.724</td><td class="num">201.121</td><td class="pp">Motor de fundações: volumes, aço e concreto por torre com sobre-escavação e desperdício</td></tr>
+<tr><td class="n">42</td><td class="sn"><code>Travesias</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">1.568</td><td class="num">157</td><td class="pp">Travessias de LT e de vias principais</td></tr>
+<tr><td class="n">43</td><td class="sn"><code>Limpieza</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">1.400</td><td class="num">447</td><td class="pp">Limpeza de faixa de servidão (ha e km por tipo de vegetação)</td></tr>
+<tr><td class="n">44</td><td class="sn"><code>Accesos</code></td><td><span class="dom dE">E</span></td><td class="st">visível</td><td class="num">1.003</td><td class="num">417</td><td class="pp">Acessos por grau de dificuldade (plano / médio / difícil)</td></tr>
+<tr><td class="n">45</td><td class="sn"><code>Canteiros</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">12.251</td><td class="num">2.504</td><td class="pp">Canteiros: implantação, custo mensal e desmobilização por tipo de canteiro</td></tr>
+<tr><td class="n">46</td><td class="sn"><code>Indirectos</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">18.044</td><td class="num">8.515</td><td class="pp">Indiretos de projeto: quadro de estrutura, veículos, TI, EPI, viagens e rateio por linha</td></tr>
+<tr><td class="n">47</td><td class="sn"><code>Precip</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">483</td><td class="num">58</td><td class="pp">Precipitação mensal por linha e classificação de perda de produtividade</td></tr>
+<tr><td class="n">48</td><td class="sn"><code>Ingenieria</code></td><td><span class="dom dG">G</span></td><td class="st">oculta</td><td class="num">425</td><td class="num">367</td><td class="pp">Engenharia: projeto básico, executivo e projeto de torres</td></tr>
+<tr><td class="n">49</td><td class="sn"><code>Insumos</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">2.965</td><td class="num">667</td><td class="pp">Insumos por atividade (topografia, civil, montagem, lançamento)</td></tr>
+<tr><td class="n">50</td><td class="sn"><code>CR1</code></td><td><span class="dom dH">H</span></td><td class="st">visível</td><td class="num">59.728</td><td class="num">50.446</td><td class="pp">Cronograma de serviços mês a mês por linha: quantidades, equipes, durações e custos</td></tr>
+<tr><td class="n">51</td><td class="sn"><code>CR2</code></td><td><span class="dom dH">H</span></td><td class="st">visível</td><td class="num">54.638</td><td class="num">44.099</td><td class="pp">Cronograma de serviços da linha 2</td></tr>
+<tr><td class="n">52</td><td class="sn"><code>CR3</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">47.354</td><td class="num">40.427</td><td class="pp">Cronograma de serviços da linha 3</td></tr>
+<tr><td class="n">53</td><td class="sn"><code>BOQ-EdoB-1</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">7.623</td><td class="num">2.143</td><td class="pp">Planilha BOQ no padrão CIP do contratante</td></tr>
+<tr><td class="n">54</td><td class="sn"><code>BOQ-EdoB-2</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">7.627</td><td class="num">2.042</td><td class="pp">Planilha BOQ padrão CIP da linha 2</td></tr>
+<tr><td class="n">55</td><td class="sn"><code>BOQ-EdoB-3</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">7.626</td><td class="num">2.040</td><td class="pp">Planilha BOQ padrão CIP da linha 3</td></tr>
+<tr><td class="n">56</td><td class="sn"><code>CR4</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.674</td><td class="num">29.095</td><td class="pp">Cronograma de serviços da linha 4</td></tr>
+<tr><td class="n">57</td><td class="sn"><code>CR5</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.670</td><td class="num">29.094</td><td class="pp">Cronograma de serviços da linha 5</td></tr>
+<tr><td class="n">58</td><td class="sn"><code>CR6</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.674</td><td class="num">29.098</td><td class="pp">Cronograma de serviços da linha 6</td></tr>
+<tr><td class="n">59</td><td class="sn"><code>CR7</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.672</td><td class="num">29.095</td><td class="pp">Cronograma de serviços da linha 7</td></tr>
+<tr><td class="n">60</td><td class="sn"><code>CR8</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.672</td><td class="num">29.095</td><td class="pp">Cronograma de serviços da linha 8</td></tr>
+<tr><td class="n">61</td><td class="sn"><code>CR9</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.672</td><td class="num">29.095</td><td class="pp">Cronograma de serviços da linha 9</td></tr>
+<tr><td class="n">62</td><td class="sn"><code>CR10</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">46.672</td><td class="num">29.095</td><td class="pp">Cronograma de serviços da linha 10</td></tr>
+<tr><td class="n">63</td><td class="sn"><code>S1</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">4.898</td><td class="num">2.809</td><td class="pp">Total de serviços por linha: execução própria x subcontratado, com codigos CIP</td></tr>
+<tr><td class="n">64</td><td class="sn"><code>S2</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">4.976</td><td class="num">2.707</td><td class="pp">Total de serviços da linha 2</td></tr>
+<tr><td class="n">65</td><td class="sn"><code>S3</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">4.674</td><td class="num">2.510</td><td class="pp">Total de serviços da linha 3</td></tr>
+<tr><td class="n">66</td><td class="sn"><code>S4</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.156</td><td class="num">1.517</td><td class="pp">Total de serviços da linha 4</td></tr>
+<tr><td class="n">67</td><td class="sn"><code>S5</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.530</td><td class="num">1.512</td><td class="pp">Total de serviços da linha 5</td></tr>
+<tr><td class="n">68</td><td class="sn"><code>S6</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.317</td><td class="num">1.511</td><td class="pp">Total de serviços da linha 6</td></tr>
+<tr><td class="n">69</td><td class="sn"><code>S7</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.314</td><td class="num">1.510</td><td class="pp">Total de serviços da linha 7</td></tr>
+<tr><td class="n">70</td><td class="sn"><code>S8</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.315</td><td class="num">1.510</td><td class="pp">Total de serviços da linha 8</td></tr>
+<tr><td class="n">71</td><td class="sn"><code>S9</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.314</td><td class="num">1.510</td><td class="pp">Total de serviços da linha 9</td></tr>
+<tr><td class="n">72</td><td class="sn"><code>S10</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.314</td><td class="num">1.510</td><td class="pp">Total de serviços da linha 10</td></tr>
+<tr><td class="n">73</td><td class="sn"><code>Ratios coste</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">3.631</td><td class="num">1.440</td><td class="pp">Ratios de custo por km e por torre para benchmarking entre linhas</td></tr>
+<tr><td class="n">74</td><td class="sn"><code>AXIA SUDESTE</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">1.262</td><td class="num">88</td><td class="pp">Planilha de preços com BDI no formato do edital (por lote / linha)</td></tr>
+<tr><td class="n">75</td><td class="sn"><code>AXIA NORTE</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">1.146</td><td class="num">43</td><td class="pp">Planilha de preços com BDI para o lote NORTE</td></tr>
+<tr><td class="n">76</td><td class="sn"><code>AXIA NORDESTE</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">1.146</td><td class="num">47</td><td class="pp">Planilha de preços com BDI para o lote NORDESTE</td></tr>
+<tr><td class="n">77</td><td class="sn"><code>AXIA SUL</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">1.198</td><td class="num">91</td><td class="pp">Planilha de preços com BDI para o lote SUL</td></tr>
+<tr><td class="n">78</td><td class="sn"><code>Aux_ICMS</code></td><td><span class="dom dF">F</span></td><td class="st">oculta</td><td class="num">6.479</td><td class="num">0</td><td class="pp">Tabela auxiliar de alíquotas ICMS intra e interestaduais com base legal</td></tr>
+<tr><td class="n">79</td><td class="sn"><code>Aux_IPI</code></td><td><span class="dom dF">F</span></td><td class="st">oculta</td><td class="num">6.096</td><td class="num">0</td><td class="pp">Tabela auxiliar TIPI (NCM x alíquota IPI)</td></tr>
+<tr><td class="n">80</td><td class="sn"><code>Serviço Eventual</code></td><td><span class="dom dI">I</span></td><td class="st">visível</td><td class="num">146</td><td class="num">62</td><td class="pp">Serviços eventuais com BDI</td></tr>
+<tr><td class="n">81</td><td class="sn"><code>H1</code></td><td><span class="dom dH">H</span></td><td class="st">visível</td><td class="num">48.221</td><td class="num">47.143</td><td class="pp">Histograma mensal de pessoal e equipamentos da linha</td></tr>
+<tr><td class="n">82</td><td class="sn"><code>H2</code></td><td><span class="dom dH">H</span></td><td class="st">visível</td><td class="num">43.535</td><td class="num">42.850</td><td class="pp">Histograma de recursos da linha 2</td></tr>
+<tr><td class="n">83</td><td class="sn"><code>H3</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">42.603</td><td class="pp">Histograma de recursos da linha 3</td></tr>
+<tr><td class="n">84</td><td class="sn"><code>H4</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 4</td></tr>
+<tr><td class="n">85</td><td class="sn"><code>H5</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 5</td></tr>
+<tr><td class="n">86</td><td class="sn"><code>H6</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 6</td></tr>
+<tr><td class="n">87</td><td class="sn"><code>H7</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.259</td><td class="pp">Histograma de recursos da linha 7</td></tr>
+<tr><td class="n">88</td><td class="sn"><code>H8</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 8</td></tr>
+<tr><td class="n">89</td><td class="sn"><code>H9</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 9</td></tr>
+<tr><td class="n">90</td><td class="sn"><code>H10</code></td><td><span class="dom dH">H</span></td><td class="st">oculta</td><td class="num">43.535</td><td class="num">6.499</td><td class="pp">Histograma de recursos da linha 10</td></tr>
+<tr><td class="n">91</td><td class="sn"><code>HT</code></td><td><span class="dom dH">H</span></td><td class="st">visível</td><td class="num">43.548</td><td class="num">42.887</td><td class="pp">Histograma consolidado de pessoal e equipamentos do projeto</td></tr>
+<tr><td class="n">92</td><td class="sn"><code>Fundiario</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">347</td><td class="num">130</td><td class="pp">Fundiário: servidão, benfeitorias e compensação a proprietários</td></tr>
+<tr><td class="n">93</td><td class="sn"><code>MA</code></td><td><span class="dom dG">G</span></td><td class="st">visível</td><td class="num">548</td><td class="num">396</td><td class="pp">Gestão ambiental: licenciamento, estudos e programas</td></tr>
+<tr><td class="n">94</td><td class="sn"><code>IPCa</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">137</td><td class="num">63</td><td class="pp">Projeção de IPCA acumulado ao longo do contrato</td></tr>
+<tr><td class="n">95</td><td class="sn"><code>Risk1</code></td><td><span class="dom dL">L</span></td><td class="st">visível</td><td class="num">710</td><td class="num">174</td><td class="pp">Análise de riscos da linha: fundiário, ambiental, prazo, clima, terceiros</td></tr>
+<tr><td class="n">96</td><td class="sn"><code>Risk2</code></td><td><span class="dom dL">L</span></td><td class="st">visível</td><td class="num">671</td><td class="num">157</td><td class="pp">Análise de riscos da linha 2</td></tr>
+<tr><td class="n">97</td><td class="sn"><code>Risk3</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">656</td><td class="num">144</td><td class="pp">Análise de riscos da linha 3</td></tr>
+<tr><td class="n">98</td><td class="sn"><code>Risk4</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">536</td><td class="num">143</td><td class="pp">Análise de riscos da linha 4</td></tr>
+<tr><td class="n">99</td><td class="sn"><code>Risk5</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">535</td><td class="num">145</td><td class="pp">Análise de riscos da linha 5</td></tr>
+<tr><td class="n">100</td><td class="sn"><code>Risk6</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">536</td><td class="num">145</td><td class="pp">Análise de riscos da linha 6</td></tr>
+<tr><td class="n">101</td><td class="sn"><code>Risk7</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">538</td><td class="num">145</td><td class="pp">Análise de riscos da linha 7</td></tr>
+<tr><td class="n">102</td><td class="sn"><code>Risk8</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">537</td><td class="num">146</td><td class="pp">Análise de riscos da linha 8</td></tr>
+<tr><td class="n">103</td><td class="sn"><code>Risk9</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">478</td><td class="num">111</td><td class="pp">Análise de riscos da linha 9</td></tr>
+<tr><td class="n">104</td><td class="sn"><code>Risk10</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">477</td><td class="num">113</td><td class="pp">Análise de riscos da linha 10</td></tr>
+<tr><td class="n">105</td><td class="sn"><code>K</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">593</td><td class="num">237</td><td class="pp">Coeficientes de venda: garantias, seguros, financeiros, contingências, estrutura</td></tr>
+<tr><td class="n">106</td><td class="sn"><code>R1</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">1.317</td><td class="num">607</td><td class="pp">Resultado por linha: custo líquido, impostos, faturamento direto, venda</td></tr>
+<tr><td class="n">107</td><td class="sn"><code>M1</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">245</td><td class="num">57</td><td class="pp">Folha de medição contratual por linha</td></tr>
+<tr><td class="n">108</td><td class="sn"><code>PU1</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">556</td><td class="num">151</td><td class="pp">Folha de variações / preços unitários por linha</td></tr>
+<tr><td class="n">109</td><td class="sn"><code>R2</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">1.369</td><td class="num">608</td><td class="pp">Resultado econômico da linha 2</td></tr>
+<tr><td class="n">110</td><td class="sn"><code>M2</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">246</td><td class="num">57</td><td class="pp">Folha de medição da linha 2</td></tr>
+<tr><td class="n">111</td><td class="sn"><code>PU2</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">548</td><td class="num">120</td><td class="pp">Folha de variações da linha 2</td></tr>
+<tr><td class="n">112</td><td class="sn"><code>R3</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.321</td><td class="num">642</td><td class="pp">Resultado econômico da linha 3</td></tr>
+<tr><td class="n">113</td><td class="sn"><code>R4</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.223</td><td class="num">588</td><td class="pp">Resultado econômico da linha 4</td></tr>
+<tr><td class="n">114</td><td class="sn"><code>R5</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.220</td><td class="num">587</td><td class="pp">Resultado econômico da linha 5</td></tr>
+<tr><td class="n">115</td><td class="sn"><code>R6</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.220</td><td class="num">587</td><td class="pp">Resultado econômico da linha 6</td></tr>
+<tr><td class="n">116</td><td class="sn"><code>R7</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.220</td><td class="num">587</td><td class="pp">Resultado econômico da linha 7</td></tr>
+<tr><td class="n">117</td><td class="sn"><code>R8</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.222</td><td class="num">588</td><td class="pp">Resultado econômico da linha 8</td></tr>
+<tr><td class="n">118</td><td class="sn"><code>R9</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.220</td><td class="num">587</td><td class="pp">Resultado econômico da linha 9</td></tr>
+<tr><td class="n">119</td><td class="sn"><code>R10</code></td><td><span class="dom dJ">J</span></td><td class="st">oculta</td><td class="num">1.220</td><td class="num">587</td><td class="pp">Resultado econômico da linha 10</td></tr>
+<tr><td class="n">120</td><td class="sn"><code>M3</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">235</td><td class="num">50</td><td class="pp">Folha de medição da linha 3</td></tr>
+<tr><td class="n">121</td><td class="sn"><code>PU3</code></td><td><span class="dom dI">I</span></td><td class="st">oculta</td><td class="num">402</td><td class="num">72</td><td class="pp">Folha de variações da linha 3</td></tr>
+<tr><td class="n">122</td><td class="sn"><code>RT</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">1.287</td><td class="num">482</td><td class="pp">Resultado consolidado do lote (soma de R1..R10)</td></tr>
+<tr><td class="n">123</td><td class="sn"><code>R</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">1.056</td><td class="num">176</td><td class="pp">Resumo executivo de custos do lote em M BRL</td></tr>
+<tr><td class="n">124</td><td class="sn"><code>BDI</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">259</td><td class="num">44</td><td class="pp">BDI: decomposição da venda em custos Brasil, estrutura e margem</td></tr>
+<tr><td class="n">125</td><td class="sn"><code>Resumen</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">2.504</td><td class="num">1.298</td><td class="pp">Resumo total por linha (custo, DIFAL, venda) montado via INDIRECT</td></tr>
+<tr><td class="n">126</td><td class="sn"><code>Sim</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">168</td><td class="num">135</td><td class="pp">Simulações de venda e margem com desconto sobre revisões anteriores</td></tr>
+<tr><td class="n">127</td><td class="sn"><code>D1</code></td><td><span class="dom dK">K</span></td><td class="st">visível</td><td class="num">4.608</td><td class="num">2.517</td><td class="pp">Cronograma de desembolsos da linha (custo e venda mês a mês)</td></tr>
+<tr><td class="n">128</td><td class="sn"><code>D2</code></td><td><span class="dom dK">K</span></td><td class="st">visível</td><td class="num">4.550</td><td class="num">2.510</td><td class="pp">Cronograma de desembolsos da linha 2</td></tr>
+<tr><td class="n">129</td><td class="sn"><code>D3</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.543</td><td class="num">1.909</td><td class="pp">Cronograma de desembolsos da linha 3</td></tr>
+<tr><td class="n">130</td><td class="sn"><code>D4</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 4</td></tr>
+<tr><td class="n">131</td><td class="sn"><code>D5</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 5</td></tr>
+<tr><td class="n">132</td><td class="sn"><code>D6</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 6</td></tr>
+<tr><td class="n">133</td><td class="sn"><code>D7</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 7</td></tr>
+<tr><td class="n">134</td><td class="sn"><code>D8</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 8</td></tr>
+<tr><td class="n">135</td><td class="sn"><code>D9</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 9</td></tr>
+<tr><td class="n">136</td><td class="sn"><code>D10</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.107</td><td class="num">1.667</td><td class="pp">Cronograma de desembolsos da linha 10</td></tr>
+<tr><td class="n">137</td><td class="sn"><code>DT</code></td><td><span class="dom dK">K</span></td><td class="st">visível</td><td class="num">5.295</td><td class="num">3.601</td><td class="pp">Cronograma de desembolsos consolidado do projeto</td></tr>
+<tr><td class="n">138</td><td class="sn"><code>REPUEST. CELEO</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">5.146</td><td class="num">981</td><td class="pp">Sobressalentes no formato do contratante</td></tr>
+<tr><td class="n">139</td><td class="sn"><code>SIMULAÇÃO CELEO</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.543</td><td class="num">2.790</td><td class="pp">Simulação de faturamento no formato do contratante</td></tr>
+<tr><td class="n">140</td><td class="sn"><code>CASHFLOW ELECNOR</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">6.885</td><td class="num">4.527</td><td class="pp">Cashflow do contratante com marcos LI/LO por função de transmissão</td></tr>
+<tr><td class="n">141</td><td class="sn"><code>Check cantid. TOTAL y canteiros</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">1.804</td><td class="num">591</td><td class="pp">Verificação cruzada de quantidades entre abas S, indiretos e canteiros</td></tr>
+<tr><td class="n">142</td><td class="sn"><code>Checks</code></td><td><span class="dom dL">L</span></td><td class="st">oculta</td><td class="num">9.655</td><td class="num">6.675</td><td class="pp">Painel central de verificações de consistência de todo o modelo</td></tr>
+<tr><td class="n">143</td><td class="sn"><code>ImpFactura</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">106</td><td class="num">10</td><td class="pp">Exemplo didático de aplicação de ISS e PIS/COFINS sobre faturamento</td></tr>
+<tr><td class="n">144</td><td class="sn"><code>ToDo</code></td><td><span class="dom dA">A</span></td><td class="st">visível</td><td class="num">7</td><td class="num">0</td><td class="pp">Lista de pendências do próprio modelo</td></tr>
+<tr><td class="n">145</td><td class="sn"><code>Aux</code></td><td><span class="dom dA">A</span></td><td class="st">visível</td><td class="num">30.802</td><td class="num">29.044</td><td class="pp">Camada auxiliar: nomes de abas, listas derivadas, descrições de linha</td></tr>
+<tr><td class="n">146</td><td class="sn"><code>LU</code></td><td><span class="dom dA">A</span></td><td class="st">visível</td><td class="num">3.494</td><td class="num">1.792</td><td class="pp">Listas de valores únicos derivadas via UNIQUE / FILTER / INDIRECT</td></tr>
+<tr><td class="n">147</td><td class="sn"><code>Contingência</code></td><td><span class="dom dJ">J</span></td><td class="st">visível</td><td class="num">275</td><td class="num">42</td><td class="pp">Análise de contingências construtivas (troca de tipo de torre, fundação, solo)</td></tr>
+<tr><td class="n">148</td><td class="sn"><code>Precios SIN seguro LME y USD</code></td><td><span class="dom dF">F</span></td><td class="st">oculta</td><td class="num">2.504</td><td class="num">333</td><td class="pp">Bruteamento de preços (líquido para bruto) sem seguro, para LME e USD</td></tr>
+<tr><td class="n">149</td><td class="sn"><code>LMEUSD</code></td><td><span class="dom dF">F</span></td><td class="st">oculta</td><td class="num">4.405</td><td class="num">3.721</td><td class="pp">Curva de preço do condutor atrelada a LME + Midwest + câmbio, mês a mês</td></tr>
+<tr><td class="n">150</td><td class="sn"><code>ENTREGAS</code></td><td><span class="dom dK">K</span></td><td class="st">oculta</td><td class="num">4.305</td><td class="num">2.732</td><td class="pp">Cronograma de entregas de materiais (% por mês) usado na ponderação de futuros</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>Levantamento de requisitos &mdash; Calculo LT</span>
+  <span>Base: OPGW&#8209;2025&#8209;029_R2.xlsm &middot; 150 planilhas &middot; 1.877.471 fórmulas</span>
+  <span>Análise por engenharia reversa do pacote OOXML</span>
+</footer>
+
+</div>
