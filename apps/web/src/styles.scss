@@ -1,1 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
+// Tema do design system oficial (openspec/DESIGN.md — Minimalism & Swiss
+// Style sobre Angular Material 3). Regras: cores só via tokens --mat-sys-*,
+// ajustes por mat.*-overrides(), nunca seletor interno .mdc-*/.mat-mdc-*.
+@use '@angular/material' as mat;
+// Paleta off-black/taupe gerada de #1A1A1A / #B38B6D (front matter do
+// DESIGN.md) via `ng generate @angular/material:theme-color`
+@use './theme-colors' as palettes;
+
+html {
+  color-scheme: light dark;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: palettes.$primary-palette,
+        tertiary: palettes.$tertiary-palette,
+        theme-type: color-scheme,
+      ),
+      typography: (
+        plain-family: 'Inter, system-ui, sans-serif',
+        brand-family: 'Inter, system-ui, sans-serif',
+        bold-weight: 700,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    )
+  );
+
+  // Forma: cantos retos como padrão global (Swiss)
+  --mat-sys-corner-none: 0px;
+  --mat-sys-corner-extra-small: 2px;
+  --mat-sys-corner-small: 4px;
+  --mat-sys-corner-medium: 4px;
+  --mat-sys-corner-large: 8px;
+  --mat-sys-corner-full: 0px; // botões deixam de ser "pill"
+
+  // Elevação: sombras rasas, nunca difusas
+  --mat-sys-level1: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --mat-sys-level2: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-large);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+// Tabelas e formulários densos (densidade -1 só onde a classe é aplicada)
+.dense {
+  @include mat.form-field-density(-1);
+  @include mat.table-density(-1);
+}
+
+// Valores técnicos: decimais e códigos de catálogo
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+// Grid de 12 colunas dos formulários; 1 coluna abaixo de 768px
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.col-3 {
+  grid-column: span 3;
+}
+
+.col-4 {
+  grid-column: span 4;
+}
+
+.col-6 {
+  grid-column: span 6;
+}
+
+.col-12 {
+  grid-column: span 12;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .col-3,
+  .col-4,
+  .col-6,
+  .col-12 {
+    grid-column: auto;
+  }
+}
+
+// Contêiner de conteúdo (máx. 1280px, padding lateral 1.5rem)
+.content-container {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  padding-block: 1rem 4rem;
+}
+
+// Badge de tipo/vigência/pendência (raio 2px, acento tertiary discreto)
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+  font: var(--mat-sys-label-medium);
+}
+
+// Tabelas largas rolam no próprio contêiner — o body nunca rola na horizontal
+.table-scroll {
+  overflow-x: auto;
+}
