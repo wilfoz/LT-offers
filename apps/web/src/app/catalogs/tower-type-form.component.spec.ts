@@ -60,6 +60,20 @@ describe('TowerTypeFormComponent (novo tipo)', () => {
     expect(component.weights.length).toBe(1);
   });
 
+  it('remover a linha inválida desbloqueia o Salvar (lição do FormArray)', async () => {
+    const fixture = await mount();
+    const component = fixture.componentInstance;
+    component.form.patchValue({ code: 'SA1', function: 'SUSPENSION' });
+    component.addWeight({ heightM: 'abc', weightKg: '5200' });
+
+    component.save();
+    expect(apiMock.create).not.toHaveBeenCalled();
+
+    component.removeWeight(0);
+    component.save();
+    expect(apiMock.create).toHaveBeenCalledTimes(1);
+  });
+
   it('rejeita ponto com valor zero ou fora da escala apontando a linha', async () => {
     const fixture = await mount();
     const component = fixture.componentInstance;
@@ -145,10 +159,12 @@ describe('TowerTypeFormComponent (nova versão)', () => {
     history: vi.fn(),
   };
 
-  async function mountEdit(params: Record<string, string> = {
-    seriesId: '5',
-    id: '7',
-  }) {
+  async function mountEdit(
+    params: Record<string, string> = {
+      seriesId: '5',
+      id: '7',
+    },
+  ) {
     await TestBed.configureTestingModule({
       imports: [TowerTypeFormComponent],
       providers: [

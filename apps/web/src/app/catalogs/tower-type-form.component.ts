@@ -37,10 +37,10 @@ function weightValueValidator(maxScale: number): ValidatorFn {
       return null; // required é validador próprio
     }
     if (!POSITIVE_DECIMAL_PATTERN.test(value) || Number(value) <= 0) {
-      return { weightValue: true };
+      return { invalidDecimal: true };
     }
     const decimals = value.split('.')[1] ?? '';
-    return decimals.length <= maxScale ? null : { weightScale: true };
+    return decimals.length <= maxScale ? null : { decimalScale: true };
   };
 }
 
@@ -176,7 +176,13 @@ const uniqueHeightsValidator: ValidatorFn = (
         <button type="submit" [disabled]="saving() || form.disabled">
           Salvar
         </button>
-        <a [routerLink]="['/catalogs/structure-series', seriesId()]">
+        <a
+          [routerLink]="
+            seriesId() !== null
+              ? ['/catalogs/structure-series', seriesId()]
+              : ['/catalogs/structure-series']
+          "
+        >
           Cancelar
         </a>
       </form>
@@ -314,7 +320,7 @@ export class TowerTypeFormComponent {
     if (control.hasError('required')) {
       return 'Campo obrigatório';
     }
-    if (control.hasError('weightScale')) {
+    if (control.hasError('decimalScale')) {
       return field === 'heightM'
         ? 'Use no máximo 3 casas decimais'
         : 'Use no máximo 2 casas decimais';

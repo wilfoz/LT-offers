@@ -16,12 +16,20 @@ import { TowerTypesApi } from './tower-types-api.service';
           <small>({{ functionLabels[h.function] }})</small>
         }
       </h2>
-      <a [routerLink]="['/catalogs/structure-series', seriesId()]">
+      <a
+        [routerLink]="
+          seriesId() !== null
+            ? ['/catalogs/structure-series', seriesId()]
+            : ['/catalogs/structure-series']
+        "
+      >
         Voltar à série
       </a>
 
       @if (history(); as h) {
-        <p>Da vigência mais recente para a mais antiga; versões são imutáveis</p>
+        <p>
+          Da vigência mais recente para a mais antiga; versões são imutáveis
+        </p>
         @for (version of h.versions; track version.id) {
           <article>
             <h3>
@@ -103,6 +111,11 @@ export class TowerTypeHistoryComponent {
     const paramMap = this.route.snapshot.paramMap;
     const seriesId = Number(paramMap.get('seriesId'));
     const id = Number(paramMap.get('id'));
+    // Guardas independentes: com seriesId válido e id do tipo malformado, o
+    // link "Voltar à série" continua apontando para a série certa.
+    if (Number.isInteger(seriesId) && seriesId > 0) {
+      this.seriesId.set(seriesId);
+    }
     if (
       !Number.isInteger(seriesId) ||
       seriesId <= 0 ||
@@ -112,7 +125,6 @@ export class TowerTypeHistoryComponent {
       this.error.set('Identificador inválido');
       return;
     }
-    this.seriesId.set(seriesId);
     this.api.history(seriesId, id).subscribe({
       next: (h) => this.history.set(h),
       error: () =>

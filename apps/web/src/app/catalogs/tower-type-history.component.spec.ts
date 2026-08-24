@@ -14,10 +14,12 @@ describe('TowerTypeHistoryComponent', () => {
     history: vi.fn(),
   };
 
-  async function mount(params: Record<string, string> = {
-    seriesId: '5',
-    id: '7',
-  }) {
+  async function mount(
+    params: Record<string, string> = {
+      seriesId: '5',
+      id: '7',
+    },
+  ) {
     await TestBed.configureTestingModule({
       imports: [TowerTypeHistoryComponent],
       providers: [
@@ -120,5 +122,12 @@ describe('TowerTypeHistoryComponent', () => {
 
     expect(text).toContain('Identificador inválido');
     expect(apiMock.history).not.toHaveBeenCalled();
+  });
+
+  it('mantém o link de volta para a série quando só o id do tipo é malformado', async () => {
+    const fixture = await mount({ seriesId: '5', id: 'abc' });
+    const link = (fixture.nativeElement as HTMLElement).querySelector('a');
+
+    expect(link?.getAttribute('href')).toBe('/catalogs/structure-series/5');
   });
 });
