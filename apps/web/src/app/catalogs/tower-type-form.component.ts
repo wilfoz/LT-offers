@@ -9,6 +9,10 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   DATE_PATTERN,
@@ -60,7 +64,14 @@ const uniqueHeightsValidator: ValidatorFn = (
 
 @Component({
   selector: 'app-tower-type-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   template: `
     <section>
       <h2>
@@ -72,81 +83,118 @@ const uniqueHeightsValidator: ValidatorFn = (
         tem zero estais).
       </p>
 
-      <form [formGroup]="form" (ngSubmit)="save()">
+      <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
         @if (!editId()) {
-          <div>
-            <label for="code">Sigla *</label>
-            <input id="code" formControlName="code" maxlength="30" />
+          <mat-form-field
+            appearance="outline"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            class="col-6"
+          >
+            <mat-label>Sigla *</mat-label>
+            <input matInput id="code" formControlName="code" maxlength="30" />
             @if (errorFor('code')) {
-              <p class="error" role="alert">{{ errorFor('code') }}</p>
+              <mat-error>{{ errorFor('code') }}</mat-error>
             }
-          </div>
+          </mat-form-field>
 
-          <div>
-            <label for="function">Função *</label>
-            <select id="function" formControlName="function">
-              <option value="">Selecione…</option>
+          <mat-form-field
+            appearance="outline"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            class="col-6"
+          >
+            <mat-label>Função *</mat-label>
+            <mat-select id="function" formControlName="function">
+              <mat-option value="">Selecione…</mat-option>
               @for (option of functionOptions; track option) {
-                <option [value]="option">{{ functionLabels[option] }}</option>
+                <mat-option [value]="option">
+                  {{ functionLabels[option] }}
+                </mat-option>
               }
-            </select>
+            </mat-select>
             @if (errorFor('function')) {
-              <p class="error" role="alert">{{ errorFor('function') }}</p>
+              <mat-error>{{ errorFor('function') }}</mat-error>
             }
-          </div>
+          </mat-form-field>
         } @else {
-          <p>
-            Sigla: <strong>{{ currentCode() }}</strong> · Função:
+          <p class="col-12">
+            Sigla: <strong class="mono">{{ currentCode() }}</strong> · Função:
             <strong>{{ currentFunctionLabel() }}</strong>
             (fixa desde a criação)
           </p>
         }
 
-        <div>
-          <label for="guyCount">Quantidade de estais</label>
-          <input id="guyCount" formControlName="guyCount" inputmode="numeric" />
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Quantidade de estais</mat-label>
+          <input
+            matInput
+            id="guyCount"
+            formControlName="guyCount"
+            inputmode="numeric"
+          />
+          <mat-hint>Em branco = não informado; 0 = autoportante</mat-hint>
           @if (errorFor('guyCount')) {
-            <p class="error" role="alert">{{ errorFor('guyCount') }}</p>
+            <mat-error>{{ errorFor('guyCount') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <fieldset formArrayName="weights">
+        <fieldset class="col-12" formArrayName="weights">
           <legend>Tabela peso × altura</legend>
           @if (weights.controls.length === 0) {
             <p>Nenhum ponto informado — o tipo ficará com pendência.</p>
           }
           @for (row of weights.controls; track row; let i = $index) {
             <div class="weight-row" [formGroupName]="i">
-              <div>
-                <label [for]="'heightM-' + i">Altura (m)</label>
+              <mat-form-field
+                appearance="outline"
+                floatLabel="always"
+                subscriptSizing="dynamic"
+              >
+                <mat-label>Altura (m)</mat-label>
                 <input
+                  matInput
                   [id]="'heightM-' + i"
                   formControlName="heightM"
                   inputmode="decimal"
                 />
                 @if (rowError(i, 'heightM')) {
-                  <p class="error" role="alert">{{ rowError(i, 'heightM') }}</p>
+                  <mat-error>{{ rowError(i, 'heightM') }}</mat-error>
                 }
-              </div>
-              <div>
-                <label [for]="'weightKg-' + i">Peso (kg)</label>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                floatLabel="always"
+                subscriptSizing="dynamic"
+              >
+                <mat-label>Peso (kg)</mat-label>
                 <input
+                  matInput
                   [id]="'weightKg-' + i"
                   formControlName="weightKg"
                   inputmode="decimal"
                 />
                 @if (rowError(i, 'weightKg')) {
-                  <p class="error" role="alert">
-                    {{ rowError(i, 'weightKg') }}
-                  </p>
+                  <mat-error>{{ rowError(i, 'weightKg') }}</mat-error>
                 }
-              </div>
-              <button type="button" (click)="removeWeight(i)">
+              </mat-form-field>
+              <button
+                matButton="outlined"
+                type="button"
+                (click)="removeWeight(i)"
+              >
                 Remover ponto
               </button>
             </div>
           }
-          <button type="button" (click)="addWeight()">Adicionar ponto</button>
+          <button matButton="outlined" type="button" (click)="addWeight()">
+            Adicionar ponto
+          </button>
           @if (duplicateHeightsError()) {
             <p class="error" role="alert">
               Há alturas duplicadas na tabela peso × altura
@@ -154,70 +202,91 @@ const uniqueHeightsValidator: ValidatorFn = (
           }
         </fieldset>
 
-        <div>
-          <label for="effectiveFrom">
-            Início de vigência
-            {{ editId() ? '*' : '(opcional; padrão hoje)' }}
-          </label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>
+            Início de vigência {{ editId() ? '*' : '(opcional; padrão hoje)' }}
+          </mat-label>
           <input
+            matInput
             id="effectiveFrom"
             formControlName="effectiveFrom"
             type="date"
           />
           @if (errorFor('effectiveFrom')) {
-            <p class="error" role="alert">{{ errorFor('effectiveFrom') }}</p>
+            <mat-error>{{ errorFor('effectiveFrom') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
         @if (serverError()) {
-          <p class="error" role="alert">{{ serverError() }}</p>
+          <p class="error col-12" role="alert">{{ serverError() }}</p>
         }
 
-        <button type="submit" [disabled]="saving() || form.disabled">
-          Salvar
-        </button>
-        <a
-          [routerLink]="
-            seriesId() !== null
-              ? ['/catalogs/structure-series', seriesId()]
-              : ['/catalogs/structure-series']
-          "
-        >
-          Cancelar
-        </a>
+        <div class="actions col-12">
+          <button
+            matButton="filled"
+            type="submit"
+            [disabled]="saving() || form.disabled"
+          >
+            Salvar
+          </button>
+          <a
+            matButton
+            [routerLink]="
+              seriesId() !== null
+                ? ['/catalogs/structure-series', seriesId()]
+                : ['/catalogs/structure-series']
+            "
+          >
+            Cancelar
+          </a>
+        </div>
       </form>
     </section>
   `,
   styles: `
     form {
-      display: grid;
-      gap: 0.75rem;
-      max-width: 34rem;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-    }
-    input,
-    select {
-      width: 100%;
-      padding: 0.35rem;
+      max-width: 48rem;
     }
     fieldset {
       display: grid;
-      gap: 0.75rem;
-      border: 1px solid #ddd;
-      padding: 0.75rem;
+      gap: 1rem;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 0;
+      padding: 1rem;
+      justify-items: start;
+    }
+    legend {
+      font: var(--mat-sys-label-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--mat-sys-on-surface-variant);
+      padding-inline: 0.25rem;
     }
     .weight-row {
       display: grid;
       grid-template-columns: 1fr 1fr auto;
-      gap: 0.5rem;
-      align-items: end;
+      gap: 1rem;
+      align-items: center;
+      width: 100%;
     }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
       margin: 0.15rem 0 0;
+    }
+    .actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .weight-row {
+        grid-template-columns: 1fr;
+      }
     }
   `,
 })

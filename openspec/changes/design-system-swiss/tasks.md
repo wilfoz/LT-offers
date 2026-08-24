@@ -13,16 +13,16 @@
 
 ## 3. Refit visual — catálogos de cabos (9 telas)
 
-- [ ] 3.1 Refitar `conductor-cable-list/-form/-history` pela receita D3 (mat-table `.dense` com wrapper de rolagem própria, badge de pendência sem `role="status"`, mat-form-field outline com label fixo/hint/erro, estado vazio com ícone + CTA, progress bar, tokens no lugar dos hex locais)
-- [ ] 3.2 Refitar `ground-wire-list/-form/-history` (incl. fieldsets condicionais por tipo no grid de 12 colunas)
-- [ ] 3.3 Refitar `guy-wire-list/-form/-history`
-- [ ] 3.4 Suíte web verde **sem nenhuma asserção existente alterada** (critério D3) + `format:check --all`
+- [x] 3.1 Refitar `conductor-cable-list/-form/-history` pela receita D3 (mat-table `.dense` com wrapper de rolagem própria, badge de pendência sem `role="status"`, mat-form-field outline com label fixo/hint/erro, estado vazio com ícone + CTA, progress bar, tokens no lugar dos hex locais)
+- [x] 3.2 Refitar `ground-wire-list/-form/-history` (incl. fieldsets condicionais por tipo no grid de 12 colunas)
+- [x] 3.3 Refitar `guy-wire-list/-form/-history`
+- [x] 3.4 Suíte web verde **sem nenhuma asserção existente alterada** (critério D3) + `format:check --all`
 
 ## 4. Refit visual — séries de estruturas e torres (6 telas)
 
-- [ ] 4.1 Refitar `structure-series-list/-form/-history` pela receita D3
-- [ ] 4.2 Refitar `structure-series-detail` (card vigente `outlined` + tabela de tipos) e `tower-type-form` (FormArray dos pesos em grid com mat-form-field e botões adicionar/remover ponto) e `tower-type-history` (um card `outlined` por versão com sua tabela)
-- [ ] 4.3 Suíte web verde sem asserção alterada + `format:check --all`
+- [x] 4.1 Refitar `structure-series-list/-form/-history` pela receita D3
+- [x] 4.2 Refitar `structure-series-detail` (card vigente `outlined` + tabela de tipos) e `tower-type-form` (FormArray dos pesos em grid com mat-form-field e botões adicionar/remover ponto) e `tower-type-history` (um card `outlined` por versão com sua tabela)
+- [x] 4.3 Suíte web verde sem asserção alterada + `format:check --all`
 
 ## 5. Feedback de operação
 

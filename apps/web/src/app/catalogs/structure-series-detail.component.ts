@@ -1,7 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   StructureSeriesSummary,
+  TowerFunction,
   TowerTypeSummary,
   TowerTypeVersion,
 } from '@lt-offers/domain';
@@ -11,17 +17,32 @@ import { TowerTypesApi } from './tower-types-api.service';
 
 @Component({
   selector: 'app-structure-series-detail',
-  imports: [RouterLink],
+  imports: [
+    RouterLink,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+  ],
   template: `
     <section>
       <h2>Série de estrutura — {{ series()?.name ?? title() }}</h2>
       <nav>
-        <a routerLink="/catalogs/structure-series">Voltar à listagem</a>
+        <a matButton routerLink="/catalogs/structure-series">
+          Voltar à listagem
+        </a>
         @if (seriesId(); as id) {
-          <a [routerLink]="['/catalogs/structure-series', id, 'edit']">
+          <a
+            matButton
+            [routerLink]="['/catalogs/structure-series', id, 'edit']"
+          >
             Editar série
           </a>
-          <a [routerLink]="['/catalogs/structure-series', id, 'history']">
+          <a
+            matButton
+            [routerLink]="['/catalogs/structure-series', id, 'history']"
+          >
             Histórico da série
           </a>
         }
@@ -30,46 +51,62 @@ import { TowerTypesApi } from './tower-types-api.service';
       @if (seriesError()) {
         <p class="error" role="alert">{{ seriesError() }}</p>
       } @else if (series(); as s) {
-        <dl>
-          <div>
-            <dt>Projetista</dt>
-            <dd>{{ s.effectiveVersion?.designer ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>Tensão (kV)</dt>
-            <dd>{{ s.effectiveVersion?.voltageKv ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>Circuitos</dt>
-            <dd>{{ s.effectiveVersion?.circuitCount ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>Cabos por fase</dt>
-            <dd>{{ s.effectiveVersion?.cablesPerPhase ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>Vento de projeto (m/s)</dt>
-            <dd>{{ s.effectiveVersion?.designWindSpeedMs ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>Tipo de isolador</dt>
-            <dd>{{ s.effectiveVersion?.insulatorType ?? '—' }}</dd>
-          </div>
-          <div>
-            <dt>SIL (MW)</dt>
-            <dd>{{ s.effectiveVersion?.silMw ?? '—' }}</dd>
-          </div>
-        </dl>
-        @if (s.pendingFields.length > 0) {
-          <p class="pending">Pendente: {{ s.pendingFields.join(', ') }}</p>
-        }
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <dl>
+              <div>
+                <dt>Projetista</dt>
+                <dd>{{ s.effectiveVersion?.designer ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt>Tensão (kV)</dt>
+                <dd class="mono">{{ s.effectiveVersion?.voltageKv ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt>Circuitos</dt>
+                <dd class="mono">
+                  {{ s.effectiveVersion?.circuitCount ?? '—' }}
+                </dd>
+              </div>
+              <div>
+                <dt>Cabos por fase</dt>
+                <dd class="mono">
+                  {{ s.effectiveVersion?.cablesPerPhase ?? '—' }}
+                </dd>
+              </div>
+              <div>
+                <dt>Vento de projeto (m/s)</dt>
+                <dd class="mono">
+                  {{ s.effectiveVersion?.designWindSpeedMs ?? '—' }}
+                </dd>
+              </div>
+              <div>
+                <dt>Tipo de isolador</dt>
+                <dd>{{ s.effectiveVersion?.insulatorType ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt>SIL (MW)</dt>
+                <dd class="mono">{{ s.effectiveVersion?.silMw ?? '—' }}</dd>
+              </div>
+            </dl>
+            @if (s.pendingFields.length > 0) {
+              <p>
+                <span class="badge">
+                  Pendente: {{ s.pendingFields.join(', ') }}
+                </span>
+              </p>
+            }
+          </mat-card-content>
+        </mat-card>
       } @else {
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
         <p>Carregando…</p>
       }
 
       <h3>Tipos de torre</h3>
       @if (seriesId(); as id) {
         <a
+          matButton="filled"
           [routerLink]="[
             '/catalogs/structure-series',
             id,
@@ -82,110 +119,148 @@ import { TowerTypesApi } from './tower-types-api.service';
       }
 
       @if (typesLoading()) {
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
         <p>Carregando…</p>
       } @else if (typesError()) {
         <p class="error" role="alert">{{ typesError() }}</p>
       } @else if (types().length === 0) {
-        <p>Nenhum tipo de torre cadastrado nesta série.</p>
+        <div class="empty-state">
+          <mat-icon aria-hidden="true">cell_tower</mat-icon>
+          <p>Nenhum tipo de torre cadastrado nesta série.</p>
+        </div>
       } @else {
-        <table>
-          <caption>
-            Versões vigentes na data atual
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Sigla</th>
-              <th scope="col">Função</th>
-              <th scope="col">Estais</th>
-              <th scope="col">Tabela peso × altura</th>
-              <th scope="col">Pendências</th>
-              <th scope="col">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of types(); track item.id) {
-              <tr>
-                <td>{{ item.code }}</td>
-                <td>{{ functionLabels[item.function] }}</td>
-                <td>{{ item.effectiveVersion?.guyCount ?? '—' }}</td>
-                <td>{{ weightsSummary(item.effectiveVersion) }}</td>
-                <td>
-                  @if (!item.effectiveVersion) {
-                    <strong class="pending">Sem versão vigente</strong>
-                  } @else if (item.pendingFields.length > 0) {
-                    <strong class="pending">
-                      Pendente: {{ item.pendingFields.join(', ') }}
-                    </strong>
-                  } @else {
-                    <span>Completo</span>
-                  }
-                </td>
-                <td>
-                  <a
-                    [routerLink]="[
-                      '/catalogs/structure-series',
-                      seriesId(),
-                      'tower-types',
-                      item.id,
-                      'edit',
-                    ]"
-                  >
-                    Editar
-                  </a>
-                  <a
-                    [routerLink]="[
-                      '/catalogs/structure-series',
-                      seriesId(),
-                      'tower-types',
-                      item.id,
-                      'history',
-                    ]"
-                  >
-                    Histórico
-                  </a>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table mat-table [dataSource]="types()" class="dense">
+            <caption>
+              Versões vigentes na data atual
+            </caption>
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef scope="col">Sigla</th>
+              <td mat-cell *matCellDef="let item" class="mono">
+                {{ item.code }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="function">
+              <th mat-header-cell *matHeaderCellDef scope="col">Função</th>
+              <td mat-cell *matCellDef="let item">
+                {{ functionLabel(item.function) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="guyCount">
+              <th mat-header-cell *matHeaderCellDef scope="col">Estais</th>
+              <td mat-cell *matCellDef="let item" class="mono num">
+                {{ item.effectiveVersion?.guyCount ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weights">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Tabela peso × altura
+              </th>
+              <td mat-cell *matCellDef="let item">
+                {{ weightsSummary(item.effectiveVersion) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pending">
+              <th mat-header-cell *matHeaderCellDef scope="col">Pendências</th>
+              <td mat-cell *matCellDef="let item">
+                @if (!item.effectiveVersion) {
+                  <span class="badge badge-error">Sem versão vigente</span>
+                } @else if (item.pendingFields.length > 0) {
+                  <span class="badge">
+                    Pendente: {{ item.pendingFields.join(', ') }}
+                  </span>
+                } @else {
+                  <span>Completo</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef scope="col">Ações</th>
+              <td mat-cell *matCellDef="let item" class="actions-cell">
+                <a
+                  matButton
+                  [routerLink]="[
+                    '/catalogs/structure-series',
+                    seriesId(),
+                    'tower-types',
+                    item.id,
+                    'edit',
+                  ]"
+                >
+                  Editar
+                </a>
+                <a
+                  matButton
+                  [routerLink]="[
+                    '/catalogs/structure-series',
+                    seriesId(),
+                    'tower-types',
+                    item.id,
+                    'history',
+                  ]"
+                >
+                  Histórico
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let item; columns: columns"></tr>
+          </table>
+        </div>
       }
     </section>
   `,
   styles: `
-    .pending {
-      color: #b45309;
-    }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
     }
-    nav a + a {
-      margin-left: 0.6rem;
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-block: 0.5rem 1rem;
+    }
+    mat-card {
+      margin-block: 1rem;
     }
     dl {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-      gap: 0.5rem;
-      margin-block: 1rem;
+      gap: 0.75rem;
+      margin: 0;
     }
     dt {
-      font-weight: 600;
+      font: var(--mat-sys-label-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--mat-sys-on-surface-variant);
     }
     dd {
       margin: 0;
     }
+    h3 {
+      margin-top: 2rem;
+    }
     table {
-      border-collapse: collapse;
       width: 100%;
       margin-top: 0.5rem;
     }
-    th,
-    td {
+    caption {
+      caption-side: top;
       text-align: left;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid #ddd;
+      padding-block: 0.5rem;
+      color: var(--mat-sys-on-surface-variant);
+      font: var(--mat-sys-body-medium);
     }
-    td a + a {
-      margin-left: 0.6rem;
+    .actions-cell {
+      white-space: nowrap;
     }
   `,
 })
@@ -194,7 +269,20 @@ export class StructureSeriesDetailComponent {
   private readonly towerTypesApi = inject(TowerTypesApi);
   private readonly route = inject(ActivatedRoute);
 
-  readonly functionLabels = TOWER_FUNCTION_LABELS;
+  // Célula do mat-table não é tipada (*matCellDef="let item"); o método dá
+  // o tipo à indexação do mapa de rótulos.
+  protected functionLabel(value: TowerFunction): string {
+    return TOWER_FUNCTION_LABELS[value];
+  }
+
+  protected readonly columns = [
+    'code',
+    'function',
+    'guyCount',
+    'weights',
+    'pending',
+    'actions',
+  ];
 
   readonly seriesId = signal<number | null>(null);
   readonly title = signal('');
