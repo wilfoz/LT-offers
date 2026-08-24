@@ -1,4 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { GroundWireSummary, GroundWireType } from '@lt-offers/domain';
 import {
@@ -9,125 +16,214 @@ import { GroundWiresApi } from './ground-wires-api.service';
 
 @Component({
   selector: 'app-ground-wire-list',
-  imports: [RouterLink],
+  imports: [
+    RouterLink,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+  ],
   template: `
     <section>
       <h2>Catálogo de cabos de guarda</h2>
 
       <form role="search" (submit)="search($event)">
-        <label for="search">Buscar por código ou descrição</label>
-        <input
-          id="search"
-          name="search"
-          type="search"
-          [value]="term()"
-          (input)="term.set(searchField.value)"
-          #searchField
-        />
-        <label for="type">Tipo</label>
-        <select
-          id="type"
-          name="type"
-          [value]="typeFilter()"
-          (change)="filterByType(typeField.value)"
-          #typeField
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="search-field"
         >
-          <option value="">Todos</option>
-          <option value="STEEL">Aço</option>
-          <option value="OPGW">OPGW</option>
-        </select>
-        <button type="submit">Buscar</button>
-        <a routerLink="new">Novo cabo de guarda</a>
+          <mat-label>Buscar por código ou descrição</mat-label>
+          <input
+            matInput
+            id="search"
+            name="search"
+            type="search"
+            [value]="term()"
+            (input)="term.set(searchField.value)"
+            #searchField
+          />
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="type-field"
+        >
+          <mat-label>Tipo</mat-label>
+          <mat-select
+            id="type"
+            [value]="typeFilter()"
+            (selectionChange)="filterByType($event.value)"
+          >
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="STEEL">Aço</mat-option>
+            <mat-option value="OPGW">OPGW</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button matButton="outlined" type="submit">Buscar</button>
+        <a matButton="filled" routerLink="new">Novo cabo de guarda</a>
       </form>
 
       @if (loading()) {
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
         <p>Carregando…</p>
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else if (items().length === 0) {
-        <p>Nenhum cabo de guarda encontrado.</p>
+        <div class="empty-state">
+          <mat-icon aria-hidden="true">cable</mat-icon>
+          <p>Nenhum cabo de guarda encontrado.</p>
+          <a matButton="filled" routerLink="new">Novo cabo de guarda</a>
+        </div>
       } @else {
-        <table>
-          <caption>
-            Versões vigentes na data atual
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Código</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Peso (ton/km)</th>
-              <th scope="col">Bobina (m)</th>
-              <th scope="col">Diâmetro (mm)</th>
-              <th scope="col">UTS (kN)</th>
-              <th scope="col">Atributos do tipo</th>
-              <th scope="col">Pendências</th>
-              <th scope="col">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of items(); track item.id) {
-              <tr>
-                <td>{{ item.code }}</td>
-                <td>{{ typeLabel(item.type) }}</td>
-                <td>{{ item.effectiveVersion?.description ?? '—' }}</td>
-                <td>{{ item.effectiveVersion?.weightTonPerKm ?? '—' }}</td>
-                <td>{{ item.effectiveVersion?.reelLengthM ?? '—' }}</td>
-                <td>{{ item.effectiveVersion?.diameterMm ?? '—' }}</td>
-                <td>{{ item.effectiveVersion?.utsKn ?? '—' }}</td>
-                <td>{{ specifics(item) }}</td>
-                <td>
-                  @if (!item.effectiveVersion) {
-                    <strong class="pending">Sem versão vigente</strong>
-                  } @else if (item.pendingFields.length > 0) {
-                    <strong class="pending">
-                      Pendente: {{ item.pendingFields.join(', ') }}
-                    </strong>
-                  } @else {
-                    <span>Completo</span>
-                  }
-                </td>
-                <td>
-                  <a [routerLink]="[item.id, 'edit']">Editar</a>
-                  <a [routerLink]="[item.id, 'history']">Histórico</a>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table mat-table [dataSource]="items()" class="dense">
+            <caption>
+              Versões vigentes na data atual
+            </caption>
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
+              <td mat-cell *matCellDef="let item" class="mono">
+                {{ item.code }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef scope="col">Tipo</th>
+              <td mat-cell *matCellDef="let item">
+                {{ typeLabel(item.type) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef scope="col">Descrição</th>
+              <td mat-cell *matCellDef="let item">
+                {{ item.effectiveVersion?.description ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weightTonPerKm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Peso (ton/km)
+              </th>
+              <td mat-cell *matCellDef="let item" class="mono num">
+                {{ item.effectiveVersion?.weightTonPerKm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reelLengthM">
+              <th mat-header-cell *matHeaderCellDef scope="col">Bobina (m)</th>
+              <td mat-cell *matCellDef="let item" class="mono num">
+                {{ item.effectiveVersion?.reelLengthM ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="diameterMm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Diâmetro (mm)
+              </th>
+              <td mat-cell *matCellDef="let item" class="mono num">
+                {{ item.effectiveVersion?.diameterMm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="utsKn">
+              <th mat-header-cell *matHeaderCellDef scope="col">UTS (kN)</th>
+              <td mat-cell *matCellDef="let item" class="mono num">
+                {{ item.effectiveVersion?.utsKn ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="specifics">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Atributos do tipo
+              </th>
+              <td mat-cell *matCellDef="let item">
+                {{ specifics(item) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pending">
+              <th mat-header-cell *matHeaderCellDef scope="col">Pendências</th>
+              <td mat-cell *matCellDef="let item">
+                @if (!item.effectiveVersion) {
+                  <span class="badge badge-error">Sem versão vigente</span>
+                } @else if (item.pendingFields.length > 0) {
+                  <span class="badge">
+                    Pendente: {{ item.pendingFields.join(', ') }}
+                  </span>
+                } @else {
+                  <span>Completo</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef scope="col">Ações</th>
+              <td mat-cell *matCellDef="let item">
+                <a matButton [routerLink]="[item.id, 'edit']">Editar</a>
+                <a matButton [routerLink]="[item.id, 'history']">Histórico</a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let item; columns: columns"></tr>
+          </table>
+        </div>
       }
     </section>
   `,
   styles: `
-    .pending {
-      color: #b45309;
-    }
     .error {
-      color: #b91c1c;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    th,
-    td {
-      text-align: left;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid #ddd;
-    }
-    td a + a {
-      margin-left: 0.6rem;
+      color: var(--mat-sys-error);
     }
     form {
       display: flex;
-      gap: 0.5rem;
+      gap: 1rem;
       align-items: center;
+      flex-wrap: wrap;
       margin-block: 1rem;
+    }
+    .search-field {
+      flex: 1;
+      min-width: 16rem;
+    }
+    .type-field {
+      min-width: 10rem;
+    }
+    table {
+      width: 100%;
+    }
+    caption {
+      caption-side: top;
+      text-align: left;
+      padding-block: 0.5rem;
+      color: var(--mat-sys-on-surface-variant);
+      font: var(--mat-sys-body-medium);
     }
   `,
 })
 export class GroundWireListComponent {
   private readonly api = inject(GroundWiresApi);
+
+  protected readonly columns = [
+    'code',
+    'type',
+    'description',
+    'weightTonPerKm',
+    'reelLengthM',
+    'diameterMm',
+    'utsKn',
+    'specifics',
+    'pending',
+    'actions',
+  ];
 
   readonly term = signal('');
   readonly typeFilter = signal<'' | GroundWireType>('');

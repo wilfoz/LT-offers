@@ -114,7 +114,32 @@ body {
   font: var(--mat-sys-label-medium);
 }
 
+.badge-error {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
 // Tabelas largas rolam no próprio contêiner — o body nunca rola na horizontal
 .table-scroll {
   overflow-x: auto;
+}
+
+// Colunas numéricas (decimais/contagens) alinhadas à direita
+.num {
+  text-align: right;
+}
+
+// Estado vazio: ícone + texto + ação (DESIGN.md — nunca emoji)
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding-block: 3rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
 }

@@ -5,6 +5,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   DATE_PATTERN,
@@ -19,7 +23,14 @@ import { GroundWiresApi } from './ground-wires-api.service';
 
 @Component({
   selector: 'app-ground-wire-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   template: `
     <section>
       <h2>
@@ -30,204 +41,299 @@ import { GroundWiresApi } from './ground-wires-api.service';
         significa "não informado" — diferente de zero.
       </p>
 
-      <form [formGroup]="form" (ngSubmit)="save()">
+      <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
         @if (!editId()) {
-          <div>
-            <label for="code">Código *</label>
-            <input id="code" formControlName="code" maxlength="50" />
+          <mat-form-field
+            appearance="outline"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            class="col-6"
+          >
+            <mat-label>Código *</mat-label>
+            <input matInput id="code" formControlName="code" maxlength="50" />
             @if (errorFor('code')) {
-              <p class="error" role="alert">{{ errorFor('code') }}</p>
+              <mat-error>{{ errorFor('code') }}</mat-error>
             }
-          </div>
+          </mat-form-field>
 
-          <div>
-            <label for="type">Tipo * (fixo após a criação)</label>
-            <select id="type" formControlName="type">
-              <option value="">Selecione…</option>
-              <option value="STEEL">Aço</option>
-              <option value="OPGW">OPGW</option>
-            </select>
+          <mat-form-field
+            appearance="outline"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            class="col-6"
+          >
+            <mat-label>Tipo * (fixo após a criação)</mat-label>
+            <mat-select id="type" formControlName="type">
+              <mat-option value="">Selecione…</mat-option>
+              <mat-option value="STEEL">Aço</mat-option>
+              <mat-option value="OPGW">OPGW</mat-option>
+            </mat-select>
             @if (errorFor('type')) {
-              <p class="error" role="alert">{{ errorFor('type') }}</p>
+              <mat-error>{{ errorFor('type') }}</mat-error>
             }
-          </div>
+          </mat-form-field>
         } @else {
-          <p>
-            Código: <strong>{{ currentCode() }}</strong> · Tipo:
+          <p class="col-12">
+            Código: <strong class="mono">{{ currentCode() }}</strong> · Tipo:
             <strong>{{ typeLabel() }}</strong> (fixo desde a criação)
           </p>
         }
 
-        <div>
-          <label for="description">Descrição</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-12"
+        >
+          <mat-label>Descrição</mat-label>
           <input
+            matInput
             id="description"
             formControlName="description"
             maxlength="200"
           />
-        </div>
+          <mat-hint>Em branco = não informado</mat-hint>
+        </mat-form-field>
 
-        <div>
-          <label for="weightTonPerKm">Peso (ton/km)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Peso (ton/km)</mat-label>
           <input
+            matInput
             id="weightTonPerKm"
             formControlName="weightTonPerKm"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('weightTonPerKm')) {
-            <p class="error" role="alert">{{ errorFor('weightTonPerKm') }}</p>
+            <mat-error>{{ errorFor('weightTonPerKm') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="reelLengthM">Bobina (m)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Bobina (m)</mat-label>
           <input
+            matInput
             id="reelLengthM"
             formControlName="reelLengthM"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('reelLengthM')) {
-            <p class="error" role="alert">{{ errorFor('reelLengthM') }}</p>
+            <mat-error>{{ errorFor('reelLengthM') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="diameterMm">Diâmetro (mm)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Diâmetro (mm)</mat-label>
           <input
+            matInput
             id="diameterMm"
             formControlName="diameterMm"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('diameterMm')) {
-            <p class="error" role="alert">{{ errorFor('diameterMm') }}</p>
+            <mat-error>{{ errorFor('diameterMm') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="utsKn">UTS — carga de ruptura (kN)</label>
-          <input id="utsKn" formControlName="utsKn" inputmode="decimal" />
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>UTS — carga de ruptura (kN)</mat-label>
+          <input
+            matInput
+            id="utsKn"
+            formControlName="utsKn"
+            inputmode="decimal"
+          />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('utsKn')) {
-            <p class="error" role="alert">{{ errorFor('utsKn') }}</p>
+            <mat-error>{{ errorFor('utsKn') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
         @if (selectedType() === 'STEEL') {
-          <fieldset>
-            <legend>Atributos do tipo aço</legend>
-            <div>
-              <label for="galvanizationClass">Classe de galvanização</label>
+          <div class="col-12 form-grid type-fields">
+            <h3 class="col-12">Atributos do tipo aço</h3>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>Classe de galvanização</mat-label>
               <input
+                matInput
                 id="galvanizationClass"
                 formControlName="galvanizationClass"
                 maxlength="50"
               />
-            </div>
-            <div>
-              <label for="strengthGrade">Grau de resistência</label>
+              <mat-hint>Em branco = não informado</mat-hint>
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>Grau de resistência</mat-label>
               <input
+                matInput
                 id="strengthGrade"
                 formControlName="strengthGrade"
                 maxlength="50"
               />
-            </div>
-            <div>
-              <label for="wireCount">Número de fios</label>
+              <mat-hint>Em branco = não informado</mat-hint>
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>Número de fios</mat-label>
               <input
+                matInput
                 id="wireCount"
                 formControlName="wireCount"
                 inputmode="numeric"
               />
+              <mat-hint>Em branco = não informado</mat-hint>
               @if (errorFor('wireCount')) {
-                <p class="error" role="alert">{{ errorFor('wireCount') }}</p>
+                <mat-error>{{ errorFor('wireCount') }}</mat-error>
               }
-            </div>
-          </fieldset>
+            </mat-form-field>
+          </div>
         } @else if (selectedType() === 'OPGW') {
-          <fieldset>
-            <legend>Atributos do tipo OPGW</legend>
-            <div>
-              <label for="manufacturer">Fabricante</label>
+          <div class="col-12 form-grid type-fields">
+            <h3 class="col-12">Atributos do tipo OPGW</h3>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>Fabricante</mat-label>
               <input
+                matInput
                 id="manufacturer"
                 formControlName="manufacturer"
                 maxlength="100"
               />
-            </div>
-            <div>
-              <label for="i2tKa2s">I²t (kA²·s)</label>
+              <mat-hint>Em branco = não informado</mat-hint>
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>I²t (kA²·s)</mat-label>
               <input
+                matInput
                 id="i2tKa2s"
                 formControlName="i2tKa2s"
                 inputmode="decimal"
               />
+              <mat-hint>Em branco = não informado</mat-hint>
               @if (errorFor('i2tKa2s')) {
-                <p class="error" role="alert">{{ errorFor('i2tKa2s') }}</p>
+                <mat-error>{{ errorFor('i2tKa2s') }}</mat-error>
               }
-            </div>
-            <div>
-              <label for="fiberCount">Número de fibras</label>
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              floatLabel="always"
+              subscriptSizing="dynamic"
+              class="col-6"
+            >
+              <mat-label>Número de fibras</mat-label>
               <input
+                matInput
                 id="fiberCount"
                 formControlName="fiberCount"
                 inputmode="numeric"
               />
+              <mat-hint>Em branco = não informado</mat-hint>
               @if (errorFor('fiberCount')) {
-                <p class="error" role="alert">{{ errorFor('fiberCount') }}</p>
+                <mat-error>{{ errorFor('fiberCount') }}</mat-error>
               }
-            </div>
-          </fieldset>
+            </mat-form-field>
+          </div>
         }
 
-        <div>
-          <label for="effectiveFrom">
-            Início de vigência
-            {{ editId() ? '*' : '(opcional; padrão hoje)' }}
-          </label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>
+            Início de vigência {{ editId() ? '*' : '(opcional; padrão hoje)' }}
+          </mat-label>
           <input
+            matInput
             id="effectiveFrom"
             formControlName="effectiveFrom"
             type="date"
           />
           @if (errorFor('effectiveFrom')) {
-            <p class="error" role="alert">{{ errorFor('effectiveFrom') }}</p>
+            <mat-error>{{ errorFor('effectiveFrom') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
         @if (serverError()) {
-          <p class="error" role="alert">{{ serverError() }}</p>
+          <p class="error col-12" role="alert">{{ serverError() }}</p>
         }
 
-        <button type="submit" [disabled]="saving() || form.disabled">
-          Salvar
-        </button>
-        <a routerLink="/catalogs/ground-wires">Cancelar</a>
+        <div class="actions col-12">
+          <button
+            matButton="filled"
+            type="submit"
+            [disabled]="saving() || form.disabled"
+          >
+            Salvar
+          </button>
+          <a matButton routerLink="/catalogs/ground-wires">Cancelar</a>
+        </div>
       </form>
     </section>
   `,
   styles: `
     form {
-      display: grid;
-      gap: 0.75rem;
-      max-width: 28rem;
+      max-width: 48rem;
     }
-    label {
-      display: block;
-      font-weight: 600;
-    }
-    input,
-    select {
-      width: 100%;
-      padding: 0.35rem;
-    }
-    fieldset {
-      display: grid;
-      gap: 0.75rem;
-      border: 1px solid #ddd;
-      padding: 0.75rem;
+    h3 {
+      margin: 0;
+      font: var(--mat-sys-title-small);
+      color: var(--mat-sys-on-surface-variant);
     }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
       margin: 0.15rem 0 0;
+    }
+    .actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
     }
   `,
 })

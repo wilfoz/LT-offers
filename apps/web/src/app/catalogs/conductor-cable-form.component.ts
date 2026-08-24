@@ -5,6 +5,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   ConductorCableVersionInput,
@@ -16,7 +19,13 @@ import { orNull } from './form-utils';
 
 @Component({
   selector: 'app-conductor-cable-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   template: `
     <section>
       <h2>
@@ -27,115 +36,167 @@ import { orNull } from './form-utils';
         significa "não informado" — diferente de zero.
       </p>
 
-      <form [formGroup]="form" (ngSubmit)="save()">
+      <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
         @if (!editId()) {
-          <div>
-            <label for="code">Código *</label>
-            <input id="code" formControlName="code" maxlength="50" />
+          <mat-form-field
+            appearance="outline"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            class="col-6"
+          >
+            <mat-label>Código *</mat-label>
+            <input matInput id="code" formControlName="code" maxlength="50" />
             @if (errorFor('code')) {
-              <p class="error" role="alert">{{ errorFor('code') }}</p>
+              <mat-error>{{ errorFor('code') }}</mat-error>
             }
-          </div>
+          </mat-form-field>
         } @else {
-          <p>
-            Código: <strong>{{ currentCode() }}</strong>
+          <p class="col-12">
+            Código: <strong class="mono">{{ currentCode() }}</strong>
           </p>
         }
 
-        <div>
-          <label for="description">Descrição</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-12"
+        >
+          <mat-label>Descrição</mat-label>
           <input
+            matInput
             id="description"
             formControlName="description"
             maxlength="200"
           />
-        </div>
+          <mat-hint>Em branco = não informado</mat-hint>
+        </mat-form-field>
 
-        <div>
-          <label for="weightTonPerKm">Peso (ton/km)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Peso (ton/km)</mat-label>
           <input
+            matInput
             id="weightTonPerKm"
             formControlName="weightTonPerKm"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('weightTonPerKm')) {
-            <p class="error" role="alert">{{ errorFor('weightTonPerKm') }}</p>
+            <mat-error>{{ errorFor('weightTonPerKm') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="reelLengthM">Bobina (m)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Bobina (m)</mat-label>
           <input
+            matInput
             id="reelLengthM"
             formControlName="reelLengthM"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('reelLengthM')) {
-            <p class="error" role="alert">{{ errorFor('reelLengthM') }}</p>
+            <mat-error>{{ errorFor('reelLengthM') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="diameterMm">Diâmetro (mm)</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>Diâmetro (mm)</mat-label>
           <input
+            matInput
             id="diameterMm"
             formControlName="diameterMm"
             inputmode="decimal"
           />
+          <mat-hint>Em branco = não informado</mat-hint>
           @if (errorFor('diameterMm')) {
-            <p class="error" role="alert">{{ errorFor('diameterMm') }}</p>
+            <mat-error>{{ errorFor('diameterMm') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
-        <div>
-          <label for="utsKn">UTS — carga de ruptura (kN)</label>
-          <input id="utsKn" formControlName="utsKn" inputmode="decimal" />
-          @if (errorFor('utsKn')) {
-            <p class="error" role="alert">{{ errorFor('utsKn') }}</p>
-          }
-        </div>
-
-        <div>
-          <label for="effectiveFrom">
-            Início de vigência
-            {{ editId() ? '*' : '(opcional; padrão hoje)' }}
-          </label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>UTS — carga de ruptura (kN)</mat-label>
           <input
+            matInput
+            id="utsKn"
+            formControlName="utsKn"
+            inputmode="decimal"
+          />
+          <mat-hint>Em branco = não informado</mat-hint>
+          @if (errorFor('utsKn')) {
+            <mat-error>{{ errorFor('utsKn') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          subscriptSizing="dynamic"
+          class="col-6"
+        >
+          <mat-label>
+            Início de vigência {{ editId() ? '*' : '(opcional; padrão hoje)' }}
+          </mat-label>
+          <input
+            matInput
             id="effectiveFrom"
             formControlName="effectiveFrom"
             type="date"
           />
           @if (errorFor('effectiveFrom')) {
-            <p class="error" role="alert">{{ errorFor('effectiveFrom') }}</p>
+            <mat-error>{{ errorFor('effectiveFrom') }}</mat-error>
           }
-        </div>
+        </mat-form-field>
 
         @if (serverError()) {
-          <p class="error" role="alert">{{ serverError() }}</p>
+          <p class="error col-12" role="alert">{{ serverError() }}</p>
         }
 
-        <button type="submit" [disabled]="saving()">Salvar</button>
-        <a routerLink="/catalogs/conductor-cables">Cancelar</a>
+        <div class="actions col-12">
+          <button
+            matButton="filled"
+            type="submit"
+            [disabled]="saving() || form.disabled"
+          >
+            Salvar
+          </button>
+          <a matButton routerLink="/catalogs/conductor-cables">Cancelar</a>
+        </div>
       </form>
     </section>
   `,
   styles: `
     form {
-      display: grid;
-      gap: 0.75rem;
-      max-width: 28rem;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-    }
-    input {
-      width: 100%;
-      padding: 0.35rem;
+      max-width: 48rem;
     }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
       margin: 0.15rem 0 0;
+    }
+    .actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
     }
   `,
 })

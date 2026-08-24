@@ -1,51 +1,94 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ConductorCableHistory } from '@lt-offers/domain';
 import { ConductorCablesApi } from './conductor-cables-api.service';
 
 @Component({
   selector: 'app-conductor-cable-history',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, MatTableModule, MatButtonModule],
   template: `
     <section>
       <h2>Histórico de versões — {{ history()?.code }}</h2>
-      <a routerLink="/catalogs/conductor-cables">Voltar à listagem</a>
+      <a matButton routerLink="/catalogs/conductor-cables">
+        Voltar à listagem
+      </a>
 
       @if (history(); as h) {
-        <table>
-          <caption>
-            Da vigência mais recente para a mais antiga; versões são imutáveis
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Início de vigência</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Peso (ton/km)</th>
-              <th scope="col">Bobina (m)</th>
-              <th scope="col">Diâmetro (mm)</th>
-              <th scope="col">UTS (kN)</th>
-              <th scope="col">Autor</th>
-              <th scope="col">Criada em</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (version of h.versions; track version.id) {
-              <tr>
-                <td>
-                  {{ version.effectiveFrom | date: 'dd/MM/yyyy' : 'UTC' }}
-                </td>
-                <td>{{ version.description ?? '—' }}</td>
-                <td>{{ version.weightTonPerKm ?? '—' }}</td>
-                <td>{{ version.reelLengthM ?? '—' }}</td>
-                <td>{{ version.diameterMm ?? '—' }}</td>
-                <td>{{ version.utsKn ?? '—' }}</td>
-                <td>{{ version.createdBy }}</td>
-                <td>{{ version.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table mat-table [dataSource]="h.versions" class="dense">
+            <caption>
+              Da vigência mais recente para a mais antiga; versões são imutáveis
+            </caption>
+
+            <ng-container matColumnDef="effectiveFrom">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Início de vigência
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono">
+                {{ version.effectiveFrom | date: 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef scope="col">Descrição</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.description ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weightTonPerKm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Peso (ton/km)
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.weightTonPerKm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reelLengthM">
+              <th mat-header-cell *matHeaderCellDef scope="col">Bobina (m)</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.reelLengthM ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="diameterMm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Diâmetro (mm)
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.diameterMm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="utsKn">
+              <th mat-header-cell *matHeaderCellDef scope="col">UTS (kN)</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.utsKn ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef scope="col">Autor</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.createdBy }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef scope="col">Criada em</th>
+              <td mat-cell *matCellDef="let version" class="mono">
+                {{ version.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let version; columns: columns"></tr>
+          </table>
+        </div>
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else {
@@ -55,24 +98,35 @@ import { ConductorCablesApi } from './conductor-cables-api.service';
   `,
   styles: `
     table {
-      border-collapse: collapse;
       width: 100%;
       margin-top: 1rem;
     }
-    th,
-    td {
+    caption {
+      caption-side: top;
       text-align: left;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid #ddd;
+      padding-block: 0.5rem;
+      color: var(--mat-sys-on-surface-variant);
+      font: var(--mat-sys-body-medium);
     }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
     }
   `,
 })
 export class ConductorCableHistoryComponent {
   private readonly api = inject(ConductorCablesApi);
   private readonly route = inject(ActivatedRoute);
+
+  protected readonly columns = [
+    'effectiveFrom',
+    'description',
+    'weightTonPerKm',
+    'reelLengthM',
+    'diameterMm',
+    'utsKn',
+    'createdBy',
+    'createdAt',
+  ];
 
   readonly history = signal<ConductorCableHistory | null>(null);
   readonly error = signal('');

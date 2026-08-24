@@ -1,5 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GroundWireHistory } from '@lt-offers/domain';
 import { GROUND_WIRE_TYPE_LABELS } from './ground-wire-labels';
@@ -7,7 +9,7 @@ import { GroundWiresApi } from './ground-wires-api.service';
 
 @Component({
   selector: 'app-ground-wire-history',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, MatTableModule, MatButtonModule],
   template: `
     <section>
       <h2>
@@ -16,60 +18,127 @@ import { GroundWiresApi } from './ground-wires-api.service';
           <small>(tipo {{ typeLabel(h) }})</small>
         }
       </h2>
-      <a routerLink="/catalogs/ground-wires">Voltar à listagem</a>
+      <a matButton routerLink="/catalogs/ground-wires">Voltar à listagem</a>
 
       @if (history(); as h) {
-        <table>
-          <caption>
-            Da vigência mais recente para a mais antiga; versões são imutáveis
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Início de vigência</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Peso (ton/km)</th>
-              <th scope="col">Bobina (m)</th>
-              <th scope="col">Diâmetro (mm)</th>
-              <th scope="col">UTS (kN)</th>
-              @if (h.type === 'STEEL') {
-                <th scope="col">Classe de galvanização</th>
-                <th scope="col">Grau de resistência</th>
-                <th scope="col">Fios</th>
-              } @else {
-                <th scope="col">Fabricante</th>
-                <th scope="col">I²t (kA²·s)</th>
-                <th scope="col">Fibras</th>
-              }
-              <th scope="col">Autor</th>
-              <th scope="col">Criada em</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (version of h.versions; track version.id) {
-              <tr>
-                <td>
-                  {{ version.effectiveFrom | date: 'dd/MM/yyyy' : 'UTC' }}
-                </td>
-                <td>{{ version.description ?? '—' }}</td>
-                <td>{{ version.weightTonPerKm ?? '—' }}</td>
-                <td>{{ version.reelLengthM ?? '—' }}</td>
-                <td>{{ version.diameterMm ?? '—' }}</td>
-                <td>{{ version.utsKn ?? '—' }}</td>
-                @if (h.type === 'STEEL') {
-                  <td>{{ version.galvanizationClass ?? '—' }}</td>
-                  <td>{{ version.strengthGrade ?? '—' }}</td>
-                  <td>{{ version.wireCount ?? '—' }}</td>
-                } @else {
-                  <td>{{ version.manufacturer ?? '—' }}</td>
-                  <td>{{ version.i2tKa2s ?? '—' }}</td>
-                  <td>{{ version.fiberCount ?? '—' }}</td>
-                }
-                <td>{{ version.createdBy }}</td>
-                <td>{{ version.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table mat-table [dataSource]="h.versions" class="dense">
+            <caption>
+              Da vigência mais recente para a mais antiga; versões são imutáveis
+            </caption>
+
+            <ng-container matColumnDef="effectiveFrom">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Início de vigência
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono">
+                {{ version.effectiveFrom | date: 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef scope="col">Descrição</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.description ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weightTonPerKm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Peso (ton/km)
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.weightTonPerKm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reelLengthM">
+              <th mat-header-cell *matHeaderCellDef scope="col">Bobina (m)</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.reelLengthM ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="diameterMm">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Diâmetro (mm)
+              </th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.diameterMm ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="utsKn">
+              <th mat-header-cell *matHeaderCellDef scope="col">UTS (kN)</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.utsKn ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="galvanizationClass">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Classe de galvanização
+              </th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.galvanizationClass ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="strengthGrade">
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Grau de resistência
+              </th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.strengthGrade ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="wireCount">
+              <th mat-header-cell *matHeaderCellDef scope="col">Fios</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.wireCount ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="manufacturer">
+              <th mat-header-cell *matHeaderCellDef scope="col">Fabricante</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.manufacturer ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="i2tKa2s">
+              <th mat-header-cell *matHeaderCellDef scope="col">I²t (kA²·s)</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.i2tKa2s ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fiberCount">
+              <th mat-header-cell *matHeaderCellDef scope="col">Fibras</th>
+              <td mat-cell *matCellDef="let version" class="mono num">
+                {{ version.fiberCount ?? '—' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef scope="col">Autor</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.createdBy }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef scope="col">Criada em</th>
+              <td mat-cell *matCellDef="let version" class="mono">
+                {{ version.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns()"></tr>
+            <tr mat-row *matRowDef="let version; columns: columns()"></tr>
+          </table>
+        </div>
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else {
@@ -79,18 +148,18 @@ import { GroundWiresApi } from './ground-wires-api.service';
   `,
   styles: `
     table {
-      border-collapse: collapse;
       width: 100%;
       margin-top: 1rem;
     }
-    th,
-    td {
+    caption {
+      caption-side: top;
       text-align: left;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid #ddd;
+      padding-block: 0.5rem;
+      color: var(--mat-sys-on-surface-variant);
+      font: var(--mat-sys-body-medium);
     }
     .error {
-      color: #b91c1c;
+      color: var(--mat-sys-error);
     }
   `,
 })
@@ -100,6 +169,25 @@ export class GroundWireHistoryComponent {
 
   readonly history = signal<GroundWireHistory | null>(null);
   readonly error = signal('');
+
+  /** Colunas exibidas: as comuns mais as específicas do tipo do item. */
+  protected readonly columns = computed(() => {
+    const specific =
+      this.history()?.type === 'STEEL'
+        ? ['galvanizationClass', 'strengthGrade', 'wireCount']
+        : ['manufacturer', 'i2tKa2s', 'fiberCount'];
+    return [
+      'effectiveFrom',
+      'description',
+      'weightTonPerKm',
+      'reelLengthM',
+      'diameterMm',
+      'utsKn',
+      ...specific,
+      'createdBy',
+      'createdAt',
+    ];
+  });
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
