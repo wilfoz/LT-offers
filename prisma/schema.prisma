@@ -1,6 +1,8 @@
 // Schema Prisma do app api.
 // Infra: health_check. Catálogos F1 seguem o padrão item + versões com
-// vigência derivada (RNF-05) — um par de modelos por catálogo, abaixo.
+// vigência derivada (RNF-05): identidade estável e versões imutáveis, um par
+// de modelos por nível de catálogo (catálogos hierárquicos têm mais de um
+// nível; tabelas filhas pertencem à versão e são imutáveis com ela).
 // As demais entidades de negócio (ofertas) chegam em fases futuras.
 
 generator client {
@@ -126,4 +128,83 @@ model GuyWireVersion {
   @@unique([guyWireId, effectiveFrom])
   @@index([guyWireId, effectiveFrom(sort: Desc)])
   @@map("guy_wire_version")
+}
+
+// Catálogo de séries de estruturas e torres (F1 — origem DB_TOR), primeiro
+// catálogo hierárquico (design D1 da change catalogo-series-torres): série →
+// tipos de torre, cada nível no padrão item + versões. A função do tipo de
+// torre pertence à identidade (como GroundWire.type) e não muda entre versões;
+// a tabela peso × altura pertence à versão e é imutável junto com ela.
+model StructureSeries {
+  id         Int                      @id @default(autoincrement())
+  name       String                   @unique
+  versions   StructureSeriesVersion[]
+  towerTypes TowerType[]
+
+  @@map("structure_series")
+}
+
+model StructureSeriesVersion {
+  id                Int             @id @default(autoincrement())
+  structureSeriesId Int             @map("structure_series_id")
+  structureSeries   StructureSeries @relation(fields: [structureSeriesId], references: [id])
+  designer          String?
+  voltageKv         Decimal?        @map("voltage_kv") @db.Decimal(12, 2)
+  circuitCount      Int?            @map("circuit_count")
+  cablesPerPhase    Int?            @map("cables_per_phase")
+  designWindSpeedMs Decimal?        @map("design_wind_speed_ms") @db.Decimal(12, 2)
+  insulatorType     String?         @map("insulator_type")
+  silMw             Decimal?        @map("sil_mw") @db.Decimal(12, 2)
+  effectiveFrom     DateTime        @map("effective_from") @db.Date
+  createdBy         String          @map("created_by")
+  createdAt         DateTime        @default(now()) @map("created_at")
+
+  @@unique([structureSeriesId, effectiveFrom])
+  @@index([structureSeriesId, effectiveFrom(sort: Desc)])
+  @@map("structure_series_version")
+}
+
+enum TowerFunction {
+  SUSPENSION
+  ANCHOR
+
+  @@map("tower_function")
+}
+
+model TowerType {
+  id                Int                @id @default(autoincrement())
+  structureSeriesId Int                @map("structure_series_id")
+  structureSeries   StructureSeries    @relation(fields: [structureSeriesId], references: [id])
+  code              String
+  function          TowerFunction
+  versions          TowerTypeVersion[]
+
+  @@unique([structureSeriesId, code])
+  @@map("tower_type")
+}
+
+model TowerTypeVersion {
+  id            Int               @id @default(autoincrement())
+  towerTypeId   Int               @map("tower_type_id")
+  towerType     TowerType         @relation(fields: [towerTypeId], references: [id])
+  guyCount      Int?              @map("guy_count")
+  weights       TowerTypeWeight[]
+  effectiveFrom DateTime          @map("effective_from") @db.Date
+  createdBy     String            @map("created_by")
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  @@unique([towerTypeId, effectiveFrom])
+  @@index([towerTypeId, effectiveFrom(sort: Desc)])
+  @@map("tower_type_version")
+}
+
+model TowerTypeWeight {
+  id                 Int              @id @default(autoincrement())
+  towerTypeVersionId Int              @map("tower_type_version_id")
+  towerTypeVersion   TowerTypeVersion @relation(fields: [towerTypeVersionId], references: [id])
+  heightM            Decimal          @map("height_m") @db.Decimal(10, 3)
+  weightKg           Decimal          @map("weight_kg") @db.Decimal(12, 2)
+
+  @@unique([towerTypeVersionId, heightM])
+  @@map("tower_type_weight")
 }
