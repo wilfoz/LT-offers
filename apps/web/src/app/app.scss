@@ -17,6 +17,13 @@
 .app-title {
   font: var(--mat-sys-title-large);
   margin: 0;
+  // A toolbar é flex: sem min-width 0 o título não encolhe e estica a página
+  // na horizontal em telas estreitas (bug pego no QA — regressão coberta pelo
+  // cenário E2E "tabela larga em tela estreita" do qa/e2e.mjs)
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-container {
