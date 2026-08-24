@@ -1,4 +1,4 @@
-# Tasks: catalogo-cabos-guarda-opgw
+﻿# Tasks: catalogo-cabos-guarda-opgw
 
 ## 1. Nomenclatura e modelo de dados
 
@@ -8,15 +8,15 @@
 
 ## 2. Contratos compartilhados
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/ground-wires.ts` com o enum de tipo e os contratos de request/response (decimais como string, campos anuláveis), exportado pelo index da lib, seguindo o padrão de `conductor-cables.ts`
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/ground-wires.ts` com o enum de tipo e os contratos de request/response (decimais como string, campos anuláveis), exportado pelo index da lib, seguindo o padrão de `conductor-cables.ts`
 
 ## 3. API de cabos de guarda
 
-- [ ] 3.1 Criar `ground-wires.controller/service` no módulo `catalogs` do `apps/api` com endpoints do design D2: criar item com tipo (primeira versão), nova versão (tipo fixo — rejeitar tentativa de troca), listar vigentes com `?search=` e `?type=`, obter item com `?effectiveOn=`, histórico — datas resolvidas na borda com `civil-date.ts` (validação de calendário round-trip) e vigência via `effectiveness.ts`, sem alterá-los
-- [ ] 3.2 Implementar DTOs com class-validator e mensagens em pt-BR: tipo obrigatório e restrito ao enum, numéricos como string decimal positiva, `wireCount`/`fiberCount` inteiros positivos, `null` para não informado; validação de aplicabilidade por tipo no service (campo do outro tipo → 400 apontando o campo)
-- [ ] 3.3 Aplicar os padrões herdados das reviews do piloto (design D3): `P2002` → 409 no create, `ParseIntPipe` com `exceptionFactory` pt-BR, um único decorador HTTP por método, `pendingFields` calculado por tipo (comuns + específicos obrigatórios; `manufacturer`/`description` fora), autor via `X-User` com fallback `"sistema"`
-- [ ] 3.4 Escrever testes do service e do controller cobrindo os cenários do spec `cabos-guarda`: criação por tipo, código duplicado entre tipos, tipo inválido, troca de tipo rejeitada, campo do outro tipo rejeitado, contagens não inteiras, filtro por tipo, pendências por tipo, histórico
-- [ ] 3.5 Verificar os endpoints ao vivo contra o Postgres do Compose (criar aço e OPGW, nova versão, listar com `search`+`type`, `effectiveOn` em data passada, histórico)
+- [x] 3.1 Criar `ground-wires.controller/service` no módulo `catalogs` do `apps/api` com endpoints do design D2: criar item com tipo (primeira versão), nova versão (tipo fixo — rejeitar tentativa de troca), listar vigentes com `?search=` e `?type=`, obter item com `?effectiveOn=`, histórico — datas resolvidas na borda com `civil-date.ts` (validação de calendário round-trip) e vigência via `effectiveness.ts`, sem alterá-los
+- [x] 3.2 Implementar DTOs com class-validator e mensagens em pt-BR: tipo obrigatório e restrito ao enum, numéricos como string decimal positiva, `wireCount`/`fiberCount` inteiros positivos, `null` para não informado; validação de aplicabilidade por tipo no service (campo do outro tipo → 400 apontando o campo)
+- [x] 3.3 Aplicar os padrões herdados das reviews do piloto (design D3): `P2002` → 409 no create, `ParseIntPipe` com `exceptionFactory` pt-BR, um único decorador HTTP por método, `pendingFields` calculado por tipo (comuns + específicos obrigatórios; `manufacturer`/`description` fora), autor via `X-User` com fallback `"sistema"`
+- [x] 3.4 Escrever testes do service e do controller cobrindo os cenários do spec `cabos-guarda`: criação por tipo, código duplicado entre tipos, tipo inválido, troca de tipo rejeitada, campo do outro tipo rejeitado, contagens não inteiras, filtro por tipo, pendências por tipo, histórico
+- [x] 3.5 Verificar os endpoints ao vivo contra o Postgres do Compose (criar aço e OPGW, nova versão, listar com `search`+`type`, `effectiveOn` em data passada, histórico)
 
 ## 4. Interface de manutenção
 
