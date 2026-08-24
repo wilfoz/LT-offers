@@ -36,7 +36,10 @@ export const CATALOGS_ROUTES: Routes = [
   { path: 'guy-wires/:id/history', component: GuyWireHistoryComponent },
   { path: 'structure-series', component: StructureSeriesListComponent },
   { path: 'structure-series/new', component: StructureSeriesFormComponent },
-  { path: 'structure-series/:id/edit', component: StructureSeriesFormComponent },
+  {
+    path: 'structure-series/:id/edit',
+    component: StructureSeriesFormComponent,
+  },
   {
     path: 'structure-series/:id/history',
     component: StructureSeriesHistoryComponent,

@@ -61,9 +61,7 @@ import { TowerTypesApi } from './tower-types-api.service';
           </div>
         </dl>
         @if (s.pendingFields.length > 0) {
-          <p class="pending">
-            Pendente: {{ s.pendingFields.join(', ') }}
-          </p>
+          <p class="pending">Pendente: {{ s.pendingFields.join(', ') }}</p>
         }
       } @else {
         <p>Carregando…</p>
@@ -72,7 +70,12 @@ import { TowerTypesApi } from './tower-types-api.service';
       <h3>Tipos de torre</h3>
       @if (seriesId(); as id) {
         <a
-          [routerLink]="['/catalogs/structure-series', id, 'tower-types', 'new']"
+          [routerLink]="[
+            '/catalogs/structure-series',
+            id,
+            'tower-types',
+            'new',
+          ]"
         >
           Novo tipo de torre
         </a>

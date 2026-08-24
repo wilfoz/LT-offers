@@ -21,7 +21,11 @@ import { StructureSeriesApi } from './structure-series-api.service';
   template: `
     <section>
       <h2>
-        {{ editId() ? 'Nova versão da série de estrutura' : 'Nova série de estrutura' }}
+        {{
+          editId()
+            ? 'Nova versão da série de estrutura'
+            : 'Nova série de estrutura'
+        }}
       </h2>
       <p>
         Campos numéricos usam ponto como separador decimal. Campo em branco

@@ -45,8 +45,7 @@ export interface StructureSeriesVersionInput {
 }
 
 /** Nova versão de item existente: a data de vigência é obrigatória. */
-export interface NewStructureSeriesVersionInput
-  extends StructureSeriesVersionInput {
+export interface NewStructureSeriesVersionInput extends StructureSeriesVersionInput {
   effectiveFrom: string;
 }
 
