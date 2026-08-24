@@ -2,8 +2,8 @@ import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
   {
-    path: 'catalogos',
+    path: 'catalogs',
     loadChildren: () =>
-      import('./catalogos/catalogos.routes').then((m) => m.CATALOGOS_ROUTES),
+      import('./catalogs/catalogs.routes').then((m) => m.CATALOGS_ROUTES),
   },
 ];

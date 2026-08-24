@@ -27,9 +27,9 @@
 
 ## 5. Web
 
-- [ ] 5.1 Renomear `apps/web/src/app/catalogos` → `catalogs`: componentes `ConductorCableListComponent`, `ConductorCableFormComponent`, `ConductorCableHistoryComponent`, service `ConductorCablesApi`, identificadores em inglês; todos os textos de tela permanecem pt-BR
-- [ ] 5.2 Atualizar rotas do navegador para `/catalogs/conductor-cables` e os testes de componente
-- [ ] 5.3 Atualizar o script E2E `qa/e2e-qa.mjs` da change do piloto (rotas e seletores que mudaram) mantendo os mesmos cenários
+- [x] 5.1 Renomear `apps/web/src/app/catalogos` → `catalogs`: componentes `ConductorCableListComponent`, `ConductorCableFormComponent`, `ConductorCableHistoryComponent`, service `ConductorCablesApi`, identificadores em inglês; todos os textos de tela permanecem pt-BR
+- [x] 5.2 Atualizar rotas do navegador para `/catalogs/conductor-cables` e os testes de componente
+- [x] 5.3 Atualizar o script E2E `qa/e2e-qa.mjs` da change do piloto (rotas e seletores que mudaram) mantendo os mesmos cenários
 
 ## 6. Verificação final
 

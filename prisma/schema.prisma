@@ -11,11 +11,11 @@ datasource db {
   provider = "postgresql"
 }
 
-model VerificacaoSaude {
-  id       Int      @id @default(autoincrement())
-  criadoEm DateTime @default(now()) @map("criado_em")
+model HealthCheck {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
 
-  @@map("verificacao_saude")
+  @@map("health_check")
 }
 
 // Catálogo de cabos condutores (piloto F1 — origem DB_CAL).

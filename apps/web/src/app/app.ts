@@ -8,5 +8,5 @@ import { RouterModule } from '@angular/router';
   styleUrl: './app.scss',
 })
 export class App {
-  protected titulo = 'Orçamentação de Linhas de Transmissão';
+  protected title = 'Orçamentação de Linhas de Transmissão';
 }
