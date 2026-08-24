@@ -1,7 +1,7 @@
-// Schema Prisma do app api (design D6).
-// Nesta fase existe apenas a tabela mínima de infraestrutura que prova o
-// ciclo migrate → generate → query. As entidades de negócio (catálogos,
-// ofertas) chegam na fase F1 com design de dados próprio.
+// Schema Prisma do app api.
+// Infra: health_check. Catálogos F1 (padrão item + versões com vigência
+// derivada, RNF-05): cabos condutores e cabos de guarda. As demais entidades
+// de negócio (ofertas) chegam em fases futuras com design de dados próprio.
 
 generator client {
   provider = "prisma-client-js"
@@ -46,4 +46,51 @@ model ConductorCableVersion {
   @@unique([conductorCableId, effectiveFrom])
   @@index([conductorCableId, effectiveFrom(sort: Desc)])
   @@map("conductor_cable_version")
+}
+
+// Catálogo de cabos de guarda (F1 — origem DB_CGA e DB_OPGW).
+// Família única com discriminador de tipo (design D1 da change
+// catalogo-cabos-guarda-opgw): o tipo pertence à identidade e não muda entre
+// versões. Colunas específicas de cada tipo são anuláveis; a aplicabilidade
+// por tipo é garantida pela API (campo do outro tipo é rejeitado com 400).
+enum GroundWireType {
+  STEEL
+  OPGW
+
+  @@map("ground_wire_type")
+}
+
+model GroundWire {
+  id       Int                 @id @default(autoincrement())
+  code     String              @unique
+  type     GroundWireType
+  versions GroundWireVersion[]
+
+  @@map("ground_wire")
+}
+
+model GroundWireVersion {
+  id                 Int        @id @default(autoincrement())
+  groundWireId       Int        @map("ground_wire_id")
+  groundWire         GroundWire @relation(fields: [groundWireId], references: [id])
+  description        String?
+  weightTonPerKm     Decimal?   @map("weight_ton_per_km") @db.Decimal(12, 4)
+  reelLengthM        Decimal?   @map("reel_length_m") @db.Decimal(12, 2)
+  diameterMm         Decimal?   @map("diameter_mm") @db.Decimal(10, 3)
+  utsKn              Decimal?   @map("uts_kn") @db.Decimal(12, 2)
+  // Específicos do tipo aço (DB_CGA)
+  galvanizationClass String?    @map("galvanization_class")
+  strengthGrade      String?    @map("strength_grade")
+  wireCount          Int?       @map("wire_count")
+  // Específicos do tipo OPGW (DB_OPGW)
+  manufacturer       String?
+  i2tKa2s            Decimal?   @map("i2t_ka2s") @db.Decimal(12, 3)
+  fiberCount         Int?       @map("fiber_count")
+  effectiveFrom      DateTime   @map("effective_from") @db.Date
+  createdBy          String     @map("created_by")
+  createdAt          DateTime   @default(now()) @map("created_at")
+
+  @@unique([groundWireId, effectiveFrom])
+  @@index([groundWireId, effectiveFrom(sort: Desc)])
+  @@map("ground_wire_version")
 }
