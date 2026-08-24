@@ -5,6 +5,9 @@ import { ConductorCableListComponent } from './conductor-cable-list.component';
 import { GroundWireFormComponent } from './ground-wire-form.component';
 import { GroundWireHistoryComponent } from './ground-wire-history.component';
 import { GroundWireListComponent } from './ground-wire-list.component';
+import { GuyWireFormComponent } from './guy-wire-form.component';
+import { GuyWireHistoryComponent } from './guy-wire-history.component';
+import { GuyWireListComponent } from './guy-wire-list.component';
 
 export const CATALOGS_ROUTES: Routes = [
   { path: 'conductor-cables', component: ConductorCableListComponent },
@@ -21,4 +24,8 @@ export const CATALOGS_ROUTES: Routes = [
     path: 'ground-wires/:id/history',
     component: GroundWireHistoryComponent,
   },
+  { path: 'guy-wires', component: GuyWireListComponent },
+  { path: 'guy-wires/new', component: GuyWireFormComponent },
+  { path: 'guy-wires/:id/edit', component: GuyWireFormComponent },
+  { path: 'guy-wires/:id/history', component: GuyWireHistoryComponent },
 ];

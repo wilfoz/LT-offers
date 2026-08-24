@@ -27,9 +27,9 @@
 
 ## 5. Interface de manutenção
 
-- [ ] 5.1 Criar `guy-wire-list/-form/-history` na feature `catalogs` (sem filtro de tipo nem blocos condicionais), rotas lazy sob `/catalogs/guy-wires` e link na navegação da página inicial
-- [ ] 5.2 Implementar listagem (busca, pendências, callback de erro em toda leitura), formulário (branco→null via `form-utils`, prefill bloqueante na edição, botão refletindo `form.disabled`, id malformado rejeitado) e histórico (vigência `dd/MM/yyyy` UTC, `createdAt` local)
-- [ ] 5.3 Escrever testes de componente (pendências, erro de API, payload com null e `wireCount` numérico, prefill pendente/falho, histórico)
+- [x] 5.1 Criar `guy-wire-list/-form/-history` na feature `catalogs` (sem filtro de tipo nem blocos condicionais), rotas lazy sob `/catalogs/guy-wires` e link na navegação da página inicial
+- [x] 5.2 Implementar listagem (busca, pendências, callback de erro em toda leitura), formulário (branco→null via `form-utils`, prefill bloqueante na edição, botão refletindo `form.disabled`, id malformado rejeitado) e histórico (vigência `dd/MM/yyyy` UTC, `createdAt` local)
+- [x] 5.3 Escrever testes de componente (pendências, erro de API, payload com null e `wireCount` numérico, prefill pendente/falho, histórico)
 
 ## 6. QA e fechamento
 
