@@ -16,7 +16,7 @@
 
 ## 3. Contratos compartilhados
 
-- [ ] 3.1 Criar `libs/domain/src/lib/catalogs/guy-wires.ts` (contratos de request/response, decimais como string, campos anuláveis) exportado pelo index
+- [x] 3.1 Criar `libs/domain/src/lib/catalogs/guy-wires.ts` (contratos de request/response, decimais como string, campos anuláveis) exportado pelo index
 
 ## 4. API de cabos de tirante
 
