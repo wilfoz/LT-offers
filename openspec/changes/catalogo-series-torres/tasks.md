@@ -34,4 +34,4 @@
 ## 6. QA e fechamento
 
 - [x] 6.1 Executar a skill `/executar-qa` para a change: validar cada cenário do spec `series-torres` com evidências nos dois níveis e incluir smoke E2E dos três catálogos de cabos existentes; gerar `qa.md`
-- [ ] 6.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check`) limpa e confirmar o CI verde no push
+- [x] 6.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check`) limpa e confirmar o CI verde no push
