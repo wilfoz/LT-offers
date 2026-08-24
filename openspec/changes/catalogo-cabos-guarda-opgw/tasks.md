@@ -20,11 +20,11 @@
 
 ## 4. Interface de manutenção
 
-- [ ] 4.1 Criar os componentes `ground-wire-list/-form/-history` na feature `catalogs` do `apps/web`, com rotas lazy sob `/catalogs/ground-wires` e navegação a partir da página inicial
-- [ ] 4.2 Implementar a listagem com busca, filtro por tipo (todos/aço/OPGW) e sinalização de pendências por tipo, com callback de erro em todo subscribe de leitura (review grupo-4)
-- [ ] 4.3 Implementar o formulário com seleção de tipo travada após a criação e bloco de campos específicos condicional ao tipo, branco→null via `orNull` com aviso (RNF-09), validação pt-BR espelhando a API
-- [ ] 4.4 Implementar a tela de histórico exibindo também os atributos específicos do tipo; vigência com `date: 'dd/MM/yyyy' : 'UTC'` e `createdAt` sem timezone
-- [ ] 4.5 Escrever testes de componente cobrindo filtro por tipo, campos condicionais do formulário, payload com `null`, pendências e histórico
+- [x] 4.1 Criar os componentes `ground-wire-list/-form/-history` na feature `catalogs` do `apps/web`, com rotas lazy sob `/catalogs/ground-wires` e navegação a partir da página inicial
+- [x] 4.2 Implementar a listagem com busca, filtro por tipo (todos/aço/OPGW) e sinalização de pendências por tipo, com callback de erro em todo subscribe de leitura (review grupo-4)
+- [x] 4.3 Implementar o formulário com seleção de tipo travada após a criação e bloco de campos específicos condicional ao tipo, branco→null via `orNull` com aviso (RNF-09), validação pt-BR espelhando a API
+- [x] 4.4 Implementar a tela de histórico exibindo também os atributos específicos do tipo; vigência com `date: 'dd/MM/yyyy' : 'UTC'` e `createdAt` sem timezone
+- [x] 4.5 Escrever testes de componente cobrindo filtro por tipo, campos condicionais do formulário, payload com `null`, pendências e histórico
 
 ## 5. QA e fechamento
 
