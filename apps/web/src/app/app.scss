@@ -1,0 +1,36 @@
+// Shell da aplicação: toolbar sticky (único z-index manual do app) sobre o
+// contêiner de navegação; alturas com dvh, nunca 100vh (DESIGN.md).
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.app-title {
+  font: var(--mat-sys-title-large);
+  margin: 0;
+}
+
+.app-container {
+  flex: 1;
+}
+
+mat-sidenav {
+  width: 16rem;
+  background: var(--mat-sys-surface-container);
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+// Item ativo: barra de 2px primary à esquerda, peso 500 (DESIGN.md)
+a.active-link {
+  border-left: 2px solid var(--mat-sys-primary);
+  font-weight: 500;
+}

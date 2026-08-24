@@ -1,14 +1,43 @@
-<header>
-  <h1>{{ title }}</h1>
-  <nav aria-label="Navegação principal">
-    <a routerLink="/catalogs/conductor-cables">Catálogo de cabos condutores</a>
-    <a routerLink="/catalogs/ground-wires">Catálogo de cabos de guarda</a>
-    <a routerLink="/catalogs/guy-wires">Catálogo de cabos de tirante</a>
-    <a routerLink="/catalogs/structure-series">
-      Catálogo de séries de estruturas
-    </a>
-  </nav>
-</header>
-<main>
-  <router-outlet></router-outlet>
-</main>
+<mat-toolbar class="app-toolbar">
+  @if (!wide()) {
+  <button
+    matIconButton
+    type="button"
+    aria-label="Abrir menu de navegação"
+    (click)="toggleMenu()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  }
+  <h1 class="app-title">{{ title }}</h1>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container">
+  <mat-sidenav
+    [mode]="wide() ? 'side' : 'over'"
+    [opened]="wide() || menuOpen()"
+    (closedStart)="menuOpen.set(false)"
+  >
+    <mat-nav-list aria-label="Navegação principal">
+      @for (link of links; track link.path) {
+      <a
+        mat-list-item
+        [routerLink]="link.path"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [activated]="rla.isActive"
+        [class.active-link]="rla.isActive"
+        (click)="closeAfterNavigate()"
+      >
+        {{ link.label }}
+      </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <main class="content-container">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

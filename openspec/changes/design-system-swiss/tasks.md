@@ -8,8 +8,8 @@
 
 ## 2. Casca da aplicação
 
-- [ ] 2.1 Reescrever `app.ts/app.html/app.scss` como shell Material (design D2): `mat-toolbar` sticky + `mat-sidenav-container`/`mat-sidenav`/`mat-nav-list` com `routerLinkActive`, modo `side`/`over` por `BreakpointObserver` (fechar após navegar no modo `over`), botão de menu com `aria-label`, conteúdo máx. 1280px, `min-height: 100dvh`
-- [ ] 2.2 Escrever os testes da casca substituindo `app.spec.ts` (cenários do spec `interface/casca-navegacao`: itens por catálogo, item ativo, modo por breakpoint com observer mockado, botão de menu abre a sidenav sobreposta)
+- [x] 2.1 Reescrever `app.ts/app.html/app.scss` como shell Material (design D2): `mat-toolbar` sticky + `mat-sidenav-container`/`mat-sidenav`/`mat-nav-list` com `routerLinkActive`, modo `side`/`over` por `BreakpointObserver` (fechar após navegar no modo `over`), botão de menu com `aria-label`, conteúdo máx. 1280px, `min-height: 100dvh`
+- [x] 2.2 Escrever os testes da casca substituindo `app.spec.ts` (cenários do spec `interface/casca-navegacao`: itens por catálogo, item ativo, modo por breakpoint com observer mockado, botão de menu abre a sidenav sobreposta)
 
 ## 3. Refit visual — catálogos de cabos (9 telas)
 

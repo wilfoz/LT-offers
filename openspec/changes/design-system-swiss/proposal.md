@@ -10,7 +10,7 @@ O `apps/web` chegou ao 4º catálogo sem design system: HTML puro, estilos inlin
 - **Casca da aplicação:** `app.html` deixa de ser header+links e vira `mat-sidenav-container` + `mat-toolbar` + `mat-nav-list` com item ativo destacado; sidenav fixa ≥ 1024px e sobreposta (com botão de menu) abaixo, via `BreakpointObserver` do CDK; conteúdo em contêiner de até 1280px; tema claro/escuro segue a preferência do sistema.
 - **Refit visual das 14 telas dos 4 catálogos** (decisão do usuário: todas nesta change) pelo mapeamento do DESIGN.md: listagens em `mat-table` densa, forms em `mat-form-field appearance="outline"` com `floatLabel="always"`, `<mat-error>`/`<mat-hint>` ("em branco = não informado"), cards `outlined`, badges de pendência/vigência, carregamento por `mat-progress-bar`, estados vazios com ícone + CTA, valores decimais/códigos em monospace alinhados à direita. **Sem mudança de comportamento observável das rotas e payloads** — rotas, validações, mensagens pt-BR e contratos intactos; asserções de teste preservadas (critério do refit que já funcionou na extração).
 - **Feedback de operação (comportamento novo, único além do visual):** `MatSnackBar` de confirmação ao salvar item/versão em qualquer catálogo; erros de leitura continuam inline (regra do DESIGN.md, já praticada).
-- **Fora do escopo** (decisões do usuário e desvios conscientes registrados): ordenação/paginação nas listagens (`matSort`/`mat-paginator` do mapeamento — dívida registrada); `matDatepicker` (mudaria o tipo do valor do form de string ISO para `Date`, quebrando o critério de refit — o campo de vigência segue `matInput type="date"`; evolução futura junto do sort); paleta off-black exata via `ng generate @angular/material:theme-color` (o `mat.$neutral-palette` cumpre a identidade até lá); toggle manual de tema (segue só a preferência do SO); `mat-tab-group` item × versões (estrutura de páginas atual mantida).
+- **Fora do escopo** (decisões do usuário e desvios conscientes registrados): ordenação/paginação nas listagens (`matSort`/`mat-paginator` do mapeamento — dívida registrada); `matDatepicker` (mudaria o tipo do valor do form de string ISO para `Date`, quebrando o critério de refit — o campo de vigência segue `matInput type="date"`; evolução futura junto do sort); toggle manual de tema (segue só a preferência do SO); `mat-tab-group` item × versões (estrutura de páginas atual mantida).
 
 Fase do roadmap: **F1 (transversal — infraestrutura de UI dos catálogos M02)**. Requisitos cobertos: RNF-14 (interface pt-BR preservada), acessibilidade das telas de catálogo (contraste AA, foco, rótulos — práticas do §09/QA institucionalizadas pelo tema); nenhum RF novo.
 
@@ -27,7 +27,7 @@ Nenhuma — o refit das telas de catálogo é visual e preserva todos os cenári
 ## Impact
 
 - **Código:**
-  - Dependências novas: `@angular/material` e `@angular/cdk` (únicas; fontes via `index.html`).
+  - Dependências novas: `@angular/material` e `@angular/cdk` (únicas; fontes via `index.html`). A paleta off-black/taupe exata é gerada pelo schematic `theme-color` já nesta change (o fallback `mat.$neutral-palette` citado no DESIGN.md não existe na v22).
   - `apps/web/src/styles.scss` (tema completo), `apps/web/src/index.html` (fontes/ícones), `app.ts/app.html/app.scss` (casca), `app.config.ts` se necessário (animações já são padrão no Angular 22).
   - Refit dos 14 componentes de catálogo em `apps/web/src/app/catalogs/` (templates e estilos; lógica e serviços intactos) + snackbar nos 5 forms.
 - **API observável:** nenhuma mudança; nenhum contrato da domain é tocado.
