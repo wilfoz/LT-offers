@@ -34,4 +34,4 @@
 ## 6. QA e fechamento
 
 - [x] 6.1 Executar a skill `/executar-qa` para a change: validar cada cenário do spec `cabos-tirante` com evidências e incluir smoke E2E dos catálogos refitados (condutores e guarda) para confirmar a extração sem regressão; gerar `qa.md`
-- [ ] 6.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check`) limpa e confirmar o CI verde no push
+- [x] 6.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check`) limpa e confirmar o CI verde no push
