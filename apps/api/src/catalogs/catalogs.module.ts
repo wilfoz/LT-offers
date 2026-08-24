@@ -7,6 +7,8 @@ import { GuyWiresController } from './guy-wires.controller';
 import { GuyWiresService } from './guy-wires.service';
 import { StructureSeriesController } from './structure-series.controller';
 import { StructureSeriesService } from './structure-series.service';
+import { TowerTypesController } from './tower-types.controller';
+import { TowerTypesService } from './tower-types.service';
 
 @Module({
   controllers: [
@@ -14,12 +16,14 @@ import { StructureSeriesService } from './structure-series.service';
     GroundWiresController,
     GuyWiresController,
     StructureSeriesController,
+    TowerTypesController,
   ],
   providers: [
     ConductorCablesService,
     GroundWiresService,
     GuyWiresService,
     StructureSeriesService,
+    TowerTypesService,
   ],
 })
 export class CatalogsModule {}

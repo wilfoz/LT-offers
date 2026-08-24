@@ -5,3 +5,8 @@ export const decimalMessage = (field: string) =>
 
 export const countMessage = (field: string) =>
   `O campo ${field} deve ser um número inteiro positivo`;
+
+// Contagens em que zero é valor válido (ex.: estais de torre autoportante,
+// RNF-09: zero informado é diferente de não informado)
+export const nonNegativeCountMessage = (field: string) =>
+  `O campo ${field} deve ser um número inteiro maior ou igual a zero`;

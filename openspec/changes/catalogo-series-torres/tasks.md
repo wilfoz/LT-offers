@@ -18,10 +18,10 @@
 
 ## 4. API de tipos de torre
 
-- [ ] 4.1 Implementar DTOs (design D2): função obrigatória na criação e `@IsEmpty` com mensagem pt-BR no DTO de versão (troca rejeitada com 400), `guyCount` inteiro ≥ 0 (zero válido, distinto de null), tabela de pesos como array `ValidateNested` de `{heightM, weightKg}` decimais positivos com validador custom de altura duplicada em pt-BR
-- [ ] 4.2 Criar `tower-types.controller/service` com prefixo aninhado `/catalogs/structure-series/:seriesId/tower-types` (design D2): checagem de pertencimento série↔tipo com 404 pt-BR em toda operação, sigla única por série (P2002→409), versão + tabela de pesos via nested create atômico, pendências = `guyCount` composto com verificação de tabela vazia (design D3), pesos ordenados por altura nos retornos
-- [ ] 4.3 Escrever testes do service e controller cobrindo os cenários do spec (criação, sigla duplicada na série 409, mesma sigla em outra série aceita, série inexistente 404, troca de função 400, altura duplicada 400, ponto inválido 400, versão anterior preserva tabela, zero estais sem pendência, tabela vazia sinalizada, histórico com pesos, 405)
-- [ ] 4.4 Verificar os endpoints ao vivo contra o Postgres do Compose (série + tipos aninhados: criar, nova versão com tabela, histórico dos dois níveis, 404 de pertencimento, `effectiveOn` passado)
+- [x] 4.1 Implementar DTOs (design D2): função obrigatória na criação e `@IsEmpty` com mensagem pt-BR no DTO de versão (troca rejeitada com 400), `guyCount` inteiro ≥ 0 (zero válido, distinto de null), tabela de pesos como array `ValidateNested` de `{heightM, weightKg}` decimais positivos com validador custom de altura duplicada em pt-BR
+- [x] 4.2 Criar `tower-types.controller/service` com prefixo aninhado `/catalogs/structure-series/:seriesId/tower-types` (design D2): checagem de pertencimento série↔tipo com 404 pt-BR em toda operação, sigla única por série (P2002→409), versão + tabela de pesos via nested create atômico, pendências = `guyCount` composto com verificação de tabela vazia (design D3), pesos ordenados por altura nos retornos
+- [x] 4.3 Escrever testes do service e controller cobrindo os cenários do spec (criação, sigla duplicada na série 409, mesma sigla em outra série aceita, série inexistente 404, troca de função 400, altura duplicada 400, ponto inválido 400, versão anterior preserva tabela, zero estais sem pendência, tabela vazia sinalizada, histórico com pesos, 405)
+- [x] 4.4 Verificar os endpoints ao vivo contra o Postgres do Compose (série + tipos aninhados: criar, nova versão com tabela, histórico dos dois níveis, 404 de pertencimento, `effectiveOn` passado)
 
 ## 5. Interface de manutenção
 
