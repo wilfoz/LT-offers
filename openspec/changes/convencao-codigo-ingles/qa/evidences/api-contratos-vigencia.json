@@ -1,0 +1,52 @@
+{
+  "effectiveOn_2026_08_23": {
+    "id": 10,
+    "code": "QA-E2E-001",
+    "effectiveVersion": {
+      "id": 10,
+      "conductorCableId": 10,
+      "description": "Cabo QA Grosbeak",
+      "weightTonPerKm": "1.3026",
+      "reelLengthM": "2500",
+      "diameterMm": "25.16",
+      "utsKn": "124.9",
+      "effectiveFrom": "2026-08-23T00:00:00.000Z",
+      "createdBy": "sistema",
+      "createdAt": "2026-08-24T00:41:06.623Z"
+    },
+    "pendingFields": []
+  },
+  "effectiveOn_2026_12_01": {
+    "id": 10,
+    "code": "QA-E2E-001",
+    "effectiveVersion": {
+      "id": 12,
+      "conductorCableId": 10,
+      "description": "Cabo QA Grosbeak",
+      "weightTonPerKm": "1.31",
+      "reelLengthM": "2500",
+      "diameterMm": "25.16",
+      "utsKn": "124.9",
+      "effectiveFrom": "2026-09-01T00:00:00.000Z",
+      "createdBy": "sistema",
+      "createdAt": "2026-08-24T00:41:07.521Z"
+    },
+    "pendingFields": []
+  },
+  "effectiveOn_2020_01_01": {
+    "status": 404,
+    "body": {
+      "message": "Não há versão vigente para a data de referência informada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  "patch_version": {
+    "status": 405,
+    "body": {
+      "message": "Versões são imutáveis; para alterar valores, crie uma nova versão com data de vigência",
+      "error": "Method Not Allowed",
+      "statusCode": 405
+    }
+  }
+}

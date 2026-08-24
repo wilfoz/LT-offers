@@ -33,6 +33,6 @@
 
 ## 6. Verificação final
 
-- [ ] 6.1 Rodar `npx nx run-many -t lint test build` e `npx nx format:check --all` limpos; grep global por identificadores pt-BR remanescentes em código ativo
-- [ ] 6.2 Reexecutar o script E2E completo contra os serviços reais confirmando os mesmos 15 resultados PASSOU do QA
+- [x] 6.1 Rodar `npx nx run-many -t lint test build` e `npx nx format:check --all` limpos; grep global por identificadores pt-BR remanescentes em código ativo
+- [x] 6.2 Reexecutar o script E2E completo contra os serviços reais confirmando os mesmos 15 resultados PASSOU do QA
 - [ ] 6.3 Commit, push e CI verde
