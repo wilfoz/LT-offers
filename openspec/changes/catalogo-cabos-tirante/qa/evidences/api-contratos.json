@@ -1,0 +1,37 @@
+{
+  "effectiveOn_2026_09_01": {
+    "id": 1,
+    "code": "QA-CT-HS",
+    "effectiveVersion": {
+      "id": 1,
+      "description": "Cordoalha HS 5/16",
+      "weightTonPerKm": "0.31",
+      "reelLengthM": "1500",
+      "diameterMm": "7.9",
+      "utsKn": "48.2",
+      "galvanizationClass": "B",
+      "strengthGrade": "HS",
+      "wireCount": 7,
+      "effectiveFrom": "2026-08-24T00:00:00.000Z",
+      "createdBy": "sistema",
+      "createdAt": "2026-08-24T10:08:25.669Z"
+    },
+    "pendingFields": []
+  },
+  "effectiveOn_2020_01_01": {
+    "status": 404,
+    "corpo": {
+      "message": "Não há versão vigente para a data de referência informada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  "patch_versao": {
+    "status": 405,
+    "corpo": {
+      "message": "Versões são imutáveis; para alterar valores, crie uma nova versão com data de vigência",
+      "error": "Method Not Allowed",
+      "statusCode": 405
+    }
+  }
+}
