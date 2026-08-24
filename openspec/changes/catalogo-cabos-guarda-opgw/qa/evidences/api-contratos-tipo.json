@@ -1,0 +1,38 @@
+{
+  "tipo_invalido": {
+    "status": 400,
+    "corpo": {
+      "message": [
+        "O tipo deve ser STEEL (aço) ou OPGW"
+      ],
+      "error": "Bad Request",
+      "statusCode": 400
+    }
+  },
+  "troca_de_tipo": {
+    "status": 400,
+    "corpo": {
+      "message": [
+        "O tipo é fixo desde a criação e não pode ser alterado; para outro tipo, crie um novo item"
+      ],
+      "error": "Bad Request",
+      "statusCode": 400
+    }
+  },
+  "fibra_em_aco": {
+    "status": 400,
+    "corpo": {
+      "message": "Os campos a seguir não se aplicam ao tipo aço: número de fibras",
+      "error": "Bad Request",
+      "statusCode": 400
+    }
+  },
+  "galvanizacao_em_opgw": {
+    "status": 400,
+    "corpo": {
+      "message": "Os campos a seguir não se aplicam ao tipo OPGW: classe de galvanização",
+      "error": "Bad Request",
+      "statusCode": 400
+    }
+  }
+}
