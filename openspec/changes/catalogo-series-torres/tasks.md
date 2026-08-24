@@ -8,7 +8,7 @@
 
 ## 2. Contratos compartilhados
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/structure-series.ts` e `tower-types.ts` (design D3): `TOWER_FUNCTIONS`/`TowerFunction` const-array, interfaces Summary/Version/History com decimais string e datas ISO, `TowerWeightPoint` e `towerTypeCount` no summary da série; exportar pelo index e rodar lint/test da domain
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/structure-series.ts` e `tower-types.ts` (design D3): `TOWER_FUNCTIONS`/`TowerFunction` const-array, interfaces Summary/Version/History com decimais string e datas ISO, `TowerWeightPoint` e `towerTypeCount` no summary da série; exportar pelo index e rodar lint/test da domain
 
 ## 3. API de séries de estrutura
 
