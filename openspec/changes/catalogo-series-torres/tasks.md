@@ -25,11 +25,11 @@
 
 ## 5. Interface de manutenção
 
-- [ ] 5.1 Criar `StructureSeriesApi extends VersionedCatalogApi` e `TowerTypesApi` próprio com `seriesId` explícito (design D4 — limite da base registrado), em `apps/web/src/app/catalogs`
-- [ ] 5.2 Implementar `structure-series-list/-form/-history` no padrão dos catálogos existentes (busca, pendências, `towerTypeCount` na listagem, callbacks de erro, prefill bloqueante, branco→null, botão refletindo `form.disabled`, id malformado rejeitado, datas UTC/local) e o detalhe da série com a lista de tipos de torre vigentes
-- [ ] 5.3 Implementar `tower-type-form/-history` com `FormArray` da tabela peso × altura (adicionar/remover linha, validação por linha, duplicata de altura apontada antes do submit, prefill da tabela vigente, `enable({emitEvent: false})`, guarda dos dois ids de rota testada) e histórico exibindo a tabela de cada versão
-- [ ] 5.4 Registrar rotas lazy sob `/catalogs/structure-series` (incl. rotas aninhadas de tipos) e link na navegação da página inicial
-- [ ] 5.5 Escrever testes de componente (pendências dos dois níveis, erro de API em toda leitura, payload com null/número/tabela, FormArray incl. duplicata e remoção de linha, prefill pendente/falho, ids malformados, histórico com pesos)
+- [x] 5.1 Criar `StructureSeriesApi extends VersionedCatalogApi` e `TowerTypesApi` próprio com `seriesId` explícito (design D4 — limite da base registrado), em `apps/web/src/app/catalogs`
+- [x] 5.2 Implementar `structure-series-list/-form/-history` no padrão dos catálogos existentes (busca, pendências, `towerTypeCount` na listagem, callbacks de erro, prefill bloqueante, branco→null, botão refletindo `form.disabled`, id malformado rejeitado, datas UTC/local) e o detalhe da série com a lista de tipos de torre vigentes
+- [x] 5.3 Implementar `tower-type-form/-history` com `FormArray` da tabela peso × altura (adicionar/remover linha, validação por linha, duplicata de altura apontada antes do submit, prefill da tabela vigente, `enable({emitEvent: false})`, guarda dos dois ids de rota testada) e histórico exibindo a tabela de cada versão
+- [x] 5.4 Registrar rotas lazy sob `/catalogs/structure-series` (incl. rotas aninhadas de tipos) e link na navegação da página inicial
+- [x] 5.5 Escrever testes de componente (pendências dos dois níveis, erro de API em toda leitura, payload com null/número/tabela, FormArray incl. duplicata e remoção de linha, prefill pendente/falho, ids malformados, histórico com pesos)
 
 ## 6. QA e fechamento
 
