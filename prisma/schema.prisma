@@ -94,3 +94,36 @@ model GroundWireVersion {
   @@index([groundWireId, effectiveFrom(sort: Desc)])
   @@map("ground_wire_version")
 }
+
+// Catálogo de cabos de aço para tirante (F1 — origem DB_CTI, tirantes e
+// interligação). Catálogo próprio, sem discriminador de tipo (design D5 da
+// change catalogo-cabos-tirante): a planilha consolida tirantes em aba
+// separada e o RF-23 os quantifica à parte dos cabos de guarda.
+model GuyWire {
+  id       Int              @id @default(autoincrement())
+  code     String           @unique
+  versions GuyWireVersion[]
+
+  @@map("guy_wire")
+}
+
+model GuyWireVersion {
+  id                 Int      @id @default(autoincrement())
+  guyWireId          Int      @map("guy_wire_id")
+  guyWire            GuyWire  @relation(fields: [guyWireId], references: [id])
+  description        String?
+  weightTonPerKm     Decimal? @map("weight_ton_per_km") @db.Decimal(12, 4)
+  reelLengthM        Decimal? @map("reel_length_m") @db.Decimal(12, 2)
+  diameterMm         Decimal? @map("diameter_mm") @db.Decimal(10, 3)
+  utsKn              Decimal? @map("uts_kn") @db.Decimal(12, 2)
+  galvanizationClass String?  @map("galvanization_class")
+  strengthGrade      String?  @map("strength_grade")
+  wireCount          Int?     @map("wire_count")
+  effectiveFrom      DateTime @map("effective_from") @db.Date
+  createdBy          String   @map("created_by")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@unique([guyWireId, effectiveFrom])
+  @@index([guyWireId, effectiveFrom(sort: Desc)])
+  @@map("guy_wire_version")
+}

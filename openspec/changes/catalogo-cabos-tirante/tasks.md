@@ -10,9 +10,9 @@
 
 ## 2. Nomenclatura e modelo de dados
 
-- [ ] 2.1 Acrescentar ao mapa do README: tirante (cabo de aço) → `GuyWire` / `guy_wire` / `guy-wires` (design D6)
-- [ ] 2.2 Modelar `GuyWire`/`GuyWireVersion` no `schema.prisma` (design D5: precisões espelhando os catálogos existentes, campos anuláveis RNF-09, `effective_from @db.Date`, `@@unique([guyWireId, effectiveFrom])`, índice desc, bloco após os modelos existentes) e gerar a migration
-- [ ] 2.3 Aplicar a migration no Postgres local e regenerar o Prisma Client, confirmando os tipos no client
+- [x] 2.1 Acrescentar ao mapa do README: tirante (cabo de aço) → `GuyWire` / `guy_wire` / `guy-wires` (design D6)
+- [x] 2.2 Modelar `GuyWire`/`GuyWireVersion` no `schema.prisma` (design D5: precisões espelhando os catálogos existentes, campos anuláveis RNF-09, `effective_from @db.Date`, `@@unique([guyWireId, effectiveFrom])`, índice desc, bloco após os modelos existentes) e gerar a migration
+- [x] 2.3 Aplicar a migration no Postgres local e regenerar o Prisma Client, confirmando os tipos no client
 
 ## 3. Contratos compartilhados
 

@@ -97,6 +97,7 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | fabricante             | `manufacturer`                                            |
 | I²t (kA²·s)            | `i2tKa2s` / `i2t_ka2s`                                    |
 | número de fibras       | `fiberCount` / `fiber_count`                              |
+| tirante (cabo de aço)  | `GuyWire` / `guy_wire` / `guy-wires`                      |
 | versão (de catálogo)   | `Version` / `_version`                                    |
 | vigência (início de)   | `effectiveFrom` / `effective_from`                        |
 | vigente em (consulta)  | `effectiveOn` (query param)                               |
