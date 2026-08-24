@@ -3,6 +3,7 @@ import {
   ActivatedRoute,
   convertToParamMap,
   provideRouter,
+  Router,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -208,6 +209,7 @@ describe('GuyWireFormComponent (confirmação ao salvar)', () => {
     fixture.detectChanges();
 
     fixture.componentInstance.form.patchValue({ code: 'CT-1' });
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate');
     fixture.componentInstance.save();
 
     expect(snackMock.open).toHaveBeenCalledWith(
@@ -216,5 +218,6 @@ describe('GuyWireFormComponent (confirmação ao salvar)', () => {
       expect.objectContaining({ duration: 4000 }),
     );
     expect(apiMock.create).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['/catalogs/guy-wires']);
   });
 });

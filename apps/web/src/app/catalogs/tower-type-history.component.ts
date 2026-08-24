@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TowerTypeHistory } from '@lt-offers/domain';
@@ -14,6 +15,7 @@ import { TowerTypesApi } from './tower-types-api.service';
     RouterLink,
     DatePipe,
     MatCardModule,
+    MatProgressBarModule,
     MatTableModule,
     MatButtonModule,
   ],
@@ -92,6 +94,7 @@ import { TowerTypesApi } from './tower-types-api.service';
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else {
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
         <p>Carregando…</p>
       }
     </section>

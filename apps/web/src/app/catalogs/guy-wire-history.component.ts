@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GuyWireHistory } from '@lt-offers/domain';
@@ -8,7 +9,13 @@ import { GuyWiresApi } from './guy-wires-api.service';
 
 @Component({
   selector: 'app-guy-wire-history',
-  imports: [RouterLink, DatePipe, MatTableModule, MatButtonModule],
+  imports: [
+    RouterLink,
+    DatePipe,
+    MatProgressBarModule,
+    MatTableModule,
+    MatButtonModule,
+  ],
   template: `
     <section>
       <h2>Histórico de versões — {{ history()?.code }}</h2>
@@ -115,6 +122,7 @@ import { GuyWiresApi } from './guy-wires-api.service';
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else {
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
         <p>Carregando…</p>
       }
     </section>

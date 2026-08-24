@@ -14,7 +14,7 @@ Ver `proposal.md — Why`. A autoridade de layout é **`openspec/DESIGN.md`** (S
 
 **Non-Goals:**
 
-- `matSort`/`mat-paginator`, `matDatepicker`, `mat-tab-group`, toggle de tema, paleta off-black gerada — desvios/dívidas listados na proposta ("Fora do escopo").
+- `matSort`/`mat-paginator`, `matDatepicker`, `mat-tab-group`, toggle de tema — desvios/dívidas listados na proposta ("Fora do escopo").
 - Refatorar lógica de componente, serviços, contratos ou rotas — o refit é de template/estilo; a única lógica nova é o snackbar e o `BreakpointObserver` da casca.
 - Design tokens próprios fora do Material (um arquivo de tema só; utilitários `.dense`, `.mono` e grid no `styles.scss`).
 
@@ -22,7 +22,7 @@ Ver `proposal.md — Why`. A autoridade de layout é **`openspec/DESIGN.md`** (S
 
 ### D1 — Instalação e tema em um único ponto
 
-`npm i @angular/material @angular/cdk` (sem `ng add` — o schematic mexe em arquivos que controlamos à mão). Tema completo em `apps/web/src/styles.scss` conforme o bloco do DESIGN.md: `mat.theme()` com `mat.$neutral-palette` (primary) + `mat.$orange-palette` (tertiary), `theme-type: color-scheme`, tipografia Inter, densidade 0 global; tokens `--mat-sys-corner-*` e `--mat-sys-level1/2` sobrescritos no `html`; classe `.dense` com `mat.form-field-density(-1)` + `mat.table-density(-1)`; utilitário `.mono` (JetBrains Mono) para decimais/códigos. Fontes e Material Symbols Outlined via `<link>` no `index.html` (aceito o request externo em dev; espelhar local é tarefa futura se a rede incomodar). Alternativa — tema pré-construído: proibida pelo DESIGN.md.
+`npm i @angular/material @angular/cdk` (sem `ng add` — o schematic mexe em arquivos que controlamos à mão; versões pinadas exatas como as demais deps Angular). Tema completo em `apps/web/src/styles.scss` conforme o bloco do DESIGN.md: `mat.theme()` com a paleta off-black/taupe **gerada** de `#1A1A1A`/`#B38B6D` pelo schematic `theme-color` (`_theme-colors.scss` — o fallback `mat.$neutral-palette` citado no documento não existe na v22), `theme-type: color-scheme`, tipografia Inter, densidade 0 global; tokens `--mat-sys-corner-*` e `--mat-sys-level1/2` sobrescritos no `html`; classe `.dense` com `mat.form-field-density(-1)` + `mat.table-density(-1)`; utilitário `.mono` (JetBrains Mono) para decimais/códigos. Fontes e Material Symbols Outlined via `<link>` no `index.html` (aceito o request externo em dev; espelhar local é tarefa futura se a rede incomodar). Alternativa — tema pré-construído: proibida pelo DESIGN.md.
 
 ### D2 — Casca: `App` vira o shell Material
 
