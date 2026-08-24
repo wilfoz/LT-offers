@@ -4,11 +4,33 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { GroundWiresService } from './ground-wires.service';
 
 const uniqueViolation = () =>
   Object.assign(new Error('unique'), { code: 'P2002' });
+
+// Linha completa de versão como o Prisma devolve (o service mapeia para o
+// contrato da domain, então os mocks precisam dos campos de autoria/datas)
+const versionRow = (overrides: Record<string, unknown> = {}) => ({
+  id: 10,
+  description: null,
+  weightTonPerKm: null,
+  reelLengthM: null,
+  diameterMm: null,
+  utsKn: null,
+  galvanizationClass: null,
+  strengthGrade: null,
+  wireCount: null,
+  manufacturer: null,
+  i2tKa2s: null,
+  fiberCount: null,
+  effectiveFrom: new Date('2026-01-01'),
+  createdBy: 'ana',
+  createdAt: new Date('2026-01-01T12:00:00.000Z'),
+  ...overrides,
+});
 
 describe('GroundWiresService', () => {
   const today = new Date('2026-08-23T00:00:00.000Z');
@@ -40,7 +62,12 @@ describe('GroundWiresService', () => {
 
   describe('create', () => {
     it('cria cabo de aço com primeira versão e campos específicos do tipo', async () => {
-      prismaMock.groundWire.create.mockResolvedValue({ id: 1 });
+      prismaMock.groundWire.create.mockResolvedValue({
+        id: 1,
+        code: 'CG-EHS-3/8',
+        type: 'STEEL',
+        versions: [versionRow({ strengthGrade: 'EHS', wireCount: 7 })],
+      });
 
       await service.create(
         {
@@ -65,7 +92,12 @@ describe('GroundWiresService', () => {
     });
 
     it('cria cabo OPGW com primeira versão e campos específicos do tipo', async () => {
-      prismaMock.groundWire.create.mockResolvedValue({ id: 2 });
+      prismaMock.groundWire.create.mockResolvedValue({
+        id: 2,
+        code: 'OPGW-48FO',
+        type: 'OPGW',
+        versions: [versionRow({ i2tKa2s: '95.5', fiberCount: 48 })],
+      });
 
       await service.create(
         {
@@ -117,7 +149,12 @@ describe('GroundWiresService', () => {
     });
 
     it('aceita campo do outro tipo explicitamente null (não informado)', async () => {
-      prismaMock.groundWire.create.mockResolvedValue({ id: 3 });
+      prismaMock.groundWire.create.mockResolvedValue({
+        id: 3,
+        code: 'CG-HS-5/16',
+        type: 'STEEL',
+        versions: [versionRow()],
+      });
 
       await service.create(
         { code: 'CG-HS-5/16', type: 'STEEL', fiberCount: null },
@@ -146,9 +183,11 @@ describe('GroundWiresService', () => {
         id: 1,
         code: 'CG-EHS-3/8',
         type: 'STEEL',
-        versions: [{ effectiveFrom: new Date('2026-01-01') }],
+        versions: [versionRow()],
       });
-      prismaMock.groundWireVersion.create.mockResolvedValue({ id: 2 });
+      prismaMock.groundWireVersion.create.mockResolvedValue(
+        versionRow({ id: 2, effectiveFrom: new Date('2026-09-01') }),
+      );
 
       await service.createVersion(
         1,
@@ -227,8 +266,7 @@ describe('GroundWiresService', () => {
           code: 'CG-EHS-3/8',
           type: 'STEEL',
           versions: [
-            {
-              effectiveFrom: new Date('2026-01-01'),
+            versionRow({
               weightTonPerKm: '0.4',
               reelLengthM: '2000',
               diameterMm: '9.52',
@@ -236,7 +274,7 @@ describe('GroundWiresService', () => {
               galvanizationClass: null,
               strengthGrade: 'EHS',
               wireCount: null,
-            },
+            }),
           ],
         },
       ]);
@@ -256,8 +294,7 @@ describe('GroundWiresService', () => {
           code: 'OPGW-48FO',
           type: 'OPGW',
           versions: [
-            {
-              effectiveFrom: new Date('2026-01-01'),
+            versionRow({
               weightTonPerKm: '0.55',
               reelLengthM: '4000',
               diameterMm: '12.1',
@@ -265,7 +302,7 @@ describe('GroundWiresService', () => {
               manufacturer: null,
               i2tKa2s: '95.5',
               fiberCount: 48,
-            },
+            }),
           ],
         },
       ]);
@@ -282,8 +319,7 @@ describe('GroundWiresService', () => {
           code: 'OPGW-24FO',
           type: 'OPGW',
           versions: [
-            {
-              effectiveFrom: new Date('2026-01-01'),
+            versionRow({
               weightTonPerKm: null,
               reelLengthM: '4000',
               diameterMm: '12.1',
@@ -291,7 +327,7 @@ describe('GroundWiresService', () => {
               galvanizationClass: null,
               i2tKa2s: null,
               fiberCount: 24,
-            },
+            }),
           ],
         },
       ]);
@@ -309,15 +345,25 @@ describe('GroundWiresService', () => {
         code: 'CG-EHS-3/8',
         type: 'STEEL',
         versions: [
-          { effectiveFrom: new Date('2026-01-01'), strengthGrade: 'HS' },
-          { effectiveFrom: new Date('2026-06-01'), strengthGrade: 'EHS' },
+          versionRow({
+            effectiveFrom: new Date('2026-01-01'),
+            strengthGrade: 'HS',
+            // Decimal real do Prisma: o mapper deve devolver a string exata
+            utsKn: new Prisma.Decimal('68.4'),
+          }),
+          versionRow({
+            id: 11,
+            effectiveFrom: new Date('2026-06-01'),
+            strengthGrade: 'EHS',
+          }),
         ],
       });
 
       const result = await service.get(1, new Date('2026-03-15'));
 
       expect(result.type).toBe('STEEL');
-      expect(result.effectiveVersion.strengthGrade).toBe('HS');
+      expect(result.effectiveVersion?.strengthGrade).toBe('HS');
+      expect(result.effectiveVersion?.utsKn).toBe('68.4');
     });
 
     it('responde que não há versão vigente para data anterior à primeira', async () => {
@@ -325,7 +371,7 @@ describe('GroundWiresService', () => {
         id: 1,
         code: 'CG-EHS-3/8',
         type: 'STEEL',
-        versions: [{ effectiveFrom: new Date('2026-01-01') }],
+        versions: [versionRow()],
       });
 
       await expect(service.get(1, new Date('2025-06-01'))).rejects.toThrow(
@@ -341,8 +387,15 @@ describe('GroundWiresService', () => {
         code: 'OPGW-48FO',
         type: 'OPGW',
         versions: [
-          { effectiveFrom: new Date('2026-01-01'), createdBy: 'ana' },
-          { effectiveFrom: new Date('2026-06-01'), createdBy: 'bruno' },
+          versionRow({
+            effectiveFrom: new Date('2026-01-01'),
+            createdBy: 'ana',
+          }),
+          versionRow({
+            id: 11,
+            effectiveFrom: new Date('2026-06-01'),
+            createdBy: 'bruno',
+          }),
         ],
       });
 

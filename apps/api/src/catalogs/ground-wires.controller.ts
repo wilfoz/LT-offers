@@ -5,25 +5,24 @@ import {
   Controller,
   Get,
   Headers,
-  MethodNotAllowedException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
-import { todayCivilDate, toCivilDate } from './civil-date';
+import { todayCivilDate } from './civil-date';
+import {
+  createIdPipe,
+  resolveAuthor,
+  resolveReferenceDate,
+  versionImmutableException,
+} from './controller-shared';
 import { CreateGroundWireDto } from './dto/create-ground-wire.dto';
 import { CreateGroundWireVersionDto } from './dto/create-ground-wire-version.dto';
 import { GroundWiresService } from './ground-wires.service';
 
-const DEFAULT_USER = 'sistema';
-
-const IdPipe = new ParseIntPipe({
-  exceptionFactory: () =>
-    new BadRequestException('O identificador deve ser um número inteiro'),
-});
+const IdPipe = createIdPipe();
 
 @Controller('catalogs/ground-wires')
 export class GroundWiresController {
@@ -31,7 +30,7 @@ export class GroundWiresController {
 
   @Post()
   create(@Body() dto: CreateGroundWireDto, @Headers('x-user') user?: string) {
-    return this.service.create(dto, this.author(user), todayCivilDate());
+    return this.service.create(dto, resolveAuthor(user), todayCivilDate());
   }
 
   @Get()
@@ -43,7 +42,7 @@ export class GroundWiresController {
     return this.service.list(
       search,
       this.wireType(type),
-      this.referenceDate(effectiveOn),
+      resolveReferenceDate(effectiveOn),
     );
   }
 
@@ -52,7 +51,7 @@ export class GroundWiresController {
     @Param('id', IdPipe) id: number,
     @Query('effectiveOn') effectiveOn?: string,
   ) {
-    return this.service.get(id, this.referenceDate(effectiveOn));
+    return this.service.get(id, resolveReferenceDate(effectiveOn));
   }
 
   @Get(':id/history')
@@ -66,29 +65,19 @@ export class GroundWiresController {
     @Body() dto: CreateGroundWireVersionDto,
     @Headers('x-user') user?: string,
   ) {
-    return this.service.createVersion(id, dto, this.author(user));
+    return this.service.createVersion(id, dto, resolveAuthor(user));
   }
 
   // Decoradores @Put/@Patch empilhados no mesmo método NÃO registram duas
   // rotas (o mais externo sobrescreve o metadata) — por isso dois métodos.
   @Put(':id/versions/:versionId')
   replaceVersion(): never {
-    return this.rejectVersionChange();
+    throw versionImmutableException();
   }
 
   @Patch(':id/versions/:versionId')
   patchVersion(): never {
-    return this.rejectVersionChange();
-  }
-
-  private rejectVersionChange(): never {
-    throw new MethodNotAllowedException(
-      'Versões são imutáveis; para alterar valores, crie uma nova versão com data de vigência',
-    );
-  }
-
-  private author(user?: string): string {
-    return user?.trim() || DEFAULT_USER;
+    throw versionImmutableException();
   }
 
   /** Filtro de tipo validado na borda; ausência = todos os tipos. */
@@ -102,10 +91,5 @@ export class GroundWiresController {
       );
     }
     return type as GroundWireType;
-  }
-
-  /** Data de referência resolvida na borda: default = hoje civil. */
-  private referenceDate(effectiveOn?: string): Date {
-    return effectiveOn ? toCivilDate(effectiveOn) : todayCivilDate();
   }
 }

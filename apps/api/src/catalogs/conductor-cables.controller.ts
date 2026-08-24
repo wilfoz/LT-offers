@@ -1,28 +1,26 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
   Headers,
-  MethodNotAllowedException,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
 import { ConductorCablesService } from './conductor-cables.service';
-import { todayCivilDate, toCivilDate } from './civil-date';
+import {
+  createIdPipe,
+  resolveAuthor,
+  resolveReferenceDate,
+  versionImmutableException,
+} from './controller-shared';
+import { todayCivilDate } from './civil-date';
 import { CreateConductorCableDto } from './dto/create-conductor-cable.dto';
 import { CreateVersionDto } from './dto/create-version.dto';
 
-const DEFAULT_USER = 'sistema';
-
-const IdPipe = new ParseIntPipe({
-  exceptionFactory: () =>
-    new BadRequestException('O identificador deve ser um número inteiro'),
-});
+const IdPipe = createIdPipe();
 
 @Controller('catalogs/conductor-cables')
 export class ConductorCablesController {
@@ -33,7 +31,7 @@ export class ConductorCablesController {
     @Body() dto: CreateConductorCableDto,
     @Headers('x-user') user?: string,
   ) {
-    return this.service.create(dto, this.author(user), todayCivilDate());
+    return this.service.create(dto, resolveAuthor(user), todayCivilDate());
   }
 
   @Get()
@@ -41,7 +39,7 @@ export class ConductorCablesController {
     @Query('search') search?: string,
     @Query('effectiveOn') effectiveOn?: string,
   ) {
-    return this.service.list(search, this.referenceDate(effectiveOn));
+    return this.service.list(search, resolveReferenceDate(effectiveOn));
   }
 
   @Get(':id')
@@ -49,7 +47,7 @@ export class ConductorCablesController {
     @Param('id', IdPipe) id: number,
     @Query('effectiveOn') effectiveOn?: string,
   ) {
-    return this.service.get(id, this.referenceDate(effectiveOn));
+    return this.service.get(id, resolveReferenceDate(effectiveOn));
   }
 
   @Get(':id/history')
@@ -63,33 +61,18 @@ export class ConductorCablesController {
     @Body() dto: CreateVersionDto,
     @Headers('x-user') user?: string,
   ) {
-    return this.service.createVersion(id, dto, this.author(user));
+    return this.service.createVersion(id, dto, resolveAuthor(user));
   }
 
   // Decoradores @Put/@Patch empilhados no mesmo método NÃO registram duas
   // rotas (o mais externo sobrescreve o metadata) — por isso dois métodos.
   @Put(':id/versions/:versionId')
   replaceVersion(): never {
-    return this.rejectVersionChange();
+    throw versionImmutableException();
   }
 
   @Patch(':id/versions/:versionId')
   patchVersion(): never {
-    return this.rejectVersionChange();
-  }
-
-  private rejectVersionChange(): never {
-    throw new MethodNotAllowedException(
-      'Versões são imutáveis; para alterar valores, crie uma nova versão com data de vigência',
-    );
-  }
-
-  private author(user?: string): string {
-    return user?.trim() || DEFAULT_USER;
-  }
-
-  /** Data de referência resolvida na borda: default = hoje civil. */
-  private referenceDate(effectiveOn?: string): Date {
-    return effectiveOn ? toCivilDate(effectiveOn) : todayCivilDate();
+    throw versionImmutableException();
   }
 }

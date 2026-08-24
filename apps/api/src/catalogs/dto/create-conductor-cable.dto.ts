@@ -1,3 +1,4 @@
+import { DATE_PATTERN } from '@lt-offers/domain';
 import {
   IsNotEmpty,
   IsOptional,
@@ -5,7 +6,7 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { DATE_PATTERN, VersionFieldsDto } from './version-fields.dto';
+import { VersionFieldsDto } from './version-fields.dto';
 
 export class CreateConductorCableDto extends VersionFieldsDto {
   @IsString({ message: 'O código deve ser um texto' })

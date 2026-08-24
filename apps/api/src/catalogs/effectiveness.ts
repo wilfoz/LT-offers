@@ -18,33 +18,23 @@ export function resolveEffectiveVersion<T extends HasEffectiveFrom>(
     .sort((a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime())[0];
 }
 
-export interface RequiredFields {
-  description: string | null;
-  weightTonPerKm: unknown | null;
-  reelLengthM: unknown | null;
-  diameterMm: unknown | null;
-  utsKn: unknown | null;
-}
-
-// Rótulos exibidos ao usuário — permanecem em pt-BR (RNF-14)
-const LABELS: Record<keyof RequiredFields, string> = {
-  description: 'descrição',
-  weightTonPerKm: 'peso (ton/km)',
-  reelLengthM: 'bobina (m)',
-  diameterMm: 'diâmetro (mm)',
-  utsKn: 'UTS (kN)',
-};
-
-function isMissing(value: unknown): boolean {
+/** null/undefined ou texto em branco = não informado, distinto de zero (RNF-09). */
+export function isMissing(value: unknown): boolean {
   if (value === null || value === undefined) {
     return true;
   }
   return typeof value === 'string' && value.trim() === '';
 }
 
-/** Campos obrigatórios não informados, para sinalização (RF-11, RNF-09). */
-export function pendingFields(version: RequiredFields): string[] {
-  return (Object.keys(LABELS) as (keyof RequiredFields)[])
-    .filter((field) => isMissing(version[field]))
-    .map((field) => LABELS[field]);
+/**
+ * Campos obrigatórios não informados, por mapa campo→rótulo pt-BR — cada
+ * catálogo declara seu mapa e chama o genérico (RF-11, RNF-09).
+ */
+export function missingFields<K extends string>(
+  version: Partial<Record<K, unknown>>,
+  labels: Partial<Record<K, string>>,
+): string[] {
+  return (Object.entries(labels) as [K, string][])
+    .filter(([field]) => isMissing(version[field]))
+    .map(([, label]) => label);
 }

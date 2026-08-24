@@ -1,4 +1,5 @@
-import { pendingFields, resolveEffectiveVersion } from './effectiveness';
+import { CONDUCTOR_CABLE_REQUIRED_LABELS } from './conductor-cables.service';
+import { missingFields, resolveEffectiveVersion } from './effectiveness';
 
 const version = (start: string) => ({ effectiveFrom: new Date(start) });
 
@@ -37,7 +38,8 @@ describe('resolveEffectiveVersion', () => {
   });
 });
 
-describe('pendingFields', () => {
+describe('missingFields (mapa de rótulos do cabo condutor)', () => {
+  const labels = CONDUCTOR_CABLE_REQUIRED_LABELS;
   const complete = {
     description: 'CAA 636 MCM',
     weightTonPerKm: '1.2',
@@ -47,19 +49,23 @@ describe('pendingFields', () => {
   };
 
   it('retorna vazio quando todos os campos obrigatórios estão informados', () => {
-    expect(pendingFields(complete)).toEqual([]);
+    expect(missingFields(complete, labels)).toEqual([]);
   });
 
   it('aponta o campo não informado pelo rótulo em pt-BR', () => {
-    expect(pendingFields({ ...complete, utsKn: null })).toEqual(['UTS (kN)']);
+    expect(missingFields({ ...complete, utsKn: null }, labels)).toEqual([
+      'UTS (kN)',
+    ]);
   });
 
   it('distingue não informado (null) de zero informado', () => {
-    expect(pendingFields({ ...complete, weightTonPerKm: '0' })).toEqual([]);
+    expect(missingFields({ ...complete, weightTonPerKm: '0' }, labels)).toEqual(
+      [],
+    );
   });
 
   it('trata descrição em branco como não informada', () => {
-    expect(pendingFields({ ...complete, description: '   ' })).toEqual([
+    expect(missingFields({ ...complete, description: '   ' }, labels)).toEqual([
       'descrição',
     ]);
   });

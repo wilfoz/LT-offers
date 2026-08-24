@@ -1,4 +1,8 @@
-import { GROUND_WIRE_TYPES, GroundWireType } from '@lt-offers/domain';
+import {
+  DATE_PATTERN,
+  GROUND_WIRE_TYPES,
+  GroundWireType,
+} from '@lt-offers/domain';
 import {
   IsIn,
   IsNotEmpty,
@@ -7,7 +11,6 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { DATE_PATTERN } from './version-fields.dto';
 import { GroundWireVersionFieldsDto } from './ground-wire-version-fields.dto';
 
 export class CreateGroundWireDto extends GroundWireVersionFieldsDto {

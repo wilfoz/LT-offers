@@ -1,36 +1,47 @@
 import {
+  ConductorCableHistory,
+  ConductorCableSummary,
+  ConductorCableVersion,
+} from '@lt-offers/domain';
+import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import type { ConductorCableVersion as ConductorCableVersionRow } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { toCivilDate } from './civil-date';
 import { CreateConductorCableDto } from './dto/create-conductor-cable.dto';
 import { CreateVersionDto } from './dto/create-version.dto';
 import { VersionFieldsDto } from './dto/version-fields.dto';
-import { pendingFields, resolveEffectiveVersion } from './effectiveness';
+import { missingFields, resolveEffectiveVersion } from './effectiveness';
+import { isUniqueViolation } from './prisma-errors';
 
-/** Violação de unicidade do Postgres via Prisma (duck-typing: mock-friendly). */
-function isUniqueViolation(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    (error as { code?: string }).code === 'P2002'
-  );
-}
+// Rótulos exibidos ao usuário — permanecem em pt-BR (RNF-14)
+export const CONDUCTOR_CABLE_REQUIRED_LABELS = {
+  description: 'descrição',
+  weightTonPerKm: 'peso (ton/km)',
+  reelLengthM: 'bobina (m)',
+  diameterMm: 'diâmetro (mm)',
+  utsKn: 'UTS (kN)',
+} as const;
 
 @Injectable()
 export class ConductorCablesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateConductorCableDto, createdBy: string, today: Date) {
+  async create(
+    dto: CreateConductorCableDto,
+    createdBy: string,
+    today: Date,
+  ): Promise<ConductorCableSummary> {
     const effectiveFrom = dto.effectiveFrom
       ? toCivilDate(dto.effectiveFrom)
       : today;
 
     try {
-      return await this.prisma.conductorCable.create({
+      const item = await this.prisma.conductorCable.create({
         data: {
           code: dto.code,
           versions: {
@@ -43,6 +54,7 @@ export class ConductorCablesService {
         },
         include: { versions: true },
       });
+      return this.toSummary(item.id, item.code, item.versions[0]);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new ConflictException(
@@ -53,12 +65,16 @@ export class ConductorCablesService {
     }
   }
 
-  async createVersion(id: number, dto: CreateVersionDto, createdBy: string) {
+  async createVersion(
+    id: number,
+    dto: CreateVersionDto,
+    createdBy: string,
+  ): Promise<ConductorCableVersion> {
     await this.getItem(id);
     const effectiveFrom = toCivilDate(dto.effectiveFrom);
 
     try {
-      return await this.prisma.conductorCableVersion.create({
+      const version = await this.prisma.conductorCableVersion.create({
         data: {
           conductorCableId: id,
           ...this.toVersionFields(dto),
@@ -66,6 +82,7 @@ export class ConductorCablesService {
           createdBy,
         },
       });
+      return this.toVersionContract(version);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new ConflictException(
@@ -76,7 +93,10 @@ export class ConductorCablesService {
     }
   }
 
-  async list(search: string | undefined, referenceDate: Date) {
+  async list(
+    search: string | undefined,
+    referenceDate: Date,
+  ): Promise<ConductorCableSummary[]> {
     const filter: Prisma.ConductorCableWhereInput = search
       ? {
           OR: [
@@ -100,16 +120,11 @@ export class ConductorCablesService {
 
     return items.map((item) => {
       const effective = resolveEffectiveVersion(item.versions, referenceDate);
-      return {
-        id: item.id,
-        code: item.code,
-        effectiveVersion: effective ?? null,
-        pendingFields: effective ? pendingFields(effective) : [],
-      };
+      return this.toSummary(item.id, item.code, effective);
     });
   }
 
-  async get(id: number, referenceDate: Date) {
+  async get(id: number, referenceDate: Date): Promise<ConductorCableSummary> {
     const item = await this.getItem(id);
     const effective = resolveEffectiveVersion(item.versions, referenceDate);
     if (!effective) {
@@ -117,19 +132,14 @@ export class ConductorCablesService {
         'Não há versão vigente para a data de referência informada',
       );
     }
-    return {
-      id: item.id,
-      code: item.code,
-      effectiveVersion: effective,
-      pendingFields: pendingFields(effective),
-    };
+    return this.toSummary(item.id, item.code, effective);
   }
 
-  async listHistory(id: number) {
+  async listHistory(id: number): Promise<ConductorCableHistory> {
     const item = await this.getItem(id);
-    const versions = [...item.versions].sort(
-      (a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime(),
-    );
+    const versions = [...item.versions]
+      .sort((a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime())
+      .map((version) => this.toVersionContract(version));
     return { id: item.id, code: item.code, versions };
   }
 
@@ -142,6 +152,39 @@ export class ConductorCablesService {
       throw new NotFoundException('Cabo condutor não encontrado');
     }
     return item;
+  }
+
+  private toSummary(
+    id: number,
+    code: string,
+    row: ConductorCableVersionRow | undefined,
+  ): ConductorCableSummary {
+    const effective = row ? this.toVersionContract(row) : null;
+    return {
+      id,
+      code,
+      effectiveVersion: effective,
+      pendingFields: effective
+        ? missingFields(effective, CONDUCTOR_CABLE_REQUIRED_LABELS)
+        : [],
+    };
+  }
+
+  /** Linha Prisma → contrato da domain: Decimal→string, datas→ISO, sem FKs. */
+  private toVersionContract(
+    row: ConductorCableVersionRow,
+  ): ConductorCableVersion {
+    return {
+      id: row.id,
+      description: row.description ?? null,
+      weightTonPerKm: row.weightTonPerKm?.toString() ?? null,
+      reelLengthM: row.reelLengthM?.toString() ?? null,
+      diameterMm: row.diameterMm?.toString() ?? null,
+      utsKn: row.utsKn?.toString() ?? null,
+      effectiveFrom: row.effectiveFrom.toISOString(),
+      createdBy: row.createdBy,
+      createdAt: row.createdAt.toISOString(),
+    };
   }
 
   private toVersionFields(dto: VersionFieldsDto) {

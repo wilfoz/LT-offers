@@ -1,4 +1,9 @@
-import { GroundWireType } from '@lt-offers/domain';
+import {
+  GroundWireHistory,
+  GroundWireSummary,
+  GroundWireType,
+  GroundWireVersion,
+} from '@lt-offers/domain';
 import {
   BadRequestException,
   ConflictException,
@@ -6,21 +11,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import type { GroundWireVersion as GroundWireVersionRow } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { toCivilDate } from './civil-date';
 import { CreateGroundWireDto } from './dto/create-ground-wire.dto';
 import { CreateGroundWireVersionDto } from './dto/create-ground-wire-version.dto';
 import { GroundWireVersionFieldsDto } from './dto/ground-wire-version-fields.dto';
-import { resolveEffectiveVersion } from './effectiveness';
-
-/** Violação de unicidade do Postgres via Prisma (duck-typing: mock-friendly). */
-function isUniqueViolation(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    (error as { code?: string }).code === 'P2002'
-  );
-}
+import {
+  isMissing,
+  missingFields,
+  resolveEffectiveVersion,
+} from './effectiveness';
+import { isUniqueViolation } from './prisma-errors';
 
 // Rótulos exibidos ao usuário — permanecem em pt-BR (RNF-14)
 const COMMON_REQUIRED_LABELS = {
@@ -63,25 +65,22 @@ const TYPE_LABELS: Record<GroundWireType, string> = {
   OPGW: 'OPGW',
 };
 
-function isMissing(value: unknown): boolean {
-  if (value === null || value === undefined) {
-    return true;
-  }
-  return typeof value === 'string' && value.trim() === '';
-}
-
 @Injectable()
 export class GroundWiresService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateGroundWireDto, createdBy: string, today: Date) {
+  async create(
+    dto: CreateGroundWireDto,
+    createdBy: string,
+    today: Date,
+  ): Promise<GroundWireSummary> {
     this.assertFieldsApplyToType(dto.type, dto);
     const effectiveFrom = dto.effectiveFrom
       ? toCivilDate(dto.effectiveFrom)
       : today;
 
     try {
-      return await this.prisma.groundWire.create({
+      const item = await this.prisma.groundWire.create({
         data: {
           code: dto.code,
           type: dto.type,
@@ -95,6 +94,7 @@ export class GroundWiresService {
         },
         include: { versions: true },
       });
+      return this.toSummary(item.id, item.code, item.type, item.versions[0]);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new ConflictException(
@@ -109,13 +109,13 @@ export class GroundWiresService {
     id: number,
     dto: CreateGroundWireVersionDto,
     createdBy: string,
-  ) {
+  ): Promise<GroundWireVersion> {
     const item = await this.getItem(id);
     this.assertFieldsApplyToType(item.type, dto);
     const effectiveFrom = toCivilDate(dto.effectiveFrom);
 
     try {
-      return await this.prisma.groundWireVersion.create({
+      const version = await this.prisma.groundWireVersion.create({
         data: {
           groundWireId: id,
           ...this.toVersionFields(dto),
@@ -123,6 +123,7 @@ export class GroundWiresService {
           createdBy,
         },
       });
+      return this.toVersionContract(version);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new ConflictException(
@@ -137,7 +138,7 @@ export class GroundWiresService {
     search: string | undefined,
     type: GroundWireType | undefined,
     referenceDate: Date,
-  ) {
+  ): Promise<GroundWireSummary[]> {
     const searchFilter: Prisma.GroundWireWhereInput = search
       ? {
           OR: [
@@ -161,19 +162,11 @@ export class GroundWiresService {
 
     return items.map((item) => {
       const effective = resolveEffectiveVersion(item.versions, referenceDate);
-      return {
-        id: item.id,
-        code: item.code,
-        type: item.type,
-        effectiveVersion: effective ?? null,
-        pendingFields: effective
-          ? this.pendingFields(item.type, effective)
-          : [],
-      };
+      return this.toSummary(item.id, item.code, item.type, effective);
     });
   }
 
-  async get(id: number, referenceDate: Date) {
+  async get(id: number, referenceDate: Date): Promise<GroundWireSummary> {
     const item = await this.getItem(id);
     const effective = resolveEffectiveVersion(item.versions, referenceDate);
     if (!effective) {
@@ -181,27 +174,22 @@ export class GroundWiresService {
         'Não há versão vigente para a data de referência informada',
       );
     }
-    return {
-      id: item.id,
-      code: item.code,
-      type: item.type,
-      effectiveVersion: effective,
-      pendingFields: this.pendingFields(item.type, effective),
-    };
+    return this.toSummary(item.id, item.code, item.type, effective);
   }
 
-  async listHistory(id: number) {
+  async listHistory(id: number): Promise<GroundWireHistory> {
     const item = await this.getItem(id);
-    const versions = [...item.versions].sort(
-      (a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime(),
-    );
+    const versions = [...item.versions]
+      .sort((a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime())
+      .map((version) => this.toVersionContract(version));
     return { id: item.id, code: item.code, type: item.type, versions };
   }
 
   /**
-   * Aplicabilidade por tipo (design D1): campo específico do outro tipo é
-   * rejeitado com 400 apontando o campo — a invariante do banco (colunas
-   * anuláveis) é garantida aqui, na única via de escrita.
+   * Aplicabilidade por tipo (design D1 da change do catálogo): campo
+   * específico do outro tipo é rejeitado com 400 apontando o campo — a
+   * invariante do banco (colunas anuláveis) é garantida aqui, na única via
+   * de escrita.
    */
   private assertFieldsApplyToType(
     type: GroundWireType,
@@ -219,16 +207,6 @@ export class GroundWiresService {
     }
   }
 
-  /** Campos obrigatórios não informados, por tipo (RF-11, RNF-09). */
-  private pendingFields(
-    type: GroundWireType,
-    version: Partial<Record<VersionFieldKey, unknown>>,
-  ): string[] {
-    return Object.entries(REQUIRED_BY_TYPE[type])
-      .filter(([field]) => isMissing(version[field as VersionFieldKey]))
-      .map(([, label]) => label);
-  }
-
   private async getItem(id: number) {
     const item = await this.prisma.groundWire.findUnique({
       where: { id },
@@ -238,6 +216,45 @@ export class GroundWiresService {
       throw new NotFoundException('Cabo de guarda não encontrado');
     }
     return item;
+  }
+
+  private toSummary(
+    id: number,
+    code: string,
+    type: GroundWireType,
+    row: GroundWireVersionRow | undefined,
+  ): GroundWireSummary {
+    const effective = row ? this.toVersionContract(row) : null;
+    return {
+      id,
+      code,
+      type,
+      effectiveVersion: effective,
+      pendingFields: effective
+        ? missingFields(effective, REQUIRED_BY_TYPE[type])
+        : [],
+    };
+  }
+
+  /** Linha Prisma → contrato da domain: Decimal→string, datas→ISO, sem FKs. */
+  private toVersionContract(row: GroundWireVersionRow): GroundWireVersion {
+    return {
+      id: row.id,
+      description: row.description ?? null,
+      weightTonPerKm: row.weightTonPerKm?.toString() ?? null,
+      reelLengthM: row.reelLengthM?.toString() ?? null,
+      diameterMm: row.diameterMm?.toString() ?? null,
+      utsKn: row.utsKn?.toString() ?? null,
+      galvanizationClass: row.galvanizationClass ?? null,
+      strengthGrade: row.strengthGrade ?? null,
+      wireCount: row.wireCount ?? null,
+      manufacturer: row.manufacturer ?? null,
+      i2tKa2s: row.i2tKa2s?.toString() ?? null,
+      fiberCount: row.fiberCount ?? null,
+      effectiveFrom: row.effectiveFrom.toISOString(),
+      createdBy: row.createdBy,
+      createdAt: row.createdAt.toISOString(),
+    };
   }
 
   private toVersionFields(dto: GroundWireVersionFieldsDto) {

@@ -1,3 +1,4 @@
+import { POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
 import {
   IsInt,
   IsOptional,
@@ -6,7 +7,6 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { POSITIVE_DECIMAL_PATTERN } from './version-fields.dto';
 
 const decimalMessage = (field: string) =>
   `O campo ${field} deve ser um número decimal positivo em formato texto, com ponto como separador (ex.: "12.34")`;

@@ -1,5 +1,5 @@
+import { DATE_PATTERN } from '@lt-offers/domain';
 import { IsEmpty, Matches } from 'class-validator';
-import { DATE_PATTERN } from './version-fields.dto';
 import { GroundWireVersionFieldsDto } from './ground-wire-version-fields.dto';
 
 export class CreateGroundWireVersionDto extends GroundWireVersionFieldsDto {

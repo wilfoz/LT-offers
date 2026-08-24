@@ -1,5 +1,6 @@
+import { DATE_PATTERN } from '@lt-offers/domain';
 import { Matches } from 'class-validator';
-import { DATE_PATTERN, VersionFieldsDto } from './version-fields.dto';
+import { VersionFieldsDto } from './version-fields.dto';
 
 export class CreateVersionDto extends VersionFieldsDto {
   @Matches(DATE_PATTERN, {

@@ -1,5 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   GroundWireHistory,
   GroundWireSummary,
@@ -8,13 +8,21 @@ import {
   NewGroundWireVersionInput,
 } from '@lt-offers/domain';
 import { Observable } from 'rxjs';
+import { VersionedCatalogApi } from './versioned-catalog-api';
 
 @Injectable({ providedIn: 'root' })
-export class GroundWiresApi {
-  private readonly http = inject(HttpClient);
-  private readonly base = '/api/catalogs/ground-wires';
+export class GroundWiresApi extends VersionedCatalogApi<
+  GroundWireSummary,
+  GroundWireHistory,
+  NewGroundWireInput,
+  NewGroundWireVersionInput
+> {
+  constructor() {
+    super('/api/catalogs/ground-wires');
+  }
 
-  list(
+  // Variação deste catálogo: filtro por tipo além da busca
+  override list(
     search?: string,
     type?: GroundWireType,
   ): Observable<GroundWireSummary[]> {
@@ -26,20 +34,5 @@ export class GroundWiresApi {
       params = params.set('type', type);
     }
     return this.http.get<GroundWireSummary[]>(this.base, { params });
-  }
-
-  history(id: number): Observable<GroundWireHistory> {
-    return this.http.get<GroundWireHistory>(`${this.base}/${id}/history`);
-  }
-
-  create(input: NewGroundWireInput): Observable<unknown> {
-    return this.http.post(this.base, input);
-  }
-
-  createVersion(
-    id: number,
-    input: NewGroundWireVersionInput,
-  ): Observable<unknown> {
-    return this.http.post(`${this.base}/${id}/versions`, input);
   }
 }

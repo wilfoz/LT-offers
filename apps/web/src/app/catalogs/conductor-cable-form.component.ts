@@ -6,11 +6,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ConductorCableVersionInput } from '@lt-offers/domain';
+import {
+  ConductorCableVersionInput,
+  DATE_PATTERN,
+  POSITIVE_DECIMAL_PATTERN,
+} from '@lt-offers/domain';
 import { ConductorCablesApi } from './conductor-cables-api.service';
-
-const DECIMAL_PATTERN = /^\d+(\.\d+)?$/;
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+import { orNull } from './form-utils';
 
 @Component({
   selector: 'app-conductor-cable-form',
@@ -152,19 +154,19 @@ export class ConductorCableFormComponent {
     description: new FormControl('', { nonNullable: true }),
     weightTonPerKm: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     reelLengthM: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     diameterMm: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     utsKn: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     effectiveFrom: new FormControl('', {
       nonNullable: true,
@@ -264,7 +266,6 @@ export class ConductorCableFormComponent {
   /** Campo em branco vira null (não informado) — nunca "0" implícito (RNF-09). */
   private toInput(): ConductorCableVersionInput {
     const value = this.form.getRawValue();
-    const orNull = (text: string) => (text.trim() === '' ? null : text.trim());
     return {
       description: orNull(value.description),
       weightTonPerKm: orNull(value.weightTonPerKm),

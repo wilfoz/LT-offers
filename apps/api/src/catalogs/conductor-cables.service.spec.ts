@@ -4,11 +4,27 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { ConductorCablesService } from './conductor-cables.service';
 
 const uniqueViolation = () =>
   Object.assign(new Error('unique'), { code: 'P2002' });
+
+// Linha completa de versão como o Prisma devolve (o service mapeia para o
+// contrato da domain, então os mocks precisam dos campos de autoria/datas)
+const versionRow = (overrides: Record<string, unknown> = {}) => ({
+  id: 10,
+  description: null,
+  weightTonPerKm: null,
+  reelLengthM: null,
+  diameterMm: null,
+  utsKn: null,
+  effectiveFrom: new Date('2026-01-01'),
+  createdBy: 'ana',
+  createdAt: new Date('2026-01-01T12:00:00.000Z'),
+  ...overrides,
+});
 
 describe('ConductorCablesService', () => {
   const today = new Date('2026-08-23T00:00:00.000Z');
@@ -40,7 +56,11 @@ describe('ConductorCablesService', () => {
 
   describe('create', () => {
     it('cria item com primeira versão quando o código é inédito', async () => {
-      prismaMock.conductorCable.create.mockResolvedValue({ id: 1 });
+      prismaMock.conductorCable.create.mockResolvedValue({
+        id: 1,
+        code: 'CAA-636',
+        versions: [versionRow({ weightTonPerKm: '1.2' })],
+      });
 
       await service.create(
         { code: 'CAA-636', weightTonPerKm: '1.2' },
@@ -80,9 +100,11 @@ describe('ConductorCablesService', () => {
       prismaMock.conductorCable.findUnique.mockResolvedValue({
         id: 1,
         code: 'CAA-636',
-        versions: [{ effectiveFrom: new Date('2026-01-01') }],
+        versions: [versionRow()],
       });
-      prismaMock.conductorCableVersion.create.mockResolvedValue({ id: 2 });
+      prismaMock.conductorCableVersion.create.mockResolvedValue(
+        versionRow({ id: 2, effectiveFrom: new Date('2026-09-01') }),
+      );
 
       await service.createVersion(
         1,
@@ -123,35 +145,38 @@ describe('ConductorCablesService', () => {
         id: 1,
         code: 'CAA-636',
         versions: [
-          {
+          versionRow({
             effectiveFrom: new Date('2026-01-01'),
-            weightTonPerKm: '1.2',
+            // Decimal real do Prisma: o mapper deve devolver a string exata
+            weightTonPerKm: new Prisma.Decimal('1.2'),
             description: 'v1',
             reelLengthM: '2000',
             diameterMm: '25',
             utsKn: '120',
-          },
-          {
+          }),
+          versionRow({
+            id: 11,
             effectiveFrom: new Date('2026-06-01'),
             weightTonPerKm: '1.3',
             description: 'v2',
             reelLengthM: '2000',
             diameterMm: '25',
             utsKn: '125',
-          },
+          }),
         ],
       });
 
       const result = await service.get(1, new Date('2026-03-15'));
 
-      expect(result.effectiveVersion.weightTonPerKm).toBe('1.2');
+      expect(result.effectiveVersion?.weightTonPerKm).toBe('1.2');
+      expect(typeof result.effectiveVersion?.weightTonPerKm).toBe('string');
     });
 
     it('responde que não há versão vigente para data anterior à primeira', async () => {
       prismaMock.conductorCable.findUnique.mockResolvedValue({
         id: 1,
         code: 'CAA-636',
-        versions: [{ effectiveFrom: new Date('2026-01-01') }],
+        versions: [versionRow()],
       });
 
       await expect(service.get(1, new Date('2025-06-01'))).rejects.toThrow(
@@ -167,14 +192,13 @@ describe('ConductorCablesService', () => {
           id: 1,
           code: 'CAA-636',
           versions: [
-            {
-              effectiveFrom: new Date('2026-01-01'),
+            versionRow({
               description: 'CAA 636 MCM',
               weightTonPerKm: '1.2',
               reelLengthM: null,
               diameterMm: '25.15',
               utsKn: null,
-            },
+            }),
           ],
         },
       ]);
@@ -191,8 +215,15 @@ describe('ConductorCablesService', () => {
         id: 1,
         code: 'CAA-636',
         versions: [
-          { effectiveFrom: new Date('2026-01-01'), createdBy: 'ana' },
-          { effectiveFrom: new Date('2026-06-01'), createdBy: 'bruno' },
+          versionRow({
+            effectiveFrom: new Date('2026-01-01'),
+            createdBy: 'ana',
+          }),
+          versionRow({
+            id: 11,
+            effectiveFrom: new Date('2026-06-01'),
+            createdBy: 'bruno',
+          }),
         ],
       });
 

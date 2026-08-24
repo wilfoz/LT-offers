@@ -1,7 +1,5 @@
+import { POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
 import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-
-export const POSITIVE_DECIMAL_PATTERN = /^\d+(\.\d+)?$/;
-export const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const decimalMessage = (field: string) =>
   `O campo ${field} deve ser um número decimal positivo em formato texto, com ponto como separador (ex.: "12.34")`;

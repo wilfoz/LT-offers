@@ -6,13 +6,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { GroundWireType, GroundWireVersionInput } from '@lt-offers/domain';
+import {
+  DATE_PATTERN,
+  GroundWireType,
+  GroundWireVersionInput,
+  POSITIVE_DECIMAL_PATTERN,
+  POSITIVE_INT_PATTERN,
+} from '@lt-offers/domain';
+import { intOrNull, orNull } from './form-utils';
 import { GROUND_WIRE_TYPE_LABELS } from './ground-wire-labels';
 import { GroundWiresApi } from './ground-wires-api.service';
-
-const DECIMAL_PATTERN = /^\d+(\.\d+)?$/;
-const POSITIVE_INT_PATTERN = /^[1-9]\d*$/;
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 @Component({
   selector: 'app-ground-wire-form',
@@ -245,19 +248,19 @@ export class GroundWireFormComponent {
     description: new FormControl('', { nonNullable: true }),
     weightTonPerKm: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     reelLengthM: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     diameterMm: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     utsKn: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     galvanizationClass: new FormControl('', { nonNullable: true }),
     strengthGrade: new FormControl('', { nonNullable: true }),
@@ -268,7 +271,7 @@ export class GroundWireFormComponent {
     manufacturer: new FormControl('', { nonNullable: true }),
     i2tKa2s: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.pattern(DECIMAL_PATTERN)],
+      validators: [Validators.pattern(POSITIVE_DECIMAL_PATTERN)],
     }),
     fiberCount: new FormControl('', {
       nonNullable: true,
@@ -427,9 +430,6 @@ export class GroundWireFormComponent {
    */
   private toInput(): GroundWireVersionInput {
     const value = this.form.getRawValue();
-    const orNull = (text: string) => (text.trim() === '' ? null : text.trim());
-    const intOrNull = (text: string) =>
-      text.trim() === '' ? null : Number(text.trim());
     const isSteel = this.selectedType() === 'STEEL';
     return {
       description: orNull(value.description),

@@ -1,5 +1,5 @@
+import { DATE_PATTERN } from '@lt-offers/domain';
 import { BadRequestException } from '@nestjs/common';
-import { DATE_PATTERN } from './dto/version-fields.dto';
 
 export const BUSINESS_TIMEZONE = 'America/Sao_Paulo';
 
