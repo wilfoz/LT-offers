@@ -5,6 +5,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { vi } from 'vitest';
 import { ConductorCablesApi } from './conductor-cables-api.service';
 import { ConductorCableFormComponent } from './conductor-cable-form.component';
@@ -130,5 +131,40 @@ describe('ConductorCableFormComponent (nova versão)', () => {
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).toContain('Não foi possível carregar os dados atuais');
     expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+});
+
+describe('ConductorCableFormComponent (confirmação ao salvar)', () => {
+  it('abre a confirmação transitória e grava ao salvar com sucesso', async () => {
+    const apiMock = {
+      create: vi.fn().mockReturnValue(of({})),
+      createVersion: vi.fn(),
+      history: vi.fn(),
+    };
+    const snackMock = { open: vi.fn() };
+    await TestBed.configureTestingModule({
+      imports: [ConductorCableFormComponent],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: ConductorCablesApi, useValue: apiMock },
+        { provide: MatSnackBar, useValue: snackMock },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({}) } },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(ConductorCableFormComponent);
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.patchValue({ code: 'CA-1' });
+    fixture.componentInstance.save();
+
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Cabo condutor salvo',
+      'Fechar',
+      expect.objectContaining({ duration: 4000 }),
+    );
+    expect(apiMock.create).toHaveBeenCalled();
   });
 });

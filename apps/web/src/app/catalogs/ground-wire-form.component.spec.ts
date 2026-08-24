@@ -5,6 +5,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { vi } from 'vitest';
 import { GroundWireFormComponent } from './ground-wire-form.component';
 import { GroundWiresApi } from './ground-wires-api.service';
@@ -273,5 +274,43 @@ describe('GroundWireFormComponent (nova versão)', () => {
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).toContain('Não foi possível carregar os dados atuais');
     expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+});
+
+describe('GroundWireFormComponent (confirmação ao salvar)', () => {
+  it('abre a confirmação transitória e grava ao salvar com sucesso', async () => {
+    const apiMock = {
+      create: vi.fn().mockReturnValue(of({})),
+      createVersion: vi.fn(),
+      history: vi.fn(),
+    };
+    const snackMock = { open: vi.fn() };
+    await TestBed.configureTestingModule({
+      imports: [GroundWireFormComponent],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: GroundWiresApi, useValue: apiMock },
+        { provide: MatSnackBar, useValue: snackMock },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({}) } },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(GroundWireFormComponent);
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.patchValue({
+      code: 'CG-1',
+      type: 'STEEL',
+    });
+    fixture.componentInstance.save();
+
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Cabo de guarda salvo',
+      'Fechar',
+      expect.objectContaining({ duration: 4000 }),
+    );
+    expect(apiMock.create).toHaveBeenCalled();
   });
 });

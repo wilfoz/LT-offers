@@ -5,6 +5,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { vi } from 'vitest';
 import { GuyWireFormComponent } from './guy-wire-form.component';
 import { GuyWiresApi } from './guy-wires-api.service';
@@ -180,5 +181,40 @@ describe('GuyWireFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
     expect(apiMock.create).not.toHaveBeenCalled();
     expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+});
+
+describe('GuyWireFormComponent (confirmação ao salvar)', () => {
+  it('abre a confirmação transitória e grava ao salvar com sucesso', async () => {
+    const apiMock = {
+      create: vi.fn().mockReturnValue(of({})),
+      createVersion: vi.fn(),
+      history: vi.fn(),
+    };
+    const snackMock = { open: vi.fn() };
+    await TestBed.configureTestingModule({
+      imports: [GuyWireFormComponent],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: GuyWiresApi, useValue: apiMock },
+        { provide: MatSnackBar, useValue: snackMock },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({}) } },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(GuyWireFormComponent);
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.patchValue({ code: 'CT-1' });
+    fixture.componentInstance.save();
+
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Cabo de tirante salvo',
+      'Fechar',
+      expect.objectContaining({ duration: 4000 }),
+    );
+    expect(apiMock.create).toHaveBeenCalled();
   });
 });

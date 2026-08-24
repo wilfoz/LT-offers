@@ -5,6 +5,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { vi } from 'vitest';
 import { StructureSeriesApi } from './structure-series-api.service';
 import { StructureSeriesFormComponent } from './structure-series-form.component';
@@ -180,5 +181,40 @@ describe('StructureSeriesFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
     expect(apiMock.create).not.toHaveBeenCalled();
     expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+});
+
+describe('StructureSeriesFormComponent (confirmação ao salvar)', () => {
+  it('abre a confirmação transitória e grava ao salvar com sucesso', async () => {
+    const apiMock = {
+      create: vi.fn().mockReturnValue(of({})),
+      createVersion: vi.fn(),
+      history: vi.fn(),
+    };
+    const snackMock = { open: vi.fn() };
+    await TestBed.configureTestingModule({
+      imports: [StructureSeriesFormComponent],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: StructureSeriesApi, useValue: apiMock },
+        { provide: MatSnackBar, useValue: snackMock },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({}) } },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(StructureSeriesFormComponent);
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.patchValue({ name: 'S1' });
+    fixture.componentInstance.save();
+
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Série de estrutura salva',
+      'Fechar',
+      expect.objectContaining({ duration: 4000 }),
+    );
+    expect(apiMock.create).toHaveBeenCalled();
   });
 });

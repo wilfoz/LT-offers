@@ -5,6 +5,7 @@ import {
   provideRouter,
 } from '@angular/router';
 import { NEVER, of, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { vi } from 'vitest';
 import { TowerTypeFormComponent } from './tower-type-form.component';
 import { TowerTypesApi } from './tower-types-api.service';
@@ -288,5 +289,45 @@ describe('TowerTypeFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
     expect(apiMock.create).not.toHaveBeenCalled();
     expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+});
+
+describe('TowerTypeFormComponent (confirmação ao salvar)', () => {
+  it('abre a confirmação transitória e grava ao salvar com sucesso', async () => {
+    const apiMock = {
+      create: vi.fn().mockReturnValue(of({})),
+      createVersion: vi.fn(),
+      history: vi.fn(),
+    };
+    const snackMock = { open: vi.fn() };
+    await TestBed.configureTestingModule({
+      imports: [TowerTypeFormComponent],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        { provide: TowerTypesApi, useValue: apiMock },
+        { provide: MatSnackBar, useValue: snackMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: convertToParamMap({ seriesId: '5' }) },
+          },
+        },
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TowerTypeFormComponent);
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.patchValue({
+      code: 'SA1',
+      function: 'SUSPENSION',
+    });
+    fixture.componentInstance.save();
+
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Tipo de torre salvo',
+      'Fechar',
+      expect.objectContaining({ duration: 4000 }),
+    );
+    expect(apiMock.create).toHaveBeenCalled();
   });
 });

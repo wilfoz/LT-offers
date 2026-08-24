@@ -26,8 +26,8 @@
 
 ## 5. Feedback de operação
 
-- [ ] 5.1 Adicionar `MatSnackBar` de confirmação pt-BR no sucesso do save dos 5 formulários (design D4), mantendo erros inline como estão
-- [ ] 5.2 Escrever os testes do snackbar (sucesso → confirmação + navegação) sem tocar nos testes de erro existentes
+- [x] 5.1 Adicionar `MatSnackBar` de confirmação pt-BR no sucesso do save dos 5 formulários (design D4), mantendo erros inline como estão
+- [x] 5.2 Escrever os testes do snackbar (sucesso → confirmação + navegação) sem tocar nos testes de erro existentes
 
 ## 6. QA e fechamento
 

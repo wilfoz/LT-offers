@@ -8,6 +8,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   ConductorCableVersionInput,
@@ -204,6 +205,7 @@ export class ConductorCableFormComponent {
   private readonly api = inject(ConductorCablesApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly editId = signal<number | null>(null);
   readonly currentCode = signal('');
@@ -285,7 +287,10 @@ export class ConductorCableFormComponent {
         });
 
     operation.subscribe({
-      next: () => this.router.navigate(['/catalogs/conductor-cables']),
+      next: () => {
+        this.snackBar.open('Cabo condutor salvo', 'Fechar', { duration: 4000 });
+        this.router.navigate(['/catalogs/conductor-cables']);
+      },
       error: (error) => {
         this.saving.set(false);
         const message = error?.error?.message;

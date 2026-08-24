@@ -8,6 +8,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   DATE_PATTERN,
@@ -244,6 +245,7 @@ export class StructureSeriesFormComponent {
   private readonly api = inject(StructureSeriesApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly editId = signal<number | null>(null);
   readonly currentName = signal('');
@@ -338,7 +340,12 @@ export class StructureSeriesFormComponent {
         });
 
     operation.subscribe({
-      next: () => this.router.navigate(['/catalogs/structure-series']),
+      next: () => {
+        this.snackBar.open('Série de estrutura salva', 'Fechar', {
+          duration: 4000,
+        });
+        this.router.navigate(['/catalogs/structure-series']);
+      },
       error: (error) => {
         this.saving.set(false);
         const message = error?.error?.message;
