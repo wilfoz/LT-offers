@@ -1,8 +1,6 @@
 import { POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
 import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-
-const decimalMessage = (field: string) =>
-  `O campo ${field} deve ser um número decimal positivo em formato texto, com ponto como separador (ex.: "12.34")`;
+import { decimalMessage } from './validation-messages';
 
 /**
  * Campos versionáveis do cabo condutor. Valores numéricos trafegam como

@@ -10,13 +10,10 @@ import {
 import { countMessage, decimalMessage } from './validation-messages';
 
 /**
- * Campos versionáveis do cabo de guarda: comuns à família mais os
- * específicos de cada tipo — a aplicabilidade por tipo é validada no
- * service (campo do outro tipo é rejeitado). Valores decimais trafegam
- * como string (RNF-08); null significa "não informado", distinto de
- * "0" (RNF-09).
+ * Campos versionáveis do cabo de tirante. Valores decimais trafegam como
+ * string (RNF-08); null significa "não informado", distinto de "0" (RNF-09).
  */
-export class GroundWireVersionFieldsDto {
+export class GuyWireVersionFieldsDto {
   @IsOptional()
   @IsString({ message: 'A descrição deve ser um texto' })
   @MaxLength(200, { message: 'A descrição deve ter no máximo 200 caracteres' })
@@ -46,7 +43,6 @@ export class GroundWireVersionFieldsDto {
   })
   utsKn?: string | null;
 
-  // Específicos do tipo aço (DB_CGA)
   @IsOptional()
   @IsString({ message: 'A classe de galvanização deve ser um texto' })
   @MaxLength(50, {
@@ -65,23 +61,4 @@ export class GroundWireVersionFieldsDto {
   @IsInt({ message: countMessage('número de fios') })
   @Min(1, { message: countMessage('número de fios') })
   wireCount?: number | null;
-
-  // Específicos do tipo OPGW (DB_OPGW)
-  @IsOptional()
-  @IsString({ message: 'O fabricante deve ser um texto' })
-  @MaxLength(100, {
-    message: 'O fabricante deve ter no máximo 100 caracteres',
-  })
-  manufacturer?: string | null;
-
-  @IsOptional()
-  @Matches(POSITIVE_DECIMAL_PATTERN, {
-    message: decimalMessage('I²t (kA²·s)'),
-  })
-  i2tKa2s?: string | null;
-
-  @IsOptional()
-  @IsInt({ message: countMessage('número de fibras') })
-  @Min(1, { message: countMessage('número de fibras') })
-  fiberCount?: number | null;
 }

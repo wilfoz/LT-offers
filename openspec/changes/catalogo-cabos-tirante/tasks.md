@@ -20,10 +20,10 @@
 
 ## 4. API de cabos de tirante
 
-- [ ] 4.1 Criar `guy-wires.controller/service` em `/catalogs/guy-wires` sobre a base extraída (helpers D2, retornos tipados D3, datas civis na borda, `effectiveness.ts` intacto), registrando no `CatalogsModule`
-- [ ] 4.2 Implementar DTOs com class-validator e mensagens pt-BR (patterns da domain D1): código obrigatório/único, decimais como string positiva, `wireCount` inteiro positivo, `null` p/ não informado; `pendingFields` = comuns + galvanização/grau/fios (descrição fora, conforme spec)
-- [ ] 4.3 Escrever testes do service e controller cobrindo os cenários do spec `cabos-tirante` (criação, duplicado 409 via P2002, numéricos inválidos, fios não inteiro, busca, pendências, histórico, vigência passada/anterior à primeira, 405 PUT/PATCH, autor X-User)
-- [ ] 4.4 Verificar os endpoints ao vivo contra o Postgres do Compose (criar, nova versão, busca, `effectiveOn` passado, histórico, 405)
+- [x] 4.1 Criar `guy-wires.controller/service` em `/catalogs/guy-wires` sobre a base extraída (helpers D2, retornos tipados D3, datas civis na borda, `effectiveness.ts` intacto), registrando no `CatalogsModule`
+- [x] 4.2 Implementar DTOs com class-validator e mensagens pt-BR (patterns da domain D1): código obrigatório/único, decimais como string positiva, `wireCount` inteiro positivo, `null` p/ não informado; `pendingFields` = comuns + galvanização/grau/fios (descrição fora, conforme spec)
+- [x] 4.3 Escrever testes do service e controller cobrindo os cenários do spec `cabos-tirante` (criação, duplicado 409 via P2002, numéricos inválidos, fios não inteiro, busca, pendências, histórico, vigência passada/anterior à primeira, 405 PUT/PATCH, autor X-User)
+- [x] 4.4 Verificar os endpoints ao vivo contra o Postgres do Compose (criar, nova versão, busca, `effectiveOn` passado, histórico, 405)
 
 ## 5. Interface de manutenção
 

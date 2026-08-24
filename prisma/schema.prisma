@@ -1,7 +1,7 @@
 // Schema Prisma do app api.
-// Infra: health_check. Catálogos F1 (padrão item + versões com vigência
-// derivada, RNF-05): cabos condutores e cabos de guarda. As demais entidades
-// de negócio (ofertas) chegam em fases futuras com design de dados próprio.
+// Infra: health_check. Catálogos F1 seguem o padrão item + versões com
+// vigência derivada (RNF-05) — um par de modelos por catálogo, abaixo.
+// As demais entidades de negócio (ofertas) chegam em fases futuras.
 
 generator client {
   provider = "prisma-client-js"
