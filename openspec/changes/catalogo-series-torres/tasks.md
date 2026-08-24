@@ -12,9 +12,9 @@
 
 ## 3. API de séries de estrutura
 
-- [ ] 3.1 Criar `structure-series.controller/service` em `/catalogs/structure-series` sobre a base extraída (helpers `controller-shared`/`prisma-errors`/`missingFields`, mappers D3, data civil na borda), registrando no `CatalogsModule`; `list` com busca por nome/projetista, `effectiveOn` e `towerTypeCount` via `_count`
-- [ ] 3.2 Implementar DTOs com class-validator e mensagens pt-BR (patterns da domain): nome obrigatório/único (P2002→409), decimais como string positiva, circuitos e cabos por fase inteiros positivos, `null` p/ não informado; `pendingFields` = todos os campos da versão (design D3)
-- [ ] 3.3 Escrever testes do service e controller cobrindo os cenários do spec (criação, nome duplicado 409, numéricos inválidos, busca por nome, pendências incl. série sem SIL, histórico, vigência, 405 PUT/PATCH, autor X-User)
+- [x] 3.1 Criar `structure-series.controller/service` em `/catalogs/structure-series` sobre a base extraída (helpers `controller-shared`/`prisma-errors`/`missingFields`, mappers D3, data civil na borda), registrando no `CatalogsModule`; `list` com busca por nome/projetista, `effectiveOn` e `towerTypeCount` via `_count`
+- [x] 3.2 Implementar DTOs com class-validator e mensagens pt-BR (patterns da domain): nome obrigatório/único (P2002→409), decimais como string positiva, circuitos e cabos por fase inteiros positivos, `null` p/ não informado; `pendingFields` = todos os campos da versão (design D3)
+- [x] 3.3 Escrever testes do service e controller cobrindo os cenários do spec (criação, nome duplicado 409, numéricos inválidos, busca por nome, pendências incl. série sem SIL, histórico, vigência, 405 PUT/PATCH, autor X-User)
 
 ## 4. API de tipos de torre
 
