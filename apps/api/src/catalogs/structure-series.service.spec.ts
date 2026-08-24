@@ -177,13 +177,20 @@ describe('StructureSeriesService', () => {
   });
 
   describe('list', () => {
-    it('busca por nome e projetista', async () => {
+    it('repassa o termo de busca para os filtros de nome e projetista', async () => {
       prismaMock.structureSeries.findMany.mockResolvedValue([]);
 
       await service.list('Raptor', today);
 
       const where = prismaMock.structureSeries.findMany.mock.calls[0][0].where;
-      expect(where.OR).toBeDefined();
+      expect(where.OR).toEqual([
+        { name: { contains: 'Raptor', mode: 'insensitive' } },
+        {
+          versions: {
+            some: { designer: { contains: 'Raptor', mode: 'insensitive' } },
+          },
+        },
+      ]);
     });
 
     it('inclui a quantidade de tipos de torre de cada série', async () => {

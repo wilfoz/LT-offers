@@ -51,8 +51,9 @@ describe('StructureSeriesController', () => {
     );
   });
 
-  it('repassa a data de referência válida para o serviço', () => {
+  it('repassa o termo de busca e a data de referência válida para o serviço', () => {
     controller.list('Raptor', '2026-03-15');
+    expect(serviceMock.list.mock.calls[0][0]).toBe('Raptor');
     expect(serviceMock.list.mock.calls[0][1]).toEqual(
       new Date('2026-03-15T00:00:00.000Z'),
     );

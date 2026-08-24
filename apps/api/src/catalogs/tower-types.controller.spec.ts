@@ -132,6 +132,25 @@ describe('CreateTowerTypeDto (validação)', () => {
     expect(nested.some((m) => m.includes('peso (kg)'))).toBe(true);
   });
 
+  it('rejeita ponto com mais casas decimais que a precisão do banco', async () => {
+    const errors = await validate(
+      dto({
+        code: 'SA1',
+        function: 'SUSPENSION',
+        weights: [{ heightM: '24.0001', weightKg: '5200.125' }],
+      }),
+    );
+
+    const nested = errors
+      .filter((e) => e.property === 'weights')
+      .flatMap((e) => e.children ?? [])
+      .flatMap((e) => e.children ?? [])
+      .flatMap((e) => Object.values(e.constraints ?? {}));
+    expect(nested.some((m) => m.includes('altura (m)'))).toBe(true);
+    expect(nested.some((m) => m.includes('peso (kg)'))).toBe(true);
+    expect(nested.every((m) => m.includes('casas decimais'))).toBe(true);
+  });
+
   it('rejeita alturas duplicadas, inclusive com zeros à direita', async () => {
     const errors = await validate(
       dto({
