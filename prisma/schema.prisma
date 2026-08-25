@@ -178,6 +178,7 @@ model TowerType {
   code              String
   function          TowerFunction
   versions          TowerTypeVersion[]
+  volumes           FoundationVolume[]
 
   @@unique([structureSeriesId, code])
   @@map("tower_type")
@@ -239,4 +240,157 @@ model InsulatorVersion {
   @@unique([insulatorId, effectiveFrom])
   @@index([insulatorId, effectiveFrom(sort: Desc)])
   @@map("insulator_version")
+}
+
+// Catálogo de solos e fundações (F1 — origem DB_FUN), três recursos (design D1
+// da change catalogo-solos-fundacoes): tipos de solo, tipos de fundação (com
+// aplicação na identidade, como GroundWire.type) e a matriz de volumes por
+// combinação torre × solo × fundação (RN-13) — identidade composta pela tripla
+// de FKs, única no banco; as quantidades ficam na versão. Nomes de índice da
+// matriz são explícitos: os auto-gerados passariam do limite de 63 caracteres
+// do Postgres (NAMEDATALEN) e seriam truncados em silêncio.
+model SoilType {
+  id       Int                @id @default(autoincrement())
+  code     String             @unique
+  versions SoilTypeVersion[]
+  volumes  FoundationVolume[]
+
+  @@map("soil_type")
+}
+
+model SoilTypeVersion {
+  id                               Int      @id @default(autoincrement())
+  soilTypeId                       Int      @map("soil_type_id")
+  soilType                         SoilType @relation(fields: [soilTypeId], references: [id])
+  description                      String?
+  submerged                        Boolean?
+  allowableCompressionStressKgfCm2 Decimal? @map("allowable_compression_stress_kgf_cm2") @db.Decimal(12, 2)
+  specificWeightKgfM3              Decimal? @map("specific_weight_kgf_m3") @db.Decimal(12, 2)
+  internalFrictionAngleDeg         Decimal? @map("internal_friction_angle_deg") @db.Decimal(10, 3)
+  cohesionKgCm2                    Decimal? @map("cohesion_kg_cm2") @db.Decimal(10, 3)
+  // Faixa de NSPT: mínimo inclusivo, máximo exclusivo (x≤N<y na planilha);
+  // mínimo < máximo é garantido na API, sem CHECK no banco (risco aceito).
+  nsptMin                          Int?     @map("nspt_min")
+  nsptMax                          Int?     @map("nspt_max")
+  effectiveFrom                    DateTime @map("effective_from") @db.Date
+  createdBy                        String   @map("created_by")
+  createdAt                        DateTime @default(now()) @map("created_at")
+
+  @@unique([soilTypeId, effectiveFrom])
+  @@index([soilTypeId, effectiveFrom(sort: Desc)])
+  @@map("soil_type_version")
+}
+
+enum FoundationApplication {
+  SELF_SUPPORTING
+  GUYED
+  CROSS_ROPE
+
+  @@map("foundation_application")
+}
+
+model FoundationType {
+  id          Int                     @id @default(autoincrement())
+  code        String                  @unique
+  application FoundationApplication
+  versions    FoundationTypeVersion[]
+  volumes     FoundationVolume[]
+
+  @@map("foundation_type")
+}
+
+model FoundationTypeVersion {
+  id                       Int            @id @default(autoincrement())
+  foundationTypeId         Int            @map("foundation_type_id")
+  foundationType           FoundationType @relation(fields: [foundationTypeId], references: [id])
+  description              String?
+  // Composição por elemento de fundação: contagens ≥ 0 anuláveis (null = não
+  // informado, distinto de zero — RNF-09), espelhando as 17 colunas da DB_FUN.
+  spreadFootingCount       Int?           @map("spread_footing_count")
+  precastMastCount         Int?           @map("precast_mast_count")
+  precastGuyCount          Int?           @map("precast_guy_count")
+  straightPierCount        Int?           @map("straight_pier_count")
+  belledPierCount          Int?           @map("belled_pier_count")
+  slabPierCount            Int?           @map("slab_pier_count")
+  straightPierGuyCount     Int?           @map("straight_pier_guy_count")
+  belledPierGuyCount       Int?           @map("belled_pier_guy_count")
+  rockAnchorCount          Int?           @map("rock_anchor_count")
+  concretePileCount        Int?           @map("concrete_pile_count")
+  steelPileCount           Int?           @map("steel_pile_count")
+  helicalMastCount         Int?           @map("helical_mast_count")
+  helicalGuyCount          Int?           @map("helical_guy_count")
+  triconeCount             Int?           @map("tricone_count")
+  rootPileCount            Int?           @map("root_pile_count")
+  micropileCount           Int?           @map("micropile_count")
+  continuousAugerPileCount Int?           @map("continuous_auger_pile_count")
+  effectiveFrom            DateTime       @map("effective_from") @db.Date
+  createdBy                String         @map("created_by")
+  createdAt                DateTime       @default(now()) @map("created_at")
+
+  @@unique([foundationTypeId, effectiveFrom])
+  @@index([foundationTypeId, effectiveFrom(sort: Desc)])
+  @@map("foundation_type_version")
+}
+
+model FoundationVolume {
+  id               Int                       @id @default(autoincrement())
+  towerTypeId      Int                       @map("tower_type_id")
+  towerType        TowerType                 @relation(fields: [towerTypeId], references: [id])
+  soilTypeId       Int                       @map("soil_type_id")
+  soilType         SoilType                  @relation(fields: [soilTypeId], references: [id])
+  foundationTypeId Int                       @map("foundation_type_id")
+  foundationType   FoundationType            @relation(fields: [foundationTypeId], references: [id])
+  versions         FoundationVolumeVersion[]
+
+  @@unique([towerTypeId, soilTypeId, foundationTypeId], map: "foundation_volume_tower_soil_foundation_key")
+  @@map("foundation_volume")
+}
+
+model FoundationVolumeVersion {
+  id                        Int              @id @default(autoincrement())
+  foundationVolumeId        Int              @map("foundation_volume_id")
+  foundationVolume          FoundationVolume @relation(fields: [foundationVolumeId], references: [id])
+  // Quantidades da combinação (~34 colunas da DB_FUN), decimais ≥ 0 anuláveis
+  // (RNF-09). Unidades inferidas — hipótese registrada no proposal (§02).
+  excavationHardFootingM3   Decimal?         @map("excavation_hard_footing_m3") @db.Decimal(12, 3)
+  excavationNormalFootingM3 Decimal?         @map("excavation_normal_footing_m3") @db.Decimal(12, 3)
+  excavationWaterFootingM3  Decimal?         @map("excavation_water_footing_m3") @db.Decimal(12, 3)
+  excavationHardPrecastM3   Decimal?         @map("excavation_hard_precast_m3") @db.Decimal(12, 3)
+  excavationNormalPrecastM3 Decimal?         @map("excavation_normal_precast_m3") @db.Decimal(12, 3)
+  excavationWaterPrecastM3  Decimal?         @map("excavation_water_precast_m3") @db.Decimal(12, 3)
+  excavationHardPileCapM3   Decimal?         @map("excavation_hard_pile_cap_m3") @db.Decimal(12, 3)
+  excavationNormalPileCapM3 Decimal?         @map("excavation_normal_pile_cap_m3") @db.Decimal(12, 3)
+  excavationWaterPileCapM3  Decimal?         @map("excavation_water_pile_cap_m3") @db.Decimal(12, 3)
+  excavationPierM3          Decimal?         @map("excavation_pier_m3") @db.Decimal(12, 3)
+  anchorBoltDrillingM       Decimal?         @map("anchor_bolt_drilling_m") @db.Decimal(12, 3)
+  steelPiersKg              Decimal?         @map("steel_piers_kg") @db.Decimal(12, 3)
+  steelFootingsKg           Decimal?         @map("steel_footings_kg") @db.Decimal(12, 3)
+  steelPileCapsKg           Decimal?         @map("steel_pile_caps_kg") @db.Decimal(12, 3)
+  steelPrecastKg            Decimal?         @map("steel_precast_kg") @db.Decimal(12, 3)
+  steelRockKg               Decimal?         @map("steel_rock_kg") @db.Decimal(12, 3)
+  steelAnchorBoltsKg        Decimal?         @map("steel_anchor_bolts_kg") @db.Decimal(12, 3)
+  concretePiersM3           Decimal?         @map("concrete_piers_m3") @db.Decimal(12, 3)
+  concreteFootingsM3        Decimal?         @map("concrete_footings_m3") @db.Decimal(12, 3)
+  concretePileCapsM3        Decimal?         @map("concrete_pile_caps_m3") @db.Decimal(12, 3)
+  concretePrecastM3         Decimal?         @map("concrete_precast_m3") @db.Decimal(12, 3)
+  concreteRockM3            Decimal?         @map("concrete_rock_m3") @db.Decimal(12, 3)
+  regenerationM3            Decimal?         @map("regeneration_m3") @db.Decimal(12, 3)
+  groutM3                   Decimal?         @map("grout_m3") @db.Decimal(12, 3)
+  backfillSoilM3            Decimal?         @map("backfill_soil_m3") @db.Decimal(12, 3)
+  backfillSoilCementM3      Decimal?         @map("backfill_soil_cement_m3") @db.Decimal(12, 3)
+  formworkM2                Decimal?         @map("formwork_m2") @db.Decimal(12, 3)
+  helicalPileM              Decimal?         @map("helical_pile_m") @db.Decimal(12, 3)
+  steelPileM                Decimal?         @map("steel_pile_m") @db.Decimal(12, 3)
+  triconeM                  Decimal?         @map("tricone_m") @db.Decimal(12, 3)
+  rootPileM                 Decimal?         @map("root_pile_m") @db.Decimal(12, 3)
+  continuousAugerPileM      Decimal?         @map("continuous_auger_pile_m") @db.Decimal(12, 3)
+  micropileM                Decimal?         @map("micropile_m") @db.Decimal(12, 3)
+  concretePileM             Decimal?         @map("concrete_pile_m") @db.Decimal(12, 3)
+  effectiveFrom             DateTime         @map("effective_from") @db.Date
+  createdBy                 String           @map("created_by")
+  createdAt                 DateTime         @default(now()) @map("created_at")
+
+  @@unique([foundationVolumeId, effectiveFrom], map: "foundation_volume_version_volume_id_effective_from_key")
+  @@index([foundationVolumeId, effectiveFrom(sort: Desc)], map: "foundation_volume_version_volume_id_effective_from_idx")
+  @@map("foundation_volume_version")
 }
