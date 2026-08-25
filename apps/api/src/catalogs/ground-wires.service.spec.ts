@@ -240,14 +240,21 @@ describe('GroundWiresService', () => {
   });
 
   describe('list', () => {
-    it('repassa o filtro de tipo para a consulta', async () => {
+    it('repassa o filtro de tipo e o termo de busca para a consulta', async () => {
       prismaMock.groundWire.findMany.mockResolvedValue([]);
 
       await service.list('CG', 'OPGW', today);
 
       const where = prismaMock.groundWire.findMany.mock.calls[0][0].where;
       expect(where.type).toBe('OPGW');
-      expect(where.OR).toBeDefined();
+      expect(where.OR).toEqual([
+        { code: { contains: 'CG', mode: 'insensitive' } },
+        {
+          versions: {
+            some: { description: { contains: 'CG', mode: 'insensitive' } },
+          },
+        },
+      ]);
     });
 
     it('não filtra por tipo quando o filtro está ausente', async () => {

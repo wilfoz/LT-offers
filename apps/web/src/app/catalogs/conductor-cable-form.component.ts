@@ -239,11 +239,18 @@ export class ConductorCableFormComponent {
 
   constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
-    const id = idParam === null ? null : Number(idParam);
-    if (id !== null && Number.isInteger(id) && id > 0) {
-      this.prepareEdit(id);
-    } else {
+    if (idParam === null) {
       this.form.controls.code.addValidators(Validators.required);
+    } else {
+      const id = Number(idParam);
+      if (Number.isInteger(id) && id > 0) {
+        this.prepareEdit(id);
+      } else {
+        // Id malformado na rota de edição não pode degradar para modo criação
+        // (retrofit da lição do grupo 4 de catalogo-cabos-guarda-opgw)
+        this.serverError.set('Identificador inválido');
+        this.form.disable({ emitEvent: false });
+      }
     }
   }
 

@@ -121,4 +121,12 @@ describe('GroundWireHistoryComponent', () => {
 
     expect(text).toContain('Não foi possível carregar o histórico');
   });
+
+  it('rejeita identificador malformado sem consultar a API', async () => {
+    const fixture = await mount('abc');
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('Identificador inválido');
+    expect(apiMock.history).not.toHaveBeenCalled();
+  });
 });

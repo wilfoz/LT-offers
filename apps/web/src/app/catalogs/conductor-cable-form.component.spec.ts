@@ -91,7 +91,7 @@ describe('ConductorCableFormComponent (nova versão)', () => {
     history: vi.fn(),
   };
 
-  async function mountEdit() {
+  async function mountEdit(id = '1') {
     await TestBed.configureTestingModule({
       imports: [ConductorCableFormComponent],
       providers: [
@@ -99,7 +99,7 @@ describe('ConductorCableFormComponent (nova versão)', () => {
         { provide: ConductorCablesApi, useValue: apiMock },
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap({ id: '1' }) } },
+          useValue: { snapshot: { paramMap: convertToParamMap({ id }) } },
         },
       ],
     }).compileComponents();
@@ -131,6 +131,19 @@ describe('ConductorCableFormComponent (nova versão)', () => {
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).toContain('Não foi possível carregar os dados atuais');
+    expect(apiMock.createVersion).not.toHaveBeenCalled();
+  });
+
+  it('rejeita identificador malformado na rota sem degradar para criação', async () => {
+    const fixture = await mountEdit('abc');
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Identificador inválido');
+    expect(apiMock.history).not.toHaveBeenCalled();
+
+    fixture.componentInstance.save();
+    expect(apiMock.create).not.toHaveBeenCalled();
     expect(apiMock.createVersion).not.toHaveBeenCalled();
   });
 });

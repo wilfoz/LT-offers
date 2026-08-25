@@ -10,7 +10,10 @@ import { ConductorCablesApi } from './conductor-cables-api.service';
 import { ConductorCableHistoryComponent } from './conductor-cable-history.component';
 
 describe('ConductorCableHistoryComponent', () => {
-  async function mount(apiMock: { history: ReturnType<typeof vi.fn> }) {
+  async function mount(
+    apiMock: { history: ReturnType<typeof vi.fn> },
+    id = '1',
+  ) {
     await TestBed.configureTestingModule({
       imports: [ConductorCableHistoryComponent],
       providers: [
@@ -18,7 +21,7 @@ describe('ConductorCableHistoryComponent', () => {
         { provide: ConductorCablesApi, useValue: apiMock },
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap({ id: '1' }) } },
+          useValue: { snapshot: { paramMap: convertToParamMap({ id }) } },
         },
       ],
     }).compileComponents();
@@ -83,5 +86,15 @@ describe('ConductorCableHistoryComponent', () => {
     expect(text).toContain('bruno');
     expect(text).toContain('ana');
     expect(text).toContain('1.3026');
+  });
+
+  it('rejeita identificador malformado sem consultar a API', async () => {
+    const apiMock = { history: vi.fn() };
+
+    const fixture = await mount(apiMock, 'abc');
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('Identificador inválido');
+    expect(apiMock.history).not.toHaveBeenCalled();
   });
 });

@@ -162,13 +162,20 @@ describe('GuyWiresService', () => {
   });
 
   describe('list', () => {
-    it('busca por código e descrição', async () => {
+    it('busca por código e descrição repassando o termo', async () => {
       prismaMock.guyWire.findMany.mockResolvedValue([]);
 
       await service.list('CT', today);
 
       const where = prismaMock.guyWire.findMany.mock.calls[0][0].where;
-      expect(where.OR).toBeDefined();
+      expect(where.OR).toEqual([
+        { code: { contains: 'CT', mode: 'insensitive' } },
+        {
+          versions: {
+            some: { description: { contains: 'CT', mode: 'insensitive' } },
+          },
+        },
+      ]);
     });
 
     it('sinaliza pendências com rótulos pt-BR, sem cobrar descrição', async () => {

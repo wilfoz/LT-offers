@@ -186,6 +186,22 @@ describe('ConductorCablesService', () => {
   });
 
   describe('list', () => {
+    it('busca por código e descrição repassando o termo', async () => {
+      prismaMock.conductorCable.findMany.mockResolvedValue([]);
+
+      await service.list('CAA', new Date('2026-03-15'));
+
+      const where = prismaMock.conductorCable.findMany.mock.calls[0][0].where;
+      expect(where.OR).toEqual([
+        { code: { contains: 'CAA', mode: 'insensitive' } },
+        {
+          versions: {
+            some: { description: { contains: 'CAA', mode: 'insensitive' } },
+          },
+        },
+      ]);
+    });
+
     it('sinaliza campos pendentes da versão vigente com rótulos pt-BR', async () => {
       prismaMock.conductorCable.findMany.mockResolvedValue([
         {
