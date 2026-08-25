@@ -16,13 +16,13 @@
 
 ## 4. API — tipos de fundação
 
-- [ ] 4.1 DTOs de `foundation-types` com aplicação validada contra `FOUNDATION_APPLICATIONS` no create, `@IsEmpty` em `application` no DTO de versão (troca rejeitada com 400 pt-BR) e as 17 contagens como inteiros ≥ 0 anuláveis.
-- [ ] 4.2 `foundation-types.service/controller/module` no padrão, com filtro `application` no list combinado à busca (teste asserta busca **e** filtro juntos — lição guy-wires), pendência composta `missingFields(description)` + "nenhuma contagem informada" (contagem zero não é pendência), imutabilidade da aplicação validada contra o tipo persistido; testes de todos os cenários do spec.
+- [x] 4.1 DTOs de `foundation-types` com aplicação validada contra `FOUNDATION_APPLICATIONS` no create, `@IsEmpty` em `application` no DTO de versão (troca rejeitada com 400 pt-BR) e as 17 contagens como inteiros ≥ 0 anuláveis.
+- [x] 4.2 `foundation-types.service/controller/module` no padrão, com filtro `application` no list combinado à busca (teste asserta busca **e** filtro juntos — lição guy-wires), pendência composta `missingFields(description)` + "nenhuma contagem informada" (contagem zero não é pendência), imutabilidade da aplicação validada contra o tipo persistido; testes de todos os cenários do spec.
 
 ## 5. API — matriz de volumes
 
-- [ ] 5.1 DTOs de `foundation-volumes`: create com a tripla de ids + 34 quantidades decimais ≥ 0 anuláveis (escala ≤ 3); DTO de versão com os três ids `@IsEmpty` (combinação imutável, 400 pt-BR).
-- [ ] 5.2 `foundation-volumes.service/controller/module` em rota plana com filtros `towerTypeId`/`soilTypeId`/`foundationTypeId` + `effectiveOn`; criação valida existência das três referências antes do insert (404 pt-BR nomeando a referência ausente), P2002 com mensagens distintas por operação (combinação duplicada × vigência duplicada — lição series-torres), summary com rótulos da combinação via `include`, pendência "nenhuma quantidade informada", zero ≠ null persistido e devolvido; testes de todos os cenários do spec.
+- [x] 5.1 DTOs de `foundation-volumes`: create com a tripla de ids + 34 quantidades decimais ≥ 0 anuláveis (escala ≤ 3); DTO de versão com os três ids `@IsEmpty` (combinação imutável, 400 pt-BR).
+- [x] 5.2 `foundation-volumes.service/controller/module` em rota plana com filtros `towerTypeId`/`soilTypeId`/`foundationTypeId` + `effectiveOn`; criação valida existência das três referências antes do insert (404 pt-BR nomeando a referência ausente), P2002 com mensagens distintas por operação (combinação duplicada × vigência duplicada — lição series-torres), summary com rótulos da combinação via `include`, pendência "nenhuma quantidade informada", zero ≠ null persistido e devolvido; testes de todos os cenários do spec.
 
 ## 6. Web — tipos de solo
 
