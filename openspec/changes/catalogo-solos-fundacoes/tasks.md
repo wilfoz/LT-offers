@@ -7,12 +7,12 @@
 
 ## 2. Contratos na domain
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/soil-types.ts`, `foundation-types.ts` (const-array `FOUNDATION_APPLICATIONS` + tipo, precedente `GROUND_WIRE_TYPES`) e `foundation-volumes.ts` (summaries com `combination` de rótulos, versões com decimais string e datas ISO), exportados em `@lt-offers/domain`, com descrições de teste em pt-BR onde houver lógica.
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/soil-types.ts`, `foundation-types.ts` (const-array `FOUNDATION_APPLICATIONS` + tipo, precedente `GROUND_WIRE_TYPES`) e `foundation-volumes.ts` (summaries com `combination` de rótulos, versões com decimais string e datas ISO), exportados em `@lt-offers/domain`, com descrições de teste em pt-BR onde houver lógica.
 
 ## 3. API — tipos de solo
 
-- [ ] 3.1 DTOs de `soil-types` reusando `dto/decimal-scale.validators.ts` e `dto/validation-messages.ts` (escala limitada à precisão das colunas), com inteiros ≥ 0 para NSPT e validação `nsptMin < nsptMax` com mensagem pt-BR (cenário "faixa invertida" do spec).
-- [ ] 3.2 `soil-types.service/controller/module` com as cinco rotas do padrão sobre os helpers `catalogs/*`, mapper tipado contra a domain, pendências via `missingFields` (descrição, submerso, tensão admissível, peso específico, ângulo — coesão e NSPT fora), busca por código/descrição com asserção de igualdade completa do `where.OR`, P2002 → 409; testes cobrindo todos os cenários do spec (incl. rocha sem coesão/NSPT sem pendência e ordem formato→positivo→escala das mensagens).
+- [x] 3.1 DTOs de `soil-types` reusando `dto/decimal-scale.validators.ts` e `dto/validation-messages.ts` (escala limitada à precisão das colunas), com inteiros ≥ 0 para NSPT e validação `nsptMin < nsptMax` com mensagem pt-BR (cenário "faixa invertida" do spec).
+- [x] 3.2 `soil-types.service/controller/module` com as cinco rotas do padrão sobre os helpers `catalogs/*`, mapper tipado contra a domain, pendências via `missingFields` (descrição, submerso, tensão admissível, peso específico, ângulo — coesão e NSPT fora), busca por código/descrição com asserção de igualdade completa do `where.OR`, P2002 → 409; testes cobrindo todos os cenários do spec (incl. rocha sem coesão/NSPT sem pendência e ordem formato→positivo→escala das mensagens).
 
 ## 4. API — tipos de fundação
 
