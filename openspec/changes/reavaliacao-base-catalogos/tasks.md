@@ -15,5 +15,5 @@
 
 ## 3. Verificação e fechamento
 
-- [ ] 3.1 Validar ao vivo o único comportamento novo (form do piloto com id malformado mostra erro e bloqueia o Salvar; fluxos válidos de criação/edição do piloto intactos) e smoke dos 2 forms refitados (escala rejeitada em tower-type e insulator); registrar evidências em `qa/qa.md` (change sem specs delta — QA enxuto de regressão)
+- [x] 3.1 Validar ao vivo o único comportamento novo (form do piloto com id malformado mostra erro e bloqueia o Salvar; fluxos válidos de criação/edição do piloto intactos) e smoke dos 2 forms refitados (escala rejeitada em tower-type e insulator); registrar evidências em `qa/qa.md` (change sem specs delta — QA enxuto de regressão)
 - [ ] 3.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check --all`) limpa e confirmar o CI verde no push
