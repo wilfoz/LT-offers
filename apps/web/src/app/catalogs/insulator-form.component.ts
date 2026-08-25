@@ -1,11 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,30 +10,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import {
-  DATE_PATTERN,
-  InsulatorVersionInput,
-  POSITIVE_DECIMAL_PATTERN,
-} from '@lt-offers/domain';
-import { orNull } from './form-utils';
+import { DATE_PATTERN, InsulatorVersionInput } from '@lt-offers/domain';
+import { decimalScaleValidator, orNull } from './form-utils';
 import { InsulatorsApi } from './insulators-api.service';
 
-// Espelha a validação da API: decimal (zero permitido — o spec só rejeita
-// negativo/não numérico) com escala limitada à precisão da coluna do banco.
-function decimalWithScale(maxScale: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = String(control.value ?? '').trim();
-    if (value === '') {
-      return null;
-    }
-    if (!POSITIVE_DECIMAL_PATTERN.test(value)) {
-      return { invalidDecimal: true };
-    }
-    const decimals = value.split('.')[1] ?? '';
-    return decimals.length <= maxScale ? null : { decimalScale: true };
-  };
-}
-
+// Validação de escala espelhando a API (zero permitido — o spec só rejeita
+// negativo/não numérico): decimalScaleValidator compartilhado em form-utils.ts.
 // Escala de cada campo decimal = precisão da coluna no schema (fonte única
 // para o validator e para a mensagem de erro)
 const DECIMAL_SCALES = {
@@ -291,19 +270,19 @@ export class InsulatorFormComponent {
     profile: new FormControl('', { nonNullable: true }),
     ruptureStrengthKn: new FormControl('', {
       nonNullable: true,
-      validators: [decimalWithScale(DECIMAL_SCALES.ruptureStrengthKn)],
+      validators: [decimalScaleValidator(DECIMAL_SCALES.ruptureStrengthKn)],
     }),
     diameterMm: new FormControl('', {
       nonNullable: true,
-      validators: [decimalWithScale(DECIMAL_SCALES.diameterMm)],
+      validators: [decimalScaleValidator(DECIMAL_SCALES.diameterMm)],
     }),
     spacingMm: new FormControl('', {
       nonNullable: true,
-      validators: [decimalWithScale(DECIMAL_SCALES.spacingMm)],
+      validators: [decimalScaleValidator(DECIMAL_SCALES.spacingMm)],
     }),
     creepageDistanceMm: new FormControl('', {
       nonNullable: true,
-      validators: [decimalWithScale(DECIMAL_SCALES.creepageDistanceMm)],
+      validators: [decimalScaleValidator(DECIMAL_SCALES.creepageDistanceMm)],
     }),
     effectiveFrom: new FormControl('', {
       nonNullable: true,

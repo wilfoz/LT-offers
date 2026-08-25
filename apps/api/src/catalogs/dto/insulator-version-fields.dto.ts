@@ -1,30 +1,9 @@
-import { POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
-import {
-  IsOptional,
-  IsString,
-  MaxLength,
-  Validate,
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
+import { IsOptional, IsString, MaxLength, Validate } from 'class-validator';
+import { DecimalWithScale } from './decimal-scale.validators';
 import { decimalWithScaleMessage } from './validation-messages';
 
-// Decimal positivo (zero permitido — o spec só rejeita negativo/não numérico)
-// com escala limitada à precisão da coluna do banco: sem o limite, o Postgres
-// arredondaria casas excedentes em silêncio (lição da review grupo 2-3-4 de
-// catalogo-series-torres).
-@ValidatorConstraint({ name: 'decimalWithScale' })
-export class DecimalWithScale implements ValidatorConstraintInterface {
-  validate(value: unknown, args: ValidationArguments): boolean {
-    if (typeof value !== 'string' || !POSITIVE_DECIMAL_PATTERN.test(value)) {
-      return false;
-    }
-    const maxScale = args.constraints[0] as number;
-    const decimals = value.split('.')[1] ?? '';
-    return decimals.length <= maxScale;
-  }
-}
+// Zero permitido (o spec só rejeita negativo/não numérico); o racional da
+// escala limitada está em decimal-scale.validators.ts.
 
 /**
  * Campos versionáveis do isolador. Valores decimais trafegam como string

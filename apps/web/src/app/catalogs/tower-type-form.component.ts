@@ -18,13 +18,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   DATE_PATTERN,
   NON_NEGATIVE_INT_PATTERN,
-  POSITIVE_DECIMAL_PATTERN,
   TOWER_FUNCTIONS,
   TowerFunction,
   TowerTypeVersionInput,
   TowerWeightPoint,
 } from '@lt-offers/domain';
-import { intOrNull } from './form-utils';
+import { decimalScaleValidator, intOrNull } from './form-utils';
 import { TOWER_FUNCTION_LABELS } from './tower-function-labels';
 import { TowerTypesApi } from './tower-types-api.service';
 
@@ -33,21 +32,8 @@ type WeightRowGroup = FormGroup<{
   weightKg: FormControl<string>;
 }>;
 
-// Espelha a validação da API: decimal positivo (> 0) com escala limitada à
-// precisão da coluna do banco (altura 3 casas, peso 2).
-function weightValueValidator(maxScale: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = String(control.value ?? '').trim();
-    if (value === '') {
-      return null; // required é validador próprio
-    }
-    if (!POSITIVE_DECIMAL_PATTERN.test(value) || Number(value) <= 0) {
-      return { invalidDecimal: true };
-    }
-    const decimals = value.split('.')[1] ?? '';
-    return decimals.length <= maxScale ? null : { decimalScale: true };
-  };
-}
+// Validação de escala espelhando a API (altura 3 casas, peso 2; zero também
+// inválido): decimalScaleValidator compartilhado em form-utils.ts.
 
 // Duplicata apontada no form antes do submit; "24" e "24.000" são a mesma
 // altura (comparação numérica, como na API).
@@ -355,11 +341,17 @@ export class TowerTypeFormComponent {
       new FormGroup({
         heightM: new FormControl(point?.heightM ?? '', {
           nonNullable: true,
-          validators: [Validators.required, weightValueValidator(3)],
+          validators: [
+            Validators.required,
+            decimalScaleValidator(3, { nonZero: true }),
+          ],
         }),
         weightKg: new FormControl(point?.weightKg ?? '', {
           nonNullable: true,
-          validators: [Validators.required, weightValueValidator(2)],
+          validators: [
+            Validators.required,
+            decimalScaleValidator(2, { nonZero: true }),
+          ],
         }),
       }),
     );

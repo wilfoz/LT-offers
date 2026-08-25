@@ -1,32 +1,9 @@
-import { POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
-import {
-  Validate,
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
+import { Validate } from 'class-validator';
+import { PositiveNonZeroDecimal } from './decimal-scale.validators';
 import { decimalWithScaleMessage } from './validation-messages';
 
-// Nos pontos da tabela peso × altura o zero também é inválido (spec
-// catalogos/series-torres) e a escala é limitada à precisão da coluna do
-// banco: sem o limite, "24.0001" e "24.0004" passariam como alturas
-// distintas no DTO e colidiriam no @@unique após o arredondamento do
-// Postgres, disparando um 409 com a mensagem errada (review grupo 2-3-4).
-@ValidatorConstraint({ name: 'positiveNonZeroDecimal' })
-export class PositiveNonZeroDecimal implements ValidatorConstraintInterface {
-  validate(value: unknown, args: ValidationArguments): boolean {
-    if (
-      typeof value !== 'string' ||
-      !POSITIVE_DECIMAL_PATTERN.test(value) ||
-      Number(value) <= 0
-    ) {
-      return false;
-    }
-    const maxScale = args.constraints[0] as number;
-    const decimals = value.split('.')[1] ?? '';
-    return decimals.length <= maxScale;
-  }
-}
+// Zero também é inválido nos pontos (spec catalogos/series-torres); o
+// racional da escala limitada está em decimal-scale.validators.ts.
 
 /** Ponto da tabela peso × altura. Decimais trafegam como string (RNF-08). */
 export class TowerWeightPointDto {
