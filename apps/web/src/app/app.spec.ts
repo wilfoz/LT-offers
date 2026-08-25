@@ -43,6 +43,7 @@ describe('App (casca de navegação)', () => {
       'Cabos condutores',
       'Cabos de guarda',
       'Cabos de tirante',
+      'Isoladores',
       'Séries de estruturas',
     ]);
   });
@@ -59,7 +60,7 @@ describe('App (casca de navegação)', () => {
     expect(active[0].textContent).toContain('Cabos de tirante');
     expect(
       (fixture.nativeElement as HTMLElement).querySelectorAll('mat-nav-list a'),
-    ).toHaveLength(4);
+    ).toHaveLength(5);
   });
 
   it('em tela larga a navegação fica fixa, sem botão de menu', async () => {

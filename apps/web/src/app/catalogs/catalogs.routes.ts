@@ -8,6 +8,9 @@ import { GroundWireListComponent } from './ground-wire-list.component';
 import { GuyWireFormComponent } from './guy-wire-form.component';
 import { GuyWireHistoryComponent } from './guy-wire-history.component';
 import { GuyWireListComponent } from './guy-wire-list.component';
+import { InsulatorFormComponent } from './insulator-form.component';
+import { InsulatorHistoryComponent } from './insulator-history.component';
+import { InsulatorListComponent } from './insulator-list.component';
 import { StructureSeriesDetailComponent } from './structure-series-detail.component';
 import { StructureSeriesFormComponent } from './structure-series-form.component';
 import { StructureSeriesHistoryComponent } from './structure-series-history.component';
@@ -34,6 +37,10 @@ export const CATALOGS_ROUTES: Routes = [
   { path: 'guy-wires/new', component: GuyWireFormComponent },
   { path: 'guy-wires/:id/edit', component: GuyWireFormComponent },
   { path: 'guy-wires/:id/history', component: GuyWireHistoryComponent },
+  { path: 'insulators', component: InsulatorListComponent },
+  { path: 'insulators/new', component: InsulatorFormComponent },
+  { path: 'insulators/:id/edit', component: InsulatorFormComponent },
+  { path: 'insulators/:id/history', component: InsulatorHistoryComponent },
   { path: 'structure-series', component: StructureSeriesListComponent },
   { path: 'structure-series/new', component: StructureSeriesFormComponent },
   {

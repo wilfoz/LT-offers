@@ -19,9 +19,9 @@
 
 ## 4. Interface de manutenção
 
-- [ ] 4.1 Criar `InsulatorsApi` estendendo `VersionedCatalogApi` sem override e os componentes `insulator-list/-form/-history` na receita Swiss das telas existentes (mat-table nativa, `.form-grid`, `.badge-error`, snackbar ao salvar, `mat-progress-bar` também no histórico), com rotas lazy sob `/catalogs/insulators` e item no menu da casca
-- [ ] 4.2 Implementar listagem (busca, pendências, callback de erro em toda leitura), formulário (branco→null via `form-utils`, prefill bloqueante via `form.disable()` incl. caso de falha, botão `[disabled]="saving() || form.disabled"`, id malformado rejeitado) e histórico (vigência `dd/MM/yyyy` UTC, `createdAt` local)
-- [ ] 4.3 Escrever testes de componente (pendências, erro de API em cada leitura, payload com null e decimais como string, repasse do termo de busca ao serviço, prefill pendente/falho, snackbar ao salvar, histórico) e conferir ausência de BOM nos arquivos novos (`head -c3 | od`)
+- [x] 4.1 Criar `InsulatorsApi` estendendo `VersionedCatalogApi` sem override e os componentes `insulator-list/-form/-history` na receita Swiss das telas existentes (mat-table nativa, `.form-grid`, `.badge-error`, snackbar ao salvar, `mat-progress-bar` também no histórico), com rotas lazy sob `/catalogs/insulators` e item no menu da casca
+- [x] 4.2 Implementar listagem (busca, pendências, callback de erro em toda leitura), formulário (branco→null via `form-utils`, prefill bloqueante via `form.disable()` incl. caso de falha, botão `[disabled]="saving() || form.disabled"`, id malformado rejeitado) e histórico (vigência `dd/MM/yyyy` UTC, `createdAt` local)
+- [x] 4.3 Escrever testes de componente (pendências, erro de API em cada leitura, payload com null e decimais como string, repasse do termo de busca ao serviço, prefill pendente/falho, snackbar ao salvar, histórico) e conferir ausência de BOM nos arquivos novos (`head -c3 | od`)
 
 ## 5. QA e fechamento
 

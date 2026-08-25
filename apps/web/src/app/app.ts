@@ -44,6 +44,7 @@ export class App {
     { path: '/catalogs/conductor-cables', label: 'Cabos condutores' },
     { path: '/catalogs/ground-wires', label: 'Cabos de guarda' },
     { path: '/catalogs/guy-wires', label: 'Cabos de tirante' },
+    { path: '/catalogs/insulators', label: 'Isoladores' },
     { path: '/catalogs/structure-series', label: 'Séries de estruturas' },
   ];
 
