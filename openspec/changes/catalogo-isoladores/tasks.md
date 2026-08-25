@@ -25,5 +25,5 @@
 
 ## 5. QA e fechamento
 
-- [ ] 5.1 Executar a skill `/executar-qa` para a change: validar cada cenário do spec `isoladores` com evidências (E2E via navegador incl. responsividade/acessibilidade) e gerar `qa.md`
+- [x] 5.1 Executar a skill `/executar-qa` para a change: validar cada cenário do spec `isoladores` com evidências (E2E via navegador incl. responsividade/acessibilidade) e gerar `qa.md`
 - [ ] 5.2 Rodar a suíte completa (`npx nx run-many -t lint test build` e `npx nx format:check --all`) limpa e confirmar o CI verde no push; registrar na review qualquer atrito da base extraída como insumo da reavaliação pós-5º catálogo
