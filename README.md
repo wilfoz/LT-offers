@@ -125,6 +125,11 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | quantidade de estais            | `guyCount` / `guy_count`                                    |
 | altura (m)                      | `heightM` / `height_m`                                      |
 | peso (kg)                       | `weightKg` / `weight_kg`                                    |
+| isolador                        | `Insulator` / `insulator` / `insulators`                    |
+| perfil (de isolador)            | `profile`                                                   |
+| carga de ruptura (kN)           | `ruptureStrengthKn` / `rupture_strength_kn`                 |
+| passo (mm)                      | `spacingMm` / `spacing_mm`                                  |
+| linha de fuga (mm)              | `creepageDistanceMm` / `creepage_distance_mm`               |
 
 ### Demais convenções
 

@@ -208,3 +208,35 @@ model TowerTypeWeight {
   @@unique([towerTypeVersionId, heightM])
   @@map("tower_type_weight")
 }
+
+// Catálogo de isoladores (F1 — origem DB_AIS). Catálogo plano, sem
+// discriminador (design D1 da change catalogo-isoladores): o levantamento não
+// enumera valores de tipo/perfil, então ambos são texto livre na versão.
+model Insulator {
+  id       Int                @id @default(autoincrement())
+  code     String             @unique
+  versions InsulatorVersion[]
+
+  @@map("insulator")
+}
+
+model InsulatorVersion {
+  id                 Int       @id @default(autoincrement())
+  insulatorId        Int       @map("insulator_id")
+  insulator          Insulator @relation(fields: [insulatorId], references: [id])
+  description        String?
+  type               String?
+  manufacturer       String?
+  profile            String?
+  ruptureStrengthKn  Decimal?  @map("rupture_strength_kn") @db.Decimal(12, 2)
+  diameterMm         Decimal?  @map("diameter_mm") @db.Decimal(10, 3)
+  spacingMm          Decimal?  @map("spacing_mm") @db.Decimal(10, 3)
+  creepageDistanceMm Decimal?  @map("creepage_distance_mm") @db.Decimal(10, 3)
+  effectiveFrom      DateTime  @map("effective_from") @db.Date
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  @@unique([insulatorId, effectiveFrom])
+  @@index([insulatorId, effectiveFrom(sort: Desc)])
+  @@map("insulator_version")
+}

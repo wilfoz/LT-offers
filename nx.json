@@ -12,7 +12,7 @@
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": ["{workspaceRoot}/prisma/schema.prisma"]
   },
   "targetDefaults": {
     "@angular/build:application": {
