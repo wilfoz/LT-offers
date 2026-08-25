@@ -8,14 +8,14 @@
 
 ## 2. Contratos compartilhados
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/insulators.ts` (contratos de request/response no molde de `guy-wires.ts`: decimais como string, campos anuláveis, `Summary` com `pendingFields`) exportado pelo index
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/insulators.ts` (contratos de request/response no molde de `guy-wires.ts`: decimais como string, campos anuláveis, `Summary` com `pendingFields`) exportado pelo index
 
 ## 3. API de isoladores
 
-- [ ] 3.1 Criar `insulators.controller/service/module` em `/catalogs/insulators` sobre a base extraída (helpers de `controller-shared.ts`/`prisma-errors.ts`, `missingFields` com o mapa de rótulos do spec — tipo, perfil, ruptura, diâmetro, passo, linha de fuga; fabricante e descrição fora —, mappers tipados contra a domain, datas civis na borda), registrando no `CatalogsModule`
-- [ ] 3.2 Implementar DTOs com class-validator e mensagens pt-BR de `dto/validation-messages.ts` (patterns da domain; escala dos decimais limitada à precisão das colunas — lição P2002 de series-torres): código obrigatório/único, decimais como string positiva, textos livres opcionais, `null` para não informado
-- [ ] 3.3 Escrever testes do service e controller cobrindo os cenários do spec `isoladores` (criação, duplicado 409 via P2002, numéricos inválidos, busca com asserção do TERMO repassado ao `where`, pendências incl. distinção null ≠ zero, histórico, vigência passada/anterior à primeira, 405 PUT/PATCH, autor X-User)
-- [ ] 3.4 Verificar os endpoints ao vivo contra o Postgres local (criar, nova versão, busca, `effectiveOn` passado, histórico, 405)
+- [x] 3.1 Criar `insulators.controller/service/module` em `/catalogs/insulators` sobre a base extraída (helpers de `controller-shared.ts`/`prisma-errors.ts`, `missingFields` com o mapa de rótulos do spec — tipo, perfil, ruptura, diâmetro, passo, linha de fuga; fabricante e descrição fora —, mappers tipados contra a domain, datas civis na borda), registrando no `CatalogsModule`
+- [x] 3.2 Implementar DTOs com class-validator e mensagens pt-BR de `dto/validation-messages.ts` (patterns da domain; escala dos decimais limitada à precisão das colunas — lição P2002 de series-torres): código obrigatório/único, decimais como string positiva, textos livres opcionais, `null` para não informado
+- [x] 3.3 Escrever testes do service e controller cobrindo os cenários do spec `isoladores` (criação, duplicado 409 via P2002, numéricos inválidos, busca com asserção do TERMO repassado ao `where`, pendências incl. distinção null ≠ zero, histórico, vigência passada/anterior à primeira, 405 PUT/PATCH, autor X-User)
+- [x] 3.4 Verificar os endpoints ao vivo contra o Postgres local (criar, nova versão, busca, `effectiveOn` passado, histórico, 405)
 
 ## 4. Interface de manutenção
 
