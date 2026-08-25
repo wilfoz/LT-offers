@@ -32,4 +32,4 @@
 ## 6. QA e fechamento
 
 - [x] 6.1 Executar a skill `/executar-qa` para a change: cenários do spec `interface/casca-navegacao` (navegação/item ativo, responsivo com rolagem contida, tema claro E escuro com contraste AA, snackbar, erro de leitura inline) + smoke E2E das 14 telas refitadas nos dois esquemas e breakpoints; gerar `qa.md`
-- [ ] 6.2 Rodar `npx nx run-many -t lint test build` e `npx nx format:check --all` limpos e confirmar o CI verde no push
+- [x] 6.2 Rodar `npx nx run-many -t lint test build` e `npx nx format:check --all` limpos e confirmar o CI verde no push
