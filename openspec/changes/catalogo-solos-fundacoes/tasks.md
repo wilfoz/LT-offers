@@ -34,8 +34,8 @@
 
 ## 8. Web — matriz de volumes
 
-- [ ] 8.1 `FoundationVolumesApi` própria (sem estender `VersionedCatalogApi` — criação por tripla; divergência registrada p/ reavaliação) com os mesmos padrões de contrato e erro.
-- [ ] 8.2 Componentes `foundation-volume-list/-form/-history`: listagem com filtros por série/torre/solo/fundação e badge de pendência; form com cascata série → torre em handler explícito (sem `valueChanges` reemitido — lição institucional), selects travados na edição, 34 campos `orNull` nas cinco famílias, prefill bloqueante cobrindo as quatro leituras; empty-state orientando a cadastrar as referências primeiro; testes dos cenários do spec (incl. zero ≠ em branco no payload).
+- [x] 8.1 `FoundationVolumesApi` própria (sem estender `VersionedCatalogApi` — criação por tripla; divergência registrada p/ reavaliação) com os mesmos padrões de contrato e erro.
+- [x] 8.2 Componentes `foundation-volume-list/-form/-history`: listagem com filtros por série/torre/solo/fundação e badge de pendência; form com cascata série → torre em handler explícito (sem `valueChanges` reemitido — lição institucional), selects travados na edição, 34 campos `orNull` nas cinco famílias, prefill bloqueante cobrindo as quatro leituras; empty-state orientando a cadastrar as referências primeiro; testes dos cenários do spec (incl. zero ≠ em branco no payload).
 
 ## 9. Integração e verificação
 
