@@ -39,5 +39,5 @@
 
 ## 9. Integração e verificação
 
-- [ ] 9.1 Rotas lazy dos três recursos em `catalogs.routes.ts` + três itens novos no menu da casca, atualizando o teste que asserta a lista exata do menu (5 → 8).
-- [ ] 9.2 Verificação integrada: `npx nx run-many -t test lint -p api web domain`, `npx nx format:check --all` e `npx prisma migrate status` limpos; smoke manual dos catálogos existentes inalterados.
+- [x] 9.1 Rotas lazy dos três recursos em `catalogs.routes.ts` + três itens novos no menu da casca, atualizando o teste que asserta a lista exata do menu (5 → 8).
+- [x] 9.2 Verificação integrada: `npx nx run-many -t test lint -p api web domain`, `npx nx format:check --all` e `npx prisma migrate status` limpos; smoke manual dos catálogos existentes inalterados.

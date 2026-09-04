@@ -46,6 +46,9 @@ export class App {
     { path: '/catalogs/guy-wires', label: 'Cabos de tirante' },
     { path: '/catalogs/insulators', label: 'Isoladores' },
     { path: '/catalogs/structure-series', label: 'Séries de estruturas' },
+    { path: '/catalogs/soil-types', label: 'Tipos de solo' },
+    { path: '/catalogs/foundation-types', label: 'Tipos de fundação' },
+    { path: '/catalogs/foundation-volumes', label: 'Matriz de volumes' },
   ];
 
   protected toggleMenu(): void {
