@@ -26,11 +26,11 @@
 
 ## 6. Web — tipos de solo
 
-- [ ] 6.1 `SoilTypesApi extends VersionedCatalogApi` + componentes `soil-type-list/-form/-history` no padrão consolidado (busca, badge de pendência, prefill bloqueante com `disable({emitEvent:false})`, erro em toda leitura, guarda de id malformado com save early-return, payload null/número via `orNull`/`intOrNull`, datas UTC/local), testes de componente cobrindo os cenários do spec.
+- [x] 6.1 `SoilTypesApi extends VersionedCatalogApi` + componentes `soil-type-list/-form/-history` no padrão consolidado (busca, badge de pendência, prefill bloqueante com `disable({emitEvent:false})`, erro em toda leitura, guarda de id malformado com save early-return, payload null/número via `orNull`/`intOrNull`, datas UTC/local), testes de componente cobrindo os cenários do spec.
 
 ## 7. Web — tipos de fundação
 
-- [ ] 7.1 `FoundationTypesApi` com override do list para o filtro de aplicação + componentes `foundation-type-list/-form/-history`: filtro por aplicação na listagem, `mat-select` de aplicação travado na edição, 17 contagens agrupadas por família no `.form-grid`; testes incluindo repasse conjunto de busca + filtro e payload de contagens (zero vs null).
+- [x] 7.1 `FoundationTypesApi` com override do list para o filtro de aplicação + componentes `foundation-type-list/-form/-history`: filtro por aplicação na listagem, `mat-select` de aplicação travado na edição, 17 contagens agrupadas por família no `.form-grid`; testes incluindo repasse conjunto de busca + filtro e payload de contagens (zero vs null).
 
 ## 8. Web — matriz de volumes
 
