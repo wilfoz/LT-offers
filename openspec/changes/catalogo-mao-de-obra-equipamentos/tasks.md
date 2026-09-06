@@ -7,7 +7,7 @@
 
 ## 2. Contratos na domain
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/labor-roles.ts`, `equipment.ts` e `fixed-costs.ts` (interfaces de item, versão, summary, payloads de criação/atualização e enum de categoria), exportados em `@lt-offers/domain`.
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/labor-roles.ts`, `equipment.ts` e `fixed-costs.ts` (interfaces de item, versão, summary, payloads de criação/atualização e enum de categoria), exportados em `@lt-offers/domain`.
 
 ## 3. API — Mão de obra (DB_MO)
 

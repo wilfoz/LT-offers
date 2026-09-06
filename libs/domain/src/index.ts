@@ -1,11 +1,15 @@
 export * from './lib/identifier';
 export * from './lib/catalogs/conductor-cables';
+export * from './lib/catalogs/equipment';
+export * from './lib/catalogs/fixed-costs';
 export * from './lib/catalogs/foundation-types';
 export * from './lib/catalogs/foundation-volumes';
 export * from './lib/catalogs/ground-wires';
 export * from './lib/catalogs/guy-wires';
 export * from './lib/catalogs/insulators';
+export * from './lib/catalogs/labor-roles';
 export * from './lib/catalogs/soil-types';
 export * from './lib/catalogs/structure-series';
 export * from './lib/catalogs/tower-types';
 export * from './lib/catalogs/validation';
+
