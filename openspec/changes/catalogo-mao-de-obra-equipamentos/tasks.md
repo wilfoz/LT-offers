@@ -26,7 +26,7 @@
 
 ## 6. Web — Mão de obra
 
-- [ ] 6.1 Implementar `LaborRolesApi extends VersionedCatalogApi` e componentes `labor-role-list/-form/-history` no padrão Swiss / Material 3 (busca, badges de pendência, prefill bloqueante, decimal text fields), com testes de componente cobrindo os cenários do spec.
+- [x] 6.1 Implementar `LaborRolesApi extends VersionedCatalogApi` e componentes `labor-role-list/-form/-history` no padrão Swiss / Material 3 (busca, badges de pendência, prefill bloqueante, decimal text fields), com testes de componente cobrindo os cenários do spec.
 
 ## 7. Web — Equipamentos
 
