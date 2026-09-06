@@ -34,7 +34,7 @@
 
 ## 8. Web — Custos Fixos
 
-- [ ] 8.1 Implementar `FixedCostsApi extends VersionedCatalogApi` e componentes `fixed-cost-list/-form/-history` com filtro por categoria e unidade de medida, com testes de componente cobrindo os cenários do spec.
+- [x] 8.1 Implementar `FixedCostsApi extends VersionedCatalogApi` e componentes `fixed-cost-list/-form/-history` com filtro por categoria e unidade de medida, com testes de componente cobrindo os cenários do spec.
 
 ## 9. Integração e verificação
 
