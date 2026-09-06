@@ -11,6 +11,8 @@ import { GuyWiresController } from './guy-wires.controller';
 import { GuyWiresService } from './guy-wires.service';
 import { InsulatorsController } from './insulators.controller';
 import { InsulatorsService } from './insulators.service';
+import { LaborRolesController } from './labor-roles.controller';
+import { LaborRolesService } from './labor-roles.service';
 import { SoilTypesController } from './soil-types.controller';
 import { SoilTypesService } from './soil-types.service';
 import { StructureSeriesController } from './structure-series.controller';
@@ -26,6 +28,7 @@ import { TowerTypesService } from './tower-types.service';
     GroundWiresController,
     GuyWiresController,
     InsulatorsController,
+    LaborRolesController,
     SoilTypesController,
     StructureSeriesController,
     TowerTypesController,
@@ -37,6 +40,7 @@ import { TowerTypesService } from './tower-types.service';
     GroundWiresService,
     GuyWiresService,
     InsulatorsService,
+    LaborRolesService,
     SoilTypesService,
     StructureSeriesService,
     TowerTypesService,

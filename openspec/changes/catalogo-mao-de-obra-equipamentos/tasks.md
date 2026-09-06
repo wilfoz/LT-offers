@@ -11,8 +11,8 @@
 
 ## 3. API — Mão de obra (DB_MO)
 
-- [ ] 3.1 Criar DTOs de `labor-roles` reusando `dto/decimal-scale.validators.ts` e `dto/validation-messages.ts` (escala e não-negatividade), com validação em pt-BR.
-- [ ] 3.2 Implementar `labor-roles.service/controller/module` com rotas padrão, mappers tipados, sinalização de pendências (`missingFields(name, baseSalary, socialChargesPercent)`), busca por código/nome e testes cobrindo todos os cenários do spec.
+- [x] 3.1 Criar DTOs de `labor-roles` reusando `dto/decimal-scale.validators.ts` e `dto/validation-messages.ts` (escala e não-negatividade), com validação em pt-BR.
+- [x] 3.2 Implementar `labor-roles.service/controller/module` com rotas padrão, mappers tipados, sinalização de pendências (`missingFields(name, baseSalary, socialChargesPercent)`), busca por código/nome e testes cobrindo todos os cenários do spec.
 
 ## 4. API — Equipamentos (DB_EQ)
 
