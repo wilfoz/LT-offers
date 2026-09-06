@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConductorCablesController } from './conductor-cables.controller';
 import { ConductorCablesService } from './conductor-cables.service';
+import { EquipmentController } from './equipment.controller';
+import { EquipmentService } from './equipment.service';
 import { FoundationTypesController } from './foundation-types.controller';
 import { FoundationTypesService } from './foundation-types.service';
 import { FoundationVolumesController } from './foundation-volumes.controller';
@@ -23,6 +25,7 @@ import { TowerTypesService } from './tower-types.service';
 @Module({
   controllers: [
     ConductorCablesController,
+    EquipmentController,
     FoundationTypesController,
     FoundationVolumesController,
     GroundWiresController,
@@ -35,6 +38,7 @@ import { TowerTypesService } from './tower-types.service';
   ],
   providers: [
     ConductorCablesService,
+    EquipmentService,
     FoundationTypesService,
     FoundationVolumesService,
     GroundWiresService,

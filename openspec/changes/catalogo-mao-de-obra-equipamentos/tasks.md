@@ -16,8 +16,8 @@
 
 ## 4. API — Equipamentos (DB_EQ)
 
-- [ ] 4.1 Criar DTOs de `equipment` com validação de precisão decimal, não-negatividade e anos de amortização inteiros > 0.
-- [ ] 4.2 Implementar `equipment.service/controller/module` com busca, filtro por categoria, pendência composta (ao menos uma estratégia de custo informada) e testes cobrindo todos os cenários do spec.
+- [x] 4.1 Criar DTOs de `equipment` com validação de precisão decimal, não-negatividade e anos de amortização inteiros > 0.
+- [x] 4.2 Implementar `equipment.service/controller/module` com busca, filtro por categoria, pendência composta (ao menos uma estratégia de custo informada) e testes cobrindo todos os cenários do spec.
 
 ## 5. API — Custos Fixos (DB_FI)
 
