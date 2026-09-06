@@ -30,7 +30,7 @@
 
 ## 7. Web — Equipamentos
 
-- [ ] 7.1 Implementar `EquipmentApi extends VersionedCatalogApi` e componentes `equipment-list/-form/-history` com filtro por categoria, campos de locação e amortização, com testes de componente cobrindo os cenários do spec.
+- [x] 7.1 Implementar `EquipmentApi extends VersionedCatalogApi` e componentes `equipment-list/-form/-history` com filtro por categoria, campos de locação e amortização, com testes de componente cobrindo os cenários do spec.
 
 ## 8. Web — Custos Fixos
 
