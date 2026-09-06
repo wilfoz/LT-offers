@@ -5,11 +5,13 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { decimalScaleViolation } from '@lt-offers/domain';
 
-export function orNull(text: string): string | null {
+export function orNull(text: string | null | undefined): string | null {
+  if (text === null || text === undefined) return null;
   return text.trim() === '' ? null : text.trim();
 }
 
-export function intOrNull(text: string): number | null {
+export function intOrNull(text: string | null | undefined): number | null {
+  if (text === null || text === undefined) return null;
   return text.trim() === '' ? null : Number(text.trim());
 }
 

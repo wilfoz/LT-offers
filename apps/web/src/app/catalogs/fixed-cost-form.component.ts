@@ -221,7 +221,7 @@ export class FixedCostFormComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(200)],
     }),
-    category: new FormControl<FixedCostCategory>('CANTEIRO', {
+    category: new FormControl<FixedCostCategory>('EPI', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -261,10 +261,10 @@ export class FixedCostFormComponent {
         this.currentCode.set(summary.code);
         this.form.controls.description.setValue(summary.description);
         this.form.controls.category.setValue(summary.category);
-        this.form.controls.unit.setValue(summary.unit);
         const v = summary.effectiveVersion;
         if (v) {
           this.form.patchValue({
+            unit: v.unit ?? '',
             unitCost: v.unitCost,
           });
         }
@@ -290,7 +290,8 @@ export class FixedCostFormComponent {
 
     const val = this.form.getRawValue();
     const versionData: FixedCostVersionInput = {
-      unitCost: orNull(val.unitCost ?? ''),
+      unitCost: orNull(val.unitCost),
+      unit: orNull(val.unit),
       effectiveFrom: orNull(val.effectiveFrom) ?? undefined,
     };
 
@@ -323,7 +324,6 @@ export class FixedCostFormComponent {
           code: val.code.trim(),
           description: val.description.trim(),
           category: val.category,
-          unit: val.unit.trim(),
           ...versionData,
         })
         .subscribe({

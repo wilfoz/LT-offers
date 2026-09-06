@@ -7,7 +7,8 @@ import { FixedCostsApi } from './fixed-costs-api.service';
 
 const version = (overrides: Record<string, unknown> = {}) => ({
   id: 10,
-  unitCost: '4500.00',
+  unitCost: '45.00',
+  unit: 'unid',
   effectiveFrom: '2026-03-01T00:00:00.000Z',
   createdBy: 'ana',
   createdAt: '2026-03-01T12:00:00.000Z',
@@ -42,10 +43,9 @@ describe('FixedCostListComponent', () => {
       of([
         {
           id: 1,
-          code: 'CAN-01',
-          description: 'Locação de contêiner escritório',
-          category: 'CANTEIRO',
-          unit: 'mês',
+          code: 'EPI-01',
+          description: 'Capacete de proteção',
+          category: 'EPI',
           effectiveVersion: version(),
           pendingFields: [],
         },
@@ -55,11 +55,11 @@ describe('FixedCostListComponent', () => {
     const fixture = await mount();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(text).toContain('CAN-01');
-    expect(text).toContain('Locação de contêiner escritório');
-    expect(text).toContain('Canteiro de Obras');
-    expect(text).toContain('mês');
-    expect(text).toContain('4500.00');
+    expect(text).toContain('EPI-01');
+    expect(text).toContain('Capacete de proteção');
+    expect(text).toContain('EPI (Equipamentos de Proteção)');
+    expect(text).toContain('unid');
+    expect(text).toContain('45.00');
     expect(text).toContain('Completo');
   });
 
@@ -68,10 +68,9 @@ describe('FixedCostListComponent', () => {
       of([
         {
           id: 2,
-          code: 'SEG-01',
-          description: 'Seguro Garantia',
-          category: 'SEGUROS_GARANTIAS',
-          unit: 'vb',
+          code: 'EXAM-01',
+          description: 'Exame Admissional',
+          category: 'MEDICAL_EXAM',
           effectiveVersion: version({ unitCost: null }),
           pendingFields: ['custo unitário (R$)'],
         },
@@ -91,8 +90,7 @@ describe('FixedCostListComponent', () => {
           id: 3,
           code: 'MOB-01',
           description: 'Mobilização de equipe',
-          category: 'MOBILIZACAO_DESMOBILIZACAO',
-          unit: 'vb',
+          category: 'MOB_DEMOB',
           effectiveVersion: null,
           pendingFields: ['versão vigente'],
         },
@@ -109,11 +107,11 @@ describe('FixedCostListComponent', () => {
     apiMock.list.mockReturnValue(of([]));
 
     const fixture = await mount();
-    fixture.componentInstance.term.set('conteiner');
-    fixture.componentInstance.categoryFilter.set('CANTEIRO');
+    fixture.componentInstance.term.set('capacete');
+    fixture.componentInstance.categoryFilter.set('EPI');
     fixture.componentInstance.search(new Event('submit'));
 
-    expect(apiMock.list).toHaveBeenLastCalledWith('conteiner', 'CANTEIRO');
+    expect(apiMock.list).toHaveBeenLastCalledWith('capacete', 'EPI');
   });
 
   it('exibe erro quando a API falha, em vez de fingir catálogo vazio', async () => {

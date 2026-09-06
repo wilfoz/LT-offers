@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   LaborRoleHistory,
   LaborRoleSummary,
@@ -16,5 +17,9 @@ export class LaborRolesApi extends VersionedCatalogApi<
 > {
   constructor() {
     super('/api/catalogs/labor-roles');
+  }
+
+  get(id: number): Observable<LaborRoleSummary> {
+    return this.http.get<LaborRoleSummary>(`${this.base}/${id}`);
   }
 }

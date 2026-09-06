@@ -1,30 +1,27 @@
 import { FixedCostCategory } from '@lt-offers/domain';
 
 export const FIXED_COST_CATEGORY_LABELS: Record<FixedCostCategory, string> = {
-  CANTEIRO: 'Canteiro de Obras',
-  ENGENHARIA_SUPERVISAO: 'Engenharia e Supervisão',
-  MOBILIZACAO_DESMOBILIZACAO: 'Mobilização e Desmobilização',
-  SEGUROS_GARANTIAS: 'Seguros e Garantias',
-  ADMINISTRACAO_CENTRAL_LOCAL: 'Administração Local/Central',
-  OUTROS: 'Outros Custos Fixos',
+  EPI: 'EPI (Equipamentos de Proteção)',
+  MEDICAL_EXAM: 'Exames Médicos',
+  UNIFORM: 'Uniformes',
+  MOB_DEMOB: 'Mobilização e Desmobilização',
+  TRAVEL_HOUSING: 'Passagens e Hospedagens',
+  OTHER: 'Outros Custos Fixos',
 };
 
 export const FIXED_COST_CATEGORIES: {
   value: FixedCostCategory;
   label: string;
 }[] = [
-  { value: 'CANTEIRO', label: 'Canteiro de Obras' },
-  { value: 'ENGENHARIA_SUPERVISAO', label: 'Engenharia e Supervisão' },
+  { value: 'EPI', label: 'EPI (Equipamentos de Proteção)' },
+  { value: 'MEDICAL_EXAM', label: 'Exames Médicos' },
+  { value: 'UNIFORM', label: 'Uniformes' },
   {
-    value: 'MOBILIZACAO_DESMOBILIZACAO',
+    value: 'MOB_DEMOB',
     label: 'Mobilização e Desmobilização',
   },
-  { value: 'SEGUROS_GARANTIAS', label: 'Seguros e Garantias' },
-  {
-    value: 'ADMINISTRACAO_CENTRAL_LOCAL',
-    label: 'Administração Local/Central',
-  },
-  { value: 'OUTROS', label: 'Outros Custos Fixos' },
+  { value: 'TRAVEL_HOUSING', label: 'Passagens e Hospedagens' },
+  { value: 'OTHER', label: 'Outros Custos Fixos' },
 ];
 
 export function fixedCostCategoryLabel(category: FixedCostCategory): string {

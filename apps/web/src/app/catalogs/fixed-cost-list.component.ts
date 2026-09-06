@@ -114,7 +114,7 @@ import { FixedCostsApi } from './fixed-costs-api.service';
             <ng-container matColumnDef="unit">
               <th mat-header-cell *matHeaderCellDef scope="col">Unidade</th>
               <td mat-cell *matCellDef="let item">
-                {{ item.unit }}
+                {{ item.effectiveVersion?.unit ?? '—' }}
               </td>
             </ng-container>
 

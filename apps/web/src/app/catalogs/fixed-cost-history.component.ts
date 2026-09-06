@@ -28,8 +28,7 @@ import { FixedCostsApi } from './fixed-costs-api.service';
 
       @if (history(); as h) {
         <p>
-          Categoria: <strong>{{ categoryLabel(h.category) }}</strong> | Unidade:
-          <strong>{{ h.unit }}</strong>
+          Categoria: <strong>{{ categoryLabel(h.category) }}</strong>
         </p>
 
         <div class="table-scroll">
@@ -44,6 +43,13 @@ import { FixedCostsApi } from './fixed-costs-api.service';
               </th>
               <td mat-cell *matCellDef="let version" class="mono">
                 {{ version.effectiveFrom | date: 'dd/MM/yyyy' : 'UTC' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef scope="col">Unidade</th>
+              <td mat-cell *matCellDef="let version">
+                {{ version.unit ?? '—' }}
               </td>
             </ng-container>
 
@@ -105,6 +111,7 @@ export class FixedCostHistoryComponent {
 
   protected readonly columns = [
     'effectiveFrom',
+    'unit',
     'unitCost',
     'createdBy',
     'createdAt',

@@ -11,7 +11,8 @@ import { FixedCostsApi } from './fixed-costs-api.service';
 
 const version = (overrides: Record<string, unknown> = {}) => ({
   id: 10,
-  unitCost: '4500.00',
+  unitCost: '45.00',
+  unit: 'unid',
   effectiveFrom: '2026-03-01T00:00:00.000Z',
   createdBy: 'ana',
   createdAt: '2026-03-01T12:00:00.000Z',
@@ -49,15 +50,15 @@ describe('FixedCostHistoryComponent', () => {
     apiMock.history.mockReturnValue(
       of({
         id: 1,
-        code: 'CAN-01',
-        description: 'Locação de contêiner',
-        category: 'CANTEIRO',
-        unit: 'mês',
+        code: 'EPI-01',
+        description: 'Capacete de proteção',
+        category: 'EPI',
         versions: [
           version({
             id: 11,
             effectiveFrom: '2026-06-01T00:00:00.000Z',
-            unitCost: '4800.00',
+            unitCost: '50.00',
+            unit: 'unid',
             createdBy: 'bruno',
           }),
           version(),
@@ -68,14 +69,14 @@ describe('FixedCostHistoryComponent', () => {
     const fixture = await mount();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(text).toContain('CAN-01');
-    expect(text).toContain('Locação de contêiner');
-    expect(text).toContain('Canteiro de Obras');
-    expect(text).toContain('mês');
+    expect(text).toContain('EPI-01');
+    expect(text).toContain('Capacete de proteção');
+    expect(text).toContain('EPI (Equipamentos de Proteção)');
+    expect(text).toContain('unid');
     expect(text).toContain('01/06/2026');
-    expect(text).toContain('4800.00');
+    expect(text).toContain('50.00');
     expect(text).toContain('01/03/2026');
-    expect(text).toContain('4500.00');
+    expect(text).toContain('45.00');
     expect(text).toContain('bruno');
     expect(text).toContain('ana');
   });

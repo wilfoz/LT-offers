@@ -58,10 +58,10 @@ describe('FixedCostFormComponent (novo custo fixo)', () => {
   it('rejeita valor negativo ou malformado', async () => {
     const fixture = await mount();
     fixture.componentInstance.form.patchValue({
-      code: 'CAN-01',
-      description: 'Contêiner',
-      category: 'CANTEIRO',
-      unit: 'mês',
+      code: 'EPI-01',
+      description: 'Capacete',
+      category: 'EPI',
+      unit: 'unid',
       unitCost: '-500',
     });
     fixture.componentInstance.save();
@@ -75,10 +75,10 @@ describe('FixedCostFormComponent (novo custo fixo)', () => {
   it('rejeita casas decimais além de 2', async () => {
     const fixture = await mount();
     fixture.componentInstance.form.patchValue({
-      code: 'CAN-01',
-      description: 'Contêiner',
-      category: 'CANTEIRO',
-      unit: 'mês',
+      code: 'EPI-01',
+      description: 'Capacete',
+      category: 'EPI',
+      unit: 'unid',
       unitCost: '1000.123',
     });
     fixture.componentInstance.save();
@@ -108,11 +108,11 @@ describe('FixedCostFormComponent (novo custo fixo)', () => {
     fixture.detectChanges();
 
     fixture.componentInstance.form.patchValue({
-      code: 'CAN-01',
-      description: 'Locação de contêiner',
-      category: 'CANTEIRO',
-      unit: 'mês',
-      unitCost: '4500.00',
+      code: 'EPI-01',
+      description: 'Capacete de proteção',
+      category: 'EPI',
+      unit: 'unid',
+      unitCost: '45.00',
     });
 
     const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate');
@@ -120,11 +120,11 @@ describe('FixedCostFormComponent (novo custo fixo)', () => {
 
     expect(apiMock.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        code: 'CAN-01',
-        description: 'Locação de contêiner',
-        category: 'CANTEIRO',
-        unit: 'mês',
-        unitCost: '4500.00',
+        code: 'EPI-01',
+        description: 'Capacete de proteção',
+        category: 'EPI',
+        unit: 'unid',
+        unitCost: '45.00',
       }),
     );
     expect(snackMock.open).toHaveBeenCalledWith(
@@ -169,13 +169,13 @@ describe('FixedCostFormComponent (nova versão)', () => {
     apiMock.get.mockReturnValue(
       of({
         id: 1,
-        code: 'CAN-01',
-        description: 'Locação de contêiner',
-        category: 'CANTEIRO',
-        unit: 'mês',
+        code: 'EPI-01',
+        description: 'Capacete de proteção',
+        category: 'EPI',
         effectiveVersion: {
           id: 10,
-          unitCost: '4500.00',
+          unit: 'unid',
+          unitCost: '45.00',
           effectiveFrom: '2026-03-01T00:00:00.000Z',
           createdBy: 'ana',
           createdAt: '2026-03-01T12:00:00.000Z',
@@ -189,20 +189,19 @@ describe('FixedCostFormComponent (nova versão)', () => {
 
     const controls = fixture.componentInstance.form.controls;
     expect(controls.code.disabled).toBe(true);
-    expect(controls.description.value).toBe('Locação de contêiner');
-    expect(controls.category.value).toBe('CANTEIRO');
-    expect(controls.unit.value).toBe('mês');
-    expect(controls.unitCost.value).toBe('4500.00');
+    expect(controls.description.value).toBe('Capacete de proteção');
+    expect(controls.category.value).toBe('EPI');
+    expect(controls.unit.value).toBe('unid');
+    expect(controls.unitCost.value).toBe('45.00');
   });
 
   it('exige vigência ao salvar nova versão', async () => {
     apiMock.get.mockReturnValue(
       of({
         id: 1,
-        code: 'CAN-01',
-        description: 'Locação de contêiner',
-        category: 'CANTEIRO',
-        unit: 'mês',
+        code: 'EPI-01',
+        description: 'Capacete de proteção',
+        category: 'EPI',
         effectiveVersion: null,
         pendingFields: [],
       }),
