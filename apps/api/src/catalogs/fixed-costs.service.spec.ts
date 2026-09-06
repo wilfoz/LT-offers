@@ -56,7 +56,9 @@ describe('FixedCostsService', () => {
         code: 'EPI01',
         description: 'Capacete com jugular',
         category: 'EPI',
-        versions: [versionRow({ unitCost: new Prisma.Decimal('45.00'), unit: 'unid' })],
+        versions: [
+          versionRow({ unitCost: new Prisma.Decimal('45.00'), unit: 'unid' }),
+        ],
       });
 
       await service.create(
@@ -115,9 +117,7 @@ describe('FixedCostsService', () => {
         code: 'EPI01',
         description: 'Capacete',
         category: 'EPI',
-        versions: [
-          versionRow({ unitCost: new Prisma.Decimal('45.50') }),
-        ],
+        versions: [versionRow({ unitCost: new Prisma.Decimal('45.50') })],
       });
 
       const result = await service.create(

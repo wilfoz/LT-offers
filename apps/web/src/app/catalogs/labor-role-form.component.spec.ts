@@ -130,7 +130,11 @@ describe('LaborRoleFormComponent (novo cargo)', () => {
         housingMonthly: null,
       }),
     );
-    expect(snackMock.open).toHaveBeenCalledWith('Cargo criado com sucesso', 'OK', expect.any(Object));
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Cargo criado com sucesso',
+      'OK',
+      expect.any(Object),
+    );
     expect(navigateSpy).toHaveBeenCalledWith(['/catalogs/labor-roles']);
   });
 });
@@ -230,7 +234,9 @@ describe('LaborRoleFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-    expect(text).toContain('Não foi possível carregar os dados atuais do cargo');
+    expect(text).toContain(
+      'Não foi possível carregar os dados atuais do cargo',
+    );
     expect(apiMock.createVersion).not.toHaveBeenCalled();
   });
 

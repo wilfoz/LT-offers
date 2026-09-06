@@ -27,7 +27,10 @@ describe('LaborRolesController', () => {
   });
 
   it('usa "sistema" como autor quando o cabeçalho X-User está ausente', async () => {
-    await controller.create({ code: 'ENC01', name: 'Encarregado' } as CreateLaborRoleDto);
+    await controller.create({
+      code: 'ENC01',
+      name: 'Encarregado',
+    } as CreateLaborRoleDto);
     expect(serviceMock.create.mock.calls[0][1]).toBe('sistema');
   });
 
@@ -98,7 +101,9 @@ describe('CreateLaborRoleDto (validação)', () => {
   });
 
   it('rejeita código ausente', async () => {
-    const errors = await validate(dto({ name: 'Encarregado', baseSalary: '5000' }));
+    const errors = await validate(
+      dto({ name: 'Encarregado', baseSalary: '5000' }),
+    );
     expect(errors.some((e) => e.property === 'code')).toBe(true);
   });
 
@@ -132,7 +137,9 @@ describe('CreateLaborRoleDto (validação)', () => {
     ).toBe(true);
     expect(
       messages.some(
-        (m) => m.includes('adicional de periculosidade (%)') && m.includes('4 casas'),
+        (m) =>
+          m.includes('adicional de periculosidade (%)') &&
+          m.includes('4 casas'),
       ),
     ).toBe(true);
   });

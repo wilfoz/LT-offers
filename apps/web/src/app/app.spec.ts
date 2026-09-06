@@ -48,6 +48,9 @@ describe('App (casca de navegação)', () => {
       'Tipos de solo',
       'Tipos de fundação',
       'Matriz de volumes',
+      'Mão de obra',
+      'Equipamentos',
+      'Custos fixos',
     ]);
   });
 
@@ -63,7 +66,7 @@ describe('App (casca de navegação)', () => {
     expect(active[0].textContent).toContain('Cabos de tirante');
     expect(
       (fixture.nativeElement as HTMLElement).querySelectorAll('mat-nav-list a'),
-    ).toHaveLength(8);
+    ).toHaveLength(11);
   });
 
   it('em tela larga a navegação fica fixa, sem botão de menu', async () => {

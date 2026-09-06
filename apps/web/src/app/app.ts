@@ -49,6 +49,9 @@ export class App {
     { path: '/catalogs/soil-types', label: 'Tipos de solo' },
     { path: '/catalogs/foundation-types', label: 'Tipos de fundação' },
     { path: '/catalogs/foundation-volumes', label: 'Matriz de volumes' },
+    { path: '/catalogs/labor-roles', label: 'Mão de obra' },
+    { path: '/catalogs/equipment', label: 'Equipamentos' },
+    { path: '/catalogs/fixed-costs', label: 'Custos fixos' },
   ];
 
   protected toggleMenu(): void {

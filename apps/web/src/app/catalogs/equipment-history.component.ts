@@ -18,7 +18,11 @@ import { EquipmentApi } from './equipment-api.service';
   ],
   template: `
     <section>
-      <h2>Histórico de versões — {{ history()?.code }} ({{ history()?.description }})</h2>
+      <h2>
+        Histórico de versões — {{ history()?.code }} ({{
+          history()?.description
+        }})
+      </h2>
       <a matButton routerLink="/catalogs/equipment">Voltar à listagem</a>
 
       @if (history(); as h) {

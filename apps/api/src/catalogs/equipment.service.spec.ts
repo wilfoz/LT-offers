@@ -60,7 +60,9 @@ describe('EquipmentService', () => {
         code: 'TRAT01',
         description: 'Trator de Esteiras',
         category: 'TERRAPLANAGEM',
-        versions: [versionRow({ externalRentalMonthly: new Prisma.Decimal('18000.00') })],
+        versions: [
+          versionRow({ externalRentalMonthly: new Prisma.Decimal('18000.00') }),
+        ],
       });
 
       await service.create(
@@ -92,11 +94,7 @@ describe('EquipmentService', () => {
       prismaMock.equipment.create.mockRejectedValue(uniqueViolation());
 
       await expect(
-        service.create(
-          { code: 'TRAT01', description: 'Trator' },
-          'ana',
-          today,
-        ),
+        service.create({ code: 'TRAT01', description: 'Trator' }, 'ana', today),
       ).rejects.toThrow(ConflictException);
     });
 
@@ -133,7 +131,9 @@ describe('EquipmentService', () => {
       );
 
       expect(result.effectiveVersion?.externalRentalMonthly).toBe('18000.5');
-      expect(typeof result.effectiveVersion?.externalRentalMonthly).toBe('string');
+      expect(typeof result.effectiveVersion?.externalRentalMonthly).toBe(
+        'string',
+      );
     });
   });
 
@@ -191,7 +191,10 @@ describe('EquipmentService', () => {
         { code: { contains: 'TRAT', mode: 'insensitive' } },
         { description: { contains: 'TRAT', mode: 'insensitive' } },
       ]);
-      expect(where.category).toEqual({ equals: 'TRANSPORTE', mode: 'insensitive' });
+      expect(where.category).toEqual({
+        equals: 'TRANSPORTE',
+        mode: 'insensitive',
+      });
     });
 
     it('sinaliza pendência quando nenhuma estratégia de custo for informada', async () => {
@@ -207,7 +210,9 @@ describe('EquipmentService', () => {
 
       const [item] = await service.list(undefined, undefined, today);
 
-      expect(item.pendingFields).toEqual(['nenhuma estratégia de custo informada']);
+      expect(item.pendingFields).toEqual([
+        'nenhuma estratégia de custo informada',
+      ]);
     });
 
     it('não sinaliza pendência se houver locação externa informada', async () => {

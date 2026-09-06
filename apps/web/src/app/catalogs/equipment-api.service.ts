@@ -20,7 +20,10 @@ export class EquipmentApi extends VersionedCatalogApi<
     super('/api/catalogs/equipment');
   }
 
-  override list(search?: string, category?: string): Observable<EquipmentSummary[]> {
+  override list(
+    search?: string,
+    category?: string,
+  ): Observable<EquipmentSummary[]> {
     let params = new HttpParams();
     if (search && search.trim() !== '') {
       params = params.set('search', search.trim());

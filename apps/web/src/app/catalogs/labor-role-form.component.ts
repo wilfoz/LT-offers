@@ -531,7 +531,8 @@ export class LaborRoleFormComponent {
       return 'Campo obrigatório';
     }
     if (c.errors['pattern']) return 'Formato inválido (esperado AAAA-MM-DD)';
-    if (c.errors['invalidDecimal']) return 'Informe um valor numérico maior ou igual a zero';
+    if (c.errors['invalidDecimal'])
+      return 'Informe um valor numérico maior ou igual a zero';
     if (c.errors['decimalScale']) {
       const max = DECIMAL_SCALES[field as DecimalField] ?? 2;
       return `Use no máximo ${max} casas decimais`;

@@ -38,5 +38,5 @@
 
 ## 9. Integração e verificação
 
-- [ ] 9.1 Registrar rotas lazy dos três recursos em `catalogs.routes.ts` e adicionar itens no menu de navegação da casca (`app.component.ts`), atualizando os testes de rota e menu.
-- [ ] 9.2 Verificação integrada: `npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status` limpos.
+- [x] 9.1 Registrar rotas lazy dos três recursos em `catalogs.routes.ts` e adicionar itens no menu de navegação da casca (`app.component.ts`), atualizando os testes de rota e menu.
+- [x] 9.2 Verificação integrada: `npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status` limpos.

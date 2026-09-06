@@ -16,7 +16,9 @@ export class CreateLaborRoleDto extends LaborRoleVersionFieldsDto {
 
   @IsString({ message: 'O nome do cargo deve ser um texto' })
   @IsNotEmpty({ message: 'O nome do cargo é obrigatório' })
-  @MaxLength(100, { message: 'O nome do cargo deve ter no máximo 100 caracteres' })
+  @MaxLength(100, {
+    message: 'O nome do cargo deve ter no máximo 100 caracteres',
+  })
   name!: string;
 
   @IsOptional()

@@ -20,7 +20,9 @@ import { FixedCostsApi } from './fixed-costs-api.service';
   template: `
     <section>
       <h2>
-        Histórico de versões — {{ history()?.code }} ({{ history()?.description }})
+        Histórico de versões — {{ history()?.code }} ({{
+          history()?.description
+        }})
       </h2>
       <a matButton routerLink="/catalogs/fixed-costs">Voltar à listagem</a>
 

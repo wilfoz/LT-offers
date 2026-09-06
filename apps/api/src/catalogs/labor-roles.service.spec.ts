@@ -120,9 +120,7 @@ describe('LaborRolesService', () => {
         id: 1,
         code: 'ENC01',
         name: 'Encarregado de Linha',
-        versions: [
-          versionRow({ baseSalary: new Prisma.Decimal('5500.50') }),
-        ],
+        versions: [versionRow({ baseSalary: new Prisma.Decimal('5500.50') })],
       });
 
       const result = await service.create(

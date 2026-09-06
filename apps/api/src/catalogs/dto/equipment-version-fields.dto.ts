@@ -33,7 +33,9 @@ export class EquipmentVersionFieldsDto {
 
   @IsOptional()
   @IsInt({ message: 'A disponibilidade própria deve ser um número inteiro' })
-  @Min(0, { message: 'A disponibilidade própria deve ser maior ou igual a zero' })
+  @Min(0, {
+    message: 'A disponibilidade própria deve ser maior ou igual a zero',
+  })
   ownedAvailabilityCount?: number | null;
 
   @IsOptional()

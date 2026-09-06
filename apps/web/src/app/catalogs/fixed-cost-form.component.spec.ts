@@ -127,7 +127,11 @@ describe('FixedCostFormComponent (novo custo fixo)', () => {
         unitCost: '4500.00',
       }),
     );
-    expect(snackMock.open).toHaveBeenCalledWith('Custo fixo criado com sucesso', 'OK', expect.any(Object));
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Custo fixo criado com sucesso',
+      'OK',
+      expect.any(Object),
+    );
     expect(navigateSpy).toHaveBeenCalledWith(['/catalogs/fixed-costs']);
   });
 });
@@ -223,7 +227,9 @@ describe('FixedCostFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-    expect(text).toContain('Não foi possível carregar os dados atuais do custo fixo');
+    expect(text).toContain(
+      'Não foi possível carregar os dados atuais do custo fixo',
+    );
     expect(apiMock.createVersion).not.toHaveBeenCalled();
   });
 

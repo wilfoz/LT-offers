@@ -1,6 +1,7 @@
 import { MethodNotAllowedException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { validate } from 'class-validator';
+import { FixedCostCategory } from '@lt-offers/domain';
 import { CreateFixedCostDto } from './dto/create-fixed-cost.dto';
 import { CreateFixedCostVersionDto } from './dto/create-fixed-cost-version.dto';
 import { FixedCostsController } from './fixed-costs.controller';
@@ -27,7 +28,11 @@ describe('FixedCostsController', () => {
   });
 
   it('usa "sistema" como autor quando o cabeçalho X-User está ausente', async () => {
-    await controller.create({ code: 'EPI01', description: 'Capacete', category: 'EPI' } as CreateFixedCostDto);
+    await controller.create({
+      code: 'EPI01',
+      description: 'Capacete',
+      category: 'EPI',
+    } as CreateFixedCostDto);
     expect(serviceMock.create.mock.calls[0][1]).toBe('sistema');
   });
 
@@ -66,17 +71,25 @@ describe('CreateFixedCostDto (validação)', () => {
   });
 
   it('rejeita código ausente', async () => {
-    const errors = await validate(dto({ description: 'Capacete', category: 'EPI' }));
+    const errors = await validate(
+      dto({ description: 'Capacete', category: 'EPI' }),
+    );
     expect(errors.some((e) => e.property === 'code')).toBe(true);
   });
 
   it('rejeita categoria inválida', async () => {
     const errors = await validate(
-      dto({ code: 'EPI01', description: 'Capacete', category: 'INVALIDA' as unknown as FixedCostCategory }),
+      dto({
+        code: 'EPI01',
+        description: 'Capacete',
+        category: 'INVALIDA' as unknown as FixedCostCategory,
+      }),
     );
     const messages = errors.flatMap((e) => Object.values(e.constraints ?? {}));
     expect(
-      messages.some((m) => m.includes('categoria deve ser uma das opções válidas')),
+      messages.some((m) =>
+        m.includes('categoria deve ser uma das opções válidas'),
+      ),
     ).toBe(true);
   });
 

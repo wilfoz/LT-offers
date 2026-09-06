@@ -9,7 +9,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { FixedCostCategory as PrismaFixedCostCategory, Prisma } from '@prisma/client';
+import {
+  FixedCostCategory as PrismaFixedCostCategory,
+  Prisma,
+} from '@prisma/client';
 import type { FixedCostVersion as FixedCostVersionRow } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
 import { toCivilDate } from './civil-date';

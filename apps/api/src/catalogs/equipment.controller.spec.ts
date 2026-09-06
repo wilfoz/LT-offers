@@ -27,7 +27,10 @@ describe('EquipmentController', () => {
   });
 
   it('usa "sistema" como autor quando o cabeçalho X-User está ausente', async () => {
-    await controller.create({ code: 'TRAT01', description: 'Trator' } as CreateEquipmentDto);
+    await controller.create({
+      code: 'TRAT01',
+      description: 'Trator',
+    } as CreateEquipmentDto);
     expect(serviceMock.create.mock.calls[0][1]).toBe('sistema');
   });
 
@@ -89,7 +92,9 @@ describe('CreateEquipmentDto (validação)', () => {
     );
     const messages = errors.flatMap((e) => Object.values(e.constraints ?? {}));
     expect(
-      messages.some((m) => m.includes('anos de amortização devem ser maiores que zero')),
+      messages.some((m) =>
+        m.includes('anos de amortização devem ser maiores que zero'),
+      ),
     ).toBe(true);
   });
 

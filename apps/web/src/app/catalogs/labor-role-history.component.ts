@@ -18,7 +18,9 @@ import { LaborRolesApi } from './labor-roles-api.service';
   ],
   template: `
     <section>
-      <h2>Histórico de versões — {{ history()?.code }} ({{ history()?.name }})</h2>
+      <h2>
+        Histórico de versões — {{ history()?.code }} ({{ history()?.name }})
+      </h2>
       <a matButton routerLink="/catalogs/labor-roles">Voltar à listagem</a>
 
       @if (history(); as h) {
@@ -65,9 +67,7 @@ import { LaborRolesApi } from './labor-roles-api.service';
             </ng-container>
 
             <ng-container matColumnDef="dsrOvertimePercent">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                DSR HE (%)
-              </th>
+              <th mat-header-cell *matHeaderCellDef scope="col">DSR HE (%)</th>
               <td mat-cell *matCellDef="let version" class="mono num">
                 {{ version.dsrOvertimePercent ?? '—' }}
               </td>
@@ -110,9 +110,7 @@ import { LaborRolesApi } from './labor-roles-api.service';
             </ng-container>
 
             <ng-container matColumnDef="healthInsuranceMonthly">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                Saúde (R$)
-              </th>
+              <th mat-header-cell *matHeaderCellDef scope="col">Saúde (R$)</th>
               <td mat-cell *matCellDef="let version" class="mono num">
                 {{ version.healthInsuranceMonthly ?? '—' }}
               </td>

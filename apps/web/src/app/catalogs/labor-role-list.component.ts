@@ -72,7 +72,9 @@ import { LaborRolesApi } from './labor-roles-api.service';
             </ng-container>
 
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef scope="col">Nome do cargo</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Nome do cargo
+              </th>
               <td mat-cell *matCellDef="let item">
                 {{ item.name }}
               </td>

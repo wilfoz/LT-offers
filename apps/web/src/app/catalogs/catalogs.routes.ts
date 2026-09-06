@@ -17,6 +17,15 @@ import { GuyWireListComponent } from './guy-wire-list.component';
 import { InsulatorFormComponent } from './insulator-form.component';
 import { InsulatorHistoryComponent } from './insulator-history.component';
 import { InsulatorListComponent } from './insulator-list.component';
+import { EquipmentFormComponent } from './equipment-form.component';
+import { EquipmentHistoryComponent } from './equipment-history.component';
+import { EquipmentListComponent } from './equipment-list.component';
+import { FixedCostFormComponent } from './fixed-cost-form.component';
+import { FixedCostHistoryComponent } from './fixed-cost-history.component';
+import { FixedCostListComponent } from './fixed-cost-list.component';
+import { LaborRoleFormComponent } from './labor-role-form.component';
+import { LaborRoleHistoryComponent } from './labor-role-history.component';
+import { LaborRoleListComponent } from './labor-role-list.component';
 import { SoilTypeFormComponent } from './soil-type-form.component';
 import { SoilTypeHistoryComponent } from './soil-type-history.component';
 import { SoilTypeListComponent } from './soil-type-list.component';
@@ -97,4 +106,16 @@ export const CATALOGS_ROUTES: Routes = [
     path: 'foundation-volumes/:id/history',
     component: FoundationVolumeHistoryComponent,
   },
+  { path: 'labor-roles', component: LaborRoleListComponent },
+  { path: 'labor-roles/new', component: LaborRoleFormComponent },
+  { path: 'labor-roles/:id/edit', component: LaborRoleFormComponent },
+  { path: 'labor-roles/:id/history', component: LaborRoleHistoryComponent },
+  { path: 'equipment', component: EquipmentListComponent },
+  { path: 'equipment/new', component: EquipmentFormComponent },
+  { path: 'equipment/:id/edit', component: EquipmentFormComponent },
+  { path: 'equipment/:id/history', component: EquipmentHistoryComponent },
+  { path: 'fixed-costs', component: FixedCostListComponent },
+  { path: 'fixed-costs/new', component: FixedCostFormComponent },
+  { path: 'fixed-costs/:id/edit', component: FixedCostFormComponent },
+  { path: 'fixed-costs/:id/history', component: FixedCostHistoryComponent },
 ];

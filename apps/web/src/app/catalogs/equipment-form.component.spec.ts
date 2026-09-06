@@ -138,7 +138,11 @@ describe('EquipmentFormComponent (novo equipamento)', () => {
         depreciationYears: 5,
       }),
     );
-    expect(snackMock.open).toHaveBeenCalledWith('Equipamento criado com sucesso', 'OK', expect.any(Object));
+    expect(snackMock.open).toHaveBeenCalledWith(
+      'Equipamento criado com sucesso',
+      'OK',
+      expect.any(Object),
+    );
     expect(navigateSpy).toHaveBeenCalledWith(['/catalogs/equipment']);
   });
 });
@@ -235,7 +239,9 @@ describe('EquipmentFormComponent (nova versão)', () => {
     fixture.componentInstance.save();
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-    expect(text).toContain('Não foi possível carregar os dados atuais do equipamento');
+    expect(text).toContain(
+      'Não foi possível carregar os dados atuais do equipamento',
+    );
     expect(apiMock.createVersion).not.toHaveBeenCalled();
   });
 

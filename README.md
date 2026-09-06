@@ -86,102 +86,102 @@ contra um Postgres real.
 Referência canônica para os termos de domínio; termos novos entram aqui antes
 de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 
-| pt-BR (domínio)                                     | Inglês (código/banco/API)                                                   |
-| --------------------------------------------------- | --------------------------------------------------------------------------- |
-| cabo condutor                                       | `ConductorCable` / `conductor_cable` / `conductor-cables`                   |
-| cabo de guarda                                      | `GroundWire` / `ground_wire` / `ground-wires`                               |
-| tipo (aço \| OPGW)                                  | `GroundWireType`: `STEEL` \| `OPGW`                                         |
-| classe de galvanização                              | `galvanizationClass` / `galvanization_class`                                |
-| grau de resistência                                 | `strengthGrade` / `strength_grade`                                          |
-| número de fios                                      | `wireCount` / `wire_count`                                                  |
-| fabricante                                          | `manufacturer`                                                              |
-| I²t (kA²·s)                                         | `i2tKa2s` / `i2t_ka2s`                                                      |
-| número de fibras                                    | `fiberCount` / `fiber_count`                                                |
-| tirante (cabo de aço)                               | `GuyWire` / `guy_wire` / `guy-wires`                                        |
-| versão (de catálogo)                                | `Version` / `_version`                                                      |
-| vigência (início de)                                | `effectiveFrom` / `effective_from`                                          |
-| vigente em (consulta)                               | `effectiveOn` (query param)                                                 |
-| peso (ton/km)                                       | `weightTonPerKm` / `weight_ton_per_km`                                      |
-| bobina (m)                                          | `reelLengthM` / `reel_length_m`                                             |
-| diâmetro (mm)                                       | `diameterMm` / `diameter_mm`                                                |
-| UTS (kN)                                            | `utsKn` / `uts_kn`                                                          |
-| criado por / em                                     | `createdBy` / `createdAt`                                                   |
-| campos pendentes                                    | `pendingFields`                                                             |
-| busca                                               | `search`                                                                    |
-| catálogo                                            | `catalogs`                                                                  |
-| motor de cálculo                                    | `calc-engine` / `DecimalValue`, `DependencyGraph`                           |
-| domínio                                             | `domain`                                                                    |
-| arredondamento                                      | `RoundingPolicy`: `'half-up'` \| `'half-even'`                              |
-| série de estrutura                                  | `StructureSeries` / `structure_series` / `structure-series`                 |
-| tipo de torre                                       | `TowerType` / `tower_type` / `tower-types`                                  |
-| função (suspensão \| ancoragem)                     | `TowerFunction`: `SUSPENSION` \| `ANCHOR`                                   |
-| projetista                                          | `designer`                                                                  |
-| tensão (kV)                                         | `voltageKv` / `voltage_kv`                                                  |
-| circuitos                                           | `circuitCount` / `circuit_count`                                            |
-| cabos por fase                                      | `cablesPerPhase` / `cables_per_phase`                                       |
-| vento de projeto (m/s)                              | `designWindSpeedMs` / `design_wind_speed_ms`                                |
-| tipo de isolador                                    | `insulatorType` / `insulator_type`                                          |
-| SIL (MW)                                            | `silMw` / `sil_mw`                                                          |
-| quantidade de estais                                | `guyCount` / `guy_count`                                                    |
-| altura (m)                                          | `heightM` / `height_m`                                                      |
-| peso (kg)                                           | `weightKg` / `weight_kg`                                                    |
-| isolador                                            | `Insulator` / `insulator` / `insulators`                                    |
-| perfil (de isolador)                                | `profile`                                                                   |
-| carga de ruptura (kN)                               | `ruptureStrengthKn` / `rupture_strength_kn`                                 |
-| passo (mm)                                          | `spacingMm` / `spacing_mm`                                                  |
-| linha de fuga (mm)                                  | `creepageDistanceMm` / `creepage_distance_mm`                               |
-| tipo de solo                                        | `SoilType` / `soil_type` / `soil-types`                                     |
-| submerso                                            | `submerged`                                                                 |
-| tensão admissível à compressão (kgf/cm²)            | `allowableCompressionStressKgfCm2` / `allowable_compression_stress_kgf_cm2` |
-| peso específico (kgf/m³)                            | `specificWeightKgfM3` / `specific_weight_kgf_m3`                            |
-| ângulo de atrito interno (°)                        | `internalFrictionAngleDeg` / `internal_friction_angle_deg`                  |
-| coesão (kg/cm²)                                     | `cohesionKgCm2` / `cohesion_kg_cm2`                                         |
-| faixa de NSPT (mínimo inclusivo / máximo exclusivo) | `nsptMin` / `nsptMax` / `nspt_min` / `nspt_max`                             |
-| tipo de fundação                                    | `FoundationType` / `foundation_type` / `foundation-types`                   |
-| aplicação (autoportante \| estaiada \| cross-rope)  | `FoundationApplication`: `SELF_SUPPORTING` \| `GUYED` \| `CROSS_ROPE`       |
-| matriz de volumes (torre × solo × fundação)         | `FoundationVolume` / `foundation_volume` / `foundation-volumes`             |
-| fuste sapata                                        | `spreadFooting`                                                             |
-| preformado (pré-moldado)                            | `precast` (`precastMast` \| `precastGuy`)                                   |
-| pila (reta \| campana \| com laje)                  | `pier` (`straightPier` \| `belledPier` \| `slabPier`)                       |
-| tirante (elemento de fundação estaiada)             | `guy` (sufixo, ex. `straightPierGuy`)                                       |
-| ancoragem em rocha                                  | `rockAnchor`                                                                |
-| estaca (concreto \| metálica \| raiz)               | `pile` (`concretePile` \| `steelPile` \| `rootPile`)                        |
-| helicoidal (mastro \| tirante)                      | `helicalMast` \| `helicalGuy`                                               |
-| tricone                                             | `tricone`                                                                   |
-| micropilote                                         | `micropile`                                                                 |
-| hélice contínua                                     | `continuousAugerPile`                                                       |
-| encepado (bloco de coroamento)                      | `pileCap`                                                                   |
-| contagem de elemento                                | sufixo `Count` / `_count` (ex. `spreadFootingCount`)                        |
-| escavação (duro \| normal \| com água) (m³)         | `excavation{Hard\|Normal\|Water}…M3`                                        |
-| perfuração de pernos (m)                            | `anchorBoltDrillingM` / `anchor_bolt_drilling_m`                            |
-| aço por elemento (kg)                               | `steel…Kg` (ex. `steelPiersKg`, `steelAnchorBoltsKg`)                       |
-| concreto por elemento (m³)                          | `concrete…M3` (ex. `concretePiersM3`)                                       |
-| regeneração (m³)                                    | `regenerationM3` / `regeneration_m3`                                        |
-| grout (m³)                                          | `groutM3` / `grout_m3` (termo do setor, não se traduz)                      |
-| reaterro (solo \| solo-cimento) (m³)                | `backfillSoilM3` \| `backfillSoilCementM3`                                  |
-| formas (m²)                                         | `formworkM2` / `formwork_m2`                                                |
-| metragem de estaca (m)                              | sufixo `M` (ex. `helicalPileM`, `triconeM`, `micropileM`)                   |
-| cargo / mão de obra                                 | `LaborRole` / `labor_role` / `labor-roles`                                  |
-| salário base (R$)                                   | `baseSalary` / `base_salary`                                                |
-| periculosidade (%)                                  | `hazardPayPercent` / `hazard_pay_percent`                                  |
-| hora extra (%)                                      | `overtimePercent` / `overtime_percent`                                      |
-| DSR sobre hora extra (%)                            | `dsrOvertimePercent` / `dsr_overtime_percent`                              |
-| encargos sociais (%)                                | `socialChargesPercent` / `social_charges_percent`                          |
-| alimentação (R$/mês)                                | `foodAllowanceMonthly` / `food_allowance_monthly`                            |
-| alojamento (R$/mês)                                 | `housingMonthly` / `housing_monthly`                                        |
-| folgas de campo com viagem (R$/mês)                 | `homeLeaveTravelMonthly` / `home_leave_travel_monthly`                      |
-| plano de saúde (R$/mês)                             | `healthInsuranceMonthly` / `health_insurance_monthly`                      |
-| seguro de vida (R$/mês)                             | `lifeInsuranceMonthly` / `life_insurance_monthly`                          |
-| equipamento                                         | `Equipment` / `equipment`                                                   |
-| aluguel externo (R$/mês)                            | `externalRentalMonthly` / `external_rental_monthly`                          |
-| aluguel interno (R$/mês)                            | `internalRentalMonthly` / `internal_rental_monthly`                          |
-| preço de compra (R$)                                | `purchasePrice` / `purchase_price`                                          |
-| anos de amortização                                 | `depreciationYears` / `depreciation_years`                                  |
-| disponibilidade própria (qtd)                       | `ownedAvailabilityCount` / `owned_availability_count`                      |
-| combustível e manutenção (R$/mês)                   | `fuelMaintenanceMonthly` / `fuel_maintenance_monthly`                      |
-| custo fixo / indireto de obra                       | `FixedCost` / `fixed_cost` / `fixed-costs`                                  |
+| pt-BR (domínio)                                     | Inglês (código/banco/API)                                                                               |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| cabo condutor                                       | `ConductorCable` / `conductor_cable` / `conductor-cables`                                               |
+| cabo de guarda                                      | `GroundWire` / `ground_wire` / `ground-wires`                                                           |
+| tipo (aço \| OPGW)                                  | `GroundWireType`: `STEEL` \| `OPGW`                                                                     |
+| classe de galvanização                              | `galvanizationClass` / `galvanization_class`                                                            |
+| grau de resistência                                 | `strengthGrade` / `strength_grade`                                                                      |
+| número de fios                                      | `wireCount` / `wire_count`                                                                              |
+| fabricante                                          | `manufacturer`                                                                                          |
+| I²t (kA²·s)                                         | `i2tKa2s` / `i2t_ka2s`                                                                                  |
+| número de fibras                                    | `fiberCount` / `fiber_count`                                                                            |
+| tirante (cabo de aço)                               | `GuyWire` / `guy_wire` / `guy-wires`                                                                    |
+| versão (de catálogo)                                | `Version` / `_version`                                                                                  |
+| vigência (início de)                                | `effectiveFrom` / `effective_from`                                                                      |
+| vigente em (consulta)                               | `effectiveOn` (query param)                                                                             |
+| peso (ton/km)                                       | `weightTonPerKm` / `weight_ton_per_km`                                                                  |
+| bobina (m)                                          | `reelLengthM` / `reel_length_m`                                                                         |
+| diâmetro (mm)                                       | `diameterMm` / `diameter_mm`                                                                            |
+| UTS (kN)                                            | `utsKn` / `uts_kn`                                                                                      |
+| criado por / em                                     | `createdBy` / `createdAt`                                                                               |
+| campos pendentes                                    | `pendingFields`                                                                                         |
+| busca                                               | `search`                                                                                                |
+| catálogo                                            | `catalogs`                                                                                              |
+| motor de cálculo                                    | `calc-engine` / `DecimalValue`, `DependencyGraph`                                                       |
+| domínio                                             | `domain`                                                                                                |
+| arredondamento                                      | `RoundingPolicy`: `'half-up'` \| `'half-even'`                                                          |
+| série de estrutura                                  | `StructureSeries` / `structure_series` / `structure-series`                                             |
+| tipo de torre                                       | `TowerType` / `tower_type` / `tower-types`                                                              |
+| função (suspensão \| ancoragem)                     | `TowerFunction`: `SUSPENSION` \| `ANCHOR`                                                               |
+| projetista                                          | `designer`                                                                                              |
+| tensão (kV)                                         | `voltageKv` / `voltage_kv`                                                                              |
+| circuitos                                           | `circuitCount` / `circuit_count`                                                                        |
+| cabos por fase                                      | `cablesPerPhase` / `cables_per_phase`                                                                   |
+| vento de projeto (m/s)                              | `designWindSpeedMs` / `design_wind_speed_ms`                                                            |
+| tipo de isolador                                    | `insulatorType` / `insulator_type`                                                                      |
+| SIL (MW)                                            | `silMw` / `sil_mw`                                                                                      |
+| quantidade de estais                                | `guyCount` / `guy_count`                                                                                |
+| altura (m)                                          | `heightM` / `height_m`                                                                                  |
+| peso (kg)                                           | `weightKg` / `weight_kg`                                                                                |
+| isolador                                            | `Insulator` / `insulator` / `insulators`                                                                |
+| perfil (de isolador)                                | `profile`                                                                                               |
+| carga de ruptura (kN)                               | `ruptureStrengthKn` / `rupture_strength_kn`                                                             |
+| passo (mm)                                          | `spacingMm` / `spacing_mm`                                                                              |
+| linha de fuga (mm)                                  | `creepageDistanceMm` / `creepage_distance_mm`                                                           |
+| tipo de solo                                        | `SoilType` / `soil_type` / `soil-types`                                                                 |
+| submerso                                            | `submerged`                                                                                             |
+| tensão admissível à compressão (kgf/cm²)            | `allowableCompressionStressKgfCm2` / `allowable_compression_stress_kgf_cm2`                             |
+| peso específico (kgf/m³)                            | `specificWeightKgfM3` / `specific_weight_kgf_m3`                                                        |
+| ângulo de atrito interno (°)                        | `internalFrictionAngleDeg` / `internal_friction_angle_deg`                                              |
+| coesão (kg/cm²)                                     | `cohesionKgCm2` / `cohesion_kg_cm2`                                                                     |
+| faixa de NSPT (mínimo inclusivo / máximo exclusivo) | `nsptMin` / `nsptMax` / `nspt_min` / `nspt_max`                                                         |
+| tipo de fundação                                    | `FoundationType` / `foundation_type` / `foundation-types`                                               |
+| aplicação (autoportante \| estaiada \| cross-rope)  | `FoundationApplication`: `SELF_SUPPORTING` \| `GUYED` \| `CROSS_ROPE`                                   |
+| matriz de volumes (torre × solo × fundação)         | `FoundationVolume` / `foundation_volume` / `foundation-volumes`                                         |
+| fuste sapata                                        | `spreadFooting`                                                                                         |
+| preformado (pré-moldado)                            | `precast` (`precastMast` \| `precastGuy`)                                                               |
+| pila (reta \| campana \| com laje)                  | `pier` (`straightPier` \| `belledPier` \| `slabPier`)                                                   |
+| tirante (elemento de fundação estaiada)             | `guy` (sufixo, ex. `straightPierGuy`)                                                                   |
+| ancoragem em rocha                                  | `rockAnchor`                                                                                            |
+| estaca (concreto \| metálica \| raiz)               | `pile` (`concretePile` \| `steelPile` \| `rootPile`)                                                    |
+| helicoidal (mastro \| tirante)                      | `helicalMast` \| `helicalGuy`                                                                           |
+| tricone                                             | `tricone`                                                                                               |
+| micropilote                                         | `micropile`                                                                                             |
+| hélice contínua                                     | `continuousAugerPile`                                                                                   |
+| encepado (bloco de coroamento)                      | `pileCap`                                                                                               |
+| contagem de elemento                                | sufixo `Count` / `_count` (ex. `spreadFootingCount`)                                                    |
+| escavação (duro \| normal \| com água) (m³)         | `excavation{Hard\|Normal\|Water}…M3`                                                                    |
+| perfuração de pernos (m)                            | `anchorBoltDrillingM` / `anchor_bolt_drilling_m`                                                        |
+| aço por elemento (kg)                               | `steel…Kg` (ex. `steelPiersKg`, `steelAnchorBoltsKg`)                                                   |
+| concreto por elemento (m³)                          | `concrete…M3` (ex. `concretePiersM3`)                                                                   |
+| regeneração (m³)                                    | `regenerationM3` / `regeneration_m3`                                                                    |
+| grout (m³)                                          | `groutM3` / `grout_m3` (termo do setor, não se traduz)                                                  |
+| reaterro (solo \| solo-cimento) (m³)                | `backfillSoilM3` \| `backfillSoilCementM3`                                                              |
+| formas (m²)                                         | `formworkM2` / `formwork_m2`                                                                            |
+| metragem de estaca (m)                              | sufixo `M` (ex. `helicalPileM`, `triconeM`, `micropileM`)                                               |
+| cargo / mão de obra                                 | `LaborRole` / `labor_role` / `labor-roles`                                                              |
+| salário base (R$)                                   | `baseSalary` / `base_salary`                                                                            |
+| periculosidade (%)                                  | `hazardPayPercent` / `hazard_pay_percent`                                                               |
+| hora extra (%)                                      | `overtimePercent` / `overtime_percent`                                                                  |
+| DSR sobre hora extra (%)                            | `dsrOvertimePercent` / `dsr_overtime_percent`                                                           |
+| encargos sociais (%)                                | `socialChargesPercent` / `social_charges_percent`                                                       |
+| alimentação (R$/mês)                                | `foodAllowanceMonthly` / `food_allowance_monthly`                                                       |
+| alojamento (R$/mês)                                 | `housingMonthly` / `housing_monthly`                                                                    |
+| folgas de campo com viagem (R$/mês)                 | `homeLeaveTravelMonthly` / `home_leave_travel_monthly`                                                  |
+| plano de saúde (R$/mês)                             | `healthInsuranceMonthly` / `health_insurance_monthly`                                                   |
+| seguro de vida (R$/mês)                             | `lifeInsuranceMonthly` / `life_insurance_monthly`                                                       |
+| equipamento                                         | `Equipment` / `equipment`                                                                               |
+| aluguel externo (R$/mês)                            | `externalRentalMonthly` / `external_rental_monthly`                                                     |
+| aluguel interno (R$/mês)                            | `internalRentalMonthly` / `internal_rental_monthly`                                                     |
+| preço de compra (R$)                                | `purchasePrice` / `purchase_price`                                                                      |
+| anos de amortização                                 | `depreciationYears` / `depreciation_years`                                                              |
+| disponibilidade própria (qtd)                       | `ownedAvailabilityCount` / `owned_availability_count`                                                   |
+| combustível e manutenção (R$/mês)                   | `fuelMaintenanceMonthly` / `fuel_maintenance_monthly`                                                   |
+| custo fixo / indireto de obra                       | `FixedCost` / `fixed_cost` / `fixed-costs`                                                              |
 | categoria de custo fixo                             | `FixedCostCategory`: `EPI` \| `MEDICAL_EXAM` \| `UNIFORM` \| `MOB_DEMOB` \| `TRAVEL_HOUSING` \| `OTHER` |
-| custo unitário (R$)                                 | `unitCost` / `unit_cost`                                                    |
+| custo unitário (R$)                                 | `unitCost` / `unit_cost`                                                                                |
 
 ### Demais convenções
 

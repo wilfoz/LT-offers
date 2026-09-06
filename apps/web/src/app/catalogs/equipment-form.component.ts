@@ -33,7 +33,9 @@ type DecimalField = keyof typeof DECIMAL_SCALES;
   ],
   template: `
     <section>
-      <h2>{{ editId() ? 'Nova versão do equipamento' : 'Novo equipamento' }}</h2>
+      <h2>
+        {{ editId() ? 'Nova versão do equipamento' : 'Novo equipamento' }}
+      </h2>
       <p>
         Campos monetários usam ponto como separador decimal. Campo em branco
         significa "não informado" — diferente de zero.

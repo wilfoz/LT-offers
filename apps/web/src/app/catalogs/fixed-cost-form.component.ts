@@ -16,9 +16,7 @@ import {
   FixedCostCategory,
   FixedCostVersionInput,
 } from '@lt-offers/domain';
-import {
-  FIXED_COST_CATEGORIES,
-} from './fixed-cost-labels';
+import { FIXED_COST_CATEGORIES } from './fixed-cost-labels';
 import { decimalScaleValidator, orNull } from './form-utils';
 import { FixedCostsApi } from './fixed-costs-api.service';
 
