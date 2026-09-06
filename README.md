@@ -161,6 +161,27 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | reaterro (solo \| solo-cimento) (m³)                | `backfillSoilM3` \| `backfillSoilCementM3`                                  |
 | formas (m²)                                         | `formworkM2` / `formwork_m2`                                                |
 | metragem de estaca (m)                              | sufixo `M` (ex. `helicalPileM`, `triconeM`, `micropileM`)                   |
+| cargo / mão de obra                                 | `LaborRole` / `labor_role` / `labor-roles`                                  |
+| salário base (R$)                                   | `baseSalary` / `base_salary`                                                |
+| periculosidade (%)                                  | `hazardPayPercent` / `hazard_pay_percent`                                  |
+| hora extra (%)                                      | `overtimePercent` / `overtime_percent`                                      |
+| DSR sobre hora extra (%)                            | `dsrOvertimePercent` / `dsr_overtime_percent`                              |
+| encargos sociais (%)                                | `socialChargesPercent` / `social_charges_percent`                          |
+| alimentação (R$/mês)                                | `foodAllowanceMonthly` / `food_allowance_monthly`                            |
+| alojamento (R$/mês)                                 | `housingMonthly` / `housing_monthly`                                        |
+| folgas de campo com viagem (R$/mês)                 | `homeLeaveTravelMonthly` / `home_leave_travel_monthly`                      |
+| plano de saúde (R$/mês)                             | `healthInsuranceMonthly` / `health_insurance_monthly`                      |
+| seguro de vida (R$/mês)                             | `lifeInsuranceMonthly` / `life_insurance_monthly`                          |
+| equipamento                                         | `Equipment` / `equipment`                                                   |
+| aluguel externo (R$/mês)                            | `externalRentalMonthly` / `external_rental_monthly`                          |
+| aluguel interno (R$/mês)                            | `internalRentalMonthly` / `internal_rental_monthly`                          |
+| preço de compra (R$)                                | `purchasePrice` / `purchase_price`                                          |
+| anos de amortização                                 | `depreciationYears` / `depreciation_years`                                  |
+| disponibilidade própria (qtd)                       | `ownedAvailabilityCount` / `owned_availability_count`                      |
+| combustível e manutenção (R$/mês)                   | `fuelMaintenanceMonthly` / `fuel_maintenance_monthly`                      |
+| custo fixo / indireto de obra                       | `FixedCost` / `fixed_cost` / `fixed-costs`                                  |
+| categoria de custo fixo                             | `FixedCostCategory`: `EPI` \| `MEDICAL_EXAM` \| `UNIFORM` \| `MOB_DEMOB` \| `TRAVEL_HOUSING` \| `OTHER` |
+| custo unitário (R$)                                 | `unitCost` / `unit_cost`                                                    |
 
 ### Demais convenções
 

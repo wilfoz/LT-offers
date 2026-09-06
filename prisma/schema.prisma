@@ -394,3 +394,103 @@ model FoundationVolumeVersion {
   @@index([foundationVolumeId, effectiveFrom(sort: Desc)], map: "foundation_volume_version_volume_id_effective_from_idx")
   @@map("foundation_volume_version")
 }
+
+// Catálogo de mão de obra (F1 — origem DB_MO, RF-12, RN-14).
+model LaborRole {
+  id       Int                @id @default(autoincrement())
+  code     String             @unique
+  name     String
+  versions LaborRoleVersion[]
+
+  @@map("labor_role")
+}
+
+model LaborRoleVersion {
+  id                     Int       @id @default(autoincrement())
+  laborRoleId            Int       @map("labor_role_id")
+  laborRole              LaborRole @relation(fields: [laborRoleId], references: [id])
+  baseSalary             Decimal?  @map("base_salary") @db.Decimal(12, 2)
+  hazardPayPercent       Decimal?  @map("hazard_pay_percent") @db.Decimal(6, 4)
+  overtimePercent        Decimal?  @map("overtime_percent") @db.Decimal(6, 4)
+  dsrOvertimePercent     Decimal?  @map("dsr_overtime_percent") @db.Decimal(6, 4)
+  socialChargesPercent   Decimal?  @map("social_charges_percent") @db.Decimal(6, 4)
+  foodAllowanceMonthly   Decimal?  @map("food_allowance_monthly") @db.Decimal(12, 2)
+  housingMonthly         Decimal?  @map("housing_monthly") @db.Decimal(12, 2)
+  homeLeaveTravelMonthly Decimal?  @map("home_leave_travel_monthly") @db.Decimal(12, 2)
+  healthInsuranceMonthly Decimal?  @map("health_insurance_monthly") @db.Decimal(12, 2)
+  lifeInsuranceMonthly   Decimal?  @map("life_insurance_monthly") @db.Decimal(12, 2)
+  effectiveFrom          DateTime  @map("effective_from") @db.Date
+  createdBy              String    @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  @@unique([laborRoleId, effectiveFrom])
+  @@index([laborRoleId, effectiveFrom(sort: Desc)])
+  @@map("labor_role_version")
+}
+
+// Catálogo de equipamentos (F1 — origem DB_EQ, RF-13, RN-17).
+model Equipment {
+  id          Int                @id @default(autoincrement())
+  code        String             @unique
+  description String
+  category    String?
+  versions    EquipmentVersion[]
+
+  @@map("equipment")
+}
+
+model EquipmentVersion {
+  id                     Int       @id @default(autoincrement())
+  equipmentId            Int       @map("equipment_id")
+  equipment              Equipment @relation(fields: [equipmentId], references: [id])
+  externalRentalMonthly  Decimal?  @map("external_rental_monthly") @db.Decimal(12, 2)
+  internalRentalMonthly  Decimal?  @map("internal_rental_monthly") @db.Decimal(12, 2)
+  purchasePrice          Decimal?  @map("purchase_price") @db.Decimal(12, 2)
+  depreciationYears      Int?      @map("depreciation_years")
+  ownedAvailabilityCount Int?      @map("owned_availability_count")
+  fuelMaintenanceMonthly Decimal?  @map("fuel_maintenance_monthly") @db.Decimal(12, 2)
+  effectiveFrom          DateTime  @map("effective_from") @db.Date
+  createdBy              String    @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  @@unique([equipmentId, effectiveFrom])
+  @@index([equipmentId, effectiveFrom(sort: Desc)])
+  @@map("equipment_version")
+}
+
+// Catálogo de custos fixos e indiretos (F1 — origem DB_FI).
+enum FixedCostCategory {
+  EPI
+  MEDICAL_EXAM
+  UNIFORM
+  MOB_DEMOB
+  TRAVEL_HOUSING
+  OTHER
+
+  @@map("fixed_cost_category")
+}
+
+model FixedCost {
+  id          Int                @id @default(autoincrement())
+  code        String             @unique
+  description String
+  category    FixedCostCategory
+  versions    FixedCostVersion[]
+
+  @@map("fixed_cost")
+}
+
+model FixedCostVersion {
+  id            Int       @id @default(autoincrement())
+  fixedCostId   Int       @map("fixed_cost_id")
+  fixedCost     FixedCost @relation(fields: [fixedCostId], references: [id])
+  unitCost      Decimal?  @map("unit_cost") @db.Decimal(12, 2)
+  unit          String?   @db.VarChar(50)
+  effectiveFrom DateTime  @map("effective_from") @db.Date
+  createdBy     String    @map("created_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@unique([fixedCostId, effectiveFrom])
+  @@index([fixedCostId, effectiveFrom(sort: Desc)])
+  @@map("fixed_cost_version")
+}
