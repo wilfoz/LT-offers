@@ -3,6 +3,8 @@ import { ConductorCablesController } from './conductor-cables.controller';
 import { ConductorCablesService } from './conductor-cables.service';
 import { EquipmentController } from './equipment.controller';
 import { EquipmentService } from './equipment.service';
+import { FixedCostsController } from './fixed-costs.controller';
+import { FixedCostsService } from './fixed-costs.service';
 import { FoundationTypesController } from './foundation-types.controller';
 import { FoundationTypesService } from './foundation-types.service';
 import { FoundationVolumesController } from './foundation-volumes.controller';
@@ -26,6 +28,7 @@ import { TowerTypesService } from './tower-types.service';
   controllers: [
     ConductorCablesController,
     EquipmentController,
+    FixedCostsController,
     FoundationTypesController,
     FoundationVolumesController,
     GroundWiresController,
@@ -39,6 +42,7 @@ import { TowerTypesService } from './tower-types.service';
   providers: [
     ConductorCablesService,
     EquipmentService,
+    FixedCostsService,
     FoundationTypesService,
     FoundationVolumesService,
     GroundWiresService,

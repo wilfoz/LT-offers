@@ -21,8 +21,8 @@
 
 ## 5. API — Custos Fixos (DB_FI)
 
-- [ ] 5.1 Criar DTOs de `fixed-costs` com categoria validada e custo unitário decimal ≥ 0.
-- [ ] 5.2 Implementar `fixed-costs.service/controller/module` com busca, filtro por categoria, pendências e testes cobrindo todos os cenários do spec.
+- [x] 5.1 Criar DTOs de `fixed-costs` com categoria validada e custo unitário decimal ≥ 0.
+- [x] 5.2 Implementar `fixed-costs.service/controller/module` com busca, filtro por categoria, pendências e testes cobrindo todos os cenários do spec.
 
 ## 6. Web — Mão de obra
 
