@@ -17,11 +17,11 @@
 
 ## 4. Web — Equipes de trabalho
 
-- [ ] 4.1 Implementar `WorkCrewsApi extends VersionedCatalogApi` no `apps/web/src/app/catalogs/api/`.
-- [ ] 4.2 Implementar `work-crew-list.component` com busca, tabela densa, contadores de mão de obra/equipamentos, taxa de produção e badges de pendência e vigência.
-- [ ] 4.3 Implementar `work-crew-form.component` no padrão Swiss / Material 3 com edição dinâmica de tabelas de composição de cargos e equipamentos (`FormArray`), autocomplete/select integrado, validações de quantidade decimal e prefill bloqueante na edição.
-- [ ] 4.4 Implementar `work-crew-history.component` exibindo o histórico de versões com as composições completas de cada vigência.
-- [ ] 4.5 Implementar testes de componentes cobrindo criação, edição, validações dinâmicas e listagem.
+- [x] 4.1 Implementar `WorkCrewsApi extends VersionedCatalogApi` no `apps/web/src/app/catalogs/api/`.
+- [x] 4.2 Implementar `work-crew-list.component` com busca, tabela densa, contadores de mão de obra/equipamentos, taxa de produção e badges de pendência e vigência.
+- [x] 4.3 Implementar `work-crew-form.component` no padrão Swiss / Material 3 com edição dinâmica de tabelas de composição de cargos e equipamentos (`FormArray`), autocomplete/select integrado, validações de quantidade decimal e prefill bloqueante na edição.
+- [x] 4.4 Implementar `work-crew-history.component` exibindo o histórico de versões com as composições completas de cada vigência.
+- [x] 4.5 Implementar testes de componentes cobrindo criação, edição, validações dinâmicas e listagem.
 
 ## 5. Integração e verificação
 
