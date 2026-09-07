@@ -7,7 +7,7 @@
 
 ## 2. Contratos na domain
 
-- [ ] 2.1 Criar `libs/domain/src/lib/offers/offers.ts` (interfaces de oferta, revisão, linha de transmissão com rateio de UFs, itens da matriz de escopo com 4 eixos, payloads de criação/atualização/clonagem e enums), exportando em `@lt-offers/domain`.
+- [x] 2.1 Criar `libs/domain/src/lib/offers/offers.ts` (interfaces de oferta, revisão, linha de transmissão com rateio de UFs, itens da matriz de escopo com 4 eixos, payloads de criação/atualização/clonagem e enums), exportando em `@lt-offers/domain`.
 
 ## 3. API — Ofertas, Revisões, Linhas e Matriz de Escopo
 
