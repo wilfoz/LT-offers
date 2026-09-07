@@ -397,10 +397,11 @@ model FoundationVolumeVersion {
 
 // Catálogo de mão de obra (F1 — origem DB_MO, RF-12, RN-14).
 model LaborRole {
-  id       Int                @id @default(autoincrement())
-  code     String             @unique
-  name     String
-  versions LaborRoleVersion[]
+  id                 Int                 @id @default(autoincrement())
+  code               String              @unique
+  name               String
+  versions           LaborRoleVersion[]
+  workCrewLaborRoles WorkCrewLaborRole[]
 
   @@map("labor_role")
 }
@@ -430,11 +431,12 @@ model LaborRoleVersion {
 
 // Catálogo de equipamentos (F1 — origem DB_EQ, RF-13, RN-17).
 model Equipment {
-  id          Int                @id @default(autoincrement())
-  code        String             @unique
-  description String
-  category    String?
-  versions    EquipmentVersion[]
+  id                 Int                 @id @default(autoincrement())
+  code               String              @unique
+  description        String
+  category           String?
+  versions           EquipmentVersion[]
+  workCrewEquipments WorkCrewEquipment[]
 
   @@map("equipment")
 }
@@ -494,3 +496,65 @@ model FixedCostVersion {
   @@index([fixedCostId, effectiveFrom(sort: Desc)])
   @@map("fixed_cost_version")
 }
+
+// Catálogo de equipes de trabalho e composições (F1 — origem Equipos e DesEquipos, RF-14, RF-15, RN-15).
+enum ProductionPeriod {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+
+  @@map("production_period")
+}
+
+model WorkCrew {
+  id       Int               @id @default(autoincrement())
+  code     String            @unique
+  name     String
+  versions WorkCrewVersion[]
+
+  @@map("work_crew")
+}
+
+model WorkCrewVersion {
+  id                     Int                  @id @default(autoincrement())
+  workCrewId             Int                  @map("work_crew_id")
+  workCrew               WorkCrew             @relation(fields: [workCrewId], references: [id])
+  standardProductionRate Decimal?             @map("standard_production_rate") @db.Decimal(12, 4)
+  productionUnit         String?              @map("production_unit") @db.VarChar(50)
+  productionPeriod       ProductionPeriod?    @map("production_period")
+  effectiveFrom          DateTime             @map("effective_from") @db.Date
+  createdBy              String               @map("created_by")
+  createdAt              DateTime             @default(now()) @map("created_at")
+  laborRoles             WorkCrewLaborRole[]
+  equipments             WorkCrewEquipment[]
+
+  @@unique([workCrewId, effectiveFrom])
+  @@index([workCrewId, effectiveFrom(sort: Desc)])
+  @@map("work_crew_version")
+}
+
+model WorkCrewLaborRole {
+  id                Int             @id @default(autoincrement())
+  workCrewVersionId Int             @map("work_crew_version_id")
+  workCrewVersion   WorkCrewVersion @relation(fields: [workCrewVersionId], references: [id], onDelete: Cascade)
+  laborRoleId       Int             @map("labor_role_id")
+  laborRole         LaborRole       @relation(fields: [laborRoleId], references: [id])
+  quantity          Decimal         @db.Decimal(6, 2)
+
+  @@unique([workCrewVersionId, laborRoleId])
+  @@map("work_crew_labor_role")
+}
+
+model WorkCrewEquipment {
+  id                Int             @id @default(autoincrement())
+  workCrewVersionId Int             @map("work_crew_version_id")
+  workCrewVersion   WorkCrewVersion @relation(fields: [workCrewVersionId], references: [id], onDelete: Cascade)
+  equipmentId       Int             @map("equipment_id")
+  equipment         Equipment       @relation(fields: [equipmentId], references: [id])
+  quantity          Decimal         @db.Decimal(6, 2)
+
+  @@unique([workCrewVersionId, equipmentId])
+  @@map("work_crew_equipment")
+}
+

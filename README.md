@@ -182,6 +182,13 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | custo fixo / indireto de obra                       | `FixedCost` / `fixed_cost` / `fixed-costs`                                                              |
 | categoria de custo fixo                             | `FixedCostCategory`: `EPI` \| `MEDICAL_EXAM` \| `UNIFORM` \| `MOB_DEMOB` \| `TRAVEL_HOUSING` \| `OTHER` |
 | custo unitário (R$)                                 | `unitCost` / `unit_cost`                                                                                |
+| equipe de trabalho                                  | `WorkCrew` / `work_crew` / `work-crews`                                                                 |
+| composição de mão de obra                           | `WorkCrewLaborRole` / `work_crew_labor_role`                                                             |
+| composição de equipamento                           | `WorkCrewEquipment` / `work_crew_equipment`                                                             |
+| taxa de produção teórica padrão                     | `standardProductionRate` / `standard_production_rate`                                                   |
+| unidade de produção                                 | `productionUnit` / `production_unit`                                                                   |
+| período de produção                                 | `ProductionPeriod`: `HOUR` \| `DAY` \| `WEEK` \| `MONTH`                                                |
+| quantidade na composição                            | `quantity`                                                                                              |
 
 ### Demais convenções
 
