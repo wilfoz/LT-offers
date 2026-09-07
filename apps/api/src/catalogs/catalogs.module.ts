@@ -23,6 +23,8 @@ import { StructureSeriesController } from './structure-series.controller';
 import { StructureSeriesService } from './structure-series.service';
 import { TowerTypesController } from './tower-types.controller';
 import { TowerTypesService } from './tower-types.service';
+import { WorkCrewsController } from './work-crews.controller';
+import { WorkCrewsService } from './work-crews.service';
 
 @Module({
   controllers: [
@@ -38,6 +40,7 @@ import { TowerTypesService } from './tower-types.service';
     SoilTypesController,
     StructureSeriesController,
     TowerTypesController,
+    WorkCrewsController,
   ],
   providers: [
     ConductorCablesService,
@@ -52,6 +55,7 @@ import { TowerTypesService } from './tower-types.service';
     SoilTypesService,
     StructureSeriesService,
     TowerTypesService,
+    WorkCrewsService,
   ],
 })
 export class CatalogsModule {}

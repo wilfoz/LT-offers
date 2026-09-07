@@ -11,9 +11,9 @@
 
 ## 3. API — Equipes de trabalho e composições (Equipos / DesEquipos)
 
-- [ ] 3.1 Criar DTOs de `work-crews` com validação de código único, nome, data de vigência civil ISO, taxa de produção decimal ≥ 0, unidade, enum de período e validação aninhada de itens de mão de obra e equipamentos (quantidades decimais > 0), com mensagens em pt-BR.
-- [ ] 3.2 Implementar `work-crews.service/controller/module` com CRUD, transação atômica de versão e composições, busca por código/nome, cálculo de pendências e proteção contra exclusão de cargos/equipamentos vinculados (RF-11, RF-16).
-- [ ] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo todos os cenários do spec de equipes de trabalho.
+- [x] 3.1 Criar DTOs de `work-crews` com validação de código único, nome, data de vigência civil ISO, taxa de produção decimal ≥ 0, unidade, enum de período e validação aninhada de itens de mão de obra e equipamentos (quantidades decimais > 0), com mensagens em pt-BR.
+- [x] 3.2 Implementar `work-crews.service/controller/module` com CRUD, transação atômica de versão e composições, busca por código/nome, cálculo de pendências e proteção contra exclusão de cargos/equipamentos vinculados (RF-11, RF-16).
+- [x] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo todos os cenários do spec de equipes de trabalho.
 
 ## 4. Web — Equipes de trabalho
 
