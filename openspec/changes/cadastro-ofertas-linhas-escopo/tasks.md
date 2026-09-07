@@ -11,9 +11,9 @@
 
 ## 3. API — Ofertas, Revisões, Linhas e Matriz de Escopo
 
-- [ ] 3.1 Criar DTOs de `offers` com validação de código único, datas ISO, validação de rateio territorial em até 2 UFs somando 100,00% (RN-01), valores decimais monetários/quantitativos ≥ 0 e mensagens em pt-BR.
-- [ ] 3.2 Implementar `offers.service/controller/module` com CRUD, transação atômica de criação de revisões com cópia profunda de linhas/escopo, clonagem de proposta com rastreabilidade (RF-06), pré-carga de itens canônicos de escopo e cálculo de pendências (RF-11, RNF-09).
-- [ ] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo todos os cenários do spec de ofertas.
+- [x] 3.1 Criar DTOs de `offers` com validação de código único, datas ISO, validação de rateio territorial em até 2 UFs somando 100,00% (RN-01), valores decimais monetários/quantitativos ≥ 0 e mensagens em pt-BR.
+- [x] 3.2 Implementar `offers.service/controller/module` com CRUD, transação atômica de criação de revisões com cópia profunda de linhas/escopo, clonagem de proposta com rastreabilidade (RF-06), pré-carga de itens canônicos de escopo e cálculo de pendências (RF-11, RNF-09).
+- [x] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo todos os cenários do spec de ofertas.
 
 ## 4. Web — Gestão de Ofertas
 
