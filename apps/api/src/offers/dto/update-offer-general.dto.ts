@@ -3,12 +3,16 @@ import { IsOptional, IsString, MaxLength } from 'class-validator';
 export class UpdateOfferGeneralDto {
   @IsOptional()
   @IsString({ message: 'O nome da oferta deve ser um texto' })
-  @MaxLength(200, { message: 'O nome da oferta deve ter no máximo 200 caracteres' })
+  @MaxLength(200, {
+    message: 'O nome da oferta deve ter no máximo 200 caracteres',
+  })
   name?: string;
 
   @IsOptional()
   @IsString({ message: 'O nome do cliente deve ser um texto' })
-  @MaxLength(150, { message: 'O nome do cliente deve ter no máximo 150 caracteres' })
+  @MaxLength(150, {
+    message: 'O nome do cliente deve ter no máximo 150 caracteres',
+  })
   clientName?: string;
 
   @IsOptional()

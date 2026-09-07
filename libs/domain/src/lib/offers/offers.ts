@@ -4,19 +4,27 @@
  * (RF-01..RF-06, RN-01..RN-04, RNF-03, RNF-05, RNF-08, RNF-09).
  */
 
-export const OFFER_REVISION_STATUSES = ['DRAFT', 'FROZEN', 'DELIVERED'] as const;
+export const OFFER_REVISION_STATUSES = [
+  'DRAFT',
+  'FROZEN',
+  'DELIVERED',
+] as const;
 export type OfferRevisionStatus = (typeof OFFER_REVISION_STATUSES)[number];
 
-export const OFFER_REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
-  DRAFT: 'Em edição',
-  FROZEN: 'Fechada',
-  DELIVERED: 'Entregue',
-};
+export const OFFER_REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> =
+  {
+    DRAFT: 'Em edição',
+    FROZEN: 'Fechada',
+    DELIVERED: 'Entregue',
+  };
 
 export const SCOPE_RESPONSIBLE_PARTIES = ['CONTRACTOR', 'CLIENT'] as const;
 export type ScopeResponsibleParty = (typeof SCOPE_RESPONSIBLE_PARTIES)[number];
 
-export const SCOPE_RESPONSIBLE_PARTY_LABELS: Record<ScopeResponsibleParty, string> = {
+export const SCOPE_RESPONSIBLE_PARTY_LABELS: Record<
+  ScopeResponsibleParty,
+  string
+> = {
   CONTRACTOR: 'Contratada (EPCista)',
   CLIENT: 'Cliente (Concessionária)',
 };

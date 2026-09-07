@@ -29,14 +29,19 @@ export class OffersApi {
   }
 
   getByCode(code: string): Observable<OfferDetail> {
-    return this.http.get<OfferDetail>(`${this.baseUrl}/code/${encodeURIComponent(code)}`);
+    return this.http.get<OfferDetail>(
+      `${this.baseUrl}/code/${encodeURIComponent(code)}`,
+    );
   }
 
   create(payload: CreateOfferPayload): Observable<OfferDetail> {
     return this.http.post<OfferDetail>(this.baseUrl, payload);
   }
 
-  updateGeneral(id: number, payload: UpdateOfferGeneralPayload): Observable<OfferDetail> {
+  updateGeneral(
+    id: number,
+    payload: UpdateOfferGeneralPayload,
+  ): Observable<OfferDetail> {
     return this.http.patch<OfferDetail>(`${this.baseUrl}/${id}`, payload);
   }
 

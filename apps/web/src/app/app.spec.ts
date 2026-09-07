@@ -40,6 +40,7 @@ describe('App (casca de navegação)', () => {
       a.textContent?.trim(),
     );
     expect(items).toEqual([
+      'Ofertas',
       'Cabos condutores',
       'Cabos de guarda',
       'Cabos de tirante',
@@ -67,7 +68,7 @@ describe('App (casca de navegação)', () => {
     expect(active[0].textContent).toContain('Cabos de tirante');
     expect(
       (fixture.nativeElement as HTMLElement).querySelectorAll('mat-nav-list a'),
-    ).toHaveLength(12);
+    ).toHaveLength(13);
   });
 
   it('em tela larga a navegação fica fixa, sem botão de menu', async () => {

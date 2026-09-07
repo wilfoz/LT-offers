@@ -15,17 +15,23 @@ import { TransmissionLineItemDto } from './transmission-line-item.dto';
 export class CreateOfferDto {
   @IsString({ message: 'O código da oferta deve ser um texto' })
   @IsNotEmpty({ message: 'O código da oferta é obrigatório' })
-  @MaxLength(30, { message: 'O código da oferta deve ter no máximo 30 caracteres' })
+  @MaxLength(30, {
+    message: 'O código da oferta deve ter no máximo 30 caracteres',
+  })
   code!: string;
 
   @IsString({ message: 'O nome da oferta deve ser um texto' })
   @IsNotEmpty({ message: 'O nome da oferta é obrigatório' })
-  @MaxLength(200, { message: 'O nome da oferta deve ter no máximo 200 caracteres' })
+  @MaxLength(200, {
+    message: 'O nome da oferta deve ter no máximo 200 caracteres',
+  })
   name!: string;
 
   @IsString({ message: 'O nome do cliente deve ser um texto' })
   @IsNotEmpty({ message: 'O nome do cliente é obrigatório' })
-  @MaxLength(150, { message: 'O nome do cliente deve ter no máximo 150 caracteres' })
+  @MaxLength(150, {
+    message: 'O nome do cliente deve ter no máximo 150 caracteres',
+  })
   clientName!: string;
 
   @IsOptional()
@@ -35,12 +41,16 @@ export class CreateOfferDto {
 
   @IsString({ message: 'O nome do leilão deve ser um texto' })
   @IsNotEmpty({ message: 'O nome do leilão é obrigatório' })
-  @MaxLength(100, { message: 'O nome do leilão deve ter no máximo 100 caracteres' })
+  @MaxLength(100, {
+    message: 'O nome do leilão deve ter no máximo 100 caracteres',
+  })
   auctionName!: string;
 
   @IsString({ message: 'O nome do lote deve ser um texto' })
   @IsNotEmpty({ message: 'O nome do lote é obrigatório' })
-  @MaxLength(100, { message: 'O nome do lote deve ter no máximo 100 caracteres' })
+  @MaxLength(100, {
+    message: 'O nome do lote deve ter no máximo 100 caracteres',
+  })
   lotName!: string;
 
   @IsString({ message: 'A data da oferta é obrigatória' })
@@ -84,7 +94,6 @@ export class CreateOfferDto {
     message: 'A RAP vencedora deve ser um número decimal não negativo',
   })
   winningRap?: string | null;
-
 
   @IsOptional()
   @IsString({ message: 'As notas devem ser texto' })

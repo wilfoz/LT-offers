@@ -20,12 +20,16 @@ import { TransmissionLineItemDto } from './transmission-line-item.dto';
 export class UpdateOfferRevisionDto {
   @IsOptional()
   @IsString({ message: 'O nome do leilão deve ser um texto' })
-  @MaxLength(100, { message: 'O nome do leilão deve ter no máximo 100 caracteres' })
+  @MaxLength(100, {
+    message: 'O nome do leilão deve ter no máximo 100 caracteres',
+  })
   auctionName?: string;
 
   @IsOptional()
   @IsString({ message: 'O nome do lote deve ser um texto' })
-  @MaxLength(100, { message: 'O nome do lote deve ter no máximo 100 caracteres' })
+  @MaxLength(100, {
+    message: 'O nome do lote deve ter no máximo 100 caracteres',
+  })
   lotName?: string;
 
   @IsOptional()
@@ -69,7 +73,6 @@ export class UpdateOfferRevisionDto {
     message: 'A RAP vencedora deve ser um número decimal não negativo',
   })
   winningRap?: string | null;
-
 
   @IsOptional()
   @IsString({ message: 'As notas devem ser texto' })

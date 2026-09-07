@@ -29,7 +29,7 @@ describe('OfferFormComponent', () => {
           useValue: {
             snapshot: {
               paramMap: {
-                get: (key: string) => (key === 'id' ? paramId ?? null : null),
+                get: (key: string) => (key === 'id' ? (paramId ?? null) : null),
               },
             },
           },

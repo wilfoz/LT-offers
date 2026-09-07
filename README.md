@@ -193,9 +193,9 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | revisão de oferta                                   | `OfferRevision` / `offer_revision` / `offer-revisions`                                                  |
 | status da revisão de oferta                         | `OfferRevisionStatus`: `DRAFT` \| `FROZEN` \| `DELIVERED`                                               |
 | linha de transmissão                                | `TransmissionLine` / `transmission_line` / `transmission-lines`                                         |
-| item da matriz de responsabilidade                  | `ScopeMatrixItem` / `scope_matrix_item` / `scope-matrix-items`                                           |
+| item da matriz de responsabilidade                  | `ScopeMatrixItem` / `scope_matrix_item` / `scope-matrix-items`                                          |
 | responsável pelo escopo                             | `ScopeResponsibleParty`: `CONTRACTOR` \| `CLIENT`                                                       |
-| faturamento direto aceito (REIDI)                   | `acceptsDirectBilling` / `accepts_direct_billing`                                                        |
+| faturamento direto aceito (REIDI)                   | `acceptsDirectBilling` / `accepts_direct_billing`                                                       |
 | parte com risco cambial                             | `currencyRiskParty` / `currency_risk_party`                                                             |
 | parte com risco de commodity                        | `commodityRiskParty` / `commodity_risk_party`                                                           |
 | leilão                                              | `auctionName` / `auction_name`                                                                          |
@@ -208,7 +208,7 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | RAP vencedora estimada (R$)                         | `winningRap` / `winning_rap`                                                                            |
 | extensão refinada (km)                              | `refinedLengthKm` / `refined_length_km`                                                                 |
 | extensão de relatório (km)                          | `reportLengthKm` / `report_length_km`                                                                   |
-| condutores por fase (feixe)                         | `bundleConductorCount` / `bundle_conductor_count`                                                        |
+| condutores por fase (feixe)                         | `bundleConductorCount` / `bundle_conductor_count`                                                       |
 | UF de destino primária                              | `destinationStatePrimary` / `destination_state_primary`                                                 |
 | percentual de rateio na UF primária (%)             | `destinationPercentagePrimary` / `destination_percentage_primary`                                       |
 | UF de destino secundária                            | `destinationStateSecondary` / `destination_state_secondary`                                             |

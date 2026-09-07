@@ -35,7 +35,6 @@ type OfferWithRevisionsAndLines = Prisma.OfferGetPayload<{
   };
 }>;
 
-
 @Injectable()
 export class OffersService {
   constructor(private readonly prisma: PrismaService) {}
@@ -52,8 +51,18 @@ export class OffersService {
               revisions: {
                 some: {
                   OR: [
-                    { auctionName: { contains: trimmed, mode: 'insensitive' as const } },
-                    { lotName: { contains: trimmed, mode: 'insensitive' as const } },
+                    {
+                      auctionName: {
+                        contains: trimmed,
+                        mode: 'insensitive' as const,
+                      },
+                    },
+                    {
+                      lotName: {
+                        contains: trimmed,
+                        mode: 'insensitive' as const,
+                      },
+                    },
                   ],
                 },
               },
@@ -108,7 +117,9 @@ export class OffersService {
         baseCurrency: offer.baseCurrency,
         clonedFromOfferId: offer.clonedFromOfferId,
         currentRevisionNumber: currentRev ? currentRev.revisionNumber : 0,
-        currentRevisionStatus: currentRev ? (currentRev.status as OfferRevisionStatus) : 'DRAFT',
+        currentRevisionStatus: currentRev
+          ? (currentRev.status as OfferRevisionStatus)
+          : 'DRAFT',
         auctionName: currentRev?.auctionName ?? '—',
         lotName: currentRev?.lotName ?? '—',
         lineCount,
@@ -181,7 +192,9 @@ export class OffersService {
     this.validateLines(lines);
 
     const offerDate = toCivilDate(payload.offerDate);
-    const auctionDate = payload.auctionDate ? toCivilDate(payload.auctionDate) : null;
+    const auctionDate = payload.auctionDate
+      ? toCivilDate(payload.auctionDate)
+      : null;
     const scheduleStartDate = payload.scheduleStartDate
       ? toCivilDate(payload.scheduleStartDate)
       : null;
@@ -249,9 +262,14 @@ export class OffersService {
               reportLengthKm: new Decimal(l.reportLengthKm),
               circuitCount: l.circuitCount,
               bundleConductorCount: l.bundleConductorCount,
-              destinationStatePrimary: l.destinationStatePrimary.trim().toUpperCase(),
-              destinationPercentagePrimary: new Decimal(l.destinationPercentagePrimary),
-              destinationStateSecondary: l.destinationStateSecondary?.trim().toUpperCase() || null,
+              destinationStatePrimary: l.destinationStatePrimary
+                .trim()
+                .toUpperCase(),
+              destinationPercentagePrimary: new Decimal(
+                l.destinationPercentagePrimary,
+              ),
+              destinationStateSecondary:
+                l.destinationStateSecondary?.trim().toUpperCase() || null,
               destinationPercentageSecondary: l.destinationPercentageSecondary
                 ? new Decimal(l.destinationPercentageSecondary)
                 : null,
@@ -299,13 +317,17 @@ export class OffersService {
     }
   }
 
-  async updateGeneral(id: number, payload: UpdateOfferGeneralPayload): Promise<OfferDetail> {
+  async updateGeneral(
+    id: number,
+    payload: UpdateOfferGeneralPayload,
+  ): Promise<OfferDetail> {
     await this.getById(id);
 
     await this.prisma.offer.update({
       where: { id },
       data: {
-        name: payload.name?.trim() !== undefined ? payload.name.trim() : undefined,
+        name:
+          payload.name?.trim() !== undefined ? payload.name.trim() : undefined,
         clientName:
           payload.clientName?.trim() !== undefined
             ? payload.clientName.trim()
@@ -336,10 +358,10 @@ export class OffersService {
       );
     }
 
-    const isClosed = revision.status === 'FROZEN' || revision.status === 'DELIVERED';
+    const isClosed =
+      revision.status === 'FROZEN' || revision.status === 'DELIVERED';
     const isStatusOnlyTransition =
-      payload.status !== undefined &&
-      Object.keys(payload).length === 1;
+      payload.status !== undefined && Object.keys(payload).length === 1;
 
     if (isClosed && !isStatusOnlyTransition) {
       throw new BadRequestException(
@@ -353,11 +375,16 @@ export class OffersService {
 
     await this.prisma.$transaction(async (tx) => {
       const dataToUpdate: Prisma.OfferRevisionUpdateInput = {};
-      if (payload.auctionName !== undefined) dataToUpdate.auctionName = payload.auctionName.trim();
-      if (payload.lotName !== undefined) dataToUpdate.lotName = payload.lotName.trim();
-      if (payload.offerDate !== undefined) dataToUpdate.offerDate = toCivilDate(payload.offerDate);
+      if (payload.auctionName !== undefined)
+        dataToUpdate.auctionName = payload.auctionName.trim();
+      if (payload.lotName !== undefined)
+        dataToUpdate.lotName = payload.lotName.trim();
+      if (payload.offerDate !== undefined)
+        dataToUpdate.offerDate = toCivilDate(payload.offerDate);
       if (payload.auctionDate !== undefined) {
-        dataToUpdate.auctionDate = payload.auctionDate ? toCivilDate(payload.auctionDate) : null;
+        dataToUpdate.auctionDate = payload.auctionDate
+          ? toCivilDate(payload.auctionDate)
+          : null;
       }
       if (payload.scheduleStartDate !== undefined) {
         dataToUpdate.scheduleStartDate = payload.scheduleStartDate
@@ -375,10 +402,14 @@ export class OffersService {
           : null;
       }
       if (payload.maxRap !== undefined) {
-        dataToUpdate.maxRap = payload.maxRap ? new Decimal(payload.maxRap) : null;
+        dataToUpdate.maxRap = payload.maxRap
+          ? new Decimal(payload.maxRap)
+          : null;
       }
       if (payload.winningRap !== undefined) {
-        dataToUpdate.winningRap = payload.winningRap ? new Decimal(payload.winningRap) : null;
+        dataToUpdate.winningRap = payload.winningRap
+          ? new Decimal(payload.winningRap)
+          : null;
       }
       if (payload.notes !== undefined) {
         dataToUpdate.notes = payload.notes?.trim() || null;
@@ -413,9 +444,14 @@ export class OffersService {
               reportLengthKm: new Decimal(l.reportLengthKm),
               circuitCount: l.circuitCount,
               bundleConductorCount: l.bundleConductorCount,
-              destinationStatePrimary: l.destinationStatePrimary.trim().toUpperCase(),
-              destinationPercentagePrimary: new Decimal(l.destinationPercentagePrimary),
-              destinationStateSecondary: l.destinationStateSecondary?.trim().toUpperCase() || null,
+              destinationStatePrimary: l.destinationStatePrimary
+                .trim()
+                .toUpperCase(),
+              destinationPercentagePrimary: new Decimal(
+                l.destinationPercentagePrimary,
+              ),
+              destinationStateSecondary:
+                l.destinationStateSecondary?.trim().toUpperCase() || null,
               destinationPercentageSecondary: l.destinationPercentageSecondary
                 ? new Decimal(l.destinationPercentageSecondary)
                 : null,
@@ -470,7 +506,9 @@ export class OffersService {
     }
 
     const latestRevision = offer.revisions[0];
-    const nextRevisionNumber = latestRevision ? latestRevision.revisionNumber + 1 : 0;
+    const nextRevisionNumber = latestRevision
+      ? latestRevision.revisionNumber + 1
+      : 0;
 
     await this.prisma.$transaction(async (tx) => {
       const newRev = await tx.offerRevision.create({
@@ -487,7 +525,9 @@ export class OffersService {
           estimatedCapex: latestRevision?.estimatedCapex,
           maxRap: latestRevision?.maxRap,
           winningRap: latestRevision?.winningRap,
-          notes: payload.notes?.trim() || `Revisão R${nextRevisionNumber} criada a partir de R${latestRevision?.revisionNumber ?? 0}`,
+          notes:
+            payload.notes?.trim() ||
+            `Revisão R${nextRevisionNumber} criada a partir de R${latestRevision?.revisionNumber ?? 0}`,
           createdBy: payload.createdBy?.trim() || 'system',
         },
       });
@@ -531,7 +571,10 @@ export class OffersService {
     return this.getById(offerId);
   }
 
-  async cloneOffer(sourceId: number, payload: CloneOfferPayload): Promise<OfferDetail> {
+  async cloneOffer(
+    sourceId: number,
+    payload: CloneOfferPayload,
+  ): Promise<OfferDetail> {
     const sourceOffer = await this.prisma.offer.findUnique({
       where: { id: sourceId },
       include: {
@@ -544,7 +587,9 @@ export class OffersService {
     });
 
     if (!sourceOffer) {
-      throw new NotFoundException(`Oferta de origem #${sourceId} não encontrada`);
+      throw new NotFoundException(
+        `Oferta de origem #${sourceId} não encontrada`,
+      );
     }
 
     const latestRevision = sourceOffer.revisions[0];
@@ -568,8 +613,14 @@ export class OffersService {
             offerId: newOffer.id,
             revisionNumber: 0,
             status: 'DRAFT',
-            auctionName: payload.targetAuctionName?.trim() || latestRevision?.auctionName || 'Leilão',
-            lotName: payload.targetLotName?.trim() || latestRevision?.lotName || 'Lote',
+            auctionName:
+              payload.targetAuctionName?.trim() ||
+              latestRevision?.auctionName ||
+              'Leilão',
+            lotName:
+              payload.targetLotName?.trim() ||
+              latestRevision?.lotName ||
+              'Lote',
             offerDate: latestRevision?.offerDate ?? new Date(),
             auctionDate: latestRevision?.auctionDate,
             scheduleStartDate: latestRevision?.scheduleStartDate,
@@ -660,7 +711,9 @@ export class OffersService {
     for (const line of lines) {
       const code = line.code.trim();
       if (codes.has(code)) {
-        throw new BadRequestException(`Código de linha duplicado na oferta: "${code}"`);
+        throw new BadRequestException(
+          `Código de linha duplicado na oferta: "${code}"`,
+        );
       }
       codes.add(code);
 
@@ -697,49 +750,62 @@ export class OffersService {
         auctionName: rev.auctionName,
         lotName: rev.lotName,
         offerDate: rev.offerDate.toISOString().slice(0, 10),
-        auctionDate: rev.auctionDate ? rev.auctionDate.toISOString().slice(0, 10) : null,
+        auctionDate: rev.auctionDate
+          ? rev.auctionDate.toISOString().slice(0, 10)
+          : null,
         scheduleStartDate: rev.scheduleStartDate
           ? rev.scheduleStartDate.toISOString().slice(0, 10)
           : null,
         commercialOperationDate: rev.commercialOperationDate
           ? rev.commercialOperationDate.toISOString().slice(0, 10)
           : null,
-        estimatedCapex: rev.estimatedCapex ? rev.estimatedCapex.toFixed(2) : null,
+        estimatedCapex: rev.estimatedCapex
+          ? rev.estimatedCapex.toFixed(2)
+          : null,
         maxRap: rev.maxRap ? rev.maxRap.toFixed(2) : null,
         winningRap: rev.winningRap ? rev.winningRap.toFixed(2) : null,
         notes: rev.notes,
         closedAt: rev.closedAt ? rev.closedAt.toISOString() : null,
         deliveredAt: rev.deliveredAt ? rev.deliveredAt.toISOString() : null,
         createdBy: rev.createdBy ?? 'system',
-        createdAt: rev.createdAt ? rev.createdAt.toISOString() : new Date().toISOString(),
-        updatedAt: rev.updatedAt ? rev.updatedAt.toISOString() : new Date().toISOString(),
-        transmissionLines: (rev.transmissionLines || []).map((l): TransmissionLineItem => ({
-          id: l.id,
-          code: l.code,
-          name: l.name,
-          nominalVoltageKv: l.nominalVoltageKv.toFixed(2),
-          refinedLengthKm: l.refinedLengthKm.toFixed(3),
-          reportLengthKm: l.reportLengthKm.toFixed(3),
-          circuitCount: l.circuitCount,
-          bundleConductorCount: l.bundleConductorCount,
-          destinationStatePrimary: l.destinationStatePrimary,
-          destinationPercentagePrimary: l.destinationPercentagePrimary.toFixed(2),
-          destinationStateSecondary: l.destinationStateSecondary,
-          destinationPercentageSecondary: l.destinationPercentageSecondary
-            ? l.destinationPercentageSecondary.toFixed(2)
-            : null,
-        })),
-        scopeMatrixItems: (rev.scopeMatrixItems || []).map((s): ScopeMatrixItemPayload => ({
-          id: s.id,
-          itemCode: s.itemCode,
-          itemName: s.itemName,
-          category: s.category,
-          responsibleParty: s.responsibleParty,
-          acceptsDirectBilling: s.acceptsDirectBilling,
-          currencyRiskParty: s.currencyRiskParty,
-          commodityRiskParty: s.commodityRiskParty,
-          notes: s.notes,
-        })),
+        createdAt: rev.createdAt
+          ? rev.createdAt.toISOString()
+          : new Date().toISOString(),
+        updatedAt: rev.updatedAt
+          ? rev.updatedAt.toISOString()
+          : new Date().toISOString(),
+        transmissionLines: (rev.transmissionLines || []).map(
+          (l): TransmissionLineItem => ({
+            id: l.id,
+            code: l.code,
+            name: l.name,
+            nominalVoltageKv: l.nominalVoltageKv.toFixed(2),
+            refinedLengthKm: l.refinedLengthKm.toFixed(3),
+            reportLengthKm: l.reportLengthKm.toFixed(3),
+            circuitCount: l.circuitCount,
+            bundleConductorCount: l.bundleConductorCount,
+            destinationStatePrimary: l.destinationStatePrimary,
+            destinationPercentagePrimary:
+              l.destinationPercentagePrimary.toFixed(2),
+            destinationStateSecondary: l.destinationStateSecondary,
+            destinationPercentageSecondary: l.destinationPercentageSecondary
+              ? l.destinationPercentageSecondary.toFixed(2)
+              : null,
+          }),
+        ),
+        scopeMatrixItems: (rev.scopeMatrixItems || []).map(
+          (s): ScopeMatrixItemPayload => ({
+            id: s.id,
+            itemCode: s.itemCode,
+            itemName: s.itemName,
+            category: s.category,
+            responsibleParty: s.responsibleParty,
+            acceptsDirectBilling: s.acceptsDirectBilling,
+            currencyRiskParty: s.currencyRiskParty,
+            commodityRiskParty: s.commodityRiskParty,
+            notes: s.notes,
+          }),
+        ),
       })),
     };
   }

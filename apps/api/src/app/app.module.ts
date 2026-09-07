@@ -11,4 +11,3 @@ import { PrismaModule } from './prisma.module';
   providers: [AppService],
 })
 export class AppModule {}
-

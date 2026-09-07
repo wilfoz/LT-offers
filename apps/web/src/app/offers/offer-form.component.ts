@@ -36,7 +36,13 @@ import { OffersApi } from './offers-api.service';
   ],
   template: `
     <section>
-      <h2>{{ editId() ? 'Editar dados gerais da proposta' : 'Nova proposta de oferta' }}</h2>
+      <h2>
+        {{
+          editId()
+            ? 'Editar dados gerais da proposta'
+            : 'Nova proposta de oferta'
+        }}
+      </h2>
       <p class="subtitle">
         {{
           editId()
@@ -124,7 +130,9 @@ import { OffersApi } from './offers-api.service';
           </mat-form-field>
 
           @if (!editId()) {
-            <h3 class="col-12 section-title">Parâmetros da revisão inicial (R0)</h3>
+            <h3 class="col-12 section-title">
+              Parâmetros da revisão inicial (R0)
+            </h3>
 
             <mat-form-field
               appearance="outline"
@@ -240,7 +248,9 @@ import { OffersApi } from './offers-api.service';
               <div class="col-12 alert-schedule" role="alert">
                 <mat-icon>warning</mat-icon>
                 <span>
-                  <strong>Alerta de Cronograma (RN-02):</strong> A data de início do cronograma é posterior à data prevista de entrada em operação do edital.
+                  <strong>Alerta de Cronograma (RN-02):</strong> A data de
+                  início do cronograma é posterior à data prevista de entrada em
+                  operação do edital.
                 </span>
               </div>
             }
@@ -330,7 +340,13 @@ import { OffersApi } from './offers-api.service';
               type="submit"
               [disabled]="saving() || form.invalid"
             >
-              {{ saving() ? 'Salvando…' : editId() ? 'Salvar alterações' : 'Criar proposta' }}
+              {{
+                saving()
+                  ? 'Salvando…'
+                  : editId()
+                    ? 'Salvar alterações'
+                    : 'Criar proposta'
+              }}
             </button>
           </div>
         </form>
@@ -350,11 +366,21 @@ import { OffersApi } from './offers-api.service';
       gap: 1rem;
       max-width: 54rem;
     }
-    .col-12 { grid-column: span 12; }
-    .col-8 { grid-column: span 8; }
-    .col-6 { grid-column: span 6; }
-    .col-4 { grid-column: span 4; }
-    .col-3 { grid-column: span 3; }
+    .col-12 {
+      grid-column: span 12;
+    }
+    .col-8 {
+      grid-column: span 8;
+    }
+    .col-6 {
+      grid-column: span 6;
+    }
+    .col-4 {
+      grid-column: span 4;
+    }
+    .col-3 {
+      grid-column: span 3;
+    }
     .section-title {
       font-size: 1rem;
       font-weight: 600;
@@ -480,7 +506,8 @@ export class OfferFormComponent {
     if (c.errors['required']) return 'Campo obrigatório';
     if (c.errors['maxlength']) return 'Texto muito longo';
     if (c.errors['pattern']) {
-      if (controlName.includes('Date')) return 'Data inválida (formato AAAA-MM-DD)';
+      if (controlName.includes('Date'))
+        return 'Data inválida (formato AAAA-MM-DD)';
       return 'Valor decimal inválido (ex.: 1500.00)';
     }
     if (c.errors['decimalScale']) return 'Máximo de 2 casas decimais';

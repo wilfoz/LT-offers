@@ -41,6 +41,7 @@ export class App {
   protected readonly menuOpen = signal(false);
 
   protected readonly links = [
+    { path: '/offers', label: 'Ofertas' },
     { path: '/catalogs/conductor-cables', label: 'Cabos condutores' },
     { path: '/catalogs/ground-wires', label: 'Cabos de guarda' },
     { path: '/catalogs/guy-wires', label: 'Cabos de tirante' },

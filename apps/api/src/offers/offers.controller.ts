@@ -43,9 +43,7 @@ export class OffersController {
   }
 
   @Get(':id')
-  async getById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<OfferDetail> {
+  async getById(@Param('id', ParseIntPipe) id: number): Promise<OfferDetail> {
     return this.service.getById(id);
   }
 

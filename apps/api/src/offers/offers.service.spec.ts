@@ -6,7 +6,6 @@ import { OffersService } from './offers.service';
 
 const Decimal = Prisma.Decimal;
 
-
 const uniqueViolation = () =>
   Object.assign(new Error('unique'), { code: 'P2002' });
 
@@ -245,7 +244,9 @@ describe('OffersService', () => {
       expect(result.code).toBe('OF-01');
       expect(result.revisions).toHaveLength(1);
       expect(result.revisions[0].estimatedCapex).toBe('500000000.00');
-      expect(result.revisions[0].transmissionLines[0].refinedLengthKm).toBe('123.456');
+      expect(result.revisions[0].transmissionLines[0].refinedLengthKm).toBe(
+        '123.456',
+      );
       expect(result.revisions[0].scopeMatrixItems[0].itemCode).toBe('MAT-CAB');
     });
 
@@ -253,7 +254,9 @@ describe('OffersService', () => {
       prismaMock.offer.findUnique.mockResolvedValue(null);
 
       await expect(service.getById(999)).rejects.toThrow(NotFoundException);
-      await expect(service.getByCode('INEXISTENTE')).rejects.toThrow(NotFoundException);
+      await expect(service.getByCode('INEXISTENTE')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -579,7 +582,9 @@ describe('OffersService', () => {
     it('deleta oferta existente', async () => {
       prismaMock.offer.findUnique.mockResolvedValue({ id: 1 });
       await service.delete(1);
-      expect(prismaMock.offer.delete).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(prismaMock.offer.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
 
     it('lança NotFoundException se a oferta a ser deletada não existir', async () => {

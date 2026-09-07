@@ -25,5 +25,5 @@
 
 ## 5. Integração e verificação
 
-- [ ] 5.1 Registrar rotas lazy em `app.routes.ts` e adicionar item no topo do menu de navegação da casca (`app.ts`), atualizando testes de rota e navegação em `app.spec.ts`.
-- [ ] 5.2 Executar verificação integrada (`npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status`).
+- [x] 5.1 Registrar rotas lazy em `app.routes.ts` e adicionar item no topo do menu de navegação da casca (`app.ts`), atualizando testes de rota e navegação em `app.spec.ts`.
+- [x] 5.2 Executar verificação integrada (`npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status`).

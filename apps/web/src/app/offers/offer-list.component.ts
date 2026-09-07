@@ -37,7 +37,8 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
         <div>
           <h2>Gestão de Ofertas e Propostas</h2>
           <p class="subtitle">
-            Controle de parâmetros de leilão, revisões, linhas de transmissão e matriz de escopo
+            Controle de parâmetros de leilão, revisões, linhas de transmissão e
+            matriz de escopo
           </p>
         </div>
         <a matButton="filled" routerLink="new" class="new-offer-btn">
@@ -52,7 +53,9 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
           subscriptSizing="dynamic"
           class="search-field"
         >
-          <mat-label>Buscar por código, nome, cliente, leilão ou lote</mat-label>
+          <mat-label
+            >Buscar por código, nome, cliente, leilão ou lote</mat-label
+          >
           <input
             matInput
             id="search"
@@ -94,21 +97,27 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
             </ng-container>
 
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef scope="col">Nome da proposta</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Nome da proposta
+              </th>
               <td mat-cell *matCellDef="let item">
                 <strong>{{ item.name }}</strong>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="clientName">
-              <th mat-header-cell *matHeaderCellDef scope="col">Cliente / Concessionária</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Cliente / Concessionária
+              </th>
               <td mat-cell *matCellDef="let item">
                 {{ item.clientName }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="auctionLot">
-              <th mat-header-cell *matHeaderCellDef scope="col">Leilão / Lote</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Leilão / Lote
+              </th>
               <td mat-cell *matCellDef="let item">
                 {{ item.auctionName }} • {{ item.lotName }}
               </td>
@@ -117,7 +126,9 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
             <ng-container matColumnDef="revision">
               <th mat-header-cell *matHeaderCellDef scope="col">Revisão</th>
               <td mat-cell *matCellDef="let item">
-                <span class="rev-badge mono">R{{ item.currentRevisionNumber }}</span>
+                <span class="rev-badge mono"
+                  >R{{ item.currentRevisionNumber }}</span
+                >
                 <span
                   class="status-chip"
                   [attr.data-status]="item.currentRevisionStatus"
@@ -128,7 +139,9 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
             </ng-container>
 
             <ng-container matColumnDef="linesKm">
-              <th mat-header-cell *matHeaderCellDef scope="col">Linhas / Extensão</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Linhas / Extensão
+              </th>
               <td mat-cell *matCellDef="let item" class="mono">
                 {{ item.lineCount }} LT ({{ item.totalLengthKm }} km)
               </td>
@@ -392,9 +405,13 @@ export class OfferListComponent {
     this.loading.set(true);
     this.api.delete(item.id).subscribe({
       next: () => {
-        this.snackBar.open(`Proposta ${item.code} excluída com sucesso.`, 'OK', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          `Proposta ${item.code} excluída com sucesso.`,
+          'OK',
+          {
+            duration: 3000,
+          },
+        );
         this.reload();
       },
       error: (err) => {

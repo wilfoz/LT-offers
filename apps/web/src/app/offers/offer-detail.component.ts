@@ -38,9 +38,33 @@ import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
 
 const BRAZILIAN_UFS = [
-  'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
-  'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN',
-  'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO',
+  'AC',
+  'AL',
+  'AM',
+  'AP',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MG',
+  'MS',
+  'MT',
+  'PA',
+  'PB',
+  'PE',
+  'PI',
+  'PR',
+  'RJ',
+  'RN',
+  'RO',
+  'RR',
+  'RS',
+  'SC',
+  'SE',
+  'SP',
+  'TO',
 ];
 
 @Component({
@@ -77,10 +101,14 @@ const BRAZILIAN_UFS = [
           <div>
             <div class="code-row">
               <span class="offer-code mono">{{ offer()!.code }}</span>
-              <span class="badge-currency mono">{{ offer()!.baseCurrency }}</span>
+              <span class="badge-currency mono">{{
+                offer()!.baseCurrency
+              }}</span>
               @if (offer()!.clonedFromOfferId) {
                 <span class="badge-cloned">
-                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{ offer()!.clonedFromOfferId }}
+                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{
+                    offer()!.clonedFromOfferId
+                  }}
                 </span>
               }
             </div>
@@ -112,18 +140,26 @@ const BRAZILIAN_UFS = [
                 <button
                   type="button"
                   class="rev-pill"
-                  [class.active]="rev.revisionNumber === selectedRevisionNumber()"
+                  [class.active]="
+                    rev.revisionNumber === selectedRevisionNumber()
+                  "
                   (click)="selectRevision(rev.revisionNumber)"
                 >
                   <span class="mono">R{{ rev.revisionNumber }}</span>
-                  <span class="status-dot" [attr.data-status]="rev.status"></span>
+                  <span
+                    class="status-dot"
+                    [attr.data-status]="rev.status"
+                  ></span>
                 </button>
               }
             </div>
           </div>
 
           <div class="revision-status-info">
-            <span class="status-chip" [attr.data-status]="currentRevision()?.status">
+            <span
+              class="status-chip"
+              [attr.data-status]="currentRevision()?.status"
+            >
               {{ statusLabel(currentRevision()?.status ?? 'DRAFT') }}
             </span>
 
@@ -146,7 +182,9 @@ const BRAZILIAN_UFS = [
               <button
                 matButton="filled"
                 (click)="createNewRevision()"
-                matTooltip="Cria uma nova revisão R{{ (currentRevision()?.revisionNumber ?? 0) + 1 }} derivada desta"
+                matTooltip="Cria uma nova revisão R{{
+                  (currentRevision()?.revisionNumber ?? 0) + 1
+                }} derivada desta"
               >
                 <mat-icon>add</mat-icon> Nova revisão
               </button>
@@ -167,8 +205,11 @@ const BRAZILIAN_UFS = [
             <mat-icon>lock</mat-icon>
             <div>
               <strong>Revisão imutável:</strong> Esta revisão está
-              {{ statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase() }} e não aceita alterações diretas
-              (RNF-05). Para efetuar modificações de engenharia ou escopo, crie uma nova revisão.
+              {{
+                statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase()
+              }}
+              e não aceita alterações diretas (RNF-05). Para efetuar
+              modificações de engenharia ou escopo, crie uma nova revisão.
             </div>
           </div>
         }
@@ -184,22 +225,30 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">power</mat-icon>
-              Linhas de Transmissão ({{ currentRevision()?.transmissionLines?.length ?? 0 }})
+              Linhas de Transmissão ({{
+                currentRevision()?.transmissionLines?.length ?? 0
+              }})
             </ng-template>
 
             <div class="tab-content">
               <div class="lines-summary-cards">
                 <div class="summary-card">
                   <span class="summary-label">Total de Linhas</span>
-                  <span class="summary-value mono">{{ currentRevision()?.transmissionLines?.length ?? 0 }}</span>
+                  <span class="summary-value mono">{{
+                    currentRevision()?.transmissionLines?.length ?? 0
+                  }}</span>
                 </div>
                 <div class="summary-card">
                   <span class="summary-label">Extensão Refinada Total</span>
-                  <span class="summary-value mono">{{ totalRefinedKm() }} km</span>
+                  <span class="summary-value mono"
+                    >{{ totalRefinedKm() }} km</span
+                  >
                 </div>
                 <div class="summary-card">
                   <span class="summary-label">Extensão Relatório Total</span>
-                  <span class="summary-value mono">{{ totalReportKm() }} km</span>
+                  <span class="summary-value mono"
+                    >{{ totalReportKm() }} km</span
+                  >
                 </div>
               </div>
 
@@ -220,66 +269,173 @@ const BRAZILIAN_UFS = [
               <!-- Formulário Inline de Adicionar/Editar Linha -->
               @if (isEditingLine()) {
                 <div class="line-edit-box">
-                  <h4>{{ editingLineIndex() === -1 ? 'Nova Linha de Transmissão' : 'Editar Linha de Transmissão' }}</h4>
-                  <form [formGroup]="lineForm" class="line-grid" (ngSubmit)="saveLine()">
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                  <h4>
+                    {{
+                      editingLineIndex() === -1
+                        ? 'Nova Linha de Transmissão'
+                        : 'Editar Linha de Transmissão'
+                    }}
+                  </h4>
+                  <form
+                    [formGroup]="lineForm"
+                    class="line-grid"
+                    (ngSubmit)="saveLine()"
+                  >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Código da LT *</mat-label>
-                      <input matInput id="lineCode" formControlName="code" placeholder="ex.: LT-500-01" maxlength="50" />
+                      <input
+                        matInput
+                        id="lineCode"
+                        formControlName="code"
+                        placeholder="ex.: LT-500-01"
+                        maxlength="50"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-6">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-6"
+                    >
                       <mat-label>Nome da LT *</mat-label>
-                      <input matInput id="lineName" formControlName="name" placeholder="ex.: LT 500 kV Curitiba Leste - Blumenau" maxlength="200" />
+                      <input
+                        matInput
+                        id="lineName"
+                        formControlName="name"
+                        placeholder="ex.: LT 500 kV Curitiba Leste - Blumenau"
+                        maxlength="200"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Tensão Nominal (kV) *</mat-label>
-                      <input matInput id="lineNominalVoltageKv" formControlName="nominalVoltageKv" inputmode="decimal" placeholder="ex.: 500.00" />
+                      <input
+                        matInput
+                        id="lineNominalVoltageKv"
+                        formControlName="nominalVoltageKv"
+                        inputmode="decimal"
+                        placeholder="ex.: 500.00"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Extensão Refinada (km) *</mat-label>
-                      <input matInput id="lineRefinedLengthKm" formControlName="refinedLengthKm" inputmode="decimal" placeholder="ex.: 154.230" />
+                      <input
+                        matInput
+                        id="lineRefinedLengthKm"
+                        formControlName="refinedLengthKm"
+                        inputmode="decimal"
+                        placeholder="ex.: 154.230"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Extensão Relatório (km) *</mat-label>
-                      <input matInput id="lineReportLengthKm" formControlName="reportLengthKm" inputmode="decimal" placeholder="ex.: 155.000" />
+                      <input
+                        matInput
+                        id="lineReportLengthKm"
+                        formControlName="reportLengthKm"
+                        inputmode="decimal"
+                        placeholder="ex.: 155.000"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Nº Circuitos *</mat-label>
-                      <input matInput id="lineCircuitCount" formControlName="circuitCount" type="number" min="1" />
+                      <input
+                        matInput
+                        id="lineCircuitCount"
+                        formControlName="circuitCount"
+                        type="number"
+                        min="1"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>Condutores / Fase *</mat-label>
-                      <input matInput id="lineBundleConductorCount" formControlName="bundleConductorCount" type="number" min="1" />
+                      <input
+                        matInput
+                        id="lineBundleConductorCount"
+                        formControlName="bundleConductorCount"
+                        type="number"
+                        min="1"
+                      />
                     </mat-form-field>
 
                     <!-- Rateio Territorial (RN-01) -->
                     <div class="col-12 uf-allocation-panel">
                       <strong>Rateio Territorial por Estado (RN-01):</strong>
-                      <span>A soma dos percentuais deve totalizar exatamente 100,00%</span>
+                      <span
+                        >A soma dos percentuais deve totalizar exatamente
+                        100,00%</span
+                      >
                     </div>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>UF Primária *</mat-label>
-                      <mat-select id="lineUf1" formControlName="destinationStatePrimary">
+                      <mat-select
+                        id="lineUf1"
+                        formControlName="destinationStatePrimary"
+                      >
                         @for (uf of ufs; track uf) {
                           <mat-option [value]="uf">{{ uf }}</mat-option>
                         }
                       </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>% UF Primária *</mat-label>
-                      <input matInput id="linePercent1" formControlName="destinationPercentagePrimary" inputmode="decimal" placeholder="ex.: 60.00" />
+                      <input
+                        matInput
+                        id="linePercent1"
+                        formControlName="destinationPercentagePrimary"
+                        inputmode="decimal"
+                        placeholder="ex.: 60.00"
+                      />
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>UF Secundária (opcional)</mat-label>
-                      <mat-select id="lineUf2" formControlName="destinationStateSecondary">
+                      <mat-select
+                        id="lineUf2"
+                        formControlName="destinationStateSecondary"
+                      >
                         <mat-option [value]="null">Nenhuma</mat-option>
                         @for (uf of ufs; track uf) {
                           <mat-option [value]="uf">{{ uf }}</mat-option>
@@ -287,9 +443,19 @@ const BRAZILIAN_UFS = [
                       </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      class="col-3"
+                    >
                       <mat-label>% UF Secundária</mat-label>
-                      <input matInput id="linePercent2" formControlName="destinationPercentageSecondary" inputmode="decimal" placeholder="ex.: 40.00" />
+                      <input
+                        matInput
+                        id="linePercent2"
+                        formControlName="destinationPercentageSecondary"
+                        inputmode="decimal"
+                        placeholder="ex.: 40.00"
+                      />
                     </mat-form-field>
 
                     @if (lineUfError()) {
@@ -299,9 +465,23 @@ const BRAZILIAN_UFS = [
                     }
 
                     <div class="col-12 line-form-actions">
-                      <button matButton="outlined" type="button" (click)="cancelLineEdit()">Cancelar</button>
-                      <button matButton="filled" type="submit" [disabled]="lineForm.invalid">
-                        {{ editingLineIndex() === -1 ? 'Inserir linha' : 'Atualizar linha' }}
+                      <button
+                        matButton="outlined"
+                        type="button"
+                        (click)="cancelLineEdit()"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        matButton="filled"
+                        type="submit"
+                        [disabled]="lineForm.invalid"
+                      >
+                        {{
+                          editingLineIndex() === -1
+                            ? 'Inserir linha'
+                            : 'Atualizar linha'
+                        }}
                       </button>
                     </div>
                   </form>
@@ -321,52 +501,82 @@ const BRAZILIAN_UFS = [
                 </div>
               } @else {
                 <div class="table-scroll">
-                  <table mat-table [dataSource]="currentRevision()?.transmissionLines ?? []" class="dense">
+                  <table
+                    mat-table
+                    [dataSource]="currentRevision()?.transmissionLines ?? []"
+                    class="dense"
+                  >
                     <ng-container matColumnDef="code">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
-                      <td mat-cell *matCellDef="let line" class="mono font-bold">{{ line.code }}</td>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Código
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let line"
+                        class="mono font-bold"
+                      >
+                        {{ line.code }}
+                      </td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Nome da LT</th>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Nome da LT
+                      </th>
                       <td mat-cell *matCellDef="let line">{{ line.name }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="nominalVoltageKv">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Tensão (kV)</th>
-                      <td mat-cell *matCellDef="let line" class="mono num">{{ line.nominalVoltageKv }} kV</td>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Tensão (kV)
+                      </th>
+                      <td mat-cell *matCellDef="let line" class="mono num">
+                        {{ line.nominalVoltageKv }} kV
+                      </td>
                     </ng-container>
 
                     <ng-container matColumnDef="lengths">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Extensão (Refinada / Relatório)</th>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Extensão (Refinada / Relatório)
+                      </th>
                       <td mat-cell *matCellDef="let line" class="mono">
-                        {{ line.refinedLengthKm }} km / {{ line.reportLengthKm }} km
+                        {{ line.refinedLengthKm }} km /
+                        {{ line.reportLengthKm }} km
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="circuits">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Circ. / Cond.</th>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Circ. / Cond.
+                      </th>
                       <td mat-cell *matCellDef="let line" class="mono">
-                        {{ line.circuitCount }}C • {{ line.bundleConductorCount }} cond/fase
+                        {{ line.circuitCount }}C •
+                        {{ line.bundleConductorCount }} cond/fase
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="ufs">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Rateio Territorial (RN-01)</th>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Rateio Territorial (RN-01)
+                      </th>
                       <td mat-cell *matCellDef="let line">
                         <span class="uf-tag">
-                          {{ line.destinationStatePrimary }}: {{ line.destinationPercentagePrimary }}%
+                          {{ line.destinationStatePrimary }}:
+                          {{ line.destinationPercentagePrimary }}%
                         </span>
                         @if (line.destinationStateSecondary) {
                           <span class="uf-tag">
-                            {{ line.destinationStateSecondary }}: {{ line.destinationPercentageSecondary }}%
+                            {{ line.destinationStateSecondary }}:
+                            {{ line.destinationPercentageSecondary }}%
                           </span>
                         }
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef scope="col">Ações</th>
+                      <th mat-header-cell *matHeaderCellDef scope="col">
+                        Ações
+                      </th>
                       <td mat-cell *matCellDef="let line; let idx = index">
                         @if (isDraft()) {
                           <button
@@ -406,7 +616,9 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">assignment_turned_in</mat-icon>
-              Matriz de Escopo ({{ currentRevision()?.scopeMatrixItems?.length ?? 0 }})
+              Matriz de Escopo ({{
+                currentRevision()?.scopeMatrixItems?.length ?? 0
+              }})
             </ng-template>
 
             <div class="tab-content">
@@ -414,12 +626,21 @@ const BRAZILIAN_UFS = [
                 <div>
                   <h3>Matriz de Responsabilidade e Risco (4 Eixos)</h3>
                   <p class="subtitle">
-                    Definição de fornecimento, REIDI (RN-04) e alocação de riscos cambial e de commodity (RN-08).
-                    Itens sob responsabilidade do Cliente entram com custo zero na proposta (RN-03).
+                    Definição de fornecimento, REIDI (RN-04) e alocação de
+                    riscos cambial e de commodity (RN-08). Itens sob
+                    responsabilidade do Cliente entram com custo zero na
+                    proposta (RN-03).
                   </p>
                 </div>
-                @if (isDraft() && ((currentRevision()?.scopeMatrixItems?.length ?? 0) === 0)) {
-                  <button matButton="filled" type="button" (click)="loadBenchmarkScope()">
+                @if (
+                  isDraft() &&
+                  (currentRevision()?.scopeMatrixItems?.length ?? 0) === 0
+                ) {
+                  <button
+                    matButton="filled"
+                    type="button"
+                    (click)="loadBenchmarkScope()"
+                  >
                     <mat-icon>auto_fix_high</mat-icon> Carregar itens canônicos
                   </button>
                 }
@@ -439,8 +660,14 @@ const BRAZILIAN_UFS = [
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of scopeItems(); track item.itemCode; let idx = $index) {
-                      <tr [class.client-item]="item.responsibleParty === 'CLIENT'">
+                    @for (
+                      item of scopeItems();
+                      track item.itemCode;
+                      let idx = $index
+                    ) {
+                      <tr
+                        [class.client-item]="item.responsibleParty === 'CLIENT'"
+                      >
                         <td class="mono font-bold">{{ item.itemCode }}</td>
                         <td>
                           <strong>{{ item.itemName }}</strong>
@@ -448,13 +675,21 @@ const BRAZILIAN_UFS = [
                             <span class="client-label">(Cliente)</span>
                           }
                         </td>
-                        <td><span class="category-chip">{{ item.category }}</span></td>
+                        <td>
+                          <span class="category-chip">{{ item.category }}</span>
+                        </td>
                         <td>
                           <select
                             class="native-select"
                             [disabled]="!isDraft()"
                             [value]="item.responsibleParty"
-                            (change)="updateScopeField(idx, 'responsibleParty', $any($event.target).value)"
+                            (change)="
+                              updateScopeField(
+                                idx,
+                                'responsibleParty',
+                                $any($event.target).value
+                              )
+                            "
                           >
                             <option value="CONTRACTOR">Contratada</option>
                             <option value="CLIENT">Cliente (Custo 0)</option>
@@ -466,9 +701,17 @@ const BRAZILIAN_UFS = [
                               type="checkbox"
                               [disabled]="!isDraft()"
                               [checked]="item.acceptsDirectBilling"
-                              (change)="updateScopeField(idx, 'acceptsDirectBilling', $any($event.target).checked)"
+                              (change)="
+                                updateScopeField(
+                                  idx,
+                                  'acceptsDirectBilling',
+                                  $any($event.target).checked
+                                )
+                              "
                             />
-                            <span>{{ item.acceptsDirectBilling ? 'REIDI Ativo' : 'Não' }}</span>
+                            <span>{{
+                              item.acceptsDirectBilling ? 'REIDI Ativo' : 'Não'
+                            }}</span>
                           </label>
                         </td>
                         <td>
@@ -476,9 +719,17 @@ const BRAZILIAN_UFS = [
                             class="native-select"
                             [disabled]="!isDraft()"
                             [value]="item.currencyRiskParty"
-                            (change)="updateScopeField(idx, 'currencyRiskParty', $any($event.target).value)"
+                            (change)="
+                              updateScopeField(
+                                idx,
+                                'currencyRiskParty',
+                                $any($event.target).value
+                              )
+                            "
                           >
-                            <option value="CONTRACTOR">Contratada (A termo)</option>
+                            <option value="CONTRACTOR">
+                              Contratada (A termo)
+                            </option>
                             <option value="CLIENT">Cliente (Spot)</option>
                           </select>
                         </td>
@@ -487,7 +738,13 @@ const BRAZILIAN_UFS = [
                             class="native-select"
                             [disabled]="!isDraft()"
                             [value]="item.commodityRiskParty"
-                            (change)="updateScopeField(idx, 'commodityRiskParty', $any($event.target).value)"
+                            (change)="
+                              updateScopeField(
+                                idx,
+                                'commodityRiskParty',
+                                $any($event.target).value
+                              )
+                            "
                           >
                             <option value="CONTRACTOR">Contratada</option>
                             <option value="CLIENT">Cliente</option>
@@ -524,69 +781,170 @@ const BRAZILIAN_UFS = [
             <div class="tab-content">
               <h3>Parâmetros Comerciais e Prazos de Edital</h3>
 
-              <form [formGroup]="revParamsForm" class="params-grid" (ngSubmit)="saveRevisionChanges()">
-                <mat-form-field appearance="outline" floatLabel="always" class="col-6">
+              <form
+                [formGroup]="revParamsForm"
+                class="params-grid"
+                (ngSubmit)="saveRevisionChanges()"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-6"
+                >
                   <mat-label>Leilão / Edital *</mat-label>
-                  <input matInput id="revAuctionName" formControlName="auctionName" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revAuctionName"
+                    formControlName="auctionName"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-6">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-6"
+                >
                   <mat-label>Lote *</mat-label>
-                  <input matInput id="revLotName" formControlName="lotName" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revLotName"
+                    formControlName="lotName"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
                   <mat-label>Data da Oferta *</mat-label>
-                  <input matInput id="revOfferDate" formControlName="offerDate" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revOfferDate"
+                    formControlName="offerDate"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
                   <mat-label>Data do Leilão</mat-label>
-                  <input matInput id="revAuctionDate" formControlName="auctionDate" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revAuctionDate"
+                    formControlName="auctionDate"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
                   <mat-label>Início Cronograma</mat-label>
-                  <input matInput id="revScheduleStartDate" formControlName="scheduleStartDate" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revScheduleStartDate"
+                    formControlName="scheduleStartDate"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-3">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
                   <mat-label>Entrada em Operação</mat-label>
-                  <input matInput id="revCommercialOperationDate" formControlName="commercialOperationDate" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revCommercialOperationDate"
+                    formControlName="commercialOperationDate"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
                 @if (hasRevScheduleWarning()) {
                   <div class="col-12 alert-schedule" role="alert">
                     <mat-icon>warning</mat-icon>
                     <span>
-                      <strong>Alerta de Cronograma (RN-02):</strong> Data de início posterior à data prevista de entrada em operação do edital.
+                      <strong>Alerta de Cronograma (RN-02):</strong> Data de
+                      início posterior à data prevista de entrada em operação do
+                      edital.
                     </span>
                   </div>
                 }
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-4">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-4"
+                >
                   <mat-label>CAPEX Estimado ANEEL</mat-label>
-                  <input matInput id="revEstimatedCapex" formControlName="estimatedCapex" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revEstimatedCapex"
+                    formControlName="estimatedCapex"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-4">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-4"
+                >
                   <mat-label>RAP Máxima Edital</mat-label>
-                  <input matInput id="revMaxRap" formControlName="maxRap" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revMaxRap"
+                    formControlName="maxRap"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-4">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-4"
+                >
                   <mat-label>RAP Vencedora Estimada</mat-label>
-                  <input matInput id="revWinningRap" formControlName="winningRap" [readonly]="!isDraft()" />
+                  <input
+                    matInput
+                    id="revWinningRap"
+                    formControlName="winningRap"
+                    [readonly]="!isDraft()"
+                  />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" floatLabel="always" class="col-12">
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-12"
+                >
                   <mat-label>Notas da Revisão</mat-label>
-                  <textarea matInput id="revNotes" formControlName="notes" rows="3" [readonly]="!isDraft()"></textarea>
+                  <textarea
+                    matInput
+                    id="revNotes"
+                    formControlName="notes"
+                    rows="3"
+                    [readonly]="!isDraft()"
+                  ></textarea>
                 </mat-form-field>
 
                 @if (isDraft()) {
                   <div class="col-12 actions-right">
-                    <button matButton="filled" type="submit" [disabled]="saving() || revParamsForm.invalid">
+                    <button
+                      matButton="filled"
+                      type="submit"
+                      [disabled]="saving() || revParamsForm.invalid"
+                    >
                       {{ saving() ? 'Salvando…' : 'Salvar parâmetros' }}
                     </button>
                   </div>
@@ -706,9 +1064,15 @@ const BRAZILIAN_UFS = [
       height: 8px;
       border-radius: 50%;
     }
-    .status-dot[data-status='DRAFT'] { background: #94a3b8; }
-    .status-dot[data-status='FROZEN'] { background: #0284c7; }
-    .status-dot[data-status='DELIVERED'] { background: #16a34a; }
+    .status-dot[data-status='DRAFT'] {
+      background: #94a3b8;
+    }
+    .status-dot[data-status='FROZEN'] {
+      background: #0284c7;
+    }
+    .status-dot[data-status='DELIVERED'] {
+      background: #16a34a;
+    }
     .revision-status-info {
       display: flex;
       align-items: center;
@@ -801,10 +1165,18 @@ const BRAZILIAN_UFS = [
       grid-template-columns: repeat(12, 1fr);
       gap: 0.75rem;
     }
-    .col-12 { grid-column: span 12; }
-    .col-6 { grid-column: span 6; }
-    .col-4 { grid-column: span 4; }
-    .col-3 { grid-column: span 3; }
+    .col-12 {
+      grid-column: span 12;
+    }
+    .col-6 {
+      grid-column: span 6;
+    }
+    .col-4 {
+      grid-column: span 4;
+    }
+    .col-3 {
+      grid-column: span 3;
+    }
     .uf-allocation-panel {
       font-size: 0.85rem;
       color: var(--mat-sys-on-surface-variant);
@@ -848,7 +1220,8 @@ const BRAZILIAN_UFS = [
       width: 100%;
       border-collapse: collapse;
     }
-    .scope-matrix-table th, .scope-matrix-table td {
+    .scope-matrix-table th,
+    .scope-matrix-table td {
       padding: 0.6rem 0.75rem;
       border-bottom: 1px solid var(--mat-sys-outline-variant);
       text-align: left;
@@ -967,7 +1340,9 @@ export class OfferDetailComponent {
   });
 
   readonly isDraft = computed(() => this.currentRevision()?.status === 'DRAFT');
-  readonly isFrozen = computed(() => this.currentRevision()?.status === 'FROZEN');
+  readonly isFrozen = computed(
+    () => this.currentRevision()?.status === 'FROZEN',
+  );
   readonly isDelivered = computed(
     () => this.currentRevision()?.status === 'DELIVERED',
   );
@@ -1184,12 +1559,12 @@ export class OfferDetailComponent {
       destinationStatePrimary: raw.destinationStatePrimary.trim(),
       destinationPercentagePrimary: raw.destinationPercentagePrimary.trim(),
       destinationStateSecondary: orNull(raw.destinationStateSecondary),
-      destinationPercentageSecondary: orNull(raw.destinationPercentageSecondary),
+      destinationPercentageSecondary: orNull(
+        raw.destinationPercentageSecondary,
+      ),
     };
 
-    const currentLines = [
-      ...(this.currentRevision()?.transmissionLines ?? []),
-    ];
+    const currentLines = [...(this.currentRevision()?.transmissionLines ?? [])];
     const idx = this.editingLineIndex();
     if (idx === -1) {
       currentLines.push(lineItem);
@@ -1202,9 +1577,7 @@ export class OfferDetailComponent {
   }
 
   removeLine(index: number): void {
-    const currentLines = [
-      ...(this.currentRevision()?.transmissionLines ?? []),
-    ];
+    const currentLines = [...(this.currentRevision()?.transmissionLines ?? [])];
     currentLines.splice(index, 1);
     this.persistRevision({ transmissionLines: currentLines });
   }
@@ -1383,7 +1756,9 @@ export class OfferDetailComponent {
       next: (detail) => {
         this.offer.set(detail);
         const latestRev = detail.revisions[detail.revisions.length - 1];
-        this.selectedRevisionNumber.set(latestRev ? latestRev.revisionNumber : 0);
+        this.selectedRevisionNumber.set(
+          latestRev ? latestRev.revisionNumber : 0,
+        );
         this.syncRevisionToForm();
         this.loading.set(false);
       },
