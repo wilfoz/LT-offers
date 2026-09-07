@@ -558,3 +558,107 @@ model WorkCrewEquipment {
   @@map("work_crew_equipment")
 }
 
+// M01 — Gestão de ofertas, revisões, linhas de transmissão e matriz de escopo (RF-01..RF-06, RN-01..RN-04).
+enum OfferRevisionStatus {
+  DRAFT
+  FROZEN
+  DELIVERED
+
+  @@map("offer_revision_status")
+}
+
+enum ScopeResponsibleParty {
+  CONTRACTOR
+  CLIENT
+
+  @@map("scope_responsible_party")
+}
+
+model Offer {
+  id                Int             @id @default(autoincrement())
+  code              String          @unique
+  name              String
+  clientName        String          @map("client_name")
+  baseCurrency      String          @default("BRL") @map("base_currency") @db.VarChar(10)
+  clonedFromOfferId Int?            @map("cloned_from_offer_id")
+  clonedFromOffer   Offer?          @relation("OfferClones", fields: [clonedFromOfferId], references: [id], onDelete: SetNull)
+  clones            Offer[]         @relation("OfferClones")
+  createdBy         String          @map("created_by")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  revisions         OfferRevision[]
+
+  @@map("offer")
+}
+
+model OfferRevision {
+  id                      Int                 @id @default(autoincrement())
+  offerId                 Int                 @map("offer_id")
+  offer                   Offer               @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  revisionNumber          Int                 @map("revision_number")
+  status                  OfferRevisionStatus @default(DRAFT)
+  auctionName             String              @map("auction_name")
+  lotName                 String              @map("lot_name")
+  offerDate               DateTime            @map("offer_date") @db.Date
+  auctionDate             DateTime?           @map("auction_date") @db.Date
+  scheduleStartDate       DateTime?           @map("schedule_start_date") @db.Date
+  commercialOperationDate DateTime?           @map("commercial_operation_date") @db.Date
+  estimatedCapex          Decimal?            @map("estimated_capex") @db.Decimal(16, 2)
+  maxRap                  Decimal?            @map("max_rap") @db.Decimal(16, 2)
+  winningRap              Decimal?            @map("winning_rap") @db.Decimal(16, 2)
+  notes                   String?
+  closedAt                DateTime?           @map("closed_at")
+  deliveredAt             DateTime?           @map("delivered_at")
+  createdBy               String              @map("created_by")
+  createdAt               DateTime            @default(now()) @map("created_at")
+  updatedAt               DateTime            @updatedAt @map("updated_at")
+  transmissionLines       TransmissionLine[]
+  scopeMatrixItems        ScopeMatrixItem[]
+
+  @@unique([offerId, revisionNumber])
+  @@index([offerId, revisionNumber(sort: Desc)])
+  @@map("offer_revision")
+}
+
+model TransmissionLine {
+  id                             Int           @id @default(autoincrement())
+  offerRevisionId                Int           @map("offer_revision_id")
+  offerRevision                  OfferRevision @relation(fields: [offerRevisionId], references: [id], onDelete: Cascade)
+  code                           String
+  name                           String
+  nominalVoltageKv               Decimal       @map("nominal_voltage_kv") @db.Decimal(8, 2)
+  refinedLengthKm                Decimal       @map("refined_length_km") @db.Decimal(10, 3)
+  reportLengthKm                 Decimal       @map("report_length_km") @db.Decimal(10, 3)
+  circuitCount                   Int           @default(1) @map("circuit_count")
+  bundleConductorCount           Int           @default(1) @map("bundle_conductor_count")
+  destinationStatePrimary        String        @map("destination_state_primary") @db.VarChar(2)
+  destinationPercentagePrimary   Decimal       @map("destination_percentage_primary") @db.Decimal(5, 2)
+  destinationStateSecondary      String?       @map("destination_state_secondary") @db.VarChar(2)
+  destinationPercentageSecondary Decimal?      @map("destination_percentage_secondary") @db.Decimal(5, 2)
+  createdAt                      DateTime      @default(now()) @map("created_at")
+  updatedAt                      DateTime      @updatedAt @map("updated_at")
+
+  @@unique([offerRevisionId, code])
+  @@map("transmission_line")
+}
+
+model ScopeMatrixItem {
+  id                   Int                   @id @default(autoincrement())
+  offerRevisionId      Int                   @map("offer_revision_id")
+  offerRevision        OfferRevision         @relation(fields: [offerRevisionId], references: [id], onDelete: Cascade)
+  itemCode             String                @map("item_code") @db.VarChar(50)
+  itemName             String                @map("item_name")
+  category             String                @db.VarChar(100)
+  responsibleParty     ScopeResponsibleParty @default(CONTRACTOR) @map("responsible_party")
+  acceptsDirectBilling Boolean               @default(false) @map("accepts_direct_billing")
+  currencyRiskParty    ScopeResponsibleParty @default(CONTRACTOR) @map("currency_risk_party")
+  commodityRiskParty   ScopeResponsibleParty @default(CONTRACTOR) @map("commodity_risk_party")
+  notes                String?
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+
+  @@unique([offerRevisionId, itemCode])
+  @@map("scope_matrix_item")
+}
+
+

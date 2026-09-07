@@ -189,6 +189,30 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | unidade de produção                                 | `productionUnit` / `production_unit`                                                                    |
 | período de produção                                 | `ProductionPeriod`: `HOUR` \| `DAY` \| `WEEK` \| `MONTH`                                                |
 | quantidade na composição                            | `quantity`                                                                                              |
+| proposta / oferta de leilão                         | `Offer` / `offer` / `offers`                                                                            |
+| revisão de oferta                                   | `OfferRevision` / `offer_revision` / `offer-revisions`                                                  |
+| status da revisão de oferta                         | `OfferRevisionStatus`: `DRAFT` \| `FROZEN` \| `DELIVERED`                                               |
+| linha de transmissão                                | `TransmissionLine` / `transmission_line` / `transmission-lines`                                         |
+| item da matriz de responsabilidade                  | `ScopeMatrixItem` / `scope_matrix_item` / `scope-matrix-items`                                           |
+| responsável pelo escopo                             | `ScopeResponsibleParty`: `CONTRACTOR` \| `CLIENT`                                                       |
+| faturamento direto aceito (REIDI)                   | `acceptsDirectBilling` / `accepts_direct_billing`                                                        |
+| parte com risco cambial                             | `currencyRiskParty` / `currency_risk_party`                                                             |
+| parte com risco de commodity                        | `commodityRiskParty` / `commodity_risk_party`                                                           |
+| leilão                                              | `auctionName` / `auction_name`                                                                          |
+| lote                                                | `lotName` / `lot_name`                                                                                  |
+| cliente / concessionária                            | `clientName` / `client_name`                                                                            |
+| entrada em operação comercial (edital)              | `commercialOperationDate` / `commercial_operation_date`                                                 |
+| início do cronograma                                | `scheduleStartDate` / `schedule_start_date`                                                             |
+| CAPEX estimado ANEEL (R$)                           | `estimatedCapex` / `estimated_capex`                                                                    |
+| RAP máxima (R$)                                     | `maxRap` / `max_rap`                                                                                    |
+| RAP vencedora estimada (R$)                         | `winningRap` / `winning_rap`                                                                            |
+| extensão refinada (km)                              | `refinedLengthKm` / `refined_length_km`                                                                 |
+| extensão de relatório (km)                          | `reportLengthKm` / `report_length_km`                                                                   |
+| condutores por fase (feixe)                         | `bundleConductorCount` / `bundle_conductor_count`                                                        |
+| UF de destino primária                              | `destinationStatePrimary` / `destination_state_primary`                                                 |
+| percentual de rateio na UF primária (%)             | `destinationPercentagePrimary` / `destination_percentage_primary`                                       |
+| UF de destino secundária                            | `destinationStateSecondary` / `destination_state_secondary`                                             |
+| percentual de rateio na UF secundária (%)           | `destinationPercentageSecondary` / `destination_percentage_secondary`                                   |
 
 ### Demais convenções
 

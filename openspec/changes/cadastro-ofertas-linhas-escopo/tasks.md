@@ -2,8 +2,8 @@
 
 ## 1. Nomenclatura e modelo de dados
 
-- [ ] 1.1 Adicionar os termos de ofertas, revisões, linhas de transmissão e matriz de escopo ao mapa canônico do `README.md` (`Offer`, `OfferRevision`, `TransmissionLine`, `ScopeMatrixItem`, `OfferRevisionStatus`, `ScopeResponsibleParty`), antes de qualquer código.
-- [ ] 1.2 Modelar no `prisma/schema.prisma` os modelos `Offer`, `OfferRevision`, `TransmissionLine`, `ScopeMatrixItem` e os enums `OfferRevisionStatus` e `ScopeResponsibleParty`, gerar a migration aditiva e confirmar zero drift com `npx prisma migrate diff`.
+- [x] 1.1 Adicionar os termos de ofertas, revisões, linhas de transmissão e matriz de escopo ao mapa canônico do `README.md` (`Offer`, `OfferRevision`, `TransmissionLine`, `ScopeMatrixItem`, `OfferRevisionStatus`, `ScopeResponsibleParty`), antes de qualquer código.
+- [x] 1.2 Modelar no `prisma/schema.prisma` os modelos `Offer`, `OfferRevision`, `TransmissionLine`, `ScopeMatrixItem` e os enums `OfferRevisionStatus` e `ScopeResponsibleParty`, gerar a migration aditiva e confirmar zero drift com `npx prisma migrate diff`.
 
 ## 2. Contratos na domain
 
