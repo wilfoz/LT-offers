@@ -12,3 +12,4 @@ export * from './lib/catalogs/soil-types';
 export * from './lib/catalogs/structure-series';
 export * from './lib/catalogs/tower-types';
 export * from './lib/catalogs/validation';
+export * from './lib/catalogs/work-crews';

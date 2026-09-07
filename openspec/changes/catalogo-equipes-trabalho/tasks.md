@@ -7,7 +7,7 @@
 
 ## 2. Contratos na domain
 
-- [ ] 2.1 Criar `libs/domain/src/lib/catalogs/work-crews.ts` (interfaces de item, versão com listas de composição de mão de obra e equipamentos, summary com contadores e taxas, payloads de criação/atualização e enum `ProductionPeriod`), exportando em `@lt-offers/domain`.
+- [x] 2.1 Criar `libs/domain/src/lib/catalogs/work-crews.ts` (interfaces de item, versão com listas de composição de mão de obra e equipamentos, summary com contadores e taxas, payloads de criação/atualização e enum `ProductionPeriod`), exportando em `@lt-offers/domain`.
 
 ## 3. API — Equipes de trabalho e composições (Equipos / DesEquipos)
 
