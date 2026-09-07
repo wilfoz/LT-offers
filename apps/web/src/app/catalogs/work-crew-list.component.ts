@@ -80,7 +80,9 @@ const PERIOD_LABELS: Record<string, string> = {
             </ng-container>
 
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef scope="col">Nome da equipe</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Nome da equipe
+              </th>
               <td mat-cell *matCellDef="let item">
                 {{ item.name }}
               </td>
@@ -89,19 +91,25 @@ const PERIOD_LABELS: Record<string, string> = {
             <ng-container matColumnDef="laborRoleCount">
               <th mat-header-cell *matHeaderCellDef scope="col">Mão de obra</th>
               <td mat-cell *matCellDef="let item" class="mono num">
-                {{ item.laborRoleCount }} {{ item.laborRoleCount === 1 ? 'função' : 'funções' }}
+                {{ item.laborRoleCount }}
+                {{ item.laborRoleCount === 1 ? 'função' : 'funções' }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="equipmentCount">
-              <th mat-header-cell *matHeaderCellDef scope="col">Equipamentos</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Equipamentos
+              </th>
               <td mat-cell *matCellDef="let item" class="mono num">
-                {{ item.equipmentCount }} {{ item.equipmentCount === 1 ? 'tipo' : 'tipos' }}
+                {{ item.equipmentCount }}
+                {{ item.equipmentCount === 1 ? 'tipo' : 'tipos' }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="productionRate">
-              <th mat-header-cell *matHeaderCellDef scope="col">Produção teórica</th>
+              <th mat-header-cell *matHeaderCellDef scope="col">
+                Produção teórica
+              </th>
               <td mat-cell *matCellDef="let item" class="mono">
                 {{ formatProduction(item) }}
               </td>

@@ -215,7 +215,9 @@ describe('WorkCrewFormComponent (nova versão)', () => {
 
     expect(component.currentCode()).toBe('EQ-CIV-01');
     expect(component.currentName()).toBe('Equipe de Escavação');
-    expect(component.form.controls.standardProductionRate.value).toBe('15.0000');
+    expect(component.form.controls.standardProductionRate.value).toBe(
+      '15.0000',
+    );
     expect(component.laborRoles.length).toBe(1);
     expect(component.equipments.length).toBe(1);
   });

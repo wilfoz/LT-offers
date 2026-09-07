@@ -35,6 +35,9 @@ import { StructureSeriesHistoryComponent } from './structure-series-history.comp
 import { StructureSeriesListComponent } from './structure-series-list.component';
 import { TowerTypeFormComponent } from './tower-type-form.component';
 import { TowerTypeHistoryComponent } from './tower-type-history.component';
+import { WorkCrewFormComponent } from './work-crew-form.component';
+import { WorkCrewHistoryComponent } from './work-crew-history.component';
+import { WorkCrewListComponent } from './work-crew-list.component';
 
 export const CATALOGS_ROUTES: Routes = [
   { path: 'conductor-cables', component: ConductorCableListComponent },
@@ -118,4 +121,8 @@ export const CATALOGS_ROUTES: Routes = [
   { path: 'fixed-costs/new', component: FixedCostFormComponent },
   { path: 'fixed-costs/:id/edit', component: FixedCostFormComponent },
   { path: 'fixed-costs/:id/history', component: FixedCostHistoryComponent },
+  { path: 'work-crews', component: WorkCrewListComponent },
+  { path: 'work-crews/new', component: WorkCrewFormComponent },
+  { path: 'work-crews/:id/edit', component: WorkCrewFormComponent },
+  { path: 'work-crews/:id/history', component: WorkCrewHistoryComponent },
 ];

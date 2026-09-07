@@ -129,9 +129,7 @@ export class WorkCrewsService {
         },
         include: WORK_CREW_VERSION_INCLUDE,
       });
-      return this.toVersionContract(
-        version as unknown as VersionWithRelations,
-      );
+      return this.toVersionContract(version as unknown as VersionWithRelations);
     } catch (error) {
       if (isUniqueViolation(error)) {
         throw new ConflictException(

@@ -1,7 +1,4 @@
-import {
-  BadRequestException,
-  MethodNotAllowedException,
-} from '@nestjs/common';
+import { BadRequestException, MethodNotAllowedException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -94,16 +91,12 @@ describe('CreateWorkCrewDto (validação)', () => {
   });
 
   it('rejeita código ausente', async () => {
-    const errors = await validate(
-      dto({ name: 'Equipe de Escavação' }),
-    );
+    const errors = await validate(dto({ name: 'Equipe de Escavação' }));
     expect(errors.some((e) => e.property === 'code')).toBe(true);
   });
 
   it('rejeita nome ausente', async () => {
-    const errors = await validate(
-      dto({ code: 'EQ-CIV-01' }),
-    );
+    const errors = await validate(dto({ code: 'EQ-CIV-01' }));
     expect(errors.some((e) => e.property === 'name')).toBe(true);
   });
 

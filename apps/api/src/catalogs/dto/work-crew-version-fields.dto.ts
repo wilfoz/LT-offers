@@ -15,12 +15,7 @@ import { DecimalWithScale } from './decimal-scale.validators';
 import { WorkCrewEquipmentItemDto } from './work-crew-equipment-item.dto';
 import { WorkCrewLaborRoleItemDto } from './work-crew-labor-role-item.dto';
 
-const PRODUCTION_PERIODS: ProductionPeriod[] = [
-  'HOUR',
-  'DAY',
-  'WEEK',
-  'MONTH',
-];
+const PRODUCTION_PERIODS: ProductionPeriod[] = ['HOUR', 'DAY', 'WEEK', 'MONTH'];
 
 @ValidatorConstraint({ name: 'uniqueWorkCrewLaborRoles' })
 export class UniqueWorkCrewLaborRoles implements ValidatorConstraintInterface {
@@ -85,8 +80,7 @@ export class WorkCrewVersionFieldsDto {
   @ValidateNested({ each: true })
   @Type(() => WorkCrewLaborRoleItemDto)
   @Validate(UniqueWorkCrewLaborRoles, {
-    message:
-      'Há cargos de mão de obra duplicados na composição da equipe',
+    message: 'Há cargos de mão de obra duplicados na composição da equipe',
   })
   laborRoles?: WorkCrewLaborRoleItemDto[];
 
@@ -97,8 +91,7 @@ export class WorkCrewVersionFieldsDto {
   @ValidateNested({ each: true })
   @Type(() => WorkCrewEquipmentItemDto)
   @Validate(UniqueWorkCrewEquipments, {
-    message:
-      'Há equipamentos duplicados na composição da equipe',
+    message: 'Há equipamentos duplicados na composição da equipe',
   })
   equipments?: WorkCrewEquipmentItemDto[];
 }

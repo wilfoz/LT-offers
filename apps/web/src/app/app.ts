@@ -52,6 +52,7 @@ export class App {
     { path: '/catalogs/labor-roles', label: 'Mão de obra' },
     { path: '/catalogs/equipment', label: 'Equipamentos' },
     { path: '/catalogs/fixed-costs', label: 'Custos fixos' },
+    { path: '/catalogs/work-crews', label: 'Equipes de trabalho' },
   ];
 
   protected toggleMenu(): void {

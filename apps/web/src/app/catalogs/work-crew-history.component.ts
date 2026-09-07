@@ -33,9 +33,7 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
           <small>({{ h.name }})</small>
         }
       </h2>
-      <a matButton routerLink="/catalogs/work-crews">
-        Voltar à lista
-      </a>
+      <a matButton routerLink="/catalogs/work-crews"> Voltar à lista </a>
 
       @if (history(); as h) {
         <p class="caption-text">
@@ -56,9 +54,13 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
                   {{
                     version.standardProductionRate
                       ? version.standardProductionRate +
-                        (version.productionUnit ? ' ' + version.productionUnit : '') +
+                        (version.productionUnit
+                          ? ' ' + version.productionUnit
+                          : '') +
                         (version.productionPeriod
-                          ? '/' + (periodShortLabels[version.productionPeriod] ?? version.productionPeriod)
+                          ? '/' +
+                            (periodShortLabels[version.productionPeriod] ??
+                              version.productionPeriod)
                           : '')
                       : '—'
                   }}
@@ -73,9 +75,15 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
                   <span class="badge">Nenhum cargo na composição</span>
                 </p>
               } @else {
-                <table mat-table [dataSource]="version.laborRoles" class="dense">
+                <table
+                  mat-table
+                  [dataSource]="version.laborRoles"
+                  class="dense"
+                >
                   <ng-container matColumnDef="code">
-                    <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
+                    <th mat-header-cell *matHeaderCellDef scope="col">
+                      Código
+                    </th>
                     <td mat-cell *matCellDef="let role" class="mono">
                       {{ role.laborRoleCode ?? '—' }}
                     </td>
@@ -106,16 +114,24 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
                   <span class="badge">Nenhum equipamento na composição</span>
                 </p>
               } @else {
-                <table mat-table [dataSource]="version.equipments" class="dense">
+                <table
+                  mat-table
+                  [dataSource]="version.equipments"
+                  class="dense"
+                >
                   <ng-container matColumnDef="code">
-                    <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
+                    <th mat-header-cell *matHeaderCellDef scope="col">
+                      Código
+                    </th>
                     <td mat-cell *matCellDef="let eq" class="mono">
                       {{ eq.equipmentCode ?? '—' }}
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef scope="col">Equipamento</th>
+                    <th mat-header-cell *matHeaderCellDef scope="col">
+                      Equipamento
+                    </th>
                     <td mat-cell *matCellDef="let eq">
                       {{ eq.equipmentDescription ?? '—' }}
                     </td>
@@ -129,7 +145,10 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="equipmentColumns"></tr>
-                  <tr mat-row *matRowDef="let eq; columns: equipmentColumns"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let eq; columns: equipmentColumns"
+                  ></tr>
                 </table>
               }
             </mat-card-content>

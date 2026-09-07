@@ -134,7 +134,9 @@ describe('WorkCrewsService', () => {
 
       expect(result.laborRoleCount).toBe(2);
       expect(result.equipmentCount).toBe(1);
-      expect(result.effectiveVersion?.laborRoles[0].laborRoleCode).toBe('ENC01');
+      expect(result.effectiveVersion?.laborRoles[0].laborRoleCode).toBe(
+        'ENC01',
+      );
     });
 
     it('rejeita cargo de mão de obra inexistente na composição', async () => {

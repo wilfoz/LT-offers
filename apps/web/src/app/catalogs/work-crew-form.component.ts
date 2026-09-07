@@ -85,10 +85,15 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
   template: `
     <section>
       <h2>
-        {{ editId() ? 'Nova versão da equipe de trabalho' : 'Nova equipe de trabalho' }}
+        {{
+          editId()
+            ? 'Nova versão da equipe de trabalho'
+            : 'Nova equipe de trabalho'
+        }}
       </h2>
       <p>
-        Campos numéricos usam ponto como separador decimal. Campo em branco significa "não informado".
+        Campos numéricos usam ponto como separador decimal. Campo em branco
+        significa "não informado".
       </p>
 
       <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
@@ -202,7 +207,10 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
                 class="resource-select"
               >
                 <mat-label>Cargo de mão de obra *</mat-label>
-                <mat-select [id]="'laborRoleId-' + i" formControlName="laborRoleId">
+                <mat-select
+                  [id]="'laborRoleId-' + i"
+                  formControlName="laborRoleId"
+                >
                   <mat-option value="">Selecione um cargo…</mat-option>
                   @for (role of availableLaborRoles(); track role.id) {
                     <mat-option [value]="role.id">
@@ -211,7 +219,9 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
                   }
                 </mat-select>
                 @if (laborRoleRowError(i, 'laborRoleId')) {
-                  <mat-error>{{ laborRoleRowError(i, 'laborRoleId') }}</mat-error>
+                  <mat-error>{{
+                    laborRoleRowError(i, 'laborRoleId')
+                  }}</mat-error>
                 }
               </mat-form-field>
 
@@ -266,7 +276,10 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
                 class="resource-select"
               >
                 <mat-label>Equipamento *</mat-label>
-                <mat-select [id]="'equipmentId-' + i" formControlName="equipmentId">
+                <mat-select
+                  [id]="'equipmentId-' + i"
+                  formControlName="equipmentId"
+                >
                   <mat-option value="">Selecione um equipamento…</mat-option>
                   @for (eq of availableEquipments(); track eq.id) {
                     <mat-option [value]="eq.id">
@@ -275,7 +288,9 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
                   }
                 </mat-select>
                 @if (equipmentRowError(i, 'equipmentId')) {
-                  <mat-error>{{ equipmentRowError(i, 'equipmentId') }}</mat-error>
+                  <mat-error>{{
+                    equipmentRowError(i, 'equipmentId')
+                  }}</mat-error>
                 }
               </mat-form-field>
 
@@ -348,9 +363,7 @@ export const PRODUCTION_PERIOD_LABELS: Record<ProductionPeriod, string> = {
           >
             Salvar
           </button>
-          <a matButton routerLink="/catalogs/work-crews">
-            Cancelar
-          </a>
+          <a matButton routerLink="/catalogs/work-crews"> Cancelar </a>
         </div>
       </form>
     </section>
@@ -676,8 +689,7 @@ export class WorkCrewFormComponent {
     return {
       standardProductionRate: orNull(value.standardProductionRate),
       productionUnit: orNull(value.productionUnit),
-      productionPeriod:
-        (value.productionPeriod as ProductionPeriod) || null,
+      productionPeriod: (value.productionPeriod as ProductionPeriod) || null,
       laborRoles: this.laborRoles.controls.map((row) => ({
         laborRoleId: Number(row.controls.laborRoleId.value),
         quantity: row.controls.quantity.value.trim(),
