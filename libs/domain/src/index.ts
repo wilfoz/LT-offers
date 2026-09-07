@@ -14,3 +14,4 @@ export * from './lib/catalogs/tower-types';
 export * from './lib/catalogs/validation';
 export * from './lib/catalogs/work-crews';
 export * from './lib/offers/offers';
+export * from './lib/staking/staking';

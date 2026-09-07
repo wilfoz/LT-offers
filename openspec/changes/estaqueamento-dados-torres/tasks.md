@@ -7,7 +7,7 @@
 
 ## 2. Contratos na domain
 
-- [ ] 2.1 Criar `libs/domain/src/lib/staking/staking.ts` com interfaces de `StakingTower`, enum `AccessDifficulty`, DTOs de importação/preview PLS-CADD, payloads de atribuição em lote (`BatchAssignStakingPayload`) e distribuição paramétrica preliminar, exportando em `@lt-offers/domain`.
+- [x] 2.1 Criar `libs/domain/src/lib/staking/staking.ts` com interfaces de `StakingTower`, enum `AccessDifficulty`, DTOs de importação/preview PLS-CADD, payloads de atribuição em lote (`BatchAssignStakingPayload`) e distribuição paramétrica preliminar, exportando em `@lt-offers/domain`.
 
 ## 3. Backend API — Estaqueamento e Importador PLS-CADD
 
