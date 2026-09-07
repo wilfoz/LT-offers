@@ -213,6 +213,16 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | percentual de rateio na UF primária (%)             | `destinationPercentagePrimary` / `destination_percentage_primary`                                       |
 | UF de destino secundária                            | `destinationStateSecondary` / `destination_state_secondary`                                             |
 | percentual de rateio na UF secundária (%)           | `destinationPercentageSecondary` / `destination_percentage_secondary`                                   |
+| torre estaqueada / estrutura de estaqueamento       | `StakingTower` / `staking_tower` / `staking-towers`                                                     |
+| estaca (m)                                          | `stationMeters` / `station_meters`                                                                       |
+| extensão de pé / ajuste de altura (m)               | `bodyExtensionMeters` / `body_extension_meters`                                                           |
+| ângulo de deflexão (°)                              | `deflectionAngleDeg` / `deflection_angle_deg`                                                             |
+| offset lateral (m)                                  | `lateralOffsetMeters` / `lateral_offset_meters`                                                           |
+| coordenada UTM leste (Easting)                      | `utmEast` / `utm_east`                                                                                   |
+| coordenada UTM norte (Northing)                     | `utmNorth` / `utm_north`                                                                                 |
+| cota de terreno (m)                                 | `elevationMeters` / `elevation_meters`                                                                   |
+| grau de dificuldade de acesso                       | `AccessDifficulty`: `NORMAL` \| `DIFFICULT` \| `CROSSING`                                                |
+| distribuição paramétrica preliminar                 | `PreliminaryStakingDistribution` / `preliminary_staking_distribution`                                     |
 
 ### Demais convenções
 

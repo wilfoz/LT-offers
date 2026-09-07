@@ -2,8 +2,8 @@
 
 ## 1. Nomenclatura e modelo de dados
 
-- [ ] 1.1 Adicionar os termos de estaqueamento e dados por torre ao mapa canônico do `README.md` (`StakingTower`, `stationMeters`, `bodyExtensionMeters`, `deflectionAngleDeg`, `lateralOffsetMeters`, `utmEast`, `utmNorth`, `elevationMeters`, `AccessDifficulty`, `PreliminaryStakingDistribution`), antes de qualquer código.
-- [ ] 1.2 Modelar no `prisma/schema.prisma` a entidade `StakingTower` vinculada a `TransmissionLine` e `PreliminaryStakingDistribution`, gerar a migration aditiva e confirmar zero drift com `npx prisma migrate diff`.
+- [x] 1.1 Adicionar os termos de estaqueamento e dados por torre ao mapa canônico do `README.md` (`StakingTower`, `stationMeters`, `bodyExtensionMeters`, `deflectionAngleDeg`, `lateralOffsetMeters`, `utmEast`, `utmNorth`, `elevationMeters`, `AccessDifficulty`, `PreliminaryStakingDistribution`), antes de qualquer código.
+- [x] 1.2 Modelar no `prisma/schema.prisma` a entidade `StakingTower` vinculada a `TransmissionLine` e `PreliminaryStakingDistribution`, gerar a migration aditiva e confirmar zero drift com `npx prisma migrate diff`.
 
 ## 2. Contratos na domain
 
