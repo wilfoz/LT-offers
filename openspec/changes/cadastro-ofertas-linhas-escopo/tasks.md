@@ -17,11 +17,11 @@
 
 ## 4. Web — Gestão de Ofertas
 
-- [ ] 4.1 Implementar `OffersApi` no `apps/web/src/app/offers/offers-api.service.ts`.
-- [ ] 4.2 Implementar `offer-list.component` com busca, tabela densa, totalizador de linhas/km, badges de revisão/status e sinalização de pendências.
-- [ ] 4.3 Implementar `offer-form.component` no padrão Swiss / Material 3 para cadastro e edição dos dados gerais e financeiros da oferta.
-- [ ] 4.4 Implementar `offer-detail.component` com gestão de revisões imutáveis, tabela/formulário de linhas de transmissão (`TransmissionLine`) com validação de rateio de UFs e editor em grade da matriz de responsabilidade com os 4 eixos.
-- [ ] 4.5 Implementar testes de componentes cobrindo criação, edição, validação de UFs, clonagem e bloqueio de edição em revisões fechadas.
+- [x] 4.1 Implementar `OffersApi` no `apps/web/src/app/offers/offers-api.service.ts`.
+- [x] 4.2 Implementar `offer-list.component` com busca, tabela densa, totalizador de linhas/km, badges de revisão/status e sinalização de pendências.
+- [x] 4.3 Implementar `offer-form.component` no padrão Swiss / Material 3 para cadastro e edição dos dados gerais e financeiros da oferta.
+- [x] 4.4 Implementar `offer-detail.component` com gestão de revisões imutáveis, tabela/formulário de linhas de transmissão (`TransmissionLine`) com validação de rateio de UFs e editor em grade da matriz de responsabilidade com os 4 eixos.
+- [x] 4.5 Implementar testes de componentes cobrindo criação, edição, validação de UFs, clonagem e bloqueio de edição em revisões fechadas.
 
 ## 5. Integração e verificação
 
