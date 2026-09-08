@@ -21,7 +21,9 @@ export class PreliminaryPercentageDto {
   @IsString({ message: 'Nome deve ser uma string.' })
   name?: string;
 
-  @IsString({ message: 'Percentual deve ser uma string formatada (ex: "50.00").' })
+  @IsString({
+    message: 'Percentual deve ser uma string formatada (ex: "50.00").',
+  })
   @IsNotEmpty({ message: 'Percentual é obrigatório.' })
   percentage!: string;
 }
@@ -32,7 +34,9 @@ export class SavePreliminaryStakingDistributionDto {
   @Type(() => PreliminaryPercentageDto)
   soilPercentages!: PreliminaryPercentageDto[];
 
-  @IsArray({ message: 'foundationPercentages deve ser um array de distribuições.' })
+  @IsArray({
+    message: 'foundationPercentages deve ser um array de distribuições.',
+  })
   @ValidateNested({ each: true })
   @Type(() => PreliminaryPercentageDto)
   foundationPercentages!: PreliminaryPercentageDto[];

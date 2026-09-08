@@ -323,10 +323,7 @@ export class StakingService {
       );
     }
 
-    if (
-      data.towerNumber &&
-      data.towerNumber.trim() !== existing.towerNumber
-    ) {
+    if (data.towerNumber && data.towerNumber.trim() !== existing.towerNumber) {
       const duplicate = await this.prisma.stakingTower.findUnique({
         where: {
           transmissionLineId_towerNumber: {
@@ -516,15 +513,15 @@ export class StakingService {
           const existing = existingMap.get(upperNumber);
 
           const towerTypeIdFromCode = row.towerTypeCode
-            ? towerTypeMap.get(row.towerTypeCode.trim().toUpperCase()) ?? null
+            ? (towerTypeMap.get(row.towerTypeCode.trim().toUpperCase()) ?? null)
             : null;
           const soilTypeIdFromCode = row.soilTypeCode
-            ? soilTypeMap.get(row.soilTypeCode.trim().toUpperCase()) ?? null
+            ? (soilTypeMap.get(row.soilTypeCode.trim().toUpperCase()) ?? null)
             : null;
           const foundationTypeIdFromCode = row.foundationTypeCode
-            ? foundationTypeMap.get(
+            ? (foundationTypeMap.get(
                 row.foundationTypeCode.trim().toUpperCase(),
-              ) ?? null
+              ) ?? null)
             : null;
 
           if (existing) {
@@ -599,9 +596,7 @@ export class StakingService {
 
         // Remover torres que deixaram de existir no arquivo novo
         const toDeleteIds = existingTowers
-          .filter(
-            (t) => !incomingTowerNumbers.has(t.towerNumber.toUpperCase()),
-          )
+          .filter((t) => !incomingTowerNumbers.has(t.towerNumber.toUpperCase()))
           .map((t) => t.id);
 
         if (toDeleteIds.length > 0) {

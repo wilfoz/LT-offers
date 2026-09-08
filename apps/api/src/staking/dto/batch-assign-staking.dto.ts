@@ -11,7 +11,10 @@ import {
 export class BatchAssignStakingDto {
   @IsOptional()
   @IsArray({ message: 'towerIds deve ser uma lista de IDs.' })
-  @IsNumber({}, { each: true, message: 'Cada item de towerIds deve ser numérico.' })
+  @IsNumber(
+    {},
+    { each: true, message: 'Cada item de towerIds deve ser numérico.' },
+  )
   towerIds?: number[];
 
   @IsOptional()
@@ -33,7 +36,10 @@ export class BatchAssignStakingDto {
   soilTypeIdFilter?: number;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ID do tipo de torre a atribuir deve ser numérico.' })
+  @IsNumber(
+    {},
+    { message: 'ID do tipo de torre a atribuir deve ser numérico.' },
+  )
   assignTowerTypeId?: number | null;
 
   @IsOptional()
@@ -41,7 +47,10 @@ export class BatchAssignStakingDto {
   assignSoilTypeId?: number | null;
 
   @IsOptional()
-  @IsNumber({}, { message: 'ID do tipo de fundação a atribuir deve ser numérico.' })
+  @IsNumber(
+    {},
+    { message: 'ID do tipo de fundação a atribuir deve ser numérico.' },
+  )
   assignFoundationTypeId?: number | null;
 
   @IsOptional()
