@@ -11,9 +11,9 @@
 
 ## 3. Backend API — Estaqueamento e Importador PLS-CADD
 
-- [ ] 3.1 Implementar utilitário/parser de arquivo PLS-CADD (CSV/XLSX) com mapeamento flexível de cabeçalhos e validação estrita de dados/duplicidades (RF-18, RNF-10).
-- [ ] 3.2 Implementar `staking.service/controller/module` com listagem paginada (RNF-02), preview de importação, gravação/reimportação incremental com preservação de solos (RF-22), atribuição em lote (RF-19), distribuição paramétrica preliminar (RF-21) e validação de integridade contra a matriz de volumes de fundação (RF-20, RN-13).
-- [ ] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo parser, validações, paginação, reimportação e integridade.
+- [x] 3.1 Implementar utilitário/parser de arquivo PLS-CADD (CSV/XLSX) com mapeamento flexível de cabeçalhos e validação estrita de dados/duplicidades (RF-18, RNF-10).
+- [x] 3.2 Implementar `staking.service/controller/module` com listagem paginada (RNF-02), preview de importação, gravação/reimportação incremental com preservação de solos (RF-22), atribuição em lote (RF-19), distribuição paramétrica preliminar (RF-21) e validação de integridade contra a matriz de volumes de fundação (RF-20, RN-13).
+- [x] 3.3 Implementar testes unitários e de integração no `apps/api` cobrindo parser, validações, paginação, reimportação e integridade.
 
 ## 4. Frontend Web — Gestão e Visualização de Estaqueamento
 
