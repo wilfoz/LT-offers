@@ -526,7 +526,6 @@ export class OfferFormComponent {
 
     if (id) {
       const payload: UpdateOfferGeneralPayload = {
-        code: raw.code.trim(),
         name: raw.name.trim(),
         clientName: raw.clientName.trim(),
         baseCurrency: raw.baseCurrency.trim(),

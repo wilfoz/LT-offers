@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormControl,
@@ -86,7 +85,6 @@ const BRAZILIAN_UFS = [
     MatChipsModule,
     MatTooltipModule,
     MatProgressBarModule,
-    DecimalPipe,
     StakingTableComponent,
   ],
   template: `

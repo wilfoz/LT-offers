@@ -35,11 +35,9 @@ import {
   StakingTowerInput,
   StakingTowerItem,
   StakingValidationSummary,
-  TowerTypeSummary,
 } from '@lt-offers/domain';
 import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
 import { SoilTypesApi } from '../catalogs/soil-types-api.service';
-import { TowerTypesApi } from '../catalogs/tower-types-api.service';
 import { PlsCaddImportDialogComponent } from './pls-cadd-import-dialog.component';
 import { PreliminaryStakingFormComponent } from './preliminary-staking-form.component';
 import { StakingApi } from './staking-api.service';
@@ -230,7 +228,7 @@ import { StakingApi } from './staking-api.service';
             >
               <mat-option [value]="undefined">Todos os Acessos</mat-option>
               @for (acc of accessDifficulties; track acc) {
-                <mat-option [value]="acc">{{ accessLabels[acc] }}</mat-option>
+                <mat-option [value]="acc">{{ getAccessLabel(acc) }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -393,7 +391,7 @@ import { StakingApi } from './staking-api.service';
                   [class.difficult]="t.accessDifficulty === 'DIFFICULT'"
                   [class.crossing]="t.accessDifficulty === 'CROSSING'"
                 >
-                  {{ accessLabels[t.accessDifficulty] || t.accessDifficulty }}
+                  {{ getAccessLabel(t.accessDifficulty) }}
                 </span>
               </td>
             </ng-container>
@@ -591,7 +589,7 @@ import { StakingApi } from './staking-api.service';
                   <mat-option [value]="undefined">Não alterar</mat-option>
                   @for (acc of accessDifficulties; track acc) {
                     <mat-option [value]="acc">{{
-                      accessLabels[acc]
+                      getAccessLabel(acc)
                     }}</mat-option>
                   }
                 </mat-select>
@@ -613,11 +611,12 @@ import { StakingApi } from './staking-api.service';
                 (click)="applyBatchAssign()"
                 [disabled]="applyingBatch()"
               >
-                @if (applyingBatch()) {
-                  <mat-icon>hourglass_empty</mat-icon> Aplicando...
-                } @else {
-                  <mat-icon>check</mat-icon> Aplicar Atribuição
-                }
+                <mat-icon>{{
+                  applyingBatch() ? 'hourglass_empty' : 'check'
+                }}</mat-icon>
+                <span>{{
+                  applyingBatch() ? 'Aplicando...' : 'Aplicar Atribuição'
+                }}</span>
               </button>
             </div>
           </div>
@@ -731,7 +730,7 @@ import { StakingApi } from './staking-api.service';
                   <mat-select [(ngModel)]="towerFormAccess">
                     @for (acc of accessDifficulties; track acc) {
                       <mat-option [value]="acc">{{
-                        accessLabels[acc]
+                        getAccessLabel(acc)
                       }}</mat-option>
                     }
                   </mat-select>
@@ -759,11 +758,12 @@ import { StakingApi } from './staking-api.service';
                 (click)="saveTowerEdit()"
                 [disabled]="savingTower()"
               >
-                @if (savingTower()) {
-                  <mat-icon>hourglass_empty</mat-icon> Salvando...
-                } @else {
-                  <mat-icon>check</mat-icon> Salvar Alterações
-                }
+                <mat-icon>{{
+                  savingTower() ? 'hourglass_empty' : 'check'
+                }}</mat-icon>
+                <span>{{
+                  savingTower() ? 'Salvando...' : 'Salvar Alterações'
+                }}</span>
               </button>
             </div>
           </div>
@@ -1043,7 +1043,6 @@ export class StakingTableComponent implements OnInit {
   private readonly stakingApi = inject(StakingApi);
   private readonly soilTypesApi = inject(SoilTypesApi);
   private readonly foundationTypesApi = inject(FoundationTypesApi);
-  private readonly towerTypesApi = inject(TowerTypesApi);
   private readonly snackBar = inject(MatSnackBar);
 
   @Input({ required: true }) lineId!: number;
@@ -1066,6 +1065,15 @@ export class StakingTableComponent implements OnInit {
   readonly accessDifficulties = ACCESS_DIFFICULTIES;
   readonly accessLabels = ACCESS_DIFFICULTY_LABELS;
 
+  getAccessLabel(
+    difficulty: string | AccessDifficulty | null | undefined,
+  ): string {
+    if (!difficulty) return 'Normal';
+    return (
+      (this.accessLabels as Record<string, string>)[difficulty] || difficulty
+    );
+  }
+
   readonly loading = signal<boolean>(true);
   readonly towers = signal<StakingTowerItem[]>([]);
   readonly totalCount = signal<number>(0);
@@ -1087,7 +1095,6 @@ export class StakingTableComponent implements OnInit {
   // Catalogs
   readonly soilTypes = signal<SoilTypeSummary[]>([]);
   readonly foundationTypes = signal<FoundationTypeSummary[]>([]);
-  readonly towerTypes = signal<TowerTypeSummary[]>([]);
 
   // Filters
   searchQuery = '';
@@ -1133,9 +1140,6 @@ export class StakingTableComponent implements OnInit {
     });
     this.foundationTypesApi.list().subscribe({
       next: (f) => this.foundationTypes.set(f),
-    });
-    this.towerTypesApi.list().subscribe({
-      next: (t) => this.towerTypes.set(t),
     });
   }
 

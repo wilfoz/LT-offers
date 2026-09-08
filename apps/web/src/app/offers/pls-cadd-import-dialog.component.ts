@@ -283,11 +283,14 @@ import { StakingApi } from './staking-api.service';
             (click)="commitImport()"
             [disabled]="!canCommit() || committing()"
           >
-            @if (committing()) {
-              <mat-icon>hourglass_empty</mat-icon> Gravando estaqueamento...
-            } @else {
-              <mat-icon>check</mat-icon> Confirmar e Gravar Estaqueamento
-            }
+            <mat-icon>{{
+              committing() ? 'hourglass_empty' : 'check'
+            }}</mat-icon>
+            <span>{{
+              committing()
+                ? 'Gravando estaqueamento...'
+                : 'Confirmar e Gravar Estaqueamento'
+            }}</span>
           </button>
         </div>
       </div>

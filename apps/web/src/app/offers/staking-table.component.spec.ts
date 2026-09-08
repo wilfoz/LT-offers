@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
 import { SoilTypesApi } from '../catalogs/soil-types-api.service';
-import { TowerTypesApi } from '../catalogs/tower-types-api.service';
 import { StakingApi } from './staking-api.service';
 import { StakingTableComponent } from './staking-table.component';
 
@@ -83,10 +82,6 @@ describe('StakingTableComponent', () => {
     list: vi.fn(),
   };
 
-  const towerTypesApiMock = {
-    list: vi.fn(),
-  };
-
   const snackBarMock = {
     open: vi.fn(),
   };
@@ -110,7 +105,6 @@ describe('StakingTableComponent', () => {
     foundationTypesApiMock.list.mockReturnValue(
       of([{ id: 10, code: 'GRELHA' }]),
     );
-    towerTypesApiMock.list.mockReturnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [StakingTableComponent],
@@ -118,7 +112,6 @@ describe('StakingTableComponent', () => {
         { provide: StakingApi, useValue: stakingApiMock },
         { provide: SoilTypesApi, useValue: soilTypesApiMock },
         { provide: FoundationTypesApi, useValue: foundationTypesApiMock },
-        { provide: TowerTypesApi, useValue: towerTypesApiMock },
         { provide: MatSnackBar, useValue: snackBarMock },
       ],
     }).compileComponents();

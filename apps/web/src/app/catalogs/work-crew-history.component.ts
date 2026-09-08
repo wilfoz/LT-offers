@@ -58,9 +58,7 @@ const PERIOD_SHORT_LABELS: Record<string, string> = {
                           ? ' ' + version.productionUnit
                           : '') +
                         (version.productionPeriod
-                          ? '/' +
-                            (periodShortLabels[version.productionPeriod] ??
-                              version.productionPeriod)
+                          ? '/' + periodShortLabels[version.productionPeriod]
                           : '')
                       : '—'
                   }}

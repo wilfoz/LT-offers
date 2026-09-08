@@ -137,7 +137,6 @@ describe('OfferFormComponent', () => {
     comp.save();
 
     expect(apiMock.updateGeneral).toHaveBeenCalledWith(5, {
-      code: 'OF-EDITADA',
       name: 'Nome Editado',
       clientName: 'Cliente Existente',
       baseCurrency: 'USD',

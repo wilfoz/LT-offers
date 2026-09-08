@@ -72,11 +72,8 @@ interface EditablePercentageRow {
             (click)="save()"
             [disabled]="!isValid() || saving() || loading()"
           >
-            @if (saving()) {
-              <mat-icon>hourglass_empty</mat-icon> Salvando...
-            } @else {
-              <mat-icon>save</mat-icon> Salvar Distribuição
-            }
+            <mat-icon>{{ saving() ? 'hourglass_empty' : 'save' }}</mat-icon>
+            <span>{{ saving() ? 'Salvando...' : 'Salvar Distribuição' }}</span>
           </button>
         </div>
       </div>
