@@ -1,5 +1,12 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -83,12 +90,18 @@ import { StakingApi } from './staking-api.service';
                 <p class="dropzone-text">
                   Arraste a planilha PLS-CADD aqui ou clique para selecionar
                 </p>
-                <span class="dropzone-hint">Formatos suportados: CSV, XLSX, XLS</span>
+                <span class="dropzone-hint"
+                  >Formatos suportados: CSV, XLSX, XLS</span
+                >
               } @else {
                 <p class="dropzone-text file-name mono">
-                  {{ selectedFile()!.name }} ({{ formatFileSize(selectedFile()!.size) }})
+                  {{ selectedFile()!.name }} ({{
+                    formatFileSize(selectedFile()!.size)
+                  }})
                 </p>
-                <span class="dropzone-hint">Clique em "Trocar Arquivo" para escolher outro</span>
+                <span class="dropzone-hint"
+                  >Clique em "Trocar Arquivo" para escolher outro</span
+                >
               }
               <button
                 type="button"
@@ -103,8 +116,13 @@ import { StakingApi } from './staking-api.service';
           </div>
 
           @if (loadingPreview()) {
-            <mat-progress-bar mode="indeterminate" aria-label="Processando arquivo" />
-            <p class="loading-label">Analisando e validando planilha do PLS-CADD...</p>
+            <mat-progress-bar
+              mode="indeterminate"
+              aria-label="Processando arquivo"
+            />
+            <p class="loading-label">
+              Analisando e validando planilha do PLS-CADD...
+            </p>
           }
 
           @if (previewError()) {
@@ -124,15 +142,21 @@ import { StakingApi } from './staking-api.service';
                 </div>
                 <div class="metric-card">
                   <span class="metric-label">Linhas Válidas</span>
-                  <span class="metric-val text-success mono">{{ p.validRowsCount }}</span>
+                  <span class="metric-val text-success mono">{{
+                    p.validRowsCount
+                  }}</span>
                 </div>
                 <div class="metric-card">
                   <span class="metric-label">Novas / Mantidas</span>
-                  <span class="metric-val mono">{{ p.newTowersCount }} / {{ p.existingTowersCount }}</span>
+                  <span class="metric-val mono"
+                    >{{ p.newTowersCount }} / {{ p.existingTowersCount }}</span
+                  >
                 </div>
                 <div class="metric-card">
                   <span class="metric-label">Classificações Preservadas</span>
-                  <span class="metric-val text-primary mono">{{ p.preservedAttributesCount }}</span>
+                  <span class="metric-val text-primary mono">{{
+                    p.preservedAttributesCount
+                  }}</span>
                 </div>
                 <div class="metric-card">
                   <span class="metric-label">Extensão Total</span>
@@ -144,8 +168,10 @@ import { StakingApi } from './staking-api.service';
                 <div class="alert-box warning">
                   <mat-icon>warning</mat-icon>
                   <span>
-                    Divergência de traçado: A extensão do estaqueamento difere em
-                    <strong>{{ p.lineLengthDifferenceKm }} km</strong> da extensão da linha cadastrada.
+                    Divergência de traçado: A extensão do estaqueamento difere
+                    em
+                    <strong>{{ p.lineLengthDifferenceKm }} km</strong> da
+                    extensão da linha cadastrada.
                   </span>
                 </div>
               }
@@ -154,8 +180,9 @@ import { StakingApi } from './staking-api.service';
                 <div class="alert-box danger">
                   <mat-icon>error_outline</mat-icon>
                   <span>
-                    Foram encontradas <strong>{{ p.invalidRowsCount }} linhas com erro</strong> no arquivo.
-                    Verifique os detalhes na tabela abaixo.
+                    Foram encontradas
+                    <strong>{{ p.invalidRowsCount }} linhas com erro</strong> no
+                    arquivo. Verifique os detalhes na tabela abaixo.
                   </span>
                 </div>
               }
@@ -218,10 +245,7 @@ import { StakingApi } from './staking-api.service';
                     </td>
                   </ng-container>
 
-                  <tr
-                    mat-header-row
-                    *matHeaderRowDef="displayedColumns"
-                  ></tr>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr
                     mat-row
                     *matRowDef="let row; columns: displayedColumns"
@@ -231,11 +255,9 @@ import { StakingApi } from './staking-api.service';
               </div>
 
               <div class="options-box">
-                <mat-checkbox
-                  [(ngModel)]="preserveAssignments"
-                  color="primary"
-                >
-                  Preservar atribuições existentes de solo, fundação e notas nas torres mantidas (RF-22)
+                <mat-checkbox [(ngModel)]="preserveAssignments" color="primary">
+                  Preservar atribuições existentes de solo, fundação e notas nas
+                  torres mantidas (RF-22)
                 </mat-checkbox>
               </div>
             </div>
@@ -336,7 +358,9 @@ import { StakingApi } from './staking-api.service';
         padding: 1.5rem;
         text-align: center;
         background: var(--mat-sys-surface-container-lowest, #f8fafc);
-        transition: border-color 0.2s, background 0.2s;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
       }
       .file-dropzone.has-file {
         border-color: var(--mat-sys-primary, #0284c7);
@@ -466,7 +490,8 @@ import { StakingApi } from './staking-api.service';
         padding: 1rem 1.5rem;
       }
       .mono {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
       .font-bold {
         font-weight: 600;

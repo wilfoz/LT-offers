@@ -36,6 +36,7 @@ import {
 import { decimalScaleValidator, orNull } from '../catalogs/form-utils';
 import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
+import { StakingTableComponent } from './staking-table.component';
 
 const BRAZILIAN_UFS = [
   'AC',
@@ -86,6 +87,7 @@ const BRAZILIAN_UFS = [
     MatTooltipModule,
     MatProgressBarModule,
     DecimalPipe,
+    StakingTableComponent,
   ],
   template: `
     <section>
@@ -578,6 +580,17 @@ const BRAZILIAN_UFS = [
                         Ações
                       </th>
                       <td mat-cell *matCellDef="let line; let idx = index">
+                        @if (line.id) {
+                          <button
+                            matIconButton
+                            type="button"
+                            (click)="openStakingForLine(line.id)"
+                            matTooltip="Gerenciar estaqueamento e dados de torre (M04)"
+                            aria-label="Gerenciar estaqueamento da linha"
+                          >
+                            <mat-icon>straighten</mat-icon>
+                          </button>
+                        }
                         @if (isDraft()) {
                           <button
                             matIconButton
@@ -598,7 +611,7 @@ const BRAZILIAN_UFS = [
                           >
                             <mat-icon>delete</mat-icon>
                           </button>
-                        } @else {
+                        } @else if (!line.id) {
                           <span class="text-muted">—</span>
                         }
                       </td>
@@ -771,7 +784,53 @@ const BRAZILIAN_UFS = [
             </div>
           </mat-tab>
 
-          <!-- ABA 3: PARÂMETROS E DATAS DA REVISÃO -->
+          <!-- ABA 3: ESTAQUEAMENTO DE TORRES (M04) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">straighten</mat-icon>
+              Estaqueamento & Torres (M04)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state">
+                  <mat-icon>straighten</mat-icon>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão nesta revisão
+                    para gerenciar o estaqueamento.
+                  </p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar">
+                  <span class="label">Linha de Transmissão:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedStakingLineId() === line.id"
+                        (click)="selectedStakingLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedStakingLineId()) {
+                  <app-staking-table [lineId]="selectedStakingLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 4: PARÂMETROS E DATAS DA REVISÃO -->
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">event_note</mat-icon>
@@ -1293,6 +1352,42 @@ const BRAZILIAN_UFS = [
     .danger-btn {
       color: var(--mat-sys-error);
     }
+    .staking-line-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--mat-sys-surface-container-low, #f8fafc);
+      border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .line-selector-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .line-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .line-pill.active {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
+    }
+    .line-name-sub {
+      font-size: 0.8rem;
+      color: var(--mat-sys-on-surface-variant, #64748b);
+    }
   `,
 })
 export class OfferDetailComponent {
@@ -1305,6 +1400,7 @@ export class OfferDetailComponent {
   readonly offer = signal<OfferDetail | null>(null);
   readonly selectedRevisionNumber = signal<number>(0);
   readonly activeTabIndex = signal<number>(0);
+  readonly selectedStakingLineId = signal<number | null>(null);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal('');
@@ -1787,5 +1883,21 @@ export class OfferDetailComponent {
       notes: rev.notes ?? '',
     });
     this.scopeItems.set(rev.scopeMatrixItems ?? []);
+
+    // Atualizar linha selecionada para a aba de estaqueamento
+    const lines = rev.transmissionLines ?? [];
+    if (
+      !this.selectedStakingLineId() ||
+      !lines.some((l) => l.id === this.selectedStakingLineId())
+    ) {
+      this.selectedStakingLineId.set(lines[0]?.id ?? null);
+    }
+  }
+
+  openStakingForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedStakingLineId.set(lineId);
+      this.activeTabIndex.set(2);
+    }
   }
 }

@@ -7,6 +7,11 @@ import { vi } from 'vitest';
 import { OfferDetailComponent } from './offer-detail.component';
 import { OffersApi } from './offers-api.service';
 
+import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
+import { SoilTypesApi } from '../catalogs/soil-types-api.service';
+import { TowerTypesApi } from '../catalogs/tower-types-api.service';
+import { StakingApi } from './staking-api.service';
+
 const mockDetail = (overrides: Partial<OfferDetail> = {}): OfferDetail => ({
   id: 1,
   code: 'OF-2026-L1',
@@ -104,6 +109,54 @@ describe('OfferDetailComponent', () => {
         provideRouter([]),
         { provide: OffersApi, useValue: apiMock },
         { provide: MatSnackBar, useValue: snackBarMock },
+        {
+          provide: StakingApi,
+          useValue: {
+            getPaginated: vi.fn().mockReturnValue(
+              of({
+                items: [],
+                totalCount: 0,
+                page: 1,
+                pageSize: 50,
+                totalPages: 1,
+                summary: {
+                  totalTowers: 0,
+                  minStationMeters: '0.00',
+                  maxStationMeters: '0.00',
+                  unassignedSoilCount: 0,
+                  unassignedFoundationCount: 0,
+                  invalidCombinationsCount: 0,
+                },
+              }),
+            ),
+            getIntegritySummary: vi.fn().mockReturnValue(
+              of({
+                hasErrors: false,
+                totalTowers: 0,
+                unassignedSoilCount: 0,
+                unassignedFoundationCount: 0,
+                invalidCombinationsCount: 0,
+                invalidCombinations: [],
+                totalStationLengthKm: '0.000',
+                lineRefinedLengthKm: '0.000',
+                lengthDiscrepancyKm: null,
+              }),
+            ),
+            getPreliminaryDistribution: vi.fn().mockReturnValue(of(null)),
+          },
+        },
+        {
+          provide: SoilTypesApi,
+          useValue: { list: vi.fn().mockReturnValue(of([])) },
+        },
+        {
+          provide: FoundationTypesApi,
+          useValue: { list: vi.fn().mockReturnValue(of([])) },
+        },
+        {
+          provide: TowerTypesApi,
+          useValue: { list: vi.fn().mockReturnValue(of([])) },
+        },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -274,5 +327,14 @@ describe('OfferDetailComponent', () => {
       notes: 'Notas da R1',
     });
     expect(fixture.componentInstance.selectedRevisionNumber()).toBe(1);
+  });
+
+  it('permite navegar diretamente para a aba de estaqueamento da linha', async () => {
+    const fixture = await mount();
+    fixture.componentInstance.openStakingForLine(101);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.activeTabIndex()).toBe(2);
+    expect(fixture.componentInstance.selectedStakingLineId()).toBe(101);
   });
 });

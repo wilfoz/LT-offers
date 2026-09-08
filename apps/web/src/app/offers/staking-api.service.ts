@@ -88,10 +88,7 @@ export class StakingApi {
     );
   }
 
-  previewImport(
-    lineId: number,
-    file: File,
-  ): Observable<PlsCaddImportPreview> {
+  previewImport(lineId: number, file: File): Observable<PlsCaddImportPreview> {
     const formData = new FormData();
     formData.append('file', file, file.name);
     return this.http.post<PlsCaddImportPreview>(
@@ -125,10 +122,7 @@ export class StakingApi {
     );
   }
 
-  getTowerById(
-    lineId: number,
-    towerId: number,
-  ): Observable<StakingTowerItem> {
+  getTowerById(lineId: number, towerId: number): Observable<StakingTowerItem> {
     return this.http.get<StakingTowerItem>(
       `${this.baseUrl}/${lineId}/staking/${towerId}`,
     );

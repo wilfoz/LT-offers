@@ -59,7 +59,8 @@ interface EditablePercentageRow {
             <h4>Distribuição Paramétrica Preliminar</h4>
             <p class="subtitle">
               Configure a estimativa percentual de solos e fundações para rateio
-              quando o estaqueamento executivo ainda não estiver disponível (RF-21).
+              quando o estaqueamento executivo ainda não estiver disponível
+              (RF-21).
             </p>
           </div>
         </div>
@@ -116,7 +117,10 @@ interface EditablePercentageRow {
                     <span class="mono font-bold">{{ row.code }}</span>
                     <span class="item-sub">{{ row.name }}</span>
                   </div>
-                  <mat-form-field appearance="outline" class="density-compact input-pct">
+                  <mat-form-field
+                    appearance="outline"
+                    class="density-compact input-pct"
+                  >
                     <mat-label>Percentual</mat-label>
                     <input
                       matInput
@@ -165,7 +169,10 @@ interface EditablePercentageRow {
                     <span class="mono font-bold">{{ row.code }}</span>
                     <span class="item-sub">{{ row.name }}</span>
                   </div>
-                  <mat-form-field appearance="outline" class="density-compact input-pct">
+                  <mat-form-field
+                    appearance="outline"
+                    class="density-compact input-pct"
+                  >
                     <mat-label>Percentual</mat-label>
                     <input
                       matInput
@@ -310,7 +317,8 @@ interface EditablePercentageRow {
         margin-bottom: -1.25rem;
       }
       .mono {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
       .font-bold {
         font-weight: 600;

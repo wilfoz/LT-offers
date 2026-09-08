@@ -75,24 +75,43 @@ import { StakingApi } from './staking-api.service';
         <div class="metric-card">
           <span class="metric-label">Extensão de Estacas</span>
           <span class="metric-val mono">
-            {{ summary().minStationMeters }} m → {{ summary().maxStationMeters }} m
+            {{ summary().minStationMeters }} m →
+            {{ summary().maxStationMeters }} m
           </span>
         </div>
-        <div class="metric-card" [class.has-issue]="summary().unassignedSoilCount > 0">
+        <div
+          class="metric-card"
+          [class.has-issue]="summary().unassignedSoilCount > 0"
+        >
           <span class="metric-label">Solos Pendentes</span>
-          <span class="metric-val mono" [class.text-danger]="summary().unassignedSoilCount > 0">
+          <span
+            class="metric-val mono"
+            [class.text-danger]="summary().unassignedSoilCount > 0"
+          >
             {{ summary().unassignedSoilCount }}
           </span>
         </div>
-        <div class="metric-card" [class.has-issue]="summary().unassignedFoundationCount > 0">
+        <div
+          class="metric-card"
+          [class.has-issue]="summary().unassignedFoundationCount > 0"
+        >
           <span class="metric-label">Fundações Pendentes</span>
-          <span class="metric-val mono" [class.text-danger]="summary().unassignedFoundationCount > 0">
+          <span
+            class="metric-val mono"
+            [class.text-danger]="summary().unassignedFoundationCount > 0"
+          >
             {{ summary().unassignedFoundationCount }}
           </span>
         </div>
-        <div class="metric-card" [class.has-issue]="summary().invalidCombinationsCount > 0">
+        <div
+          class="metric-card"
+          [class.has-issue]="summary().invalidCombinationsCount > 0"
+        >
           <span class="metric-label">Inconsistências (RN-13)</span>
-          <span class="metric-val mono" [class.text-danger]="summary().invalidCombinationsCount > 0">
+          <span
+            class="metric-val mono"
+            [class.text-danger]="summary().invalidCombinationsCount > 0"
+          >
             {{ summary().invalidCombinationsCount }}
           </span>
         </div>
@@ -104,20 +123,30 @@ import { StakingApi } from './staking-api.service';
           <div class="integrity-alert danger" role="alert">
             <mat-icon>gpp_bad</mat-icon>
             <div class="alert-content">
-              <strong>Inconsistência de Engenharia Geotécnica / Estrutural (RN-13):</strong>
+              <strong
+                >Inconsistência de Engenharia Geotécnica / Estrutural
+                (RN-13):</strong
+              >
               <p>
                 Existem {{ invCount }} torres com combinação de solo e fundação
                 sem matriz de volume cadastrada no catálogo.
               </p>
               <ul class="inconsistent-list">
-                @for (item of integritySummary()!.invalidCombinations.slice(0, 3); track item.towerNumber) {
+                @for (
+                  item of integritySummary()!.invalidCombinations.slice(0, 3);
+                  track item.towerNumber
+                ) {
                   <li>
-                    Torre <strong>{{ item.towerNumber }}</strong> (estaca {{ item.stationMeters }} m):
-                    Solo <code>{{ item.soilCode }}</code> × Fundação <code>{{ item.foundationCode }}</code>
+                    Torre <strong>{{ item.towerNumber }}</strong> (estaca
+                    {{ item.stationMeters }} m): Solo
+                    <code>{{ item.soilCode }}</code> × Fundação
+                    <code>{{ item.foundationCode }}</code>
                   </li>
                 }
                 @if (invCount > 3) {
-                  <li>...e mais {{ invCount - 3 }} estruturas inconsistentes.</li>
+                  <li>
+                    ...e mais {{ invCount - 3 }} estruturas inconsistentes.
+                  </li>
                 }
               </ul>
             </div>
@@ -131,8 +160,11 @@ import { StakingApi } from './staking-api.service';
           <div class="alert-content">
             <strong>Divergência de Traçado Geométrico:</strong>
             <span>
-              A extensão física da última estaca ({{ integritySummary()!.totalStationLengthKm }} km)
-              diverge em {{ diff }} km da extensão cadastrada para a linha ({{ integritySummary()!.lineRefinedLengthKm }} km).
+              A extensão física da última estaca ({{
+                integritySummary()!.totalStationLengthKm
+              }}
+              km) diverge em {{ diff }} km da extensão cadastrada para a linha
+              ({{ integritySummary()!.lineRefinedLengthKm }} km).
             </span>
           </div>
         </div>
@@ -141,7 +173,10 @@ import { StakingApi } from './staking-api.service';
       <!-- Action & Filter Bar -->
       <div class="actions-bar">
         <div class="search-filter-group">
-          <mat-form-field appearance="outline" class="density-compact search-input">
+          <mat-form-field
+            appearance="outline"
+            class="density-compact search-input"
+          >
             <mat-label>Buscar por torre</mat-label>
             <input
               matInput
@@ -152,7 +187,10 @@ import { StakingApi } from './staking-api.service';
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="density-compact filter-select">
+          <mat-form-field
+            appearance="outline"
+            class="density-compact filter-select"
+          >
             <mat-label>Tipo de Solo</mat-label>
             <mat-select
               [(ngModel)]="selectedSoilFilter"
@@ -165,7 +203,10 @@ import { StakingApi } from './staking-api.service';
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="density-compact filter-select">
+          <mat-form-field
+            appearance="outline"
+            class="density-compact filter-select"
+          >
             <mat-label>Fundação</mat-label>
             <mat-select
               [(ngModel)]="selectedFoundationFilter"
@@ -178,7 +219,10 @@ import { StakingApi } from './staking-api.service';
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="density-compact filter-select">
+          <mat-form-field
+            appearance="outline"
+            class="density-compact filter-select"
+          >
             <mat-label>Acesso</mat-label>
             <mat-select
               [(ngModel)]="selectedAccessFilter"
@@ -207,7 +251,11 @@ import { StakingApi } from './staking-api.service';
             (click)="togglePreliminaryMode()"
           >
             <mat-icon>tune</mat-icon>
-            {{ showPreliminary() ? 'Ocultar Distribuição' : 'Distribuição Paramétrica' }}
+            {{
+              showPreliminary()
+                ? 'Ocultar Distribuição'
+                : 'Distribuição Paramétrica'
+            }}
           </button>
           <button
             mat-stroked-button
@@ -243,11 +291,7 @@ import { StakingApi } from './staking-api.service';
 
       <div class="table-card">
         <div class="table-wrapper">
-          <table
-            mat-table
-            [dataSource]="towers()"
-            class="staking-data-table"
-          >
+          <table mat-table [dataSource]="towers()" class="staking-data-table">
             <!-- Torre -->
             <ng-container matColumnDef="towerNumber">
               <th mat-header-cell *matHeaderCellDef>Torre</th>
@@ -292,7 +336,11 @@ import { StakingApi } from './staking-api.service';
             <ng-container matColumnDef="elevationMeters">
               <th mat-header-cell *matHeaderCellDef>Cota (m)</th>
               <td mat-cell *matCellDef="let t" class="mono">
-                {{ t.elevationMeters ? (t.elevationMeters | number: '1.2-2') : '—' }}
+                {{
+                  t.elevationMeters
+                    ? (t.elevationMeters | number: '1.2-2')
+                    : '—'
+                }}
               </td>
             </ng-container>
 
@@ -313,7 +361,9 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Solo</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.soilType) {
-                  <span class="badge-cat mono success">{{ t.soilType.code }}</span>
+                  <span class="badge-cat mono success">{{
+                    t.soilType.code
+                  }}</span>
                 } @else {
                   <span class="badge-pending">Não atribuído</span>
                 }
@@ -325,7 +375,9 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Fundação</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.foundationType) {
-                  <span class="badge-cat mono primary">{{ t.foundationType.code }}</span>
+                  <span class="badge-cat mono primary">{{
+                    t.foundationType.code
+                  }}</span>
                 } @else {
                   <span class="badge-pending">Não atribuído</span>
                 }
@@ -348,7 +400,9 @@ import { StakingApi } from './staking-api.service';
 
             <!-- Ações -->
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef class="text-right">Ações</th>
+              <th mat-header-cell *matHeaderCellDef class="text-right">
+                Ações
+              </th>
               <td mat-cell *matCellDef="let t" class="text-right">
                 <button
                   mat-icon-button
@@ -409,7 +463,8 @@ import { StakingApi } from './staking-api.service';
           </div>
 
           <div class="pagination-info mono">
-            Página {{ page() }} de {{ totalPages() }} ({{ totalCount() }} estruturas no total)
+            Página {{ page() }} de {{ totalPages() }} ({{ totalCount() }}
+            estruturas no total)
           </div>
 
           <div class="pagination-buttons">
@@ -474,10 +529,16 @@ import { StakingApi } from './staking-api.service';
                 <mat-icon class="header-icon">layers</mat-icon>
                 <div>
                   <h3 id="batch-assign-title">Atribuição em Lote</h3>
-                  <p class="subtitle">Aplique solo, fundação ou acesso a trechos da linha (RF-19).</p>
+                  <p class="subtitle">
+                    Aplique solo, fundação ou acesso a trechos da linha (RF-19).
+                  </p>
                 </div>
               </div>
-              <button mat-icon-button type="button" (click)="showBatchAssignModal.set(false)">
+              <button
+                mat-icon-button
+                type="button"
+                (click)="showBatchAssignModal.set(false)"
+              >
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -529,14 +590,22 @@ import { StakingApi } from './staking-api.service';
                 <mat-select [(ngModel)]="batchAccessDifficulty">
                   <mat-option [value]="undefined">Não alterar</mat-option>
                   @for (acc of accessDifficulties; track acc) {
-                    <mat-option [value]="acc">{{ accessLabels[acc] }}</mat-option>
+                    <mat-option [value]="acc">{{
+                      accessLabels[acc]
+                    }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
             </div>
             <mat-divider />
             <div class="dialog-footer">
-              <button mat-button type="button" (click)="showBatchAssignModal.set(false)">Cancelar</button>
+              <button
+                mat-button
+                type="button"
+                (click)="showBatchAssignModal.set(false)"
+              >
+                Cancelar
+              </button>
               <button
                 mat-flat-button
                 color="primary"
@@ -570,11 +639,19 @@ import { StakingApi } from './staking-api.service';
               <div class="title-wrap">
                 <mat-icon class="header-icon">edit</mat-icon>
                 <div>
-                  <h3 id="edit-tower-title">Editar Estrutura {{ t.towerNumber }}</h3>
-                  <p class="subtitle">Ajuste os parâmetros geométricos e catálogos da torre.</p>
+                  <h3 id="edit-tower-title">
+                    Editar Estrutura {{ t.towerNumber }}
+                  </h3>
+                  <p class="subtitle">
+                    Ajuste os parâmetros geométricos e catálogos da torre.
+                  </p>
                 </div>
               </div>
-              <button mat-icon-button type="button" (click)="editingTower.set(null)">
+              <button
+                mat-icon-button
+                type="button"
+                (click)="editingTower.set(null)"
+              >
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -587,22 +664,42 @@ import { StakingApi } from './staking-api.service';
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="density-compact">
                   <mat-label>Estaca (m)</mat-label>
-                  <input matInput type="number" step="0.1" [(ngModel)]="towerFormStation" />
+                  <input
+                    matInput
+                    type="number"
+                    step="0.1"
+                    [(ngModel)]="towerFormStation"
+                  />
                 </mat-form-field>
               </div>
 
               <div class="form-row-3">
                 <mat-form-field appearance="outline" class="density-compact">
                   <mat-label>Extensão Pé (m)</mat-label>
-                  <input matInput type="number" step="0.5" [(ngModel)]="towerFormBodyExt" />
+                  <input
+                    matInput
+                    type="number"
+                    step="0.5"
+                    [(ngModel)]="towerFormBodyExt"
+                  />
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="density-compact">
                   <mat-label>Deflexão (°)</mat-label>
-                  <input matInput type="number" step="0.1" [(ngModel)]="towerFormDeflection" />
+                  <input
+                    matInput
+                    type="number"
+                    step="0.1"
+                    [(ngModel)]="towerFormDeflection"
+                  />
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="density-compact">
                   <mat-label>Offset (m)</mat-label>
-                  <input matInput type="number" step="0.1" [(ngModel)]="towerFormOffset" />
+                  <input
+                    matInput
+                    type="number"
+                    step="0.1"
+                    [(ngModel)]="towerFormOffset"
+                  />
                 </mat-form-field>
               </div>
 
@@ -633,20 +730,28 @@ import { StakingApi } from './staking-api.service';
                   <mat-label>Dificuldade de Acesso</mat-label>
                   <mat-select [(ngModel)]="towerFormAccess">
                     @for (acc of accessDifficulties; track acc) {
-                      <mat-option [value]="acc">{{ accessLabels[acc] }}</mat-option>
+                      <mat-option [value]="acc">{{
+                        accessLabels[acc]
+                      }}</mat-option>
                     }
                   </mat-select>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="density-compact">
                   <mat-label>Notas</mat-label>
-                  <input matInput [(ngModel)]="towerFormNotes" placeholder="Observações de campo" />
+                  <input
+                    matInput
+                    [(ngModel)]="towerFormNotes"
+                    placeholder="Observações de campo"
+                  />
                 </mat-form-field>
               </div>
             </div>
             <mat-divider />
             <div class="dialog-footer">
-              <button mat-button type="button" (click)="editingTower.set(null)">Cancelar</button>
+              <button mat-button type="button" (click)="editingTower.set(null)">
+                Cancelar
+              </button>
               <button
                 mat-flat-button
                 color="primary"
@@ -919,7 +1024,8 @@ import { StakingApi } from './staking-api.service';
         padding: 1rem 1.5rem;
       }
       .mono {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
       .font-bold {
         font-weight: 600;
