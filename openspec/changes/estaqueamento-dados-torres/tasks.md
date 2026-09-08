@@ -17,11 +17,11 @@
 
 ## 4. Frontend Web — Gestão e Visualização de Estaqueamento
 
-- [ ] 4.1 Implementar `StakingApi` no `apps/web/src/app/offers/staking-api.service.ts`.
-- [ ] 4.2 Implementar componente de tabela paginada de estaqueamento com busca por torre, filtros por estaca/solo/fundação/acesso e ações em lote (RF-19, RNF-02).
-- [ ] 4.3 Implementar modal/assistente de importação PLS-CADD com upload de arquivo, pré-visualização de linhas/erros e resumo do diff na reimportação (RF-18, RF-22).
-- [ ] 4.4 Implementar formulário/aba de distribuição paramétrica percentual preliminar com validação de soma 100% (RF-21).
-- [ ] 4.5 Implementar testes de componentes web cobrindo paginação, filtros, upload e validação de rateio.
+- [x] 4.1 Implementar `StakingApi` no `apps/web/src/app/offers/staking-api.service.ts`.
+- [x] 4.2 Implementar componente de tabela paginada de estaqueamento com busca por torre, filtros por estaca/solo/fundação/acesso e ações em lote (RF-19, RNF-02).
+- [x] 4.3 Implementar modal/assistente de importação PLS-CADD com upload de arquivo, pré-visualização de linhas/erros e resumo do diff na reimportação (RF-18, RF-22).
+- [x] 4.4 Implementar formulário/aba de distribuição paramétrica percentual preliminar com validação de soma 100% (RF-21).
+- [x] 4.5 Implementar testes de componentes web cobrindo paginação, filtros, upload e validação de rateio.
 
 ## 5. Integração e verificação
 
