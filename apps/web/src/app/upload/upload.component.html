@@ -1,0 +1,177 @@
+<div class="upload-page-container">
+  <!-- Subheader -->
+  <div class="page-sub-header">
+    <div class="header-left">
+      <nav class="breadcrumb-nav">
+        <span>Administração</span>
+        <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+        <span class="breadcrumb-current">Upload &amp; Processamento</span>
+      </nav>
+      <h2 class="font-display-lg page-title">Gestão de Documentos</h2>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="btn-secondary-outline"
+        (click)="clearQueue()"
+      >
+        <mat-icon>sync_alt</mat-icon>
+        <span>Limpar Fila</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-primary-gradient"
+        (click)="startProcessing()"
+        [disabled]="isProcessing()"
+      >
+        <mat-icon>play_arrow</mat-icon>
+        <span>Iniciar Processamento</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="intro-block">
+    <h3 class="font-headline-md section-title">Importação Analítica de Fundações</h3>
+    <p class="section-subtitle">
+      Arraste os arquivos de fundação para extração e validação automática no catálogo de engenharia.
+    </p>
+  </div>
+
+  <!-- Two Column Layout -->
+  <div class="upload-grid-layout">
+    <!-- Left Column: Dropzone & Attached Files List -->
+    <div class="upload-col-left">
+      <!-- Dropzone -->
+      <div
+        class="drop-zone technical-border"
+        [class.dragging]="isDragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+      >
+        <div class="drop-icon-box">
+          <mat-icon>cloud_upload</mat-icon>
+        </div>
+        <h4 class="drop-title">Arraste arquivos aqui</h4>
+        <p class="drop-subtitle">Suporta PDF (Stub / Locação) e Excel (Cargas e Planilhas).</p>
+        <button type="button" class="btn-primary-gradient select-files-btn">
+          Procurar Arquivos
+        </button>
+      </div>
+
+      <!-- Attached Files Card -->
+      <div class="panel-card technical-border">
+        <div class="panel-header">
+          <span class="font-label-caps">Arquivos Anexados ({{ attachedFiles().length }})</span>
+        </div>
+
+        <div class="files-list">
+          @for (file of attachedFiles(); track file.id) {
+            <div class="file-row">
+              <div class="file-main">
+                <mat-icon class="file-icon">{{ file.icon }}</mat-icon>
+                <div class="file-meta">
+                  <span class="file-name">{{ file.name }}</span>
+                  <span class="file-type-size">{{ file.type }} • {{ file.size }}</span>
+                </div>
+              </div>
+              <button
+                matIconButton
+                type="button"
+                class="btn-delete"
+                (click)="removeFile(file.id)"
+                matTooltip="Remover arquivo"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+
+        <div class="panel-footer">
+          <button
+            type="button"
+            class="btn-process-batch"
+            (click)="startProcessing()"
+            [disabled]="isProcessing() || attachedFiles().length === 0"
+          >
+            Processar Lote
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Processing Queue -->
+    <div class="upload-col-right">
+      <div class="panel-card technical-border queue-card">
+        <div class="panel-header queue-header">
+          <span class="font-label-caps">Fila de Processamento Analítico</span>
+          <button type="button" class="refresh-btn" (click)="startProcessing()">
+            <mat-icon>refresh</mat-icon>
+            <span>Atualizar Status</span>
+          </button>
+        </div>
+
+        <div class="table-scroll">
+          <table class="technical-table">
+            <thead>
+              <tr>
+                <th style="width: 35%;">Arquivo / Tipo</th>
+                <th style="width: 15%; text-align: center;">Torre</th>
+                <th style="width: 30%;">Progresso de Extração</th>
+                <th style="width: 20%;">Última Atualização</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of processingQueue(); track item.id) {
+                <tr>
+                  <td>
+                    <div class="filename-cell font-bold">{{ item.filename }}</div>
+                    <span class="badge badge-analysis">{{ item.tag }}</span>
+                  </td>
+                  <td style="text-align: center;" class="font-numeric-tabular font-bold">
+                    {{ item.tower }}
+                  </td>
+                  <td>
+                    <div class="progress-bar-wrapper">
+                      <div class="progress-track">
+                        <div
+                          class="progress-fill"
+                          [style.width.%]="item.progress"
+                          [class.progress-complete]="item.progress === 100"
+                          [class.progress-warning]="item.statusType === 'warning'"
+                        ></div>
+                      </div>
+                    </div>
+                    <div
+                      class="progress-status-label font-label-caps"
+                      [class.text-success]="item.statusType === 'success'"
+                      [class.text-warning]="item.statusType === 'warning'"
+                      [class.text-info]="item.statusType === 'info'"
+                    >
+                      @if (item.statusType === 'info') {
+                        <mat-icon class="spin-icon">sync</mat-icon>
+                      }
+                      {{ item.statusText }}
+                    </div>
+                  </td>
+                  <td class="font-numeric-tabular text-sub">{{ item.lastUpdate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="queue-status-footer">
+          <div class="queue-info">
+            <span class="status-pulse-green"></span>
+            <span>Processando lote analítico (OCR &amp; Validação)</span>
+          </div>
+          <span class="queue-estimate">Tempo estimado: 45s</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,11 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { map } from 'rxjs';
 
-// Casca da aplicação (spec interface/casca-navegacao, design D2): toolbar
-// fina + navegação lateral fixa em telas largas e sobreposta nas estreitas.
+// Casca da aplicação OFERTA Engineering System (Alexandria Design System)
+// Barra superior com seletor de projeto e busca + Sidebar técnica com logo OFERTA
 @Component({
   imports: [
     RouterModule,
@@ -19,6 +20,7 @@ import { map } from 'rxjs';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
   selector: 'app-root',
   templateUrl: './app.html',
@@ -26,6 +28,9 @@ import { map } from 'rxjs';
 })
 export class App {
   protected title = 'Orçamentação de Linhas de Transmissão';
+  protected brandName = 'OFERTA';
+  protected brandSubtitle = 'Linha de transmissão';
+  protected technicalMode = signal(false);
 
   private readonly breakpoints = inject(BreakpointObserver);
 
@@ -40,16 +45,33 @@ export class App {
   // Estado do menu no modo sobreposto (telas estreitas)
   protected readonly menuOpen = signal(false);
 
+  protected readonly systemLinks = [
+    { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
+    { path: '/upload', label: 'Upload & OCR', icon: 'cloud_upload' },
+  ];
+
   protected readonly links = [
-    { path: '/catalogs/conductor-cables', label: 'Cabos condutores' },
-    { path: '/catalogs/ground-wires', label: 'Cabos de guarda' },
-    { path: '/catalogs/guy-wires', label: 'Cabos de tirante' },
-    { path: '/catalogs/insulators', label: 'Isoladores' },
-    { path: '/catalogs/structure-series', label: 'Séries de estruturas' },
+    { path: '/offers', label: 'Ofertas', icon: 'topic' },
+    { path: '/catalogs/conductor-cables', label: 'Cabos condutores', icon: 'cable' },
+    { path: '/catalogs/ground-wires', label: 'Cabos de guarda', icon: 'shield' },
+    { path: '/catalogs/guy-wires', label: 'Cabos de tirante', icon: 'line_weight' },
+    { path: '/catalogs/insulators', label: 'Isoladores', icon: 'bolt' },
+    { path: '/catalogs/structure-series', label: 'Séries de estruturas', icon: 'cell_tower' },
+    { path: '/catalogs/soil-types', label: 'Tipos de solo', icon: 'terrain' },
+    { path: '/catalogs/foundation-types', label: 'Tipos de fundação', icon: 'foundation' },
+    { path: '/catalogs/foundation-volumes', label: 'Matriz de volumes', icon: 'view_in_ar' },
+    { path: '/catalogs/labor-roles', label: 'Mão de obra', icon: 'engineering' },
+    { path: '/catalogs/equipment', label: 'Equipamentos', icon: 'precision_manufacturing' },
+    { path: '/catalogs/fixed-costs', label: 'Custos fixos', icon: 'receipt_long' },
+    { path: '/catalogs/work-crews', label: 'Equipes de trabalho', icon: 'groups' },
   ];
 
   protected toggleMenu(): void {
     this.menuOpen.set(!this.menuOpen());
+  }
+
+  protected toggleTechnicalMode(): void {
+    this.technicalMode.set(!this.technicalMode());
   }
 
   // No modo sobreposto o menu fecha após navegar; no fixo permanece aberto
@@ -59,3 +81,4 @@ export class App {
     }
   }
 }
+

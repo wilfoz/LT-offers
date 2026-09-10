@@ -36,15 +36,23 @@ describe('App (casca de navegação)', () => {
     expect(el.querySelector('h1')?.textContent).toContain(
       'Orçamentação de Linhas de Transmissão',
     );
-    const items = Array.from(el.querySelectorAll('mat-nav-list a')).map((a) =>
-      a.textContent?.trim(),
-    );
+    const items = Array.from(
+      el.querySelectorAll('mat-nav-list a [matListItemTitle]'),
+    ).map((a) => a.textContent?.trim());
     expect(items).toEqual([
+      'Ofertas',
       'Cabos condutores',
       'Cabos de guarda',
       'Cabos de tirante',
       'Isoladores',
       'Séries de estruturas',
+      'Tipos de solo',
+      'Tipos de fundação',
+      'Matriz de volumes',
+      'Mão de obra',
+      'Equipamentos',
+      'Custos fixos',
+      'Equipes de trabalho',
     ]);
   });
 
@@ -60,7 +68,7 @@ describe('App (casca de navegação)', () => {
     expect(active[0].textContent).toContain('Cabos de tirante');
     expect(
       (fixture.nativeElement as HTMLElement).querySelectorAll('mat-nav-list a'),
-    ).toHaveLength(5);
+    ).toHaveLength(13);
   });
 
   it('em tela larga a navegação fica fixa, sem botão de menu', async () => {

@@ -178,6 +178,8 @@ model TowerType {
   code              String
   function          TowerFunction
   versions          TowerTypeVersion[]
+  volumes           FoundationVolume[]
+  stakingTowers     StakingTower[]
 
   @@unique([structureSeriesId, code])
   @@map("tower_type")
@@ -240,3 +242,478 @@ model InsulatorVersion {
   @@index([insulatorId, effectiveFrom(sort: Desc)])
   @@map("insulator_version")
 }
+
+// Catálogo de solos e fundações (F1 — origem DB_FUN), três recursos (design D1
+// da change catalogo-solos-fundacoes): tipos de solo, tipos de fundação (com
+// aplicação na identidade, como GroundWire.type) e a matriz de volumes por
+// combinação torre × solo × fundação (RN-13) — identidade composta pela tripla
+// de FKs, única no banco; as quantidades ficam na versão. Nomes de índice da
+// matriz são explícitos: os auto-gerados passariam do limite de 63 caracteres
+// do Postgres (NAMEDATALEN) e seriam truncados em silêncio.
+model SoilType {
+  id            Int                @id @default(autoincrement())
+  code          String             @unique
+  versions      SoilTypeVersion[]
+  volumes       FoundationVolume[]
+  stakingTowers StakingTower[]
+
+  @@map("soil_type")
+}
+
+model SoilTypeVersion {
+  id                               Int      @id @default(autoincrement())
+  soilTypeId                       Int      @map("soil_type_id")
+  soilType                         SoilType @relation(fields: [soilTypeId], references: [id])
+  description                      String?
+  submerged                        Boolean?
+  allowableCompressionStressKgfCm2 Decimal? @map("allowable_compression_stress_kgf_cm2") @db.Decimal(12, 2)
+  specificWeightKgfM3              Decimal? @map("specific_weight_kgf_m3") @db.Decimal(12, 2)
+  internalFrictionAngleDeg         Decimal? @map("internal_friction_angle_deg") @db.Decimal(10, 3)
+  cohesionKgCm2                    Decimal? @map("cohesion_kg_cm2") @db.Decimal(10, 3)
+  // Faixa de NSPT: mínimo inclusivo, máximo exclusivo (x≤N<y na planilha);
+  // mínimo < máximo é garantido na API, sem CHECK no banco (risco aceito).
+  nsptMin                          Int?     @map("nspt_min")
+  nsptMax                          Int?     @map("nspt_max")
+  effectiveFrom                    DateTime @map("effective_from") @db.Date
+  createdBy                        String   @map("created_by")
+  createdAt                        DateTime @default(now()) @map("created_at")
+
+  @@unique([soilTypeId, effectiveFrom])
+  @@index([soilTypeId, effectiveFrom(sort: Desc)])
+  @@map("soil_type_version")
+}
+
+enum FoundationApplication {
+  SELF_SUPPORTING
+  GUYED
+  CROSS_ROPE
+
+  @@map("foundation_application")
+}
+
+model FoundationType {
+  id            Int                     @id @default(autoincrement())
+  code          String                  @unique
+  application   FoundationApplication
+  versions      FoundationTypeVersion[]
+  volumes       FoundationVolume[]
+  stakingTowers StakingTower[]
+
+  @@map("foundation_type")
+}
+
+model FoundationTypeVersion {
+  id                       Int            @id @default(autoincrement())
+  foundationTypeId         Int            @map("foundation_type_id")
+  foundationType           FoundationType @relation(fields: [foundationTypeId], references: [id])
+  description              String?
+  // Composição por elemento de fundação: contagens ≥ 0 anuláveis (null = não
+  // informado, distinto de zero — RNF-09), espelhando as 17 colunas da DB_FUN.
+  spreadFootingCount       Int?           @map("spread_footing_count")
+  precastMastCount         Int?           @map("precast_mast_count")
+  precastGuyCount          Int?           @map("precast_guy_count")
+  straightPierCount        Int?           @map("straight_pier_count")
+  belledPierCount          Int?           @map("belled_pier_count")
+  slabPierCount            Int?           @map("slab_pier_count")
+  straightPierGuyCount     Int?           @map("straight_pier_guy_count")
+  belledPierGuyCount       Int?           @map("belled_pier_guy_count")
+  rockAnchorCount          Int?           @map("rock_anchor_count")
+  concretePileCount        Int?           @map("concrete_pile_count")
+  steelPileCount           Int?           @map("steel_pile_count")
+  helicalMastCount         Int?           @map("helical_mast_count")
+  helicalGuyCount          Int?           @map("helical_guy_count")
+  triconeCount             Int?           @map("tricone_count")
+  rootPileCount            Int?           @map("root_pile_count")
+  micropileCount           Int?           @map("micropile_count")
+  continuousAugerPileCount Int?           @map("continuous_auger_pile_count")
+  effectiveFrom            DateTime       @map("effective_from") @db.Date
+  createdBy                String         @map("created_by")
+  createdAt                DateTime       @default(now()) @map("created_at")
+
+  @@unique([foundationTypeId, effectiveFrom])
+  @@index([foundationTypeId, effectiveFrom(sort: Desc)])
+  @@map("foundation_type_version")
+}
+
+model FoundationVolume {
+  id               Int                       @id @default(autoincrement())
+  towerTypeId      Int                       @map("tower_type_id")
+  towerType        TowerType                 @relation(fields: [towerTypeId], references: [id])
+  soilTypeId       Int                       @map("soil_type_id")
+  soilType         SoilType                  @relation(fields: [soilTypeId], references: [id])
+  foundationTypeId Int                       @map("foundation_type_id")
+  foundationType   FoundationType            @relation(fields: [foundationTypeId], references: [id])
+  versions         FoundationVolumeVersion[]
+
+  @@unique([towerTypeId, soilTypeId, foundationTypeId], map: "foundation_volume_tower_soil_foundation_key")
+  @@map("foundation_volume")
+}
+
+model FoundationVolumeVersion {
+  id                        Int              @id @default(autoincrement())
+  foundationVolumeId        Int              @map("foundation_volume_id")
+  foundationVolume          FoundationVolume @relation(fields: [foundationVolumeId], references: [id])
+  // Quantidades da combinação (~34 colunas da DB_FUN), decimais ≥ 0 anuláveis
+  // (RNF-09). Unidades inferidas — hipótese registrada no proposal (§02).
+  excavationHardFootingM3   Decimal?         @map("excavation_hard_footing_m3") @db.Decimal(12, 3)
+  excavationNormalFootingM3 Decimal?         @map("excavation_normal_footing_m3") @db.Decimal(12, 3)
+  excavationWaterFootingM3  Decimal?         @map("excavation_water_footing_m3") @db.Decimal(12, 3)
+  excavationHardPrecastM3   Decimal?         @map("excavation_hard_precast_m3") @db.Decimal(12, 3)
+  excavationNormalPrecastM3 Decimal?         @map("excavation_normal_precast_m3") @db.Decimal(12, 3)
+  excavationWaterPrecastM3  Decimal?         @map("excavation_water_precast_m3") @db.Decimal(12, 3)
+  excavationHardPileCapM3   Decimal?         @map("excavation_hard_pile_cap_m3") @db.Decimal(12, 3)
+  excavationNormalPileCapM3 Decimal?         @map("excavation_normal_pile_cap_m3") @db.Decimal(12, 3)
+  excavationWaterPileCapM3  Decimal?         @map("excavation_water_pile_cap_m3") @db.Decimal(12, 3)
+  excavationPierM3          Decimal?         @map("excavation_pier_m3") @db.Decimal(12, 3)
+  anchorBoltDrillingM       Decimal?         @map("anchor_bolt_drilling_m") @db.Decimal(12, 3)
+  steelPiersKg              Decimal?         @map("steel_piers_kg") @db.Decimal(12, 3)
+  steelFootingsKg           Decimal?         @map("steel_footings_kg") @db.Decimal(12, 3)
+  steelPileCapsKg           Decimal?         @map("steel_pile_caps_kg") @db.Decimal(12, 3)
+  steelPrecastKg            Decimal?         @map("steel_precast_kg") @db.Decimal(12, 3)
+  steelRockKg               Decimal?         @map("steel_rock_kg") @db.Decimal(12, 3)
+  steelAnchorBoltsKg        Decimal?         @map("steel_anchor_bolts_kg") @db.Decimal(12, 3)
+  concretePiersM3           Decimal?         @map("concrete_piers_m3") @db.Decimal(12, 3)
+  concreteFootingsM3        Decimal?         @map("concrete_footings_m3") @db.Decimal(12, 3)
+  concretePileCapsM3        Decimal?         @map("concrete_pile_caps_m3") @db.Decimal(12, 3)
+  concretePrecastM3         Decimal?         @map("concrete_precast_m3") @db.Decimal(12, 3)
+  concreteRockM3            Decimal?         @map("concrete_rock_m3") @db.Decimal(12, 3)
+  regenerationM3            Decimal?         @map("regeneration_m3") @db.Decimal(12, 3)
+  groutM3                   Decimal?         @map("grout_m3") @db.Decimal(12, 3)
+  backfillSoilM3            Decimal?         @map("backfill_soil_m3") @db.Decimal(12, 3)
+  backfillSoilCementM3      Decimal?         @map("backfill_soil_cement_m3") @db.Decimal(12, 3)
+  formworkM2                Decimal?         @map("formwork_m2") @db.Decimal(12, 3)
+  helicalPileM              Decimal?         @map("helical_pile_m") @db.Decimal(12, 3)
+  steelPileM                Decimal?         @map("steel_pile_m") @db.Decimal(12, 3)
+  triconeM                  Decimal?         @map("tricone_m") @db.Decimal(12, 3)
+  rootPileM                 Decimal?         @map("root_pile_m") @db.Decimal(12, 3)
+  continuousAugerPileM      Decimal?         @map("continuous_auger_pile_m") @db.Decimal(12, 3)
+  micropileM                Decimal?         @map("micropile_m") @db.Decimal(12, 3)
+  concretePileM             Decimal?         @map("concrete_pile_m") @db.Decimal(12, 3)
+  effectiveFrom             DateTime         @map("effective_from") @db.Date
+  createdBy                 String           @map("created_by")
+  createdAt                 DateTime         @default(now()) @map("created_at")
+
+  @@unique([foundationVolumeId, effectiveFrom], map: "foundation_volume_version_volume_id_effective_from_key")
+  @@index([foundationVolumeId, effectiveFrom(sort: Desc)], map: "foundation_volume_version_volume_id_effective_from_idx")
+  @@map("foundation_volume_version")
+}
+
+// Catálogo de mão de obra (F1 — origem DB_MO, RF-12, RN-14).
+model LaborRole {
+  id                 Int                 @id @default(autoincrement())
+  code               String              @unique
+  name               String
+  versions           LaborRoleVersion[]
+  workCrewLaborRoles WorkCrewLaborRole[]
+
+  @@map("labor_role")
+}
+
+model LaborRoleVersion {
+  id                     Int       @id @default(autoincrement())
+  laborRoleId            Int       @map("labor_role_id")
+  laborRole              LaborRole @relation(fields: [laborRoleId], references: [id])
+  baseSalary             Decimal?  @map("base_salary") @db.Decimal(12, 2)
+  hazardPayPercent       Decimal?  @map("hazard_pay_percent") @db.Decimal(6, 4)
+  overtimePercent        Decimal?  @map("overtime_percent") @db.Decimal(6, 4)
+  dsrOvertimePercent     Decimal?  @map("dsr_overtime_percent") @db.Decimal(6, 4)
+  socialChargesPercent   Decimal?  @map("social_charges_percent") @db.Decimal(6, 4)
+  foodAllowanceMonthly   Decimal?  @map("food_allowance_monthly") @db.Decimal(12, 2)
+  housingMonthly         Decimal?  @map("housing_monthly") @db.Decimal(12, 2)
+  homeLeaveTravelMonthly Decimal?  @map("home_leave_travel_monthly") @db.Decimal(12, 2)
+  healthInsuranceMonthly Decimal?  @map("health_insurance_monthly") @db.Decimal(12, 2)
+  lifeInsuranceMonthly   Decimal?  @map("life_insurance_monthly") @db.Decimal(12, 2)
+  effectiveFrom          DateTime  @map("effective_from") @db.Date
+  createdBy              String    @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  @@unique([laborRoleId, effectiveFrom])
+  @@index([laborRoleId, effectiveFrom(sort: Desc)])
+  @@map("labor_role_version")
+}
+
+// Catálogo de equipamentos (F1 — origem DB_EQ, RF-13, RN-17).
+model Equipment {
+  id                 Int                 @id @default(autoincrement())
+  code               String              @unique
+  description        String
+  category           String?
+  versions           EquipmentVersion[]
+  workCrewEquipments WorkCrewEquipment[]
+
+  @@map("equipment")
+}
+
+model EquipmentVersion {
+  id                     Int       @id @default(autoincrement())
+  equipmentId            Int       @map("equipment_id")
+  equipment              Equipment @relation(fields: [equipmentId], references: [id])
+  externalRentalMonthly  Decimal?  @map("external_rental_monthly") @db.Decimal(12, 2)
+  internalRentalMonthly  Decimal?  @map("internal_rental_monthly") @db.Decimal(12, 2)
+  purchasePrice          Decimal?  @map("purchase_price") @db.Decimal(12, 2)
+  depreciationYears      Int?      @map("depreciation_years")
+  ownedAvailabilityCount Int?      @map("owned_availability_count")
+  fuelMaintenanceMonthly Decimal?  @map("fuel_maintenance_monthly") @db.Decimal(12, 2)
+  effectiveFrom          DateTime  @map("effective_from") @db.Date
+  createdBy              String    @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  @@unique([equipmentId, effectiveFrom])
+  @@index([equipmentId, effectiveFrom(sort: Desc)])
+  @@map("equipment_version")
+}
+
+// Catálogo de custos fixos e indiretos (F1 — origem DB_FI).
+enum FixedCostCategory {
+  EPI
+  MEDICAL_EXAM
+  UNIFORM
+  MOB_DEMOB
+  TRAVEL_HOUSING
+  OTHER
+
+  @@map("fixed_cost_category")
+}
+
+model FixedCost {
+  id          Int                @id @default(autoincrement())
+  code        String             @unique
+  description String
+  category    FixedCostCategory
+  versions    FixedCostVersion[]
+
+  @@map("fixed_cost")
+}
+
+model FixedCostVersion {
+  id            Int       @id @default(autoincrement())
+  fixedCostId   Int       @map("fixed_cost_id")
+  fixedCost     FixedCost @relation(fields: [fixedCostId], references: [id])
+  unitCost      Decimal?  @map("unit_cost") @db.Decimal(12, 2)
+  unit          String?   @db.VarChar(50)
+  effectiveFrom DateTime  @map("effective_from") @db.Date
+  createdBy     String    @map("created_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@unique([fixedCostId, effectiveFrom])
+  @@index([fixedCostId, effectiveFrom(sort: Desc)])
+  @@map("fixed_cost_version")
+}
+
+// Catálogo de equipes de trabalho e composições (F1 — origem Equipos e DesEquipos, RF-14, RF-15, RN-15).
+enum ProductionPeriod {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+
+  @@map("production_period")
+}
+
+model WorkCrew {
+  id       Int               @id @default(autoincrement())
+  code     String            @unique
+  name     String
+  versions WorkCrewVersion[]
+
+  @@map("work_crew")
+}
+
+model WorkCrewVersion {
+  id                     Int                  @id @default(autoincrement())
+  workCrewId             Int                  @map("work_crew_id")
+  workCrew               WorkCrew             @relation(fields: [workCrewId], references: [id])
+  standardProductionRate Decimal?             @map("standard_production_rate") @db.Decimal(12, 4)
+  productionUnit         String?              @map("production_unit") @db.VarChar(50)
+  productionPeriod       ProductionPeriod?    @map("production_period")
+  effectiveFrom          DateTime             @map("effective_from") @db.Date
+  createdBy              String               @map("created_by")
+  createdAt              DateTime             @default(now()) @map("created_at")
+  laborRoles             WorkCrewLaborRole[]
+  equipments             WorkCrewEquipment[]
+
+  @@unique([workCrewId, effectiveFrom])
+  @@index([workCrewId, effectiveFrom(sort: Desc)])
+  @@map("work_crew_version")
+}
+
+model WorkCrewLaborRole {
+  id                Int             @id @default(autoincrement())
+  workCrewVersionId Int             @map("work_crew_version_id")
+  workCrewVersion   WorkCrewVersion @relation(fields: [workCrewVersionId], references: [id], onDelete: Cascade)
+  laborRoleId       Int             @map("labor_role_id")
+  laborRole         LaborRole       @relation(fields: [laborRoleId], references: [id])
+  quantity          Decimal         @db.Decimal(6, 2)
+
+  @@unique([workCrewVersionId, laborRoleId])
+  @@map("work_crew_labor_role")
+}
+
+model WorkCrewEquipment {
+  id                Int             @id @default(autoincrement())
+  workCrewVersionId Int             @map("work_crew_version_id")
+  workCrewVersion   WorkCrewVersion @relation(fields: [workCrewVersionId], references: [id], onDelete: Cascade)
+  equipmentId       Int             @map("equipment_id")
+  equipment         Equipment       @relation(fields: [equipmentId], references: [id])
+  quantity          Decimal         @db.Decimal(6, 2)
+
+  @@unique([workCrewVersionId, equipmentId])
+  @@map("work_crew_equipment")
+}
+
+// M01 — Gestão de ofertas, revisões, linhas de transmissão e matriz de escopo (RF-01..RF-06, RN-01..RN-04).
+enum OfferRevisionStatus {
+  DRAFT
+  FROZEN
+  DELIVERED
+
+  @@map("offer_revision_status")
+}
+
+enum ScopeResponsibleParty {
+  CONTRACTOR
+  CLIENT
+
+  @@map("scope_responsible_party")
+}
+
+model Offer {
+  id                Int             @id @default(autoincrement())
+  code              String          @unique
+  name              String
+  clientName        String          @map("client_name")
+  baseCurrency      String          @default("BRL") @map("base_currency") @db.VarChar(10)
+  clonedFromOfferId Int?            @map("cloned_from_offer_id")
+  clonedFromOffer   Offer?          @relation("OfferClones", fields: [clonedFromOfferId], references: [id], onDelete: SetNull)
+  clones            Offer[]         @relation("OfferClones")
+  createdBy         String          @map("created_by")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  revisions         OfferRevision[]
+
+  @@map("offer")
+}
+
+model OfferRevision {
+  id                      Int                 @id @default(autoincrement())
+  offerId                 Int                 @map("offer_id")
+  offer                   Offer               @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  revisionNumber          Int                 @map("revision_number")
+  status                  OfferRevisionStatus @default(DRAFT)
+  auctionName             String              @map("auction_name")
+  lotName                 String              @map("lot_name")
+  offerDate               DateTime            @map("offer_date") @db.Date
+  auctionDate             DateTime?           @map("auction_date") @db.Date
+  scheduleStartDate       DateTime?           @map("schedule_start_date") @db.Date
+  commercialOperationDate DateTime?           @map("commercial_operation_date") @db.Date
+  estimatedCapex          Decimal?            @map("estimated_capex") @db.Decimal(16, 2)
+  maxRap                  Decimal?            @map("max_rap") @db.Decimal(16, 2)
+  winningRap              Decimal?            @map("winning_rap") @db.Decimal(16, 2)
+  notes                   String?
+  closedAt                DateTime?           @map("closed_at")
+  deliveredAt             DateTime?           @map("delivered_at")
+  createdBy               String              @map("created_by")
+  createdAt               DateTime            @default(now()) @map("created_at")
+  updatedAt               DateTime            @updatedAt @map("updated_at")
+  transmissionLines       TransmissionLine[]
+  scopeMatrixItems        ScopeMatrixItem[]
+
+  @@unique([offerId, revisionNumber])
+  @@index([offerId, revisionNumber(sort: Desc)])
+  @@map("offer_revision")
+}
+
+model TransmissionLine {
+  id                             Int                             @id @default(autoincrement())
+  offerRevisionId                Int                             @map("offer_revision_id")
+  offerRevision                  OfferRevision                   @relation(fields: [offerRevisionId], references: [id], onDelete: Cascade)
+  code                           String
+  name                           String
+  nominalVoltageKv               Decimal                         @map("nominal_voltage_kv") @db.Decimal(8, 2)
+  refinedLengthKm                Decimal                         @map("refined_length_km") @db.Decimal(10, 3)
+  reportLengthKm                 Decimal                         @map("report_length_km") @db.Decimal(10, 3)
+  circuitCount                   Int                             @default(1) @map("circuit_count")
+  bundleConductorCount           Int                             @default(1) @map("bundle_conductor_count")
+  destinationStatePrimary        String                          @map("destination_state_primary") @db.VarChar(2)
+  destinationPercentagePrimary   Decimal                         @map("destination_percentage_primary") @db.Decimal(5, 2)
+  destinationStateSecondary      String?                         @map("destination_state_secondary") @db.VarChar(2)
+  destinationPercentageSecondary Decimal?                        @map("destination_percentage_secondary") @db.Decimal(5, 2)
+  createdAt                      DateTime                        @default(now()) @map("created_at")
+  updatedAt                      DateTime                        @updatedAt @map("updated_at")
+  stakingTowers                  StakingTower[]
+  preliminaryStakingDistribution PreliminaryStakingDistribution?
+
+  @@unique([offerRevisionId, code])
+  @@map("transmission_line")
+}
+
+model ScopeMatrixItem {
+  id                   Int                   @id @default(autoincrement())
+  offerRevisionId      Int                   @map("offer_revision_id")
+  offerRevision        OfferRevision         @relation(fields: [offerRevisionId], references: [id], onDelete: Cascade)
+  itemCode             String                @map("item_code") @db.VarChar(50)
+  itemName             String                @map("item_name")
+  category             String                @db.VarChar(100)
+  responsibleParty     ScopeResponsibleParty @default(CONTRACTOR) @map("responsible_party")
+  acceptsDirectBilling Boolean               @default(false) @map("accepts_direct_billing")
+  currencyRiskParty    ScopeResponsibleParty @default(CONTRACTOR) @map("currency_risk_party")
+  commodityRiskParty   ScopeResponsibleParty @default(CONTRACTOR) @map("commodity_risk_party")
+  notes                String?
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+
+  @@unique([offerRevisionId, itemCode])
+  @@map("scope_matrix_item")
+}
+
+// Módulo de estaqueamento e dados por torre (F2 — origem E1..E10, RF-18..RF-22, RNF-02, RNF-10).
+enum AccessDifficulty {
+  NORMAL
+  DIFFICULT
+  CROSSING
+
+  @@map("access_difficulty")
+}
+
+model StakingTower {
+  id                  Int               @id @default(autoincrement())
+  transmissionLineId  Int               @map("transmission_line_id")
+  transmissionLine    TransmissionLine  @relation(fields: [transmissionLineId], references: [id], onDelete: Cascade)
+  towerNumber         String            @map("tower_number") @db.VarChar(50)
+  stationMeters       Decimal           @map("station_meters") @db.Decimal(12, 3)
+  bodyExtensionMeters Decimal           @default(0) @map("body_extension_meters") @db.Decimal(8, 3)
+  deflectionAngleDeg  Decimal           @default(0) @map("deflection_angle_deg") @db.Decimal(8, 4)
+  lateralOffsetMeters Decimal           @default(0) @map("lateral_offset_meters") @db.Decimal(8, 3)
+  utmEast             Decimal?          @map("utm_east") @db.Decimal(12, 3)
+  utmNorth            Decimal?          @map("utm_north") @db.Decimal(12, 3)
+  elevationMeters     Decimal?          @map("elevation_meters") @db.Decimal(10, 3)
+  towerTypeId         Int?              @map("tower_type_id")
+  towerType           TowerType?        @relation(fields: [towerTypeId], references: [id], onDelete: SetNull)
+  soilTypeId          Int?              @map("soil_type_id")
+  soilType            SoilType?         @relation(fields: [soilTypeId], references: [id], onDelete: SetNull)
+  foundationTypeId    Int?              @map("foundation_type_id")
+  foundationType      FoundationType?   @relation(fields: [foundationTypeId], references: [id], onDelete: SetNull)
+  accessDifficulty    AccessDifficulty  @default(NORMAL) @map("access_difficulty")
+  notes               String?
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  @@unique([transmissionLineId, towerNumber])
+  @@index([transmissionLineId, stationMeters])
+  @@map("staking_tower")
+}
+
+model PreliminaryStakingDistribution {
+  id                    Int              @id @default(autoincrement())
+  transmissionLineId    Int              @unique @map("transmission_line_id")
+  transmissionLine      TransmissionLine @relation(fields: [transmissionLineId], references: [id], onDelete: Cascade)
+  // Percentuais de solo e fundação em formato JSON (RF-21, RNF-08, RNF-09)
+  soilPercentages       Json             @default("[]") @map("soil_percentages")
+  foundationPercentages Json             @default("[]") @map("foundation_percentages")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
+
+  @@map("preliminary_staking_distribution")
+}
+
+

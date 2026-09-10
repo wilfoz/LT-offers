@@ -46,14 +46,46 @@ export class DecimalValue {
     return new DecimalValue(this.value.plus(other.value));
   }
 
+  minus(other: DecimalValue): DecimalValue {
+    return new DecimalValue(this.value.minus(other.value));
+  }
+
   times(other: DecimalValue): DecimalValue {
     return new DecimalValue(this.value.times(other.value));
+  }
+
+  dividedBy(other: DecimalValue): DecimalValue {
+    return new DecimalValue(this.value.dividedBy(other.value));
+  }
+
+  isZero(): boolean {
+    return this.value.isZero();
+  }
+
+  greaterThan(other: DecimalValue): boolean {
+    return this.value.greaterThan(other.value);
+  }
+
+  lessThan(other: DecimalValue): boolean {
+    return this.value.lessThan(other.value);
+  }
+
+  isNegative(): boolean {
+    return this.value.isNegative();
+  }
+
+  abs(): DecimalValue {
+    return new DecimalValue(this.value.abs());
   }
 
   round(places: number, policy: RoundingPolicy): DecimalValue {
     return new DecimalValue(
       this.value.toDecimalPlaces(places, MODE_BY_POLICY[policy]),
     );
+  }
+
+  toFixed(places: number, policy: RoundingPolicy = 'half-up'): string {
+    return this.value.toFixed(places, MODE_BY_POLICY[policy]);
   }
 
   equals(other: DecimalValue): boolean {

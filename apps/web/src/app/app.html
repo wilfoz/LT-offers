@@ -1,43 +1,128 @@
 <mat-toolbar class="app-toolbar">
   @if (!wide()) {
-  <button
-    matIconButton
-    type="button"
-    aria-label="Abrir menu de navegação"
-    (click)="toggleMenu()"
-  >
+  <button matIconButton type="button" aria-label="Abrir menu de navegação" (click)="toggleMenu()">
     <mat-icon>menu</mat-icon>
   </button>
   }
-  <h1 class="app-title">{{ title }}</h1>
+
+  <div class="toolbar-left">
+    <div class="brand-badge md:hidden">
+      <span class="brand-icon">S</span>
+      <span class="brand-text">OFERTA</span>
+    </div>
+    <h1 class="app-title">{{ title }}</h1>
+  </div>
+
+  <div class="toolbar-center">
+    <div class="project-selector" matTooltip="Selecionar projeto ou lote em andamento">
+      <mat-icon class="selector-icon">folder</mat-icon>
+      <span class="selector-text">Seletor de Projeto</span>
+      <mat-icon class="selector-arrow">expand_more</mat-icon>
+    </div>
+
+    <div class="global-search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="search" placeholder="Buscar torre, projeto ou cálculo..." aria-label="Buscar no sistema" />
+    </div>
+  </div>
+
+  <div class="toolbar-actions">
+    <button matIconButton type="button" matTooltip="Alternar Modo Técnico" (click)="toggleTechnicalMode()"
+      [class.active-tech]="technicalMode()">
+      <mat-icon>construction</mat-icon>
+    </button>
+
+    <button matIconButton type="button" matTooltip="Notificações do sistema" class="notif-btn">
+      <mat-icon>notifications</mat-icon>
+      <span class="notif-dot"></span>
+    </button>
+
+    <div class="user-avatar-chip" matTooltip="Engenheiro Responsável">
+      <div class="avatar-circle">ER</div>
+      <span class="avatar-name">Eng. Rodrigues</span>
+    </div>
+  </div>
 </mat-toolbar>
 
 <mat-sidenav-container class="app-container">
-  <mat-sidenav
-    [mode]="wide() ? 'side' : 'over'"
-    [opened]="wide() || menuOpen()"
-    (closedStart)="menuOpen.set(false)"
-  >
-    <mat-nav-list aria-label="Navegação principal">
+  <mat-sidenav [mode]="wide() ? 'side' : 'over'" [opened]="wide() || menuOpen()" (closedStart)="menuOpen.set(false)"
+    class="solaris-sidenav">
+    <!-- Brand Header -->
+    <div class="sidenav-brand">
+      <div class="logo-box">
+        <span>S</span>
+      </div>
+      <div class="brand-info">
+        <div class="brand-name">OFERTA</div>
+        <div class="brand-sub">Linha de transmissão</div>
+      </div>
+    </div>
+
+    <!-- System Section -->
+    <div class="system-nav-section">
+      @for (slink of systemLinks; track slink.path) {
+      <a [routerLink]="slink.path" routerLinkActive="active-sys" class="system-nav-link" (click)="closeAfterNavigate()">
+        <mat-icon>{{ slink.icon }}</mat-icon>
+        <span>{{ slink.label }}</span>
+      </a>
+      }
+    </div>
+
+    <div class="nav-section-divider">
+      <span class="font-label-caps">Módulos de Engenharia</span>
+    </div>
+
+    <!-- Navigation List -->
+    <mat-nav-list aria-label="Navegação principal" class="solaris-nav-list">
       @for (link of links; track link.path) {
-      <a
-        mat-list-item
-        [routerLink]="link.path"
-        routerLinkActive
-        #rla="routerLinkActive"
-        [activated]="rla.isActive"
-        [class.active-link]="rla.isActive"
-        (click)="closeAfterNavigate()"
-      >
-        {{ link.label }}
+      <a mat-list-item [routerLink]="link.path" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive"
+        [class.active-link]="rla.isActive" (click)="closeAfterNavigate()">
+        <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+        <span matListItemTitle class="nav-label">{{ link.label }}</span>
       </a>
       }
     </mat-nav-list>
+
+    <!-- Bottom Sidebar Controls -->
+    <div class="sidenav-footer">
+      <button type="button" class="tech-mode-btn" (click)="toggleTechnicalMode()" [class.tech-active]="technicalMode()">
+        <mat-icon>engineering</mat-icon>
+        <span>Modo Técnico</span>
+      </button>
+
+      <div class="engineer-card">
+        <div class="engineer-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="engineer-info">
+          <div class="engineer-title">Eng. Rodrigues</div>
+          <div class="engineer-status">
+            <span class="status-pulse-green"></span>
+            <span>ONLINE</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content class="solaris-main-content">
     <main class="content-container">
       <router-outlet></router-outlet>
     </main>
+
+    <!-- Technical Status Bar Footer -->
+    <footer class="app-status-footer">
+      <div class="footer-left">
+        <span class="footer-item">OFERTA ENGINEERING SYSTEM © 2026</span>
+        <span class="footer-sep">•</span>
+        <span class="footer-item">Verificação: Automática (OK)</span>
+        <span class="footer-sep">•</span>
+        <span class="footer-item">DB: OFERTA_PROD_04</span>
+      </div>
+      <div class="footer-right">
+        <span class="status-pulse-green"></span>
+        <span class="server-status">Conectado ao Servidor Central</span>
+      </div>
+    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

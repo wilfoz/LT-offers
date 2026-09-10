@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Armações - Autoportante | Solaris Engineering</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-tertiary-fixed": "#211b00", "on-tertiary": "#ffffff", "primary-fixed": "#d9e2ff", "inverse-on-surface": "#f2f0f1", "on-primary-fixed": "#001946", "on-error": "#ffffff", "on-error-container": "#93000a", "on-secondary-fixed": "#171c20", "surface-dim": "#dbdadb", "on-tertiary-fixed-variant": "#524600", surface: "#faf9fa", background: "#faf9fa", "surface-container-highest": "#e3e2e3", "on-primary": "#ffffff", "secondary-container": "#dfe3e8", "on-primary-container": "#e7ebff", "on-surface": "#1b1c1d", "tertiary-fixed-dim": "#dcc661", "on-secondary-fixed-variant": "#42474b", outline: "#737784", "on-tertiary-container": "#4a3f00", "tertiary-fixed": "#f9e37a", "surface-container-lowest": "#ffffff", "surface-container": "#efedee", "on-secondary-container": "#606569", "on-primary-fixed-variant": "#00419d", "tertiary-container": "#bfab49", "surface-variant": "#e3e2e3", "surface-container-low": "#f5f3f4", "primary-container": "#3366cc", "error-container": "#ffdad6", "surface-container-high": "#e9e8e9", "surface-tint": "#2259bf", "secondary-fixed-dim": "#c2c7cc", "on-secondary": "#ffffff", tertiary: "#6d5e00", secondary: "#5a5f63", "on-background": "#1b1c1d", error: "#ba1a1a", "secondary-fixed": "#dfe3e8", "on-surface-variant": "#434653", "inverse-surface": "#303031", "primary-fixed-dim": "#b1c5ff", "inverse-primary": "#b1c5ff", primary: "#094cb2", "outline-variant": "#c3c6d5", "surface-bright": "#faf9fa"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"gutter-dense": "8px", "container-padding": "24px", unit: "4px", "gutter-normal": "16px", "stack-md": "12px", "stack-sm": "4px"}, fontFamily: {"label-caps": ["Inter"], "numeric-tabular": ["Inter"], "body-md": ["Inter"], "title-sm": ["Inter"], "headline-md": ["Inter"], "display-lg": ["Inter"], "body-sm": ["Inter"], headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"]}, fontSize: {"label-caps": ["11px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700"}], "numeric-tabular": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "title-sm": ["16px", {lineHeight: "24px", fontWeight: "600"}], "headline-md": ["20px", {lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600"}], "display-lg": ["30px", {lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["13px", {lineHeight: "18px", fontWeight: "400"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .technical-table th { @apply border border-outline-variant bg-surface-container-low px-2 py-1 text-label-caps font-semibold uppercase text-on-surface-variant; }
+        .technical-table td { @apply border border-outline-variant bg-surface-container-lowest px-2 py-1 text-numeric-tabular font-numeric-tabular text-on-surface text-center; }
+        .zebra-rows tr:nth-child(even) td { @apply bg-surface-container-lowest; }
+        .header-blue { background-color: #60A5FA; }
+    </style>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .technical-table th { @apply border border-outline-variant bg-surface-container-low px-2 py-1 text-label-caps font-semibold uppercase text-on-surface-variant; }
+        .technical-table td { @apply border border-outline-variant bg-surface-container-lowest px-2 py-1 text-numeric-tabular font-numeric-tabular text-on-surface text-center; }
+        .zebra-rows tr:nth-child(even) td { @apply bg-surface-container-lowest; }
+        .header-blue { background-color: #60A5FA; }
+    </style></head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low border-r border-outline-variant flex flex-col z-40">
+<div class="p-container-padding flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">foundation</span>
+</div>
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-primary leading-none">Solaris</h1>
+<p class="text-label-caps text-on-surface-variant">Engineering</p>
+</div>
+</div>
+<nav class="flex-1 mt-6 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">cell_tower</span>
+<span class="font-body-md">Torres</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings_input_antenna</span>
+<span class="font-body-md">Estaiadas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-semibold" href="#">
+<span class="material-symbols-outlined">settings_input_component</span>
+<span class="font-body-md">Autoportante</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">upload_file</span>
+<span class="font-body-md">Upload</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md">Catálogo</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">calculate</span>
+<span class="font-body-md">Cálculos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md">Documentos</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-body-sm font-semibold truncate">Eng. Ricardo Silva</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Senior Analyst</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant px-container-padding py-stack-md flex justify-between items-center sticky top-0 z-30">
+<div class="flex items-center gap-8">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Solaris Engineering</h2>
+<nav class="flex gap-6">
+<a class="text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm pb-1" href="#">Resumo</a>
+<a class="text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm pb-1" href="#">Fundações</a>
+<a class="text-primary border-b-2 border-primary font-title-sm text-title-sm pb-1" href="#">Armações</a>
+<a class="text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm pb-1" href="#">Locações</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container-low p-1 rounded-full pr-3 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-body-sm font-medium">Perfil</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-container-padding space-y-gutter-normal max-w-[1600px] mx-auto">
+<!-- 1. Top Technical Summary -->
+<section class="overflow-x-auto rounded border border-outline-variant shadow-sm">
+<table class="w-full technical-table border-collapse">
+<thead>
+<tr class="">
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">TORRE N.º</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant" colspan="2">TIPO/EXT</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant" colspan="4">PERNAS</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">PÉ. REF.</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant" colspan="2">COORDENADAS UTM</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">VÃO DE FRENTE</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">TIPO FUNDAÇÃO</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">DH</th>
+<th class="!text-on-surface !bg-surface-container-low text-on-surface-variant">DEFLEXÃO</th>
+</tr>
+<tr>
+<th class="">OP</th>
+<th class="">PROJ.</th>
+<th class="">EXT.</th>
+<th class="">A</th>
+<th class="">B</th>
+<th class="">C</th>
+<th class="">D</th>
+<th class="">B</th>
+<th class="">ESTE</th>
+<th class="">NORTE</th>
+<th class="">(M)</th>
+<th class="">JJAT-T-10</th>
+<th class="">0,16</th>
+<th class="">37º28'17" D</th>
+</tr>
+</thead>
+<tbody class="text-center font-semibold">
+<tr>
+<td class="">157</td>
+<td class="">B/2=MV1</td>
+<td class="">0,0</td>
+<td class="">3,0</td>
+<td class="">3,0</td>
+<td class="">3,0</td>
+<td class="">3,0</td>
+<td class="">3,0</td>
+<td class="">639.443,94</td>
+<td class="">8.303.301,75</td>
+<td class="">340,64</td>
+<td class="">-</td>
+<td class="">-</td>
+<td class="">BISSETRIZ -&gt; 18º44'8"</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- 2. Section Details -->
+<section class="grid grid-cols-12 gap-gutter-normal">
+<!-- Left: Table Dados de projeto -->
+<div class="col-span-12 lg:col-span-12 overflow-x-auto rounded border border-outline-variant">
+<div class="bg-surface-container-low p-2 text-center text-label-caps font-bold text-on-surface-variant border-x border-t border-outline-variant rounded-t">
+                        Dados de projeto da fundação para locação de centro de cava (medidas planas)
+                    </div>
+<table class="w-full technical-table border-collapse zebra-rows">
+<thead>
+<tr>
+<th class="" rowspan="2">PERNAS SEQ.</th>
+<th class="" rowspan="2">COMP.</th>
+<th class="" rowspan="2">ÂNGULO HORIZONTAL</th>
+<th class="" rowspan="2">S.DIAG C</th>
+<th class="" colspan="2">SEMI-LADO</th>
+<th class="" colspan="2">FECHAMENTO LATERAIS</th>
+<th class="" colspan="2">FECHAMENTO DIAGONAIS</th>
+<th class="" rowspan="2">DESLOC. LC FUND.</th>
+<th class="" rowspan="2">DIST. PC ao P. Ref</th>
+<th class="" rowspan="2">S.DIAG C</th>
+<th class="" colspan="2">SEMI-LADO</th>
+<th class="" colspan="2">FECHAM. DIAGONAIS</th>
+</tr>
+<tr>
+<th class="">A</th>
+<th class="">B</th>
+<th class="">LADO</th>
+<th class="">VALOR</th>
+<th class="">LADO</th>
+<th class="">VALOR</th>
+<th class="">A</th>
+<th class="">B</th>
+<th class="">LADO</th>
+<th class="">VALOR</th>
+</tr>
+</thead>
+<tbody class="text-center">
+<tr>
+<td class="font-bold">A</td>
+<td class="">3,0</td>
+<td class="">135º00'00"</td>
+<td class="">6,691</td>
+<td class="">4,731</td>
+<td class="">4,731</td>
+<td class="">AB</td>
+<td class="">9,457</td>
+<td class="font-bold" rowspan="2">AC</td>
+<td class="" rowspan="2">13,376</td>
+<td class="">2,239</td>
+<td class="">4,691</td>
+<td class="">4,452</td>
+<td class="">3,148</td>
+<td class="">3,148</td>
+<td class="font-bold" rowspan="2">AC</td>
+<td class="" rowspan="2">8,90</td>
+</tr>
+<tr class="">
+<td class="font-bold">B</td>
+<td class="">3,0</td>
+<td class="">225º00'00"</td>
+<td class="">6,683</td>
+<td class="">4,725</td>
+<td class="">4,725</td>
+<td class="">BC</td>
+<td class="">9,452</td>
+<td class="">2,231</td>
+<td class="">4,683</td>
+<td class="">4,452</td>
+<td class="">3,148</td>
+<td class="">3,148</td>
+</tr>
+<tr>
+<td class="font-bold">C</td>
+<td class="">3,0</td>
+<td class="">315º00'00"</td>
+<td class="">6,685</td>
+<td class="">4,727</td>
+<td class="">4,727</td>
+<td class="">CD</td>
+<td class="">9,455</td>
+<td class="font-bold" rowspan="2">BD</td>
+<td class="" rowspan="2">13,370</td>
+<td class="">2,233</td>
+<td class="">4,685</td>
+<td class="">4,452</td>
+<td class="">3,148</td>
+<td class="">3,148</td>
+<td class="font-bold" rowspan="2">BD</td>
+<td class="" rowspan="2">8,90</td>
+</tr>
+<tr>
+<td class="font-bold">D</td>
+<td class="">3,0</td>
+<td class="">45º00'00"</td>
+<td class="">6,687</td>
+<td class="">4,728</td>
+<td class="">4,728</td>
+<td class="">DA</td>
+<td class="">9,459</td>
+<td class="">2,235</td>
+<td class="">4,687</td>
+<td class="">4,452</td>
+<td class="">3,148</td>
+<td class="">3,148</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 3. Lower Complex Section -->
+<div class="grid grid-cols-12 gap-gutter-normal">
+<!-- Left: Diagrams & Details -->
+<div class="col-span-12 xl:col-span-8 space-y-gutter-normal">
+<div class="grid grid-cols-2 gap-4">
+<!-- Locação Table -->
+<div class="rounded border border-outline-variant overflow-hidden">
+<div class="bg-surface-container-highest p-2 text-center text-label-caps font-bold">Dados de locação do centro de cava</div>
+<table class="w-full technical-table">
+<thead>
+<tr>
+<th class="">PÉS</th>
+<th class="">COTA PC</th>
+<th class="">ESTAÇÃO HI / HP</th>
+<th class="">DESNÍVEL C.CAVA / PIQ. REF.</th>
+<th class="">COTA C.CAVA / PIQ. REF.</th>
+</tr>
+</thead>
+<tbody class="text-center">
+<tr><td class="">A</td><td class="" rowspan="4">100,00</td><td class="">-</td><td class="">1,60 / -</td><td class="">-0,15 / -</td></tr>
+<tr><td class="">B</td><td class="">-</td><td class="">1,60 / -</td><td class="">-0,11 / -</td></tr>
+<tr><td class="">C</td><td class="">-</td><td class="">1,60 / -</td><td class="">-0,12 / -</td></tr>
+<tr><td class="">D</td><td class="">1,56</td><td class="">1,60 / -</td><td class="">-0,13 / -</td></tr>
+</tbody>
+</table>
+</div>
+<!-- Observation & Notes -->
+<div class="p-4 rounded border border-outline-variant bg-surface-container-low">
+<h4 class="text-label-caps font-bold mb-2">NOTAS E OBSERVAÇÕES:</h4>
+<ul class="text-body-sm space-y-1 text-on-surface-variant list-decimal pl-4">
+<li class="">Os piquetes de centro de cava deverão ser na cor vermelha.</li>
+<li class="">Os piquetes de referência (branco) deverão obedecer a distância citada.</li>
+<li class="">Piquetes de canto de cava deverão ser na cor branca.</li>
+<li class="">Alinhamento longitudinais a 10 metros do PC (cor azul).</li>
+<li class="">Alinhamento transversais a 10 metros do PC (cor amarela).</li>
+</ul>
+</div>
+</div>
+<!-- Large Diagram Canvas -->
+<div class="bg-white rounded border border-outline-variant p-container-padding flex flex-col items-center justify-center relative min-h-[500px]">
+<h3 class="absolute top-4 left-4 font-title-sm text-primary uppercase">Planta Locação Centro das Cavas</h3>
+<!-- Technical Diagram Representation -->
+<div class="relative w-[400px] h-[400px]">
+<!-- Main Square -->
+<div class="absolute inset-0 border-2 border-outline-variant opacity-20"></div>
+<!-- Crosshairs -->
+<div class="absolute left-1/2 top-0 bottom-0 w-px bg-outline-variant dashed"></div>
+<div class="absolute top-1/2 left-0 right-0 h-px bg-outline-variant dashed"></div>
+<!-- Foot A (Top Left) -->
+<div class="absolute top-4 left-4 w-16 h-16 border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center">
+<span class="font-bold text-xs">Pé A</span>
+<div class="w-4 h-4 border border-on-surface rotate-45"></div>
+</div>
+<!-- Foot B (Top Right) -->
+<div class="absolute top-4 right-4 w-16 h-16 border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center">
+<span class="font-bold text-xs">Pé B</span>
+<div class="w-4 h-4 border border-on-surface rotate-45"></div>
+</div>
+<!-- Foot C (Bottom Right) -->
+<div class="absolute bottom-4 right-4 w-16 h-16 border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center">
+<span class="font-bold text-xs">Pé C</span>
+<div class="w-4 h-4 border border-on-surface rotate-45"></div>
+</div>
+<!-- Foot D (Bottom Left) -->
+<div class="absolute bottom-4 left-4 w-16 h-16 border-2 border-on-surface bg-surface-container flex flex-col items-center justify-center">
+<span class="font-bold text-xs">Pé D</span>
+<div class="w-4 h-4 border border-on-surface rotate-45"></div>
+</div>
+<!-- Dimension Labels -->
+<div class="absolute top-1/2 left-1/4 -translate-y-1/2 text-[10px] font-bold bg-white px-1">6,691m</div>
+<div class="absolute top-1/2 right-1/4 -translate-y-1/2 text-[10px] font-bold bg-white px-1">6,683m</div>
+<div class="absolute left-1/2 top-1/4 -translate-x-1/2 text-[10px] font-bold bg-white px-1">4,731m</div>
+<div class="absolute left-1/2 bottom-1/4 -translate-x-1/2 text-[10px] font-bold bg-white px-1">4,728m</div>
+<!-- Center Point -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center bg-white z-10 shadow-sm">
+<span class="text-[8px] font-bold">MC</span>
+</div>
+</div>
+<div class="mt-8 text-center max-w-md italic text-body-sm text-on-surface-variant">
+                            "A precisão da locação é fundamental para a integridade estrutural da torre autoportante. Verifique todos os ângulos antes da concretagem."
+                        </div>
+</div>
+</div>
+<!-- Right: Legend, Stub Detail, and Footer References -->
+<div class="col-span-12 xl:col-span-4 space-y-gutter-normal">
+<!-- Legend -->
+<div class="rounded border border-outline-variant bg-surface-container-low p-4">
+<h4 class="text-label-caps font-bold mb-3 border-b border-outline-variant pb-1">LEGENDA</h4>
+<div class="grid grid-cols-1 gap-2 text-body-sm">
+<div class="flex justify-between"><span class="font-bold">CC:</span><span class="">Centro de Cava</span></div>
+<div class="flex justify-between"><span class="font-bold">S1, S2, S3, S4:</span><span class="">Piquetes nos Cantos</span></div>
+<div class="flex justify-between"><span class="font-bold">DH:</span><span class="">Altura Elevação Referência</span></div>
+<div class="flex justify-between"><span class="font-bold">P.REF:</span><span class="">Piquete de Referência</span></div>
+<div class="flex justify-between"><span class="font-bold">PC:</span><span class="">Piquete de Centro da Torre</span></div>
+<div class="flex justify-between"><span class="font-bold">S.DIAG:</span><span class="">Semi-diagonal</span></div>
+<div class="flex justify-between"><span class="font-bold">A/B:</span><span class="">Medida Semi-lado Locação</span></div>
+</div>
+</div>
+<!-- Stub Detail Diagram -->
+<div class="rounded border border-outline-variant p-4 bg-white">
+<h4 class="text-label-caps font-bold mb-4 text-center">DETALHE INCLINAÇÃO DO STUB</h4>
+<div class="flex justify-center items-end gap-8 h-40">
+<!-- SVG Drawing -->
+<svg class="w-32 h-32 overflow-visible" viewbox="0 0 100 100">
+<path d="M 20 90 L 90 90 L 90 10 Z" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+<text class="text-[10px]" font-weight="bold" x="95" y="50">50,000</text>
+<text class="text-[10px]" font-weight="bold" x="50" y="98">9,994</text>
+<text class="text-[8px] italic" x="10" y="10">Tg. Diagonal: 0,19988</text>
+</svg>
+<div class="text-right">
+<p class="text-label-caps font-bold">TIPO TORRE:</p>
+<p class="text-body-md">JJAT</p>
+</div>
+</div>
+</div>
+<!-- Desenhos de Referência -->
+<div class="rounded border border-outline-variant overflow-hidden">
+<div class="bg-surface-container-highest p-2 text-center text-label-caps font-bold">DESENHOS DE REFERÊNCIA</div>
+<table class="w-full technical-table">
+<thead>
+<tr>
+<th class="">PERNA</th>
+<th class="">PROJ. FUNDAÇÃO</th>
+<th class="">PROJ. MONTAGEM STUB</th>
+</tr>
+</thead>
+<tbody class="text-center text-[10px]">
+<tr><td class="">A</td><td class="">SL03118-LT-INJB-CV-FU-DE-0022</td><td class="">SL03118-LT-INJB-EM-CR-DE-0152</td></tr>
+<tr><td class="">B</td><td class="">SL03118-LT-INJB-CV-FU-DE-0022</td><td class="">SL03118-LT-INJB-EM-CR-DE-0152</td></tr>
+<tr><td class="">C</td><td class="">SL03118-LT-INJB-CV-FU-DE-0022</td><td class="">SL03118-LT-INJB-EM-CR-DE-0152</td></tr>
+<tr><td class="">D</td><td class="">SL03118-LT-INJB-CV-FU-DE-0022</td><td class="">SL03118-LT-INJB-EM-CR-DE-0152</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Audit Log Bar -->
+<footer class="mt-8 pt-4 border-t border-outline-variant flex justify-between items-center text-on-surface-variant text-body-sm">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">history</span> Histórico de Alterações</span>
+<span class="text-outline">|</span>
+<span class="">Última edição: 24/05/2024 às 14:32 por Eng. Ricardo Silva</span>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-primary text-on-primary rounded font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined">print</span> Imprimir Prancha
+                    </button>
+<button class="px-4 py-2 border border-outline rounded font-bold hover:bg-surface-container-low transition-colors">
+                        Exportar CSV
+                    </button>
+</div>
+</footer>
+</div>
+</main>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === '#') e.preventDefault();
+            });
+        });
+
+        // Hover effect for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.classList.add('opacity-90');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.classList.remove('opacity-90');
+            });
+        });
+    </script>
+</body></html>

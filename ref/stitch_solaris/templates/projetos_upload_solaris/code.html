@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Upload &amp; Processamento - OFERTA</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary": "#ffffff", "secondary-fixed-dim": "#c2c7cc", "on-surface": "#1b1c1d", "inverse-surface": "#303031", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#524600", "surface-container-low": "#f5f3f4", secondary: "#5a5f63", "inverse-on-surface": "#f2f0f1", "primary-fixed": "#d9e2ff", "on-primary": "#ffffff", "surface-bright": "#faf9fa", "tertiary-fixed-dim": "#dcc661", "surface-container": "#efedee", "secondary-fixed": "#dfe3e8", "on-error-container": "#93000a", "on-secondary-fixed-variant": "#42474b", "tertiary-container": "#bfab49", "primary-fixed-dim": "#b1c5ff", "on-secondary-fixed": "#171c20", "error-container": "#ffdad6", "on-primary-fixed": "#001946", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", background: "#faf9fa", "primary-container": "#3366cc", surface: "#faf9fa", "surface-container-high": "#e9e8e9", primary: "#094cb2", "surface-variant": "#e3e2e3", outline: "#737784", "on-background": "#1b1c1d", "on-tertiary-fixed": "#211b00", error: "#ba1a1a", "on-secondary-container": "#606569", "tertiary-fixed": "#f9e37a", "surface-tint": "#2259bf", "surface-container-highest": "#e3e2e3", "secondary-container": "#dfe3e8", "on-surface-variant": "#434653", "on-primary-container": "#e7ebff", tertiary: "#6d5e00", "outline-variant": "#c3c6d5", "on-primary-fixed-variant": "#00419d", "inverse-primary": "#b1c5ff", "on-tertiary-container": "#4a3f00", "surface-dim": "#dbdadb" }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" }, spacing: { "container-padding": "24px", "gutter-dense": "8px", unit: "4px", "stack-sm": "4px", "stack-md": "12px", "gutter-normal": "16px" }, fontFamily: { "numeric-tabular": ["Inter"], "body-sm": ["Inter"], "title-sm": ["Inter"], "label-caps": ["Inter"], "body-md": ["Inter"], "display-lg": ["Inter"], "headline-md": ["Inter"], headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"] }, fontSize: { "numeric-tabular": ["14px", { lineHeight: "20px", fontWeight: "400" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "title-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "display-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .technical-border {
+            border: 1px solid #c3c6d7;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .technical-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .technical-table th,
+        .technical-table td {
+            border: 1px solid #c3c6d7;
+            padding: 8px;
+        }
+
+        .technical-table th {
+            background-color: #ededf9;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface antialiased overflow-hidden">
+    <!-- Sidebar -->
+    <aside
+        class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col py-container-padding z-50">
+        <div class="px-6 mb-8">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-primary-container rounded flex items-center justify-center text-on-primary-container font-black">
+                    S</div>
+                <div>
+                    <h1 class="font-headline-md text-headline-md font-bold text-primary">OFERTA</h1>
+                    <p class="font-label-caps text-label-caps text-on-surface-variant opacity-70">Linha de transmissão
+                    </p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-1 px-3">
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-label-caps text-label-caps uppercase">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">cell_tower</span>
+                <span class="font-label-caps text-label-caps uppercase">Torres</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">cable</span>
+                <span class="font-label-caps text-label-caps uppercase">Estaiadas</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container font-bold rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">cloud_upload</span>
+                <span class="font-label-caps text-label-caps uppercase">Upload</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">list_alt</span>
+                <span class="font-label-caps text-label-caps uppercase">Catálogo</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">calculate</span>
+                <span class="font-label-caps text-label-caps uppercase">Cálculos</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">description</span>
+                <span class="font-label-caps text-label-caps uppercase">Documentos</span>
+            </a>
+        </nav>
+        <div class="px-3 mt-auto space-y-1">
+            <button
+                class="w-full flex items-center justify-center gap-2 py-2 mb-4 border border-primary text-primary font-bold rounded hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-size: 18px;">construction</span>
+                <span class="font-label-caps text-label-caps">Modo Técnico</span>
+            </button>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded"
+                href="#">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="font-label-caps text-label-caps">Configurações</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded"
+                href="#">
+                <span class="material-symbols-outlined">help</span>
+                <span class="font-label-caps text-label-caps">Suporte</span>
+            </a>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="ml-64 h-screen flex flex-col relative">
+        <!-- Top Nav Bar -->
+        <header
+            class="h-14 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter-normal sticky top-0 z-40">
+            <div class="flex items-center gap-6">
+                <nav class="flex h-14">
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Processamento</a>
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Histórico Lotes</a>
+                    <a class="flex items-center px-4 text-primary font-bold border-b-2 border-primary"
+                        href="#">Upload</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <div
+                    class="flex items-center gap-2 bg-surface-container border border-outline-variant px-3 py-1.5 rounded text-body-sm">
+                    <span class="material-symbols-outlined text-primary" style="font-size: 18px;">folder</span>
+                    <span class="font-bold">Seletor de Projeto</span>
+                    <span class="material-symbols-outlined" style="font-size: 16px;">expand_more</span>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container border border-outline-variant"
+                    title="Perfil">
+                    <span class="material-symbols-outlined text-[20px]">person</span>
+                </div>
+            </div>
+        </header>
+        <!-- Page Header -->
+        <div
+            class="bg-surface-container-lowest px-container-padding py-4 border-b border-outline-variant flex justify-between items-center shrink-0">
+            <div>
+                <nav class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-1">
+                    <span>Administração</span>
+                    <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+                    <span class="text-primary font-bold">Upload &amp; Processamento</span>
+                </nav>
+                <h2 class="font-display-lg text-display-lg font-black tracking-tight text-primary">Gestão de Documentos
+                </h2>
+            </div>
+            <div class="flex gap-3">
+                <button
+                    class="flex items-center gap-2 px-4 py-2 border border-outline text-on-surface-variant rounded font-bold hover:bg-surface-container transition-colors">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">sync_alt</span>
+                    Limpar Fila
+                </button>
+                <button
+                    class="flex items-center gap-2 px-6 py-2 bg-primary text-on-primary rounded font-bold shadow-sm hover:opacity-90 transition-all">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">play_arrow</span>
+                    Iniciar Processamento
+                </button>
+            </div>
+        </div>
+        <!-- Body -->
+        <div class="flex-1 overflow-y-auto bg-background p-container-padding">
+            <div class="mb-gutter-normal">
+                <h1 class="font-headline-md text-headline-md text-on-surface">Importação Analítica</h1>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Arraste os arquivos de fundação para
+                    extração e validação automática no catálogo.</p>
+            </div>
+            <div class="grid grid-cols-12 gap-gutter-normal">
+                <!-- Left Column -->
+                <div class="col-span-12 lg:col-span-4 space-y-gutter-normal">
+                    <!-- Drop Zone -->
+                    <div
+                        class="bg-surface-container-lowest technical-border rounded shadow-sm p-8 flex flex-col items-center justify-center text-center border-dashed border-2 border-primary/20 hover:border-primary/50 transition-all cursor-pointer">
+                        <div
+                            class="w-16 h-16 bg-primary-container/30 rounded-full flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-primary text-3xl">cloud_upload</span>
+                        </div>
+                        <h3 class="font-title-sm text-title-sm text-on-surface">Arraste arquivos aqui</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1 mb-6">Suporta PDF
+                            (Stub/Locação) e Excel (Planilhas).</p>
+                        <button
+                            class="bg-primary text-on-primary px-6 py-2 rounded font-bold hover:opacity-90 transition-all text-sm">
+                            Procurar Arquivos
+                        </button>
+                    </div>
+                    <!-- Files List -->
+                    <div class="bg-surface-container-lowest technical-border rounded shadow-sm overflow-hidden">
+                        <div
+                            class="bg-surface-container px-4 py-2 border-b border-outline-variant flex justify-between items-center">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Arquivos
+                                Anexados (4)</span>
+                        </div>
+                        <div class="divide-y divide-outline-variant">
+                            <div
+                                class="p-3 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-outline">description</span>
+                                    <div>
+                                        <div class="font-title-sm text-body-sm font-bold text-on-surface truncate w-48">
+                                            Projeto_Fundacao_12A.pdf</div>
+                                        <div class="text-[11px] text-on-surface-variant">Stub • 2.4 MB</div>
+                                    </div>
+                                </div>
+                                <button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                            <div
+                                class="p-3 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-outline">grid_on</span>
+                                    <div>
+                                        <div class="font-title-sm text-body-sm font-bold text-on-surface truncate w-48">
+                                            Cargas_Torre_Estaiada.xlsx</div>
+                                        <div class="text-[11px] text-on-surface-variant">Planilha • 850 KB</div>
+                                    </div>
+                                </div>
+                                <button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                            <div
+                                class="p-3 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-outline">description</span>
+                                    <div>
+                                        <div class="font-title-sm text-body-sm font-bold text-on-surface truncate w-48">
+                                            Locacao_Base_12A.pdf</div>
+                                        <div class="text-[11px] text-on-surface-variant">Locação • 1.1 MB</div>
+                                    </div>
+                                </div>
+                                <button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                            <div
+                                class="p-3 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-outline">description</span>
+                                    <div>
+                                        <div class="font-title-sm text-body-sm font-bold text-on-surface truncate w-48">
+                                            Detalhamento_Armadura_05.pdf</div>
+                                        <div class="text-[11px] text-on-surface-variant">Fundação • 4.2 MB</div>
+                                    </div>
+                                </div>
+                                <button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-surface-container-low border-t border-outline-variant">
+                            <button
+                                class="w-full bg-secondary-container text-on-secondary-container font-bold py-2 rounded hover:opacity-90 transition-all text-sm">
+                                Processar Lote
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column (Processing Queue) -->
+                <div class="col-span-12 lg:col-span-8">
+                    <div
+                        class="bg-surface-container-lowest technical-border rounded shadow-sm overflow-hidden flex flex-col h-full min-h-[500px]">
+                        <div
+                            class="bg-surface-container px-4 py-2 border-b border-outline-variant flex justify-between items-center">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Fila de
+                                Processamento Analítico</span>
+                            <button class="text-primary font-bold text-xs hover:underline flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">refresh</span>
+                                Atualizar Status
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-x-auto">
+                            <table class="technical-table text-body-sm">
+                                <thead>
+                                    <tr
+                                        class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">
+                                        <th class="w-1/3">Arquivo / Tipo</th>
+                                        <th class="w-1/12 text-center">Torre</th>
+                                        <th class="w-1/3">Progresso de Extração</th>
+                                        <th class="w-1/6">Última Atualização</th>
+                                        <th class="w-1/12 text-center">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <tr class="hover:bg-surface-container-low transition-colors">
+                                        <td class="p-3">
+                                            <div class="font-bold text-on-surface">Projeto_Fundacao_12A.pdf</div>
+                                            <span
+                                                class="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant uppercase font-bold">Stub</span>
+                                        </td>
+                                        <td class="text-center font-numeric-tabular">12/A</td>
+                                        <td class="p-3">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <div class="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-primary w-full"></div>
+                                                </div>
+                                            </div>
+                                            <div class="text-[10px] font-bold text-primary uppercase">Persistido no
+                                                Banco</div>
+                                        </td>
+                                        <td class="text-on-surface-variant font-numeric-tabular text-[12px]">Hoje, 10:42
+                                        </td>
+                                        <td class="text-center">
+                                            <button
+                                                class="text-primary font-bold text-[10px] border border-primary px-2 py-1 rounded hover:bg-primary/10 transition-all uppercase whitespace-nowrap">Ver
+                                                Dados</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-surface-container-low transition-colors">
+                                        <td class="p-3">
+                                            <div class="font-bold text-on-surface">Cargas_Torre_Estaiada.xlsx</div>
+                                            <span
+                                                class="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant uppercase font-bold">Planilha</span>
+                                        </td>
+                                        <td class="text-center font-numeric-tabular">EST-01</td>
+                                        <td class="p-3">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <div class="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-tertiary-container w-[65%] animate-pulse">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-[10px] font-bold text-tertiary-container uppercase">Em
+                                                Validação de Regras</div>
+                                        </td>
+                                        <td class="text-on-surface-variant font-numeric-tabular text-[12px]">Hoje, 10:45
+                                        </td>
+                                        <td class="text-center">
+                                            <button
+                                                class="text-outline border border-outline px-2 py-1 rounded text-[10px] uppercase cursor-not-allowed opacity-50">Ver
+                                                Dados</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-surface-container-low transition-colors">
+                                        <td class="p-3">
+                                            <div class="font-bold text-on-surface">Locacao_Base_12A.pdf</div>
+                                            <span
+                                                class="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant uppercase font-bold">Locação</span>
+                                        </td>
+                                        <td class="text-center font-numeric-tabular">12/A</td>
+                                        <td class="p-3">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <div class="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-primary w-[30%]"></div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="text-[10px] font-bold text-on-surface-variant uppercase flex items-center gap-1">
+                                                <span
+                                                    class="material-symbols-outlined text-[12px] animate-spin">sync</span>
+                                                Extraindo OCR
+                                            </div>
+                                        </td>
+                                        <td class="text-on-surface-variant font-numeric-tabular text-[12px]">Hoje, 10:47
+                                        </td>
+                                        <td class="text-center">
+                                            <button
+                                                class="text-outline border border-outline px-2 py-1 rounded text-[10px] uppercase cursor-not-allowed opacity-50">Ver
+                                                Dados</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-surface-container-low transition-colors">
+                                        <td class="p-3">
+                                            <div class="font-bold text-on-surface">Detalhamento_Armadura_05.pdf</div>
+                                            <span
+                                                class="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant uppercase font-bold">Fundação</span>
+                                        </td>
+                                        <td class="text-center font-numeric-tabular">-</td>
+                                        <td class="p-3">
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <div
+                                                    class="h-1.5 w-full bg-outline-variant rounded-full overflow-hidden">
+                                                    <div class="h-full bg-outline w-0"></div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="text-[10px] font-bold text-on-surface-variant opacity-50 uppercase">
+                                                Aguardando na Fila</div>
+                                        </td>
+                                        <td class="text-on-surface-variant font-numeric-tabular text-[12px]">Hoje, 10:47
+                                        </td>
+                                        <td class="text-center">
+                                            <button
+                                                class="text-outline border border-outline px-2 py-1 rounded text-[10px] uppercase cursor-not-allowed opacity-50">Ver
+                                                Dados</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div
+                            class="p-4 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">
+                            <div class="flex items-center gap-4">
+                                <span class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                    Processando 1 de 4 arquivos (25%)
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span>Tempo estimado: 45s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer / Feedback -->
+        <footer
+            class="bg-surface-container-lowest h-8 border-t border-outline-variant flex items-center justify-between px-gutter-normal text-[10px] text-on-surface-variant uppercase tracking-widest shrink-0">
+            <div class="flex gap-4">
+                <span>Operador: Eng. Rodrigues</span>
+                <span>Data: 24/10/2023</span>
+                <span>Serviço: OCR ENGINE V2</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                <span>Conectado ao Servidor Central</span>
+            </div>
+        </footer>
+    </main>
+</body>
+
+</html>

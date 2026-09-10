@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login | OFERTA Engineering System</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .technical-grid {
+            background-image: radial-gradient(#c3c6d7 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+    </style>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-tint": "#2259bf", "secondary-fixed": "#dfe3e8", "surface-container-lowest": "#ffffff", "outline-variant": "#c3c6d5", "inverse-on-surface": "#f2f0f1", "on-background": "#1b1c1d", background: "#faf9fa", "on-tertiary-container": "#4a3f00", "on-secondary-fixed": "#171c20", "inverse-surface": "#303031", "on-secondary-container": "#606569", "inverse-primary": "#b1c5ff", secondary: "#5a5f63", "tertiary-container": "#bfab49", "on-primary-fixed": "#001946", "secondary-fixed-dim": "#c2c7cc", "on-error": "#ffffff", "tertiary-fixed": "#f9e37a", "primary-container": "#3366cc", "on-primary-container": "#e7ebff", "error-container": "#ffdad6", "surface-dim": "#dbdadb", primary: "#094cb2", "surface-container-low": "#f5f3f4", "on-error-container": "#93000a", "tertiary-fixed-dim": "#dcc661", "surface-variant": "#e3e2e3", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#524600", "surface-container": "#efedee", outline: "#737784", "on-primary": "#ffffff", surface: "#faf9fa", "on-primary-fixed-variant": "#00419d", "on-surface": "#1b1c1d", "primary-fixed-dim": "#b1c5ff", "surface-container-highest": "#e3e2e3", "on-tertiary-fixed": "#211b00", "surface-container-high": "#e9e8e9", tertiary: "#6d5e00", "on-secondary": "#ffffff", error: "#ba1a1a", "primary-fixed": "#d9e2ff", "on-surface-variant": "#434653", "on-secondary-fixed-variant": "#42474b", "surface-bright": "#faf9fa", "secondary-container": "#dfe3e8" }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" }, spacing: { unit: "4px", "stack-sm": "4px", "gutter-normal": "16px", "gutter-dense": "8px", "stack-md": "12px", "container-padding": "24px" }, fontFamily: { "numeric-tabular": ["Inter"], "label-caps": ["Inter"], "headline-md": ["Inter"], "display-lg": ["Inter"], "body-md": ["Inter"], "title-sm": ["Inter"], "body-sm": ["Inter"], headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"] }, fontSize: { "numeric-tabular": ["14px", { lineHeight: "20px", fontWeight: "400" }], "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }], "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }], "display-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "title-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }] } } } };</script>
+</head>
+
+<body class="bg-surface text-on-surface overflow-hidden">
+    <main class="flex h-screen w-full">
+        <!-- Brand Section (Left Side) -->
+        <section
+            class="hidden lg:flex flex-col relative w-7/12 bg-surface-container-lowest overflow-hidden border-r border-outline-variant">
+            <!-- Grid Background Overlay -->
+            <div class="absolute inset-0 technical-grid opacity-30"></div>
+            <!-- Hero Content -->
+            <div class="relative z-10 flex flex-col justify-center h-full px-24">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 bg-primary flex items-center justify-center rounded">
+                        <span class="material-symbols-outlined text-on-primary text-3xl"
+                            data-icon="tower_control">cell_tower</span>
+                    </div>
+                    <div>
+                        <h1
+                            class="font-headline-md text-headline-md font-black text-primary tracking-tighter leading-none">
+                            OFERTA</h1>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant">Engineering System</p>
+                    </div>
+                </div>
+                <h2 class="font-display-lg text-display-lg text-on-surface max-w-xl mb-6">
+                    Precisão técnica e integridade estrutural para engenharia de grande porte.
+                </h2>
+                <div class="flex flex-col gap-4 max-w-md">
+                    <div class="p-4 bg-surface-container rounded-lg border border-outline-variant">
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            "O Solaris transformou nossa gestão de fundações, reduzindo o tempo de cálculo em 40% e
+                            garantindo conformidade total com as normas vigentes."
+                        </p>
+                        <p class="mt-2 font-label-caps text-label-caps text-primary">— Gerente de Projetos, Solaris
+                            Brazil</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Image -->
+            <div class="absolute bottom-0 right-0 w-3/4 h-2/3 opacity-20 pointer-events-none">
+                <img alt="" class="w-full h-full object-cover mix-blend-multiply"
+                    data-alt="A highly detailed architectural blueprint of a complex electrical transmission tower, showing technical callouts, measurements, and structural nodes. The style is clean and professional, rendered in a light-mode aesthetic with crisp navy blue lines over a white technical grid paper. The lighting is bright and even, evoking a sense of precision, engineering excellence, and corporate reliability."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcAZjOoKl1yJhHj539S4k0l5x2qCeCZUh24Tv5QYi4wWMeRxsu4SnYClv9RO-vDnOLLvj_OUGRu-OHu9k0GOJWdEVVHKWL3RO63yNql-hL6HpSWclhqB3oNss0X4PT7dQHIuDOcrVeIXiyDrX4qcGDGKa-8iRnHVraTURwNeeyC-cd97i4gkQzjYTPEoFyGdcjedfP5WQRBsgKrbIDmqUy5-YAPITVesQyN_YLAVsiRKEa_8rhKeDkioJ-upr5ErgEQYb24dWgSfaP" />
+            </div>
+        </section>
+        <!-- Login Form Section (Right Side) -->
+        <section class="flex flex-col w-full lg:w-5/12 bg-surface">
+            <div class="flex flex-col justify-center h-full px-container-padding max-w-md mx-auto w-full">
+                <!-- Mobile Branding (Visible only on small screens) -->
+                <div class="lg:hidden flex items-center gap-3 mb-12">
+                    <div class="w-10 h-10 bg-primary flex items-center justify-center rounded">
+                        <span class="material-symbols-outlined text-on-primary text-2xl"
+                            data-icon="tower_control">cell_tower</span>
+                    </div>
+                    <h1 class="font-headline-md text-headline-md font-black text-primary tracking-tighter">OFERTA</h1>
+                </div>
+                <div class="mb-10">
+                    <h2 class="font-display-lg text-display-lg text-on-surface mb-2">Acesso ao Sistema</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Insira suas credenciais para gerenciar
+                        cálculos e projetos.</p>
+                </div>
+                <form class="flex flex-col gap-6" onsubmit="return false;">
+                    <!-- Email Field -->
+                    <div class="flex flex-col gap-2">
+                        <label class="font-title-sm text-title-sm text-on-surface" for="email">E-mail / Usuário</label>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                                data-icon="mail">mail</span>
+                            <input
+                                class="w-full h-12 pl-10 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md"
+                                id="email" placeholder="nome@empresa.com.br" type="text" />
+                        </div>
+                    </div>
+                    <!-- Password Field -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-center">
+                            <label class="font-title-sm text-title-sm text-on-surface" for="password">Senha</label>
+                            <a class="font-label-caps text-label-caps text-primary hover:underline" href="#">Esqueci
+                                minha senha</a>
+                        </div>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                                data-icon="lock">lock</span>
+                            <input
+                                class="w-full h-12 pl-10 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md"
+                                id="password" placeholder="••••••••" type="password" />
+                            <button
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary"
+                                type="button">
+                                <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Remember Me (Optional for B2B but good for UX) -->
+                    <div class="flex items-center gap-3">
+                        <input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary bg-surface"
+                            id="remember" type="checkbox" />
+                        <label class="font-body-sm text-body-sm text-on-surface-variant" for="remember">Lembrar neste
+                            dispositivo por 30 dias</label>
+                    </div>
+                    <!-- Login Button -->
+                    <button aria-label="Entrar no sistema"
+                        class="w-full h-12 bg-primary-container text-on-primary-container font-title-sm text-title-sm rounded-lg hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                        Entrar
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                </form>
+                <!-- Support Info -->
+                <div class="mt-8 pt-8 border-t border-outline-variant">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]"
+                            data-icon="support_agent">support_agent</span>
+                        <p class="font-body-sm text-body-sm">Problemas com o acesso? <a
+                                class="text-primary font-semibold hover:underline" href="#">Contate o suporte
+                                técnico</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer
+                class="mt-auto p-container-padding flex flex-col md:flex-row justify-between items-center gap-4 text-on-surface-variant border-t border-outline-variant lg:border-t-0">
+                <div class="flex gap-4">
+                    <span class="font-label-caps text-label-caps">v2.4.0-stable</span>
+                    <span class="font-label-caps text-label-caps opacity-20">|</span>
+                    <span class="font-label-caps text-label-caps">© 2024 OFERTA Engineering</span>
+                </div>
+                <div class="flex gap-6">
+                    <a class="font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Termos de
+                        Uso</a>
+                    <a class="font-label-caps text-label-caps hover:text-primary transition-colors"
+                        href="#">Privacidade</a>
+                </div>
+            </footer>
+        </section>
+    </main>
+    <script>
+        // Micro-interaction for visual feedback on button
+        const loginBtn = document.querySelector('button');
+        loginBtn.addEventListener('click', () => {
+            loginBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-on-primary-container" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="ml-2">Autenticando...</span>
+            `;
+            setTimeout(() => {
+                window.location.reload(); // Simulate redirect/refresh
+            }, 1500);
+        });
+
+        // Toggle Password Visibility
+        const togglePass = document.querySelector('button[type="button"]');
+        const passInput = document.getElementById('password');
+        togglePass.addEventListener('click', () => {
+            const isSecret = passInput.type === 'password';
+            passInput.type = isSecret ? 'text' : 'password';
+            togglePass.querySelector('span').textContent = isSecret ? 'visibility_off' : 'visibility';
+        });
+    </script>
+</body>
+
+</html>
