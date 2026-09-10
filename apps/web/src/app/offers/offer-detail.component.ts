@@ -36,6 +36,15 @@ import { decimalScaleValidator, orNull } from '../catalogs/form-utils';
 import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
 import { StakingTableComponent } from './staking-table.component';
+import { FoundationQuantitiesComponent } from './foundation-quantities.component';
+import { ElectromechanicalQuantitiesComponent } from './electromechanical-quantities.component';
+import { MaterialPricingComponent } from './material-pricing.component';
+import { ScheduleGanttComponent } from './schedule-gantt.component';
+import { CampsManagementComponent } from './camps-management.component';
+import { ResourceHistogramsComponent } from './resource-histograms.component';
+import { ServiceBudgetComponent } from './service-budget.component';
+import { EconomicResultComponent } from './economic-result.component';
+import { CashflowComponent } from './cashflow.component';
 
 const BRAZILIAN_UFS = [
   'AC',
@@ -86,63 +95,87 @@ const BRAZILIAN_UFS = [
     MatTooltipModule,
     MatProgressBarModule,
     StakingTableComponent,
+    FoundationQuantitiesComponent,
+    ElectromechanicalQuantitiesComponent,
+    MaterialPricingComponent,
+    ScheduleGanttComponent,
+    CampsManagementComponent,
+    ResourceHistogramsComponent,
+    ServiceBudgetComponent,
+    EconomicResultComponent,
+    CashflowComponent,
   ],
   template: `
-    <section>
+    <section class="offer-detail-page">
       @if (loading()) {
         <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
-        <p>Carregando proposta…</p>
+        <div class="loading-state">
+          <mat-icon class="spin-icon">sync</mat-icon>
+          <p>Carregando dados da proposta técnica…</p>
+        </div>
       } @else if (error()) {
-        <p class="error" role="alert">{{ error() }}</p>
-        <a matButton="outlined" routerLink="/offers">Voltar à listagem</a>
+        <div class="error-banner" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          <div>
+            <strong>Erro ao carregar proposta:</strong>
+            <p>{{ error() }}</p>
+          </div>
+          <a mat-stroked-button routerLink="/offers">Voltar à listagem</a>
+        </div>
       } @else if (offer()) {
+        <!-- Breadcrumb & Top Bar -->
+        <div class="editorial-breadcrumb">
+          <a routerLink="/offers">PROPOSTAS</a>
+          <span class="sep">/</span>
+          <span class="mono">{{ offer()!.code }}</span>
+          <span class="sep">/</span>
+          <span class="current">REVISÃO R{{ selectedRevisionNumber() }}</span>
+        </div>
+
         <!-- Header da Proposta -->
         <div class="offer-header">
-          <div>
+          <div class="header-main">
             <div class="code-row">
               <span class="offer-code mono">{{ offer()!.code }}</span>
-              <span class="badge-currency mono">{{
-                offer()!.baseCurrency
-              }}</span>
+              <span class="badge badge-primary mono">{{ offer()!.baseCurrency }}</span>
               @if (offer()!.clonedFromOfferId) {
                 <span class="badge-cloned">
-                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{
-                    offer()!.clonedFromOfferId
-                  }}
+                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{ offer()!.clonedFromOfferId }}
                 </span>
               }
             </div>
-            <h2>{{ offer()!.name }}</h2>
+            <h1 class="page-title font-display-lg">{{ offer()!.name }}</h1>
             <p class="client-subtitle">
-              <mat-icon>business</mat-icon> {{ offer()!.clientName }}
+              <mat-icon>business</mat-icon>
+              <span>{{ offer()!.clientName }}</span>
+              <span class="sep-dot">•</span>
+              <span class="lot-info mono">{{ currentRevision()?.lotName ?? 'Lote 1' }}</span>
             </p>
           </div>
 
           <div class="header-actions">
-            <a matButton="outlined" [routerLink]="['edit']">
+            <a mat-stroked-button [routerLink]="['edit']">
               <mat-icon>edit</mat-icon> Editar dados gerais
             </a>
-            <button matButton="outlined" (click)="cloneCurrentOffer()">
+            <button mat-stroked-button type="button" (click)="cloneCurrentOffer()">
               <mat-icon>copy_all</mat-icon> Clonar proposta
             </button>
-            <a matButton="text" routerLink="/offers">
+            <a mat-button routerLink="/offers">
               <mat-icon>arrow_back</mat-icon> Voltar
             </a>
           </div>
         </div>
 
-        <!-- Seletor de Revisões e Status -->
-        <div class="revision-bar">
+        <!-- Seletor de Revisões e Status Bar -->
+        <div class="revision-bar technical-border">
           <div class="revision-selector">
-            <span class="label">Revisão:</span>
+            <span class="label font-label-caps">Revisão do Projeto:</span>
             <div class="revision-pills">
               @for (rev of offer()!.revisions; track rev.revisionNumber) {
                 <button
                   type="button"
                   class="rev-pill"
-                  [class.active]="
-                    rev.revisionNumber === selectedRevisionNumber()
-                  "
+                  [class.active]="rev.revisionNumber === selectedRevisionNumber()"
                   (click)="selectRevision(rev.revisionNumber)"
                 >
                   <span class="mono">R{{ rev.revisionNumber }}</span>
@@ -165,7 +198,8 @@ const BRAZILIAN_UFS = [
 
             @if (isDraft()) {
               <button
-                matButton="outlined"
+                mat-stroked-button
+                type="button"
                 (click)="freezeRevision()"
                 matTooltip="Bloqueia edições tornando a revisão imutável para histórico"
               >
@@ -173,24 +207,27 @@ const BRAZILIAN_UFS = [
               </button>
             } @else if (isFrozen()) {
               <button
-                matButton="outlined"
+                mat-stroked-button
+                type="button"
                 (click)="markDelivered()"
                 matTooltip="Marca proposta como formalmente entregue ao cliente"
               >
                 <mat-icon>send</mat-icon> Marcar como entregue
               </button>
               <button
-                matButton="filled"
+                mat-flat-button
+                color="primary"
+                type="button"
                 (click)="createNewRevision()"
-                matTooltip="Cria uma nova revisão R{{
-                  (currentRevision()?.revisionNumber ?? 0) + 1
-                }} derivada desta"
+                matTooltip="Cria uma nova revisão R{{ (currentRevision()?.revisionNumber ?? 0) + 1 }} derivada desta"
               >
                 <mat-icon>add</mat-icon> Nova revisão
               </button>
             } @else if (isDelivered()) {
               <button
-                matButton="filled"
+                mat-flat-button
+                color="primary"
+                type="button"
                 (click)="createNewRevision()"
                 matTooltip="Cria uma nova revisão derivada desta"
               >
@@ -205,9 +242,7 @@ const BRAZILIAN_UFS = [
             <mat-icon>lock</mat-icon>
             <div>
               <strong>Revisão imutável:</strong> Esta revisão está
-              {{
-                statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase()
-              }}
+              {{ statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase() }}
               e não aceita alterações diretas (RNF-05). Para efetuar
               modificações de engenharia ou escopo, crie uma nova revisão.
             </div>
@@ -225,41 +260,39 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">power</mat-icon>
-              Linhas de Transmissão ({{
-                currentRevision()?.transmissionLines?.length ?? 0
-              }})
+              Linhas de Transmissão ({{ currentRevision()?.transmissionLines?.length ?? 0 }})
             </ng-template>
 
             <div class="tab-content">
               <div class="lines-summary-cards">
-                <div class="summary-card">
-                  <span class="summary-label">Total de Linhas</span>
-                  <span class="summary-value mono">{{
-                    currentRevision()?.transmissionLines?.length ?? 0
-                  }}</span>
+                <div class="kpi-card">
+                  <span class="kpi-label">Total de Linhas</span>
+                  <span class="kpi-value mono">{{ currentRevision()?.transmissionLines?.length ?? 0 }}</span>
+                  <span class="kpi-subtext">Circuitos independentes</span>
                 </div>
-                <div class="summary-card">
-                  <span class="summary-label">Extensão Refinada Total</span>
-                  <span class="summary-value mono"
-                    >{{ totalRefinedKm() }} km</span
-                  >
+                <div class="kpi-card">
+                  <span class="kpi-label">Extensão Refinada Total</span>
+                  <span class="kpi-value mono text-primary">{{ totalRefinedKm() }} km</span>
+                  <span class="kpi-subtext">Cálculo de traçado vetorial</span>
                 </div>
-                <div class="summary-card">
-                  <span class="summary-label">Extensão Relatório Total</span>
-                  <span class="summary-value mono"
-                    >{{ totalReportKm() }} km</span
-                  >
+                <div class="kpi-card">
+                  <span class="kpi-label">Extensão Relatório Total</span>
+                  <span class="kpi-value mono">{{ totalReportKm() }} km</span>
+                  <span class="kpi-subtext">Extensão nominal edital</span>
                 </div>
               </div>
 
               <div class="section-actions">
-                <h3>Linhas de Transmissão do Lote</h3>
+                <div>
+                  <h3 class="font-display">Linhas de Transmissão do Lote</h3>
+                  <p class="section-subtitle">Relação de trechos físicos, especificações de condutores e rateio territorial por estado.</p>
+                </div>
                 @if (isDraft()) {
                   <button
-                    matButton="filled"
+                    mat-flat-button
+                    color="primary"
                     type="button"
                     (click)="openAddLineForm()"
-                    class="btn-sm"
                   >
                     <mat-icon>add</mat-icon> Adicionar linha
                   </button>
@@ -268,14 +301,17 @@ const BRAZILIAN_UFS = [
 
               <!-- Formulário Inline de Adicionar/Editar Linha -->
               @if (isEditingLine()) {
-                <div class="line-edit-box">
-                  <h4>
-                    {{
-                      editingLineIndex() === -1
-                        ? 'Nova Linha de Transmissão'
-                        : 'Editar Linha de Transmissão'
-                    }}
-                  </h4>
+                <div class="line-edit-box technical-border">
+                  <div class="line-edit-header">
+                    <h4>
+                      {{
+                        editingLineIndex() === -1
+                          ? 'Nova Linha de Transmissão'
+                          : 'Editar Linha de Transmissão'
+                      }}
+                    </h4>
+                    <span class="font-label-caps badge badge-primary">Engenharia Eletromecânica</span>
+                  </div>
                   <form
                     [formGroup]="lineForm"
                     class="line-grid"
@@ -388,11 +424,11 @@ const BRAZILIAN_UFS = [
 
                     <!-- Rateio Territorial (RN-01) -->
                     <div class="col-12 uf-allocation-panel">
-                      <strong>Rateio Territorial por Estado (RN-01):</strong>
-                      <span
-                        >A soma dos percentuais deve totalizar exatamente
-                        100,00%</span
-                      >
+                      <mat-icon class="text-primary">share_location</mat-icon>
+                      <div>
+                        <strong>Rateio Territorial por Estado (RN-01):</strong>
+                        <span>A soma dos percentuais deve totalizar exatamente 100,00% para correta tributação e faturamento.</span>
+                      </div>
                     </div>
 
                     <mat-form-field
@@ -466,14 +502,15 @@ const BRAZILIAN_UFS = [
 
                     <div class="col-12 line-form-actions">
                       <button
-                        matButton="outlined"
+                        mat-stroked-button
                         type="button"
                         (click)="cancelLineEdit()"
                       >
                         Cancelar
                       </button>
                       <button
-                        matButton="filled"
+                        mat-flat-button
+                        color="primary"
                         type="submit"
                         [disabled]="lineForm.invalid"
                       >
@@ -490,21 +527,21 @@ const BRAZILIAN_UFS = [
 
               <!-- Tabela de Linhas -->
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
-                <div class="empty-state">
+                <div class="empty-state technical-border">
                   <mat-icon>alt_route</mat-icon>
                   <p>Nenhuma linha de transmissão cadastrada nesta revisão.</p>
                   @if (isDraft()) {
-                    <button matButton="filled" (click)="openAddLineForm()">
+                    <button mat-flat-button color="primary" (click)="openAddLineForm()">
                       Adicionar primeira linha
                     </button>
                   }
                 </div>
               } @else {
-                <div class="table-scroll">
+                <div class="table-scroll technical-border">
                   <table
                     mat-table
                     [dataSource]="currentRevision()?.transmissionLines ?? []"
-                    class="dense"
+                    class="technical-table"
                   >
                     <ng-container matColumnDef="code">
                       <th mat-header-cell *matHeaderCellDef scope="col">
@@ -523,7 +560,9 @@ const BRAZILIAN_UFS = [
                       <th mat-header-cell *matHeaderCellDef scope="col">
                         Nome da LT
                       </th>
-                      <td mat-cell *matCellDef="let line">{{ line.name }}</td>
+                      <td mat-cell *matCellDef="let line">
+                        <span class="line-title font-medium">{{ line.name }}</span>
+                      </td>
                     </ng-container>
 
                     <ng-container matColumnDef="nominalVoltageKv">
@@ -560,27 +599,25 @@ const BRAZILIAN_UFS = [
                         Rateio Territorial (RN-01)
                       </th>
                       <td mat-cell *matCellDef="let line">
-                        <span class="uf-tag">
-                          {{ line.destinationStatePrimary }}:
-                          {{ line.destinationPercentagePrimary }}%
+                        <span class="badge badge-neutral mono">
+                          {{ line.destinationStatePrimary }}: {{ line.destinationPercentagePrimary }}%
                         </span>
                         @if (line.destinationStateSecondary) {
-                          <span class="uf-tag">
-                            {{ line.destinationStateSecondary }}:
-                            {{ line.destinationPercentageSecondary }}%
+                          <span class="badge badge-neutral mono ml-1">
+                            {{ line.destinationStateSecondary }}: {{ line.destinationPercentageSecondary }}%
                           </span>
                         }
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef scope="col">
+                      <th mat-header-cell *matHeaderCellDef scope="col" class="text-right">
                         Ações
                       </th>
-                      <td mat-cell *matCellDef="let line; let idx = index">
+                      <td mat-cell *matCellDef="let line; let idx = index" class="text-right">
                         @if (line.id) {
                           <button
-                            matIconButton
+                            mat-icon-button
                             type="button"
                             (click)="openStakingForLine(line.id)"
                             matTooltip="Gerenciar estaqueamento e dados de torre (M04)"
@@ -588,10 +625,55 @@ const BRAZILIAN_UFS = [
                           >
                             <mat-icon>straighten</mat-icon>
                           </button>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="openFoundationsForLine(line.id)"
+                            matTooltip="Ver quantitativos de fundações e escavações (M05)"
+                            aria-label="Ver quantitativos de fundação da linha"
+                          >
+                            <mat-icon>foundation</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="openElectroForLine(line.id)"
+                            matTooltip="Ver quantitativos eletromecânicos de torres, cabos e acessórios (M05)"
+                            aria-label="Ver quantitativos eletromecânicos da linha"
+                          >
+                            <mat-icon>bolt</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="openPricingForLine(line.id)"
+                            matTooltip="Ver preços, commodities e tributos de materiais (M06)"
+                            aria-label="Ver preços e tributos da linha"
+                          >
+                            <mat-icon>payments</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="openScheduleForLine(line.id)"
+                            matTooltip="Ver cronograma físico e planejamento temporal (M07)"
+                            aria-label="Ver cronograma físico da linha"
+                          >
+                            <mat-icon>schedule</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="openHistogramForLine(line.id)"
+                            matTooltip="Ver histograma de recursos e balanço de frota (M08)"
+                            aria-label="Ver histograma de recursos da linha"
+                          >
+                            <mat-icon>bar_chart</mat-icon>
+                          </button>
                         }
                         @if (isDraft()) {
                           <button
-                            matIconButton
+                            mat-icon-button
                             type="button"
                             (click)="editLine(idx)"
                             matTooltip="Editar linha"
@@ -600,7 +682,7 @@ const BRAZILIAN_UFS = [
                             <mat-icon>edit</mat-icon>
                           </button>
                           <button
-                            matIconButton
+                            mat-icon-button
                             type="button"
                             (click)="removeLine(idx)"
                             matTooltip="Remover linha"
@@ -627,20 +709,15 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">assignment_turned_in</mat-icon>
-              Matriz de Escopo ({{
-                currentRevision()?.scopeMatrixItems?.length ?? 0
-              }})
+              Matriz de Escopo ({{ currentRevision()?.scopeMatrixItems?.length ?? 0 }})
             </ng-template>
 
             <div class="tab-content">
               <div class="scope-header-desc">
                 <div>
-                  <h3>Matriz de Responsabilidade e Risco (4 Eixos)</h3>
-                  <p class="subtitle">
-                    Definição de fornecimento, REIDI (RN-04) e alocação de
-                    riscos cambial e de commodity (RN-08). Itens sob
-                    responsabilidade do Cliente entram com custo zero na
-                    proposta (RN-03).
+                  <h3 class="font-display">Matriz de Responsabilidade e Risco (4 Eixos)</h3>
+                  <p class="section-subtitle">
+                    Definição de fornecimento, REIDI (RN-04) e alocação de riscos cambial e de commodity (RN-08). Itens sob responsabilidade do Cliente entram com custo zero na proposta (RN-03).
                   </p>
                 </div>
                 @if (
@@ -648,7 +725,8 @@ const BRAZILIAN_UFS = [
                   (currentRevision()?.scopeMatrixItems?.length ?? 0) === 0
                 ) {
                   <button
-                    matButton="filled"
+                    mat-flat-button
+                    color="primary"
                     type="button"
                     (click)="loadBenchmarkScope()"
                   >
@@ -657,8 +735,8 @@ const BRAZILIAN_UFS = [
                 }
               </div>
 
-              <div class="table-scroll">
-                <table class="scope-matrix-table dense">
+              <div class="table-scroll technical-border">
+                <table class="technical-table scope-matrix-table">
                   <thead>
                     <tr>
                       <th>Código</th>
@@ -683,11 +761,11 @@ const BRAZILIAN_UFS = [
                         <td>
                           <strong>{{ item.itemName }}</strong>
                           @if (item.responsibleParty === 'CLIENT') {
-                            <span class="client-label">(Cliente)</span>
+                            <span class="badge badge-neutral ml-1">(Cliente)</span>
                           }
                         </td>
                         <td>
-                          <span class="category-chip">{{ item.category }}</span>
+                          <span class="badge badge-analysis">{{ item.category }}</span>
                         </td>
                         <td>
                           <select
@@ -720,9 +798,9 @@ const BRAZILIAN_UFS = [
                                 )
                               "
                             />
-                            <span>{{
-                              item.acceptsDirectBilling ? 'REIDI Ativo' : 'Não'
-                            }}</span>
+                            <span class="badge" [class.badge-valid]="item.acceptsDirectBilling" [class.badge-neutral]="!item.acceptsDirectBilling">
+                              {{ item.acceptsDirectBilling ? 'REIDI Ativo' : 'Não' }}
+                            </span>
                           </label>
                         </td>
                         <td>
@@ -738,9 +816,7 @@ const BRAZILIAN_UFS = [
                               )
                             "
                           >
-                            <option value="CONTRACTOR">
-                              Contratada (A termo)
-                            </option>
+                            <option value="CONTRACTOR">Contratada (A termo)</option>
                             <option value="CLIENT">Cliente (Spot)</option>
                           </select>
                         </td>
@@ -770,11 +846,13 @@ const BRAZILIAN_UFS = [
               @if (isDraft()) {
                 <div class="save-bar">
                   <button
-                    matButton="filled"
+                    mat-flat-button
+                    color="primary"
                     type="button"
                     (click)="saveRevisionChanges()"
                     [disabled]="saving()"
                   >
+                    <mat-icon>{{ saving() ? 'hourglass_empty' : 'save' }}</mat-icon>
                     {{ saving() ? 'Salvando…' : 'Salvar alterações do escopo' }}
                   </button>
                 </div>
@@ -791,7 +869,7 @@ const BRAZILIAN_UFS = [
 
             <div class="tab-content">
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
-                <div class="empty-state">
+                <div class="empty-state technical-border">
                   <mat-icon>straighten</mat-icon>
                   <p>
                     Cadastre ao menos uma linha de transmissão nesta revisão
@@ -799,8 +877,8 @@ const BRAZILIAN_UFS = [
                   </p>
                 </div>
               } @else {
-                <div class="staking-line-selector-bar">
-                  <span class="label">Linha de Transmissão:</span>
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
                   <div class="line-selector-pills">
                     @for (
                       line of currentRevision()?.transmissionLines ?? [];
@@ -813,9 +891,7 @@ const BRAZILIAN_UFS = [
                         (click)="selectedStakingLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub"
-                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
-                        >
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
                       </button>
                     }
                   </div>
@@ -828,7 +904,267 @@ const BRAZILIAN_UFS = [
             </div>
           </mat-tab>
 
-          <!-- ABA 4: PARÂMETROS E DATAS DA REVISÃO -->
+          <!-- ABA 4: FUNDAÇÕES E ESCAVAÇÕES (M05 / RN-12 / RN-13) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">foundation</mat-icon>
+              Fundações & Escavações (M05)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state technical-border">
+                  <mat-icon>foundation</mat-icon>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão nesta revisão
+                    para visualizar os quantitativos de fundação.
+                  </p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedFoundationLineId() === line.id"
+                        (click)="selectedFoundationLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedFoundationLineId()) {
+                  <app-foundation-quantities [lineId]="selectedFoundationLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 5: QUANTITATIVOS ELETROMECÂNICOS (M05) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">bolt</mat-icon>
+              Eletromecânica (M05)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>Cadastre ao menos uma linha de transmissão para visualizar os quantitativos eletromecânicos de torres, cabos e acessórios.</p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedElectroLineId() === line.id"
+                        (click)="selectedElectroLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedElectroLineId()) {
+                  <app-electromechanical-quantities [lineId]="selectedElectroLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 6: PREÇOS, COMMODITIES & TRIBUTOS (M06) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">payments</mat-icon>
+              Preços & Tributos (M06)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>Cadastre ao menos uma linha de transmissão para visualizar e calcular os preços de materiais e tributos.</p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedPricingLineId() === line.id"
+                        (click)="selectedPricingLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedPricingLineId()) {
+                  <app-material-pricing [lineId]="selectedPricingLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 7: CRONOGRAMA FÍSICO & CANTEIROS (M07) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">schedule</mat-icon>
+              Cronograma Físico (M07)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>Cadastre ao menos uma linha de transmissão para visualizar o cronograma físico e canteiros.</p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedScheduleLineId() === line.id"
+                        (click)="selectedScheduleLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedScheduleLineId()) {
+                  <app-schedule-gantt [lineId]="selectedScheduleLineId()!" />
+                  <app-camps-management [lineId]="selectedScheduleLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 8: HISTOGRAMA DE RECURSOS (M08) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">bar_chart</mat-icon>
+              Histograma & Recursos (M08)
+            </ng-template>
+
+            <div class="tab-content">
+              @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>Cadastre ao menos uma linha de transmissão para visualizar os histogramas de mão de obra e equipamentos.</p>
+                </div>
+              } @else {
+                <div class="staking-line-selector-bar technical-border">
+                  <span class="label font-label-caps">Linha Selecionada:</span>
+                  <div class="line-selector-pills">
+                    @for (
+                      line of currentRevision()?.transmissionLines ?? [];
+                      track line.id
+                    ) {
+                      <button
+                        type="button"
+                        class="line-pill"
+                        [class.active]="selectedHistogramLineId() === line.id"
+                        (click)="selectedHistogramLineId.set(line.id!)"
+                      >
+                        <span class="mono font-bold">{{ line.code }}</span>
+                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedHistogramLineId()) {
+                  <app-resource-histograms [lineId]="selectedHistogramLineId()!" />
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 9: SERVIÇOS & FOLHAS CONTRATUAIS (M09) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">design_services</mat-icon>
+              Serviços & CIP (M09)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-service-budget
+                  [offerId]="offer()!.id"
+                  [lines]="transmissionLineOptions()"
+                />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 10: RESULTADO ECONÔMICO & BDI (M10) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">monetization_on</mat-icon>
+              Resultado & BDI (M10)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-economic-result
+                  [offerId]="offer()!.id"
+                  [lines]="transmissionLineOptions()"
+                />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 11: DESEMBOLSO & FLUXO DE CAIXA (M11) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">account_balance</mat-icon>
+              Desembolso & Caixa (M11)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-cashflow
+                  [offerId]="offer()!.id"
+                  [lines]="transmissionLineOptions()"
+                />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 12: PARÂMETROS E DATAS DA REVISÃO -->
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">event_note</mat-icon>
@@ -836,11 +1172,14 @@ const BRAZILIAN_UFS = [
             </ng-template>
 
             <div class="tab-content">
-              <h3>Parâmetros Comerciais e Prazos de Edital</h3>
+              <div class="params-header">
+                <h3 class="font-display">Parâmetros Comerciais e Prazos de Edital</h3>
+                <p class="section-subtitle">Premissas financeiras, CAPEX estimado ANEEL, RAP de referência e marcos temporais.</p>
+              </div>
 
               <form
                 [formGroup]="revParamsForm"
-                class="params-grid"
+                class="params-grid technical-border p-4 bg-surface"
                 (ngSubmit)="saveRevisionChanges()"
               >
                 <mat-form-field
@@ -998,10 +1337,12 @@ const BRAZILIAN_UFS = [
                 @if (isDraft()) {
                   <div class="col-12 actions-right">
                     <button
-                      matButton="filled"
+                      mat-flat-button
+                      color="primary"
                       type="submit"
                       [disabled]="saving() || revParamsForm.invalid"
                     >
+                      <mat-icon>{{ saving() ? 'hourglass_empty' : 'save' }}</mat-icon>
                       {{ saving() ? 'Salvando…' : 'Salvar parâmetros' }}
                     </button>
                   </div>
@@ -1014,59 +1355,92 @@ const BRAZILIAN_UFS = [
     </section>
   `,
   styles: `
+    .offer-detail-page {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .editorial-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--solaris-on-surface-variant);
+    }
+    .editorial-breadcrumb a {
+      color: var(--solaris-primary);
+      text-decoration: none;
+    }
+    .editorial-breadcrumb .sep {
+      color: var(--solaris-outline-variant);
+    }
+    .editorial-breadcrumb .current {
+      color: var(--solaris-on-surface);
+    }
     .offer-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
       flex-wrap: wrap;
       gap: 1rem;
+    }
+    .header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
     }
     .code-row {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.25rem;
     }
     .offer-code {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      color: var(--mat-sys-primary);
-    }
-    .badge-currency {
-      background: var(--mat-sys-surface-container-high);
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      color: var(--solaris-primary);
     }
     .badge-cloned {
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
-      background: #f1f5f9;
-      color: #475569;
-      padding: 0.15rem 0.5rem;
-      border-radius: 12px;
+      background: var(--solaris-surface-low);
+      color: var(--solaris-on-surface-variant);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
       font-size: 0.75rem;
+      border: 1px solid var(--solaris-outline-variant);
     }
     .badge-cloned mat-icon {
       font-size: 0.875rem;
       width: 0.875rem;
       height: 0.875rem;
     }
+    .page-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--solaris-on-surface);
+      margin: 0;
+      line-height: 1.2;
+    }
     .client-subtitle {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: -0.25rem;
-      font: var(--mat-sys-body-medium);
+      gap: 0.4rem;
+      color: var(--solaris-on-surface-variant);
+      font-size: 0.875rem;
+      margin: 0;
     }
     .client-subtitle mat-icon {
-      font-size: 1.1rem;
-      width: 1.1rem;
-      height: 1.1rem;
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+    .sep-dot {
+      color: var(--solaris-outline-variant);
     }
     .header-actions {
       display: flex;
@@ -1078,11 +1452,10 @@ const BRAZILIAN_UFS = [
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--mat-sys-surface-container-low);
-      padding: 0.75rem 1rem;
+      background: var(--solaris-surface-low);
+      padding: 0.75rem 1.25rem;
       border-radius: 8px;
-      margin-bottom: 1.5rem;
-      border: 1px solid var(--mat-sys-outline-variant);
+      margin-bottom: 0.5rem;
       flex-wrap: wrap;
       gap: 1rem;
     }
@@ -1093,28 +1466,29 @@ const BRAZILIAN_UFS = [
     }
     .revision-pills {
       display: flex;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
     .rev-pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 20px;
-      border: 1px solid var(--mat-sys-outline-variant);
-      background: var(--mat-sys-surface);
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--solaris-outline-variant);
+      background: var(--solaris-surface);
       cursor: pointer;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.15s ease;
     }
     .rev-pill:hover {
-      background: var(--mat-sys-surface-container-high);
+      background: var(--solaris-surface-high);
+      border-color: var(--solaris-primary);
     }
     .rev-pill.active {
-      background: var(--mat-sys-primary);
-      color: var(--mat-sys-on-primary);
-      border-color: var(--mat-sys-primary);
+      background: var(--solaris-primary);
+      color: #ffffff;
+      border-color: var(--solaris-primary);
     }
     .status-dot {
       width: 8px;
@@ -1137,14 +1511,17 @@ const BRAZILIAN_UFS = [
     }
     .status-chip {
       display: inline-block;
-      padding: 0.25rem 0.65rem;
-      border-radius: 12px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .status-chip[data-status='DRAFT'] {
-      background: var(--mat-sys-surface-container-high);
-      color: var(--mat-sys-on-surface);
+      background: var(--solaris-surface-high);
+      color: var(--solaris-on-surface);
+      border: 1px solid var(--solaris-outline-variant);
     }
     .status-chip[data-status='FROZEN'] {
       background: #e0f2fe;
@@ -1163,64 +1540,59 @@ const BRAZILIAN_UFS = [
       background: #f0f9ff;
       border: 1px solid #bae6fd;
       color: #0369a1;
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1.25rem;
       border-radius: 8px;
-      margin-bottom: 1.5rem;
       font-size: 0.875rem;
     }
     .tab-icon {
       font-size: 1.1rem;
       width: 1.1rem;
       height: 1.1rem;
-      margin-right: 0.35rem;
+      margin-right: 0.4rem;
     }
     .tab-content {
-      padding-top: 1.5rem;
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
     .lines-summary-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
       gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .summary-card {
-      background: var(--mat-sys-surface-container-low);
-      border: 1px solid var(--mat-sys-outline-variant);
-      padding: 1rem;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    .summary-label {
-      font-size: 0.75rem;
-      color: var(--mat-sys-on-surface-variant);
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-    .summary-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--mat-sys-primary);
     }
     .section-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: var(--solaris-on-surface-variant);
+      margin: 0.25rem 0 0 0;
     }
     .line-edit-box {
-      background: var(--mat-sys-surface-container-low);
-      border: 1px solid var(--mat-sys-primary);
-      padding: 1.25rem;
+      background: var(--solaris-surface-low);
+      padding: 1.5rem;
       border-radius: 8px;
-      margin-bottom: 1.5rem;
+    }
+    .line-edit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .line-edit-header h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
     }
     .line-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 0.75rem;
+      gap: 1rem;
     }
     .col-12 {
       grid-column: span 12;
@@ -1236,19 +1608,26 @@ const BRAZILIAN_UFS = [
     }
     .uf-allocation-panel {
       font-size: 0.85rem;
-      color: var(--mat-sys-on-surface-variant);
+      color: var(--solaris-on-surface);
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       align-items: center;
-      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: var(--solaris-surface);
+      border: 1px solid var(--solaris-outline-variant);
+      border-radius: 6px;
     }
     .line-uf-error {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: var(--mat-sys-error);
-      font-weight: 500;
+      color: var(--solaris-error);
+      font-weight: 600;
       font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+      background: #fef2f2;
+      border-radius: 6px;
+      border: 1px solid #fecaca;
     }
     .line-form-actions {
       display: flex;
@@ -1256,61 +1635,28 @@ const BRAZILIAN_UFS = [
       gap: 0.75rem;
       margin-top: 0.5rem;
     }
-    .uf-tag {
-      display: inline-block;
-      padding: 0.1rem 0.35rem;
-      background: var(--mat-sys-surface-container-high);
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-family: monospace;
-      margin-right: 0.35rem;
-    }
     .scope-header-desc {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1rem;
       gap: 1rem;
       flex-wrap: wrap;
-    }
-    .scope-matrix-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .scope-matrix-table th,
-    .scope-matrix-table td {
-      padding: 0.6rem 0.75rem;
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
-      text-align: left;
     }
     .scope-matrix-table tr.client-item {
       background: #f8fafc;
     }
-    .client-label {
-      display: inline-block;
-      margin-left: 0.35rem;
-      padding: 0.1rem 0.35rem;
-      background: #e2e8f0;
-      color: #475569;
-      font-size: 0.7rem;
-      font-weight: 600;
-      border-radius: 4px;
-    }
-    .category-chip {
-      font-size: 0.75rem;
-      color: var(--mat-sys-on-surface-variant);
-    }
     .native-select {
-      padding: 0.35rem 0.5rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 4px;
-      border: 1px solid var(--mat-sys-outline-variant);
-      background: var(--mat-sys-surface);
+      border: 1px solid var(--solaris-outline-variant);
+      background: var(--solaris-surface);
       font-size: 0.85rem;
+      font-family: inherit;
     }
     .checkbox-label {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
       font-size: 0.85rem;
       cursor: pointer;
     }
@@ -1320,13 +1666,16 @@ const BRAZILIAN_UFS = [
     .save-bar {
       display: flex;
       justify-content: flex-end;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
+    }
+    .params-header {
+      margin-bottom: 0.75rem;
     }
     .params-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 1rem;
-      max-width: 54rem;
+      border-radius: 8px;
     }
     .alert-schedule {
       display: flex;
@@ -1335,8 +1684,8 @@ const BRAZILIAN_UFS = [
       background: #fef3c7;
       color: #92400e;
       border: 1px solid #fde68a;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
       font-size: 0.875rem;
     }
     .alert-schedule mat-icon {
@@ -1348,17 +1697,15 @@ const BRAZILIAN_UFS = [
       margin-top: 1rem;
     }
     .danger-btn {
-      color: var(--mat-sys-error);
+      color: var(--solaris-error);
     }
     .staking-line-selector-bar {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: var(--mat-sys-surface-container-low, #f8fafc);
-      border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+      padding: 0.75rem 1.25rem;
+      background: var(--solaris-surface-low);
       border-radius: 8px;
-      margin-bottom: 1.25rem;
     }
     .line-selector-pills {
       display: flex;
@@ -1370,10 +1717,10 @@ const BRAZILIAN_UFS = [
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.4rem 0.8rem;
+      padding: 0.45rem 0.85rem;
       border-radius: 6px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
+      border: 1px solid var(--solaris-outline-variant);
+      background: var(--solaris-surface);
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -1384,7 +1731,46 @@ const BRAZILIAN_UFS = [
     }
     .line-name-sub {
       font-size: 0.8rem;
-      color: var(--mat-sys-on-surface-variant, #64748b);
+      color: var(--solaris-on-surface-variant);
+    }
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      gap: 1rem;
+      color: var(--solaris-on-surface-variant);
+    }
+    .spin-icon {
+      animation: spin 1.5s linear infinite;
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .error-banner {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: var(--solaris-error);
+    }
+    .p-4 {
+      padding: 1rem;
+    }
+    .bg-surface {
+      background: var(--solaris-surface);
+    }
+    .ml-1 {
+      margin-left: 0.25rem;
     }
   `,
 })
@@ -1399,6 +1785,11 @@ export class OfferDetailComponent {
   readonly selectedRevisionNumber = signal<number>(0);
   readonly activeTabIndex = signal<number>(0);
   readonly selectedStakingLineId = signal<number | null>(null);
+  readonly selectedFoundationLineId = signal<number | null>(null);
+  readonly selectedElectroLineId = signal<number | null>(null);
+  readonly selectedPricingLineId = signal<number | null>(null);
+  readonly selectedScheduleLineId = signal<number | null>(null);
+  readonly selectedHistogramLineId = signal<number | null>(null);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal('');
@@ -1457,6 +1848,13 @@ export class OfferDetailComponent {
       0,
     );
     return total.toFixed(3);
+  });
+
+  readonly transmissionLineOptions = computed(() => {
+    const lines = this.currentRevision()?.transmissionLines ?? [];
+    return lines
+      .filter((l) => l.id != null)
+      .map((l) => ({ id: l.id!, name: `${l.code} - ${l.name}` }));
   });
 
   readonly lineForm = new FormGroup({
@@ -1882,13 +2280,43 @@ export class OfferDetailComponent {
     });
     this.scopeItems.set(rev.scopeMatrixItems ?? []);
 
-    // Atualizar linha selecionada para a aba de estaqueamento
+    // Atualizar linha selecionada para as abas de estaqueamento e fundações
     const lines = rev.transmissionLines ?? [];
     if (
       !this.selectedStakingLineId() ||
       !lines.some((l) => l.id === this.selectedStakingLineId())
     ) {
       this.selectedStakingLineId.set(lines[0]?.id ?? null);
+    }
+    if (
+      !this.selectedFoundationLineId() ||
+      !lines.some((l) => l.id === this.selectedFoundationLineId())
+    ) {
+      this.selectedFoundationLineId.set(lines[0]?.id ?? null);
+    }
+    if (
+      !this.selectedElectroLineId() ||
+      !lines.some((l) => l.id === this.selectedElectroLineId())
+    ) {
+      this.selectedElectroLineId.set(lines[0]?.id ?? null);
+    }
+    if (
+      !this.selectedPricingLineId() ||
+      !lines.some((l) => l.id === this.selectedPricingLineId())
+    ) {
+      this.selectedPricingLineId.set(lines[0]?.id ?? null);
+    }
+    if (
+      !this.selectedScheduleLineId() ||
+      !lines.some((l) => l.id === this.selectedScheduleLineId())
+    ) {
+      this.selectedScheduleLineId.set(lines[0]?.id ?? null);
+    }
+    if (
+      !this.selectedHistogramLineId() ||
+      !lines.some((l) => l.id === this.selectedHistogramLineId())
+    ) {
+      this.selectedHistogramLineId.set(lines[0]?.id ?? null);
     }
   }
 
@@ -1897,5 +2325,52 @@ export class OfferDetailComponent {
       this.selectedStakingLineId.set(lineId);
       this.activeTabIndex.set(2);
     }
+  }
+
+  openFoundationsForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedFoundationLineId.set(lineId);
+      this.activeTabIndex.set(3);
+    }
+  }
+
+  openElectroForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedElectroLineId.set(lineId);
+      this.activeTabIndex.set(4);
+    }
+  }
+
+  openPricingForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedPricingLineId.set(lineId);
+      this.activeTabIndex.set(5);
+    }
+  }
+
+  openScheduleForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedScheduleLineId.set(lineId);
+      this.activeTabIndex.set(6);
+    }
+  }
+
+  openHistogramForLine(lineId?: number): void {
+    if (lineId) {
+      this.selectedHistogramLineId.set(lineId);
+      this.activeTabIndex.set(7);
+    }
+  }
+
+  openServices(): void {
+    this.activeTabIndex.set(8);
+  }
+
+  openEconomicResult(): void {
+    this.activeTabIndex.set(9);
+  }
+
+  openCashflow(): void {
+    this.activeTabIndex.set(10);
   }
 }

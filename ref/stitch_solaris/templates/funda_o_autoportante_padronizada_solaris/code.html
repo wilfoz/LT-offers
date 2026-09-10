@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>OFERTA Engineering - Fundação Autoportante</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .spreadsheet-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .spreadsheet-table th,
+        .spreadsheet-table td {
+            border: 1px solid #c3c6d7;
+            /* outline-variant */
+            padding: 4px 8px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .spreadsheet-table th {
+            background-color: #f3f3fe;
+            /* surface-container-low */
+            font-weight: 700;
+            color: #434655;
+            /* on-surface-variant */
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .spreadsheet-table td {
+            background-color: #ffffff;
+        }
+
+        /* Custom scrollbar for data-heavy sections */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "inverse-primary": "#b1c5ff", "secondary-fixed-dim": "#c2c7cc", "on-surface-variant": "#434653", "inverse-on-surface": "#f2f0f1", "tertiary-fixed": "#f9e37a", "outline-variant": "#c3c6d5", "on-tertiary-container": "#4a3f00", "tertiary-container": "#bfab49", "surface-container": "#efedee", "on-primary-fixed": "#001946", background: "#faf9fa", "surface-container-low": "#f5f3f4", "on-error": "#ffffff", "primary-container": "#3366cc", "surface-container-highest": "#e3e2e3", "on-secondary-fixed-variant": "#42474b", "on-primary-fixed-variant": "#00419d", "surface-container-high": "#e9e8e9", "on-secondary-fixed": "#171c20", primary: "#094cb2", "primary-fixed": "#d9e2ff", error: "#ba1a1a", "on-secondary-container": "#606569", "on-secondary": "#ffffff", "inverse-surface": "#303031", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-primary-container": "#e7ebff", "surface-dim": "#dbdadb", surface: "#faf9fa", "on-tertiary": "#ffffff", "on-background": "#1b1c1d", "surface-container-lowest": "#ffffff", "secondary-container": "#dfe3e8", outline: "#737784", "surface-bright": "#faf9fa", "surface-variant": "#e3e2e3", "on-tertiary-fixed": "#211b00", "secondary-fixed": "#dfe3e8", "tertiary-fixed-dim": "#dcc661", "surface-tint": "#2259bf", "primary-fixed-dim": "#b1c5ff", tertiary: "#6d5e00", "on-surface": "#1b1c1d", secondary: "#5a5f63", "on-tertiary-fixed-variant": "#524600", "on-error-container": "#93000a" }, fontFamily: { "headline-md": ["Inter"], "body-sm": ["Inter"], "label-caps": ["Inter"], "title-sm": ["Inter"], "numeric-tabular": ["Inter"], headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"] }, fontSize: { "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }], "title-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "numeric-tabular": ["14px", { lineHeight: "20px", fontWeight: "400" }] }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" } } } };</script>
+</head>
+
+<body class="bg-surface text-on-surface">
+    <!-- Sidebar Navigation Shell -->
+    <aside
+        class="flex flex-col h-screen fixed left-0 top-0 z-50 bg-surface-container-low dark:bg-inverse-surface docked left-0 h-full w-64 border-r border-outline-variant">
+        <div class="p-6 border-b border-outline-variant">
+            <h1
+                class="font-headline-md text-headline-md font-black text-primary dark:text-inverse-primary tracking-tighter">
+                OFERTA</h1>
+            <p class="text-on-surface-variant font-label-caps text-[9px] uppercase tracking-widest">Engineering System
+            </p>
+        </div>
+        <nav class="flex-1 py-4 overflow-y-auto">
+            <ul class="space-y-1 px-3">
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span> Dashboard</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">cell_tower</span> Torres</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary font-bold border-r-4 border-primary rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">domain</span> Autoportante</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">account_tree</span> Estaiadas</a>
+                </li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">upload_file</span> Upload</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">menu_book</span> Catálogo</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-label-caps text-label-caps text-on-surface-variant"
+                        href="#"><span class="material-symbols-outlined text-[20px]">calculate</span> Cálculos</a></li>
+                <li class=""><a
+                        class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-caps text-label-caps"
+                        href="#"><span class="material-symbols-outlined text-[20px]">description</span> Documentos</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-outline-variant">
+            <div class="flex items-center gap-3">
+                <img alt="Engenheiro Responsável" class="w-8 h-8 rounded-full border border-outline"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjJxgE-ASFFKbaO3Pj_b0z89CWCPY6o67fxsWz63mPbNZjvR8FUTkkvb21us7fp_-qHBgM2NbesZKuA4feogX-nVbrbG9IB9fgW7Rkclr2ga_alayzDOvd6srKPEHnJ6CO5GaVhSNgSgHUl3pOtztSm-pg_GryCaOHgt-mr20ax2ivaQeEAWgUTheSE9RBU8NaBYoIh3iwrGb7pbIIeZRxMTfk_RTA_tPYhOADXDfSpl3E516yRtXMBDgi4mcyuayKrHtodx5-DfVv" />
+                <div>
+                    <p class="text-[11px] font-bold">Eng. Rodrigues</p>
+                    <p class="text-[9px] text-green-600 font-bold flex items-center gap-1"><span
+                            class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> ONLINE</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Top App Bar -->
+    <header
+        class="flex justify-between items-center w-full px-container-padding h-16 ml-64 bg-surface docked full-width top-0 border-b border-outline-variant sticky z-40">
+        <div class="flex items-center gap-8">
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface"><span
+                    class="text-on-surface-variant font-normal text-sm block mb-1 uppercase tracking-wider">Autoportante
+                    &gt;</span> Cálculo de Fundações</h2>
+            <nav class="hidden md:flex gap-6">
+                <a class="text-on-surface-variant hover:text-primary font-title-sm text-title-sm" href="#">Resumo</a>
+                <a class="text-primary dark:text-inverse-primary border-b-2 border-primary font-bold pb-2 font-title-sm text-title-sm"
+                    href="#">Fundações</a>
+                <a class="text-on-surface-variant hover:text-primary font-title-sm text-title-sm" href="#">Armações</a>
+                <a class="text-on-surface-variant hover:text-primary font-title-sm text-title-sm" href="#">Locações</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative group">
+                <input
+                    class="bg-surface-container-high border-none rounded-full px-4 py-1.5 text-sm w-48 focus:ring-2 focus:ring-primary transition-all"
+                    placeholder="Pesquisar torre..." type="text" />
+                <span
+                    class="material-symbols-outlined absolute right-3 top-1.5 text-on-surface-variant text-sm">search</span>
+            </div>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">help</button>
+        </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-64 p-6 space-y-6">
+        <!-- Section 1: Cabeçalho de Parâmetros Gerais (Borda Amarela) -->
+        <section
+            class="bg-white border-t-4 border-t-yellow-400 border-x border-b border-outline-variant rounded-lg overflow-hidden shadow-sm">
+            <div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant">
+                <h3 class="font-label-caps text-label-caps text-on-surface-variant">Parâmetros Gerais da Estrutura</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="spreadsheet-table">
+                    <thead>
+                        <tr>
+                            <th class="" scope="col">Nº OP</th>
+                            <th class="" scope="col">EST. Nº</th>
+                            <th class="" scope="col">TIPO</th>
+                            <th class="" scope="col">EXT.</th>
+                            <th class="" colspan="4" scope="colgroup">PERNAS</th>
+                            <th class="" scope="col">PE Ref.</th>
+                            <th class="" colspan="2" scope="colgroup">COTA ELEV. P. REF.</th>
+                            <th class="" colspan="2" scope="colgroup">STUB</th>
+                            <th class="" scope="col">DEFLEXÃO</th>
+                        </tr>
+                        <tr class="text-[9px]">
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th class="" scope="col">A</th>
+                            <th class="" scope="col">B</th>
+                            <th class="" scope="col">C</th>
+                            <th class="" scope="col">D</th>
+                            <th scope="col"></th>
+                            <th class="" scope="col">PROJ.</th>
+                            <th class="" scope="col">CAMPO</th>
+                            <th class="" scope="col">Hs</th>
+                            <th class="" scope="col">h</th>
+                            <th class="" scope="col">--&gt;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="focus-within:bg-primary-container/10 outline-none" tabindex="0">
+                            <td class="font-bold">157</td>
+                            <td class="font-bold">78/2 - MV10</td>
+                            <td class="font-bold">JJAT</td>
+                            <td class="">0</td>
+                            <td class="">3,0</td>
+                            <td class="">3,0</td>
+                            <td class="">3,0</td>
+                            <td class="">3,0</td>
+                            <td class="">B</td>
+                            <td class="">100,16</td>
+                            <td class="">100,16</td>
+                            <td class="">0,89</td>
+                            <td class="">0,060</td>
+                            <td class="">37°28'17" D</td>
+                        </tr>
+                        <tr class="text-[10px]">
+                            <th class="text-right font-bold pr-4 bg-surface-container-low" colspan="9" scope="row">Cota
+                                Final do Concreto no Pé de Referência da Torre ==&gt;</th>
+                            <td class="font-bold">478,03</td>
+                            <td class="font-bold bg-surface-container-low">BISSETRIZ</td>
+                            <td class="font-bold" colspan="3">18°44'8"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Section 2: Dados do Projeto (Borda Verde) -->
+        <section
+            class="bg-white border-t-4 border-t-green-500 border-x border-b border-outline-variant rounded-lg overflow-hidden shadow-sm">
+            <div
+                class="px-4 py-2 bg-surface-container-low border-b border-outline-variant flex justify-between items-center">
+                <h3 class="font-label-caps text-label-caps text-on-surface-variant">Dados do Projeto e Topografia</h3>
+                <span
+                    class="text-[10px] font-bold text-green-700 bg-white px-2 py-0.5 rounded border border-outline-variant">TIPO:
+                    JJAT-T-10</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="spreadsheet-table">
+                    <thead>
+                        <tr>
+                            <th class="" rowspan="2" scope="col">PÉS</th>
+                            <th class="" rowspan="2" scope="col">COMP.</th>
+                            <th class="" rowspan="2" scope="col">TIPO FUNDAÇÃO</th>
+                            <th class="" colspan="7" scope="colgroup">DADOS DO PROJETO</th>
+                            <th class="" colspan="5" scope="colgroup">DADOS DE TOPOGRAFIA</th>
+                        </tr>
+                        <tr class="text-[9px]">
+                            <th class="" scope="col">L</th>
+                            <th class="" scope="col">Dc</th>
+                            <th class="" scope="col">Ds</th>
+                            <th class="" scope="col">d</th>
+                            <th class="" scope="col">b</th>
+                            <th class="" scope="col">B</th>
+                            <th class="" scope="col">P (Fuste)</th>
+                            <th class="" scope="col">Cota PC</th>
+                            <th class="" scope="col">Cota CC</th>
+                            <th class="" scope="col">Cota P.Ref</th>
+                            <th class="" scope="col">DN.C.C.</th>
+                            <th class="" scope="col">DN.Ref.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="focus-within:bg-primary-container/10 outline-none" tabindex="0">
+                            <th class="font-bold" scope="row">A</th>
+                            <td class="">3,0</td>
+                            <td class="">JJAT-T-10</td>
+                            <td class="">10,25</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">10,25</td>
+                            <td class="font-bold">100,00</td>
+                            <td class="">99,85</td>
+                            <td class="">99,93</td>
+                            <td class="">-0,15</td>
+                            <td class="">-0,07</td>
+                        </tr>
+                        <tr class="focus-within:bg-primary-container/10 outline-none" tabindex="0">
+                            <th class="font-bold" scope="row">B</th>
+                            <td class="">3,0</td>
+                            <td class="">JJAT-T-10</td>
+                            <td class="">10,21</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">10,21</td>
+                            <td class="font-bold">100,00</td>
+                            <td class="">99,89</td>
+                            <td class="">99,91</td>
+                            <td class="">-0,11</td>
+                            <td class="">-0,09</td>
+                        </tr>
+                        <tr class="focus-within:bg-primary-container/10 outline-none" tabindex="0">
+                            <th class="font-bold" scope="row">C</th>
+                            <td class="">3,0</td>
+                            <td class="">JJAT-T-10</td>
+                            <td class="">10,22</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">10,22</td>
+                            <td class="font-bold">100,00</td>
+                            <td class="">99,88</td>
+                            <td class="">99,90</td>
+                            <td class="">-0,12</td>
+                            <td class="">-0,10</td>
+                        </tr>
+                        <tr class="focus-within:bg-primary-container/10 outline-none" tabindex="0">
+                            <th class="font-bold" scope="row">D</th>
+                            <td class="">3,0</td>
+                            <td class="">JJAT-T-10</td>
+                            <td class="">10,23</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">10,23</td>
+                            <td class="font-bold">100,00</td>
+                            <td class="">99,87</td>
+                            <td class="">99,94</td>
+                            <td class="">-0,13</td>
+                            <td class="">-0,06</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Section 3: Esquemas Gráficos e Detalhes Técnicos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Vista Lateral Fundação -->
+            <div class="bg-white border border-outline-variant rounded-lg p-6 flex flex-col items-center">
+                <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-6 self-start">Vista Lateral
+                    Técnica (Fundação)</h4>
+                <div
+                    class="relative w-full max-w-md aspect-[4/3] bg-surface-container-low rounded border border-dashed border-outline-variant flex items-center justify-center overflow-hidden">
+                    <img alt="Detailed engineering blueprint of a tower foundation cross-section showing concrete footing in soil with technical dimension labels L, Ds, Dc, and HC."
+                        class="object-contain w-full h-full opacity-90"
+                        data-alt="A highly detailed engineering blueprint cross-section of a tower foundation. The technical drawing shows a concrete footing embedded deep into grainy soil texture, with precise dimension lines labeled L, Ds, Dc, and HC. The style is professional and minimalist, with clean black lines on a white and light grey background, featuring blue technical annotations. The lighting is flat and even, characteristic of an architectural drafting document."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb_qwAHPIQE3BcMpNsyRMoOuPYrAvlhMyefAFlGJUQGzTaj3AbjNCjxpsw7QSttmR8PK0piEBDffEIE6ZmdJrbdQIx1fyKS6rXH3rpYTC0igbPjkL02Ui4jM3JyvftL0ZdSWPXZOVD_1zS9_bL8zdyONaO-c6y8oIrldi2faZEUiTdygVuS2dXs6ZWz8wyDR7GwAtpVi9o2FXk48eyv2KMayelV25w0mz5sj_gavZjqNda8VQmhDBewJ9tysHQSgxCcNOO6WQC4Dfv" />
+                    <div
+                        class="absolute top-2 left-2 bg-white/80 px-2 py-1 rounded text-[10px] border border-outline-variant font-bold">
+                        DETALHE HC / L</div>
+                </div>
+            </div>
+            <!-- Planta de Locação -->
+            <div class="bg-white border border-outline-variant rounded-lg p-6 flex flex-col items-center">
+                <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-6 self-start">Planta de Locação
+                    Centro das Cavas</h4>
+                <div
+                    class="relative w-full max-w-md aspect-[4/3] bg-surface-container-low rounded border border-dashed border-outline-variant flex items-center justify-center overflow-hidden">
+                    <img alt="Engineering floor plan showing the four-legged base layout (Pés A, B, C, D) of a power transmission tower with central axis and spacing dimensions."
+                        class="object-contain w-full h-full opacity-90"
+                        data-alt="A precise engineering floor plan showing the four-legged base layout of a power transmission tower. The drawing features a central axis point with radiating diagonal lines connecting to four corner footings labeled Pé A, B, C, and D. Numerous dimension strings and degree markers indicate exact spacing and angles. The visual style is crisp CAD-inspired linework with a professional technical aesthetic, using a light mode palette of white, grey, and primary blue highlights."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC05ILcGIV3QOGmKGVU4UeqbMaOM4ctf6qZGIqljPj8cJ_sAwYbPt86gNdEDrhy6JJMG4uocq4laOQh0k4d-WjyqM9txrBfW9xDYaOjCWI2DB88uVQbKzOmSiDvQvd64eVPDLwMnqXLe7ZFa8vFzmnFuYnt5ARM6QQlSZkOrBtYQQ3yTS0AG20bAijNwd-TrAVrsrt0JN118cF-B--L-2IW8RM-WH8D3VQrt5veqDRLhkMRR-Le9PUJQqdQb4uF8uy11_3UiIh-ngzr" />
+                    <div
+                        class="absolute bottom-2 right-2 bg-white/80 px-2 py-1 rounded text-[10px] border border-outline-variant font-bold">
+                        MARCO CENTRAL: 0.00</div>
+                </div>
+            </div>
+        </div>
+        <!-- Section 4: Dados da Fundação (Volumes e Cotas) (Borda Azul) -->
+        <section
+            class="bg-white border-t-4 border-t-blue-500 border-x border-b border-outline-variant rounded-lg overflow-hidden shadow-sm">
+            <div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant">
+                <h3 class="font-label-caps text-label-caps text-on-surface-variant">Dados Executivos da Fundação e
+                    Volumes</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="spreadsheet-table">
+                    <thead>
+                        <tr>
+                            <th class="" rowspan="2" scope="col">PÉS</th>
+                            <th class="" rowspan="2" scope="col">COMP.</th>
+                            <th class="" colspan="2" scope="colgroup">PROFUNDIDADE</th>
+                            <th class="" scope="col">AFL. PREV.</th>
+                            <th class="" scope="col">CORREÇ.</th>
+                            <th class="" scope="col">AFLOR.</th>
+                            <th class="" colspan="3" scope="colgroup">COTAS EM REL PC</th>
+                            <th class="" colspan="5" scope="colgroup">VOLUMES (m³)</th>
+                        </tr>
+                        <tr class="text-[9px]">
+                            <th class="" scope="col">HC</th>
+                            <th class="" scope="col">hr/mag</th>
+                            <th class="" scope="col">"G"</th>
+                            <th class="" scope="col">AFLOR. "G"</th>
+                            <th class="" scope="col">COR. "G"</th>
+                            <th class="" scope="col">NC</th>
+                            <th class="" scope="col">NFC</th>
+                            <th class="" scope="col">Tp.STUB</th>
+                            <th class="" scope="col">ESCAV.</th>
+                            <th class="" scope="col">REGEN.</th>
+                            <th class="" scope="col">REAT.</th>
+                            <th class="" scope="col">C. ARM.</th>
+                            <th class="" scope="col">C. MAG.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-surface-container-high transition-colors focus-within:bg-primary-container/10 outline-none"
+                            tabindex="0">
+                            <th class="font-bold" scope="row">A</th>
+                            <td class="">3,0</td>
+                            <td class="">10,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,25</td>
+                            <td class="">-</td>
+                            <td class="">0,25</td>
+                            <td class="">100,10</td>
+                            <td class="">89,850</td>
+                            <td class="">101,051</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-high transition-colors focus-within:bg-primary-container/10 outline-none"
+                            tabindex="0">
+                            <th class="font-bold" scope="row">B</th>
+                            <td class="">3,0</td>
+                            <td class="">10,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,21</td>
+                            <td class="">-</td>
+                            <td class="">0,21</td>
+                            <td class="">100,10</td>
+                            <td class="">89,890</td>
+                            <td class="">101,051</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                        </tr>
+                        <tr class="font-bold">
+                            <th class="text-right pr-4 bg-surface-container-low" colspan="10" scope="row">TOTAIS</th>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                            <td class="">0,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Section 5: Tabelas Inferiores de Marcação e Nivelamento -->
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Medidas para Marcação de Cavas -->
+            <section
+                class="bg-white border-t-4 border-t-blue-400 border-x border-b border-outline-variant rounded-lg overflow-hidden shadow-sm">
+                <div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant">
+                    <h3 class="font-label-caps text-label-caps text-on-surface-variant">Medidas para Marcação de Cavas
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="spreadsheet-table">
+                        <thead>
+                            <tr>
+                                <th class="" rowspan="2">PÉS</th>
+                                <th class="" colspan="3">SEMI-DIAGONAL "C"</th>
+                                <th class="" colspan="3">ÂNGULO HORIZONTAL</th>
+                                <th class="" colspan="2">SEMI LAT. "A"</th>
+                                <th class="" colspan="2">SEMI LAT. "B"</th>
+                                <th class="" colspan="2">PERFIL LATERAL</th>
+                                <th class="">DESLOC.</th>
+                            </tr>
+                            <tr class="text-[9px]">
+                                <th class="">C.C.</th>
+                                <th class="">S1</th>
+                                <th class="">S3</th>
+                                <th class="">C. CAVA</th>
+                                <th class="">S1</th>
+                                <th class="">S3</th>
+                                <th class="">TP STUB</th>
+                                <th class="">C. CAVA</th>
+                                <th class="">TP STUB</th>
+                                <th class="">C. CAVA</th>
+                                <th class="">LADOS</th>
+                                <th class="">C. CAVA</th>
+                                <th class="">DIAGONAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">A</td>
+                                <td class="font-bold">6,691</td>
+                                <td class="">6,691</td>
+                                <td class="">6,691</td>
+                                <td class="">135°00'00"</td>
+                                <td class="">135°00'00"</td>
+                                <td class="">135°00'00"</td>
+                                <td class="">3,148</td>
+                                <td class="">4,731</td>
+                                <td class="">3,148</td>
+                                <td class="">4,731</td>
+                                <td class="">AB</td>
+                                <td class="">9,457</td>
+                                <td class="">2,239</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">B</td>
+                                <td class="font-bold">6,683</td>
+                                <td class="">6,683</td>
+                                <td class="">6,683</td>
+                                <td class="">225°00'00"</td>
+                                <td class="">225°00'00"</td>
+                                <td class="">225°00'00"</td>
+                                <td class="">3,148</td>
+                                <td class="">4,725</td>
+                                <td class="">3,148</td>
+                                <td class="">4,725</td>
+                                <td class="">BC</td>
+                                <td class="">9,452</td>
+                                <td class="">2,231</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Medidas Reais para Nivelamento -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <section
+                    class="lg:col-span-3 bg-white border-t-4 border-t-blue-400 border-x border-b border-outline-variant rounded-lg overflow-hidden shadow-sm">
+                    <div class="px-4 py-2 bg-surface-container-low border-b border-outline-variant">
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant">Medidas Reais para
+                            Nivelamento da Base da Torre</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="spreadsheet-table">
+                            <thead>
+                                <tr>
+                                    <th class="" rowspan="2">PÉS</th>
+                                    <th class="" colspan="3">ALINHAMENTO DO STUB</th>
+                                    <th class="" colspan="4">FECHAMENTO LATERAL (m)</th>
+                                    <th class="" colspan="3">FECHAMENTO DIAGONAL (m)</th>
+                                </tr>
+                                <tr class="text-[9px]">
+                                    <th class="">ÂNGULO</th>
+                                    <th class="">TOPO</th>
+                                    <th class="">COMPLEM.</th>
+                                    <th class="">LADOS</th>
+                                    <th class="">CONCRETO</th>
+                                    <th class="">STUB</th>
+                                    <th class="">COMPLEM.</th>
+                                    <th class="">DIAGONAL</th>
+                                    <th class="">STUB</th>
+                                    <th class="">COMPLEM.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-bold">A</td>
+                                    <td class="">135°00'00"</td>
+                                    <td class="font-bold">4,452</td>
+                                    <td class="">4,299</td>
+                                    <td class="">A-B</td>
+                                    <td class="">6,554</td>
+                                    <td class="">6,296</td>
+                                    <td class="">8,080</td>
+                                    <td class="align-middle" rowspan="2">A-C</td>
+                                    <td class="align-middle font-bold" rowspan="2">8,904</td>
+                                    <td class="align-middle" rowspan="2">8,598</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">B</td>
+                                    <td class="">225°00'00"</td>
+                                    <td class="font-bold">4,452</td>
+                                    <td class="">4,299</td>
+                                    <td class="">B-C</td>
+                                    <td class="">6,554</td>
+                                    <td class="">6,296</td>
+                                    <td class="">8,080</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- Detalhe Gabarito Inclinado -->
+                <section
+                    class="bg-white border border-outline-variant rounded-lg p-4 flex flex-col items-center justify-between">
+                    <h4 class="font-label-caps text-[9px] text-on-surface-variant text-center uppercase">Detalhe
+                        Gabarito Inclinado</h4>
+                    <div class="flex-1 flex flex-col items-center justify-center py-4">
+                        <div class="relative w-24 h-32 border-l-2 border-b-2 border-primary">
+                            <div
+                                class="absolute bottom-0 left-0 w-full h-full border-r-2 border-primary-fixed origin-bottom-left rotate-[11.3deg]">
+                            </div>
+                            <div class="absolute bottom-4 left-6 text-[10px] font-bold text-primary">50.000</div>
+                            <div class="absolute top-2 right-0 text-[10px] font-bold text-primary">9,994</div>
+                        </div>
+                    </div>
+                    <div class="w-full border-t border-outline-variant pt-2">
+                        <p class="text-[10px] font-bold text-center">Tg. Diag: 0,19988</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <!-- Technical Footer -->
+    <footer
+        class="ml-64 px-container-padding py-4 bg-surface border-t border-outline-variant flex justify-between items-center text-[11px] text-on-surface-variant">
+        <div class="flex gap-8">
+            <p class=""><span class="font-bold uppercase">Calculado por:</span> Eng. Rodrigues (CREA 12345-D)</p>
+            <p class=""><span class="font-bold uppercase">Data:</span> 24/05/2024</p>
+            <p class=""><span class="font-bold uppercase">Revisão:</span> 02</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <p class="">Conectado ao servidor central</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">database</span>
+                <p class="">DB: OFERTA_PROD_04</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Micro-interactions and effects
+        document.querySelectorAll('.spreadsheet-table tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Flash animation on click to simulate data selection
+                row.classList.add('bg-primary-container/10');
+                setTimeout(() => {
+                    row.classList.remove('bg-primary-container/10');
+                }, 200);
+            });
+        });
+    </script>
+</body>
+
+</html>

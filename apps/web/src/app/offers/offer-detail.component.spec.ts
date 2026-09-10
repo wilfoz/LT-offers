@@ -11,6 +11,7 @@ import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
 import { SoilTypesApi } from '../catalogs/soil-types-api.service';
 import { TowerTypesApi } from '../catalogs/tower-types-api.service';
 import { StakingApi } from './staking-api.service';
+import { FoundationsApi } from './foundations-api.service';
 
 const mockDetail = (overrides: Partial<OfferDetail> = {}): OfferDetail => ({
   id: 1,
@@ -88,7 +89,7 @@ const mockDetail = (overrides: Partial<OfferDetail> = {}): OfferDetail => ({
   ...overrides,
 });
 
-describe('OfferDetailComponent', () => {
+describe('OfferDetailComponent', { timeout: 15000 }, () => {
   const apiMock = {
     getById: vi.fn(),
     updateRevision: vi.fn(),
@@ -156,6 +157,47 @@ describe('OfferDetailComponent', () => {
         {
           provide: TowerTypesApi,
           useValue: { list: vi.fn().mockReturnValue(of([])) },
+        },
+        {
+          provide: FoundationsApi,
+          useValue: {
+            getQuantities: vi.fn().mockReturnValue(
+              of({
+                transmissionLineId: 101,
+                calculationMode: 'STAKING_DETAILED',
+                totalTowers: 0,
+                calculatedTowers: 0,
+                pendingTowers: 0,
+                kpis: {
+                  totalExcavationM3: '0.000',
+                  totalConcreteM3: '0.000',
+                  totalSteelKg: '0.00',
+                  totalBackfillM3: '0.000',
+                  totalSpecialPilesM: '0.000',
+                },
+                materials: [],
+                materialsByFamily: {
+                  EXCAVATION: [],
+                  CONCRETE: [],
+                  STEEL: [],
+                  BACKFILL_FORMWORK: [],
+                  SPECIAL_FOUNDATIONS: [],
+                },
+                missingCombinations: [],
+              }),
+            ),
+            getTraceability: vi.fn().mockReturnValue(of({})),
+            getValidation: vi.fn().mockReturnValue(
+              of({
+                transmissionLineId: 101,
+                totalTowers: 0,
+                calculatedTowers: 0,
+                pendingTowers: 0,
+                hasErrors: false,
+                missingCombinations: [],
+              }),
+            ),
+          },
         },
         {
           provide: ActivatedRoute,

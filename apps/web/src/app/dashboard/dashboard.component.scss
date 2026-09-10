@@ -1,0 +1,294 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--solaris-outline-variant);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--solaris-on-surface-variant);
+  margin-bottom: 4px;
+
+  .breadcrumb-sep {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .breadcrumb-current {
+    font-weight: 700;
+    color: var(--solaris-primary);
+  }
+}
+
+.page-title {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// KPI Grid
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Layout de 2 colunas
+.dashboard-content-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+.content-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.content-sidebar {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.panel-card {
+  background: var(--solaris-surface-container-lowest);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--mat-sys-level1);
+}
+
+.panel-header {
+  padding: 10px 16px;
+  background: var(--solaris-surface-container-low);
+  border-bottom: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .panel-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--solaris-tertiary);
+  }
+
+  .panel-title {
+    margin: 0;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--solaris-on-surface);
+  }
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--solaris-primary);
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 4px;
+  transition: background-color 0.15s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background-color: var(--solaris-surface-container-high);
+  }
+}
+
+.text-error {
+  color: var(--solaris-error);
+  font-weight: 600;
+}
+
+.text-pending {
+  color: var(--solaris-tertiary);
+  font-weight: 600;
+}
+
+// Quick Shortcuts
+.quick-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shortcut-card {
+  background: var(--solaris-surface-container-lowest);
+  border: 1px solid var(--solaris-outline-variant);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mat-sys-level2);
+  }
+
+  .shortcut-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      color: #ffffff;
+      font-size: 22px;
+    }
+
+    &.bg-blue {
+      background: var(--solaris-primary-container);
+    }
+
+    &.bg-gold {
+      background: var(--solaris-tertiary-container);
+    }
+
+    &.bg-primary {
+      background: var(--solaris-primary);
+    }
+  }
+
+  .shortcut-info {
+    display: flex;
+    flex-direction: column;
+
+    .shortcut-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--solaris-on-surface);
+    }
+
+    .shortcut-desc {
+      font-size: 11px;
+      color: var(--solaris-on-surface-variant);
+      margin-top: 2px;
+    }
+  }
+}
+
+// Chart Container
+.chart-container {
+  height: 200px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+
+  .bar-col {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+
+    .bar-fill {
+      width: 100%;
+      background: linear-gradient(180deg, var(--solaris-primary) 0%, var(--solaris-primary-container) 100%);
+      border-radius: 4px 4px 0 0;
+      min-height: 8px;
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+
+    .bar-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--solaris-on-surface-variant);
+    }
+  }
+}
+
+// Status Cell
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &.dot-primary {
+      background: var(--solaris-primary);
+    }
+
+    &.dot-tertiary {
+      background: var(--solaris-tertiary);
+    }
+
+    &.dot-error {
+      background: var(--solaris-error);
+    }
+  }
+}

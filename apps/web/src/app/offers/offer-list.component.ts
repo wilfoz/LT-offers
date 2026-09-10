@@ -32,292 +32,404 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
     MatProgressBarModule,
   ],
   template: `
-    <section>
-      <div class="header-row">
-        <div>
-          <h2>Gestão de Ofertas e Propostas</h2>
-          <p class="subtitle">
-            Controle de parâmetros de leilão, revisões, linhas de transmissão e
-            matriz de escopo
+    <section class="offer-list-page">
+      <!-- Subheader -->
+      <div class="page-sub-header">
+        <div class="header-left">
+          <nav class="breadcrumb-nav">
+            <span>Início</span>
+            <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+            <span class="breadcrumb-current">Gestão de Ofertas</span>
+          </nav>
+          <h2 class="font-display-lg page-title">Gestão de Ofertas e Propostas</h2>
+          <p class="page-subtitle">
+            Controle de parâmetros de leilão, revisões, linhas de transmissão e matriz de escopo
           </p>
         </div>
-        <a matButton="filled" routerLink="new" class="new-offer-btn">
-          <mat-icon>add</mat-icon> Nova proposta
-        </a>
+
+        <div class="header-actions">
+          <a matButton="filled" routerLink="new" class="btn-primary-gradient new-offer-btn">
+            <mat-icon>add</mat-icon>
+            <span>Nova Proposta</span>
+          </a>
+        </div>
       </div>
 
-      <form role="search" (submit)="search($event)">
-        <mat-form-field
-          appearance="outline"
-          floatLabel="always"
-          subscriptSizing="dynamic"
-          class="search-field"
-        >
-          <mat-label
-            >Buscar por código, nome, cliente, leilão ou lote</mat-label
-          >
-          <input
-            matInput
-            id="search"
-            name="search"
-            type="search"
-            [value]="term()"
-            (input)="term.set(searchField.value)"
-            #searchField
-          />
-        </mat-form-field>
-        <button matButton="outlined" type="submit">Buscar</button>
-      </form>
+      <!-- KPIs Bar -->
+      <div class="kpis-bar">
+        <div class="kpi-mini-card">
+          <span class="kpi-mini-label">Total de Propostas</span>
+          <span class="kpi-mini-val font-numeric-tabular">{{ items().length }}</span>
+        </div>
+        <div class="kpi-mini-card">
+          <span class="kpi-mini-label">Extensão Total</span>
+          <span class="kpi-mini-val font-numeric-tabular">{{ totalExtension() }} km</span>
+        </div>
+        <div class="kpi-mini-card">
+          <span class="kpi-mini-label">Propostas Válidas</span>
+          <span class="kpi-mini-val font-numeric-tabular text-success">{{ validCount() }}</span>
+        </div>
+        <div class="kpi-mini-card">
+          <span class="kpi-mini-label">Com Pendências</span>
+          <span class="kpi-mini-val font-numeric-tabular text-pending">{{ pendingCount() }}</span>
+        </div>
+      </div>
+
+      <!-- Search Toolbar -->
+      <div class="search-toolbar-card technical-border">
+        <form role="search" (submit)="search($event)" class="search-form">
+          <div class="search-input-wrapper">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              id="search"
+              name="search"
+              type="search"
+              placeholder="Buscar por código, nome, cliente, leilão ou lote..."
+              [value]="term()"
+              (input)="term.set(searchField.value)"
+              #searchField
+            />
+          </div>
+          <button type="submit" class="btn-secondary-outline btn-search">
+            <span>Filtrar</span>
+          </button>
+        </form>
+      </div>
 
       @if (loading()) {
-        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
-        <p>Carregando ofertas…</p>
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" class="my-4" />
+        <p class="loading-text">Carregando ofertas…</p>
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       } @else if (items().length === 0) {
-        <div class="empty-state">
+        <div class="empty-state panel-card technical-border">
           <mat-icon aria-hidden="true">request_quote</mat-icon>
-          <p>Nenhuma oferta encontrada.</p>
-          <a matButton="filled" routerLink="new">Cadastrar primeira proposta</a>
+          <p class="font-bold">Nenhuma oferta encontrada.</p>
+          <a matButton="filled" routerLink="new" class="btn-primary-gradient">
+            Cadastrar primeira proposta
+          </a>
         </div>
       } @else {
-        <div class="table-scroll">
-          <table mat-table [dataSource]="items()" class="dense">
-            <caption>
-              Propostas cadastradas e revisões ativas
-            </caption>
+        <div class="panel-card technical-border overflow-hidden">
+          <div class="table-scroll">
+            <table mat-table [dataSource]="items()" class="technical-table">
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
+                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                  <a [routerLink]="[item.id]" class="offer-code-link font-bold">
+                    {{ item.code }}
+                  </a>
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="code">
-              <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
-              <td mat-cell *matCellDef="let item" class="mono">
-                <a [routerLink]="[item.id]" class="offer-link font-bold">
-                  {{ item.code }}
-                </a>
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                  Nome da proposta
+                </th>
+                <td mat-cell *matCellDef="let item">
+                  <strong>{{ item.name }}</strong>
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                Nome da proposta
-              </th>
-              <td mat-cell *matCellDef="let item">
-                <strong>{{ item.name }}</strong>
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="clientName">
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                  Cliente / Concessionária
+                </th>
+                <td mat-cell *matCellDef="let item">
+                  {{ item.clientName }}
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="clientName">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                Cliente / Concessionária
-              </th>
-              <td mat-cell *matCellDef="let item">
-                {{ item.clientName }}
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="auctionLot">
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                  Leilão / Lote
+                </th>
+                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                  {{ item.auctionName }} • {{ item.lotName }}
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="auctionLot">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                Leilão / Lote
-              </th>
-              <td mat-cell *matCellDef="let item">
-                {{ item.auctionName }} • {{ item.lotName }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="revision">
-              <th mat-header-cell *matHeaderCellDef scope="col">Revisão</th>
-              <td mat-cell *matCellDef="let item">
-                <span class="rev-badge mono"
-                  >R{{ item.currentRevisionNumber }}</span
-                >
-                <span
-                  class="status-chip"
-                  [attr.data-status]="item.currentRevisionStatus"
-                >
-                  {{ statusLabel(item.currentRevisionStatus) }}
-                </span>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="linesKm">
-              <th mat-header-cell *matHeaderCellDef scope="col">
-                Linhas / Extensão
-              </th>
-              <td mat-cell *matCellDef="let item" class="mono">
-                {{ item.lineCount }} LT ({{ item.totalLengthKm }} km)
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="issues">
-              <th mat-header-cell *matHeaderCellDef scope="col">Pendências</th>
-              <td mat-cell *matCellDef="let item">
-                @if (item.hasPendingIssues) {
-                  <span
-                    class="pending-badge"
-                    matTooltip="Possui pendências: sem linhas cadastradas ou rateio territorial incompleto"
+              <ng-container matColumnDef="revision">
+                <th mat-header-cell *matHeaderCellDef scope="col">Revisão</th>
+                <td mat-cell *matCellDef="let item">
+                  <span class="rev-badge font-numeric-tabular"
+                    >R{{ item.currentRevisionNumber }}</span
                   >
-                    <mat-icon class="pending-icon">warning</mat-icon> Incompleta
+                  <span
+                    class="status-chip"
+                    [attr.data-status]="item.currentRevisionStatus"
+                  >
+                    {{ statusLabel(item.currentRevisionStatus) }}
                   </span>
-                } @else {
-                  <span class="ok-badge">
-                    <mat-icon class="ok-icon">check_circle</mat-icon> Válida
-                  </span>
-                }
-              </td>
-            </ng-container>
+                </td>
+              </ng-container>
 
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef scope="col">Ações</th>
-              <td mat-cell *matCellDef="let item" class="actions-cell">
-                <a
-                  matButton="outlined"
-                  [routerLink]="[item.id]"
-                  matTooltip="Ver detalhes e parametrização da proposta"
-                >
-                  Abrir
-                </a>
-                <button
-                  matButton="outlined"
-                  type="button"
-                  (click)="cloneOffer(item)"
-                  matTooltip="Duplicar proposta com histórico rastreável"
-                >
-                  Clonar
-                </button>
-                <button
-                  matIconButton
-                  type="button"
-                  (click)="deleteOffer(item)"
-                  aria-label="Excluir proposta"
-                  matTooltip="Excluir proposta"
-                  class="danger-btn"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+              <ng-container matColumnDef="linesKm">
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                  Linhas / Extensão
+                </th>
+                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                  {{ item.lineCount }} LT ({{ item.totalLengthKm }} km)
+                </td>
+              </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="columns"></tr>
-            <tr mat-row *matRowDef="let row; columns: columns"></tr>
-          </table>
+              <ng-container matColumnDef="issues">
+                <th mat-header-cell *matHeaderCellDef scope="col">Pendências</th>
+                <td mat-cell *matCellDef="let item">
+                  @if (item.hasPendingIssues) {
+                    <span
+                      class="badge badge-pending"
+                      matTooltip="Possui pendências: sem linhas cadastradas ou rateio territorial incompleto"
+                    >
+                      <mat-icon class="badge-icon">warning</mat-icon> Incompleta
+                    </span>
+                  } @else {
+                    <span class="badge badge-valid">
+                      <mat-icon class="badge-icon">check_circle</mat-icon> Válida
+                    </span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef scope="col" style="text-align: right;">Ações</th>
+                <td mat-cell *matCellDef="let item" class="actions-cell" style="text-align: right;">
+                  <a
+                    matButton="outlined"
+                    [routerLink]="[item.id]"
+                    matTooltip="Ver detalhes e parametrização da proposta"
+                    class="btn-action"
+                  >
+                    Abrir
+                  </a>
+                  <button
+                    matButton="outlined"
+                    type="button"
+                    (click)="cloneOffer(item)"
+                    matTooltip="Duplicar proposta com histórico rastreável"
+                    class="btn-action"
+                  >
+                    Clonar
+                  </button>
+                  <button
+                    matIconButton
+                    type="button"
+                    (click)="deleteOffer(item)"
+                    aria-label="Excluir proposta"
+                    matTooltip="Excluir proposta"
+                    class="danger-btn"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columns"></tr>
+              <tr mat-row *matRowDef="let row; columns: columns"></tr>
+            </table>
+          </div>
         </div>
       }
     </section>
   `,
   styles: `
-    .header-row {
+    .offer-list-page {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .page-sub-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 0.5rem;
-      gap: 1rem;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--solaris-outline-variant);
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 16px;
+      }
     }
-    .subtitle {
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: -0.25rem;
-      font: var(--mat-sys-body-medium);
-    }
-    .new-offer-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    form[role='search'] {
+
+    .breadcrumb-nav {
       display: flex;
-      gap: 1rem;
       align-items: center;
-      flex-wrap: wrap;
-      margin-block: 1rem;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--solaris-on-surface-variant);
+      margin-bottom: 4px;
+
+      .breadcrumb-sep {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+
+      .breadcrumb-current {
+        font-weight: 700;
+        color: var(--solaris-primary);
+      }
     }
-    .search-field {
+
+    .page-title {
+      margin: 0;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--solaris-on-surface-variant);
+      margin: 4px 0 0;
+    }
+
+    .kpis-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+
+      @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kpi-mini-card {
+      background: var(--solaris-surface-container-lowest);
+      border: 1px solid var(--solaris-outline-variant);
+      border-radius: 6px;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+
+      .kpi-mini-label {
+        font-family: 'Public Sans', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--solaris-on-surface-variant);
+      }
+
+      .kpi-mini-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--solaris-on-surface);
+        margin-top: 2px;
+      }
+    }
+
+    .search-toolbar-card {
+      background: var(--solaris-surface-container-lowest);
+      border-radius: 6px;
+      padding: 10px 16px;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-input-wrapper {
       flex: 1;
-      min-width: 18rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--solaris-surface-container-low);
+      border: 1px solid var(--solaris-outline-variant);
+      border-radius: 4px;
+      padding: 6px 12px;
+
+      .search-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: var(--solaris-on-surface-variant);
+      }
+
+      input {
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 13px;
+        width: 100%;
+        color: var(--solaris-on-surface);
+      }
     }
-    table {
-      width: 100%;
+
+    .btn-search {
+      padding: 6px 16px;
     }
-    caption {
-      caption-side: top;
-      text-align: left;
-      padding-block: 0.5rem;
-      color: var(--mat-sys-on-surface-variant);
-      font: var(--mat-sys-body-medium);
-    }
-    .offer-link {
-      color: var(--mat-sys-primary);
+
+    .offer-code-link {
+      color: var(--solaris-primary);
       text-decoration: none;
-      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
-    .offer-link:hover {
-      text-decoration: underline;
-    }
+
     .rev-badge {
       display: inline-block;
-      padding: 0.15rem 0.4rem;
+      padding: 2px 6px;
       border-radius: 4px;
-      background: var(--mat-sys-surface-container-high);
-      font-weight: bold;
-      margin-right: 0.35rem;
+      background: var(--solaris-surface-container-high);
+      font-weight: 700;
+      font-size: 11px;
+      margin-right: 6px;
     }
+
     .status-chip {
       display: inline-block;
-      padding: 0.15rem 0.5rem;
+      padding: 2px 8px;
       border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Public Sans', sans-serif;
+      text-transform: uppercase;
     }
+
     .status-chip[data-status='DRAFT'] {
-      background: var(--mat-sys-surface-container);
-      color: var(--mat-sys-on-surface-variant);
-      border: 1px solid var(--mat-sys-outline-variant);
+      background: var(--solaris-surface-container);
+      color: var(--solaris-on-surface-variant);
+      border: 1px solid var(--solaris-outline-variant);
     }
+
     .status-chip[data-status='FROZEN'] {
       background: #e0f2fe;
       color: #0369a1;
       border: 1px solid #7dd3fc;
     }
+
     .status-chip[data-status='DELIVERED'] {
       background: #dcfce7;
       color: #15803d;
       border: 1px solid #86efac;
     }
-    .pending-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #b45309;
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      padding: 0.15rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
+
+    .badge-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
     }
-    .pending-icon {
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
-      color: #b45309;
-    }
-    .ok-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #15803d;
-      font-size: 0.75rem;
-    }
-    .ok-icon {
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
-      color: #15803d;
-    }
+
     .actions-cell {
       display: flex;
-      gap: 0.4rem;
+      gap: 6px;
       align-items: center;
+      justify-content: flex-end;
     }
+
+    .btn-action {
+      font-size: 12px;
+      height: 32px;
+    }
+
     .danger-btn {
-      color: var(--mat-sys-error);
+      color: var(--solaris-error);
     }
   `,
 })
@@ -349,6 +461,19 @@ export class OfferListComponent {
   search(event: Event): void {
     event.preventDefault();
     this.reload();
+  }
+
+  totalExtension(): number {
+    const sum = this.items().reduce((acc, curr) => acc + (Number(curr.totalLengthKm) || 0), 0);
+    return Math.round(sum * 10) / 10;
+  }
+
+  validCount(): number {
+    return this.items().filter((i) => !i.hasPendingIssues).length;
+  }
+
+  pendingCount(): number {
+    return this.items().filter((i) => i.hasPendingIssues).length;
   }
 
   statusLabel(status: OfferRevisionStatus): string {

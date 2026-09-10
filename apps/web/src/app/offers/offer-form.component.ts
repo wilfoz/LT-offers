@@ -35,380 +35,626 @@ import { OffersApi } from './offers-api.service';
     MatProgressBarModule,
   ],
   template: `
-    <section>
-      <h2>
-        {{
-          editId()
-            ? 'Editar dados gerais da proposta'
-            : 'Nova proposta de oferta'
-        }}
-      </h2>
-      <p class="subtitle">
-        {{
-          editId()
-            ? 'Alteração dos metadados globais da proposta (código, nome, cliente e moeda).'
-            : 'Cadastro da proposta e configuração dos parâmetros da revisão inicial (R0).'
-        }}
-      </p>
+    <section class="offer-form-page">
+      <!-- Subheader -->
+      <div class="page-sub-header">
+        <div class="header-left">
+          <nav class="breadcrumb-nav">
+            <a routerLink="/offers" class="breadcrumb-link">Ofertas</a>
+            <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+            <span class="breadcrumb-current">{{
+              editId() ? 'Editar Dados da Obra' : 'Nova Obra / Projeto'
+            }}</span>
+          </nav>
+          <h2 class="font-display-lg page-title">
+            {{
+              editId()
+                ? 'Editar Dados Gerais da Proposta'
+                : 'Criar Novo Projeto / Obra'
+            }}
+          </h2>
+          <p class="page-subtitle">
+            {{
+              editId()
+                ? 'Alteração dos metadados globais da proposta (código, nome, cliente e moeda).'
+                : 'Insira os parâmetros técnicos e premissas para iniciar o dimensionamento estrutural.'
+            }}
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <a matButton="outlined" [routerLink]="cancelLink()" class="btn-secondary-outline">
+            Cancelar
+          </a>
+          <button
+            type="button"
+            class="btn-primary-gradient"
+            (click)="save()"
+            [disabled]="saving() || form.invalid"
+          >
+            <mat-icon>{{ saving() ? 'sync' : editId() ? 'save' : 'add_task' }}</mat-icon>
+            <span>{{
+              saving()
+                ? 'Processando...'
+                : editId()
+                  ? 'Salvar Alterações'
+                  : 'Criar Projeto'
+            }}</span>
+          </button>
+        </div>
+      </div>
 
       @if (loading()) {
-        <mat-progress-bar mode="indeterminate" aria-label="Carregando" />
-        <p>Carregando dados…</p>
+        <mat-progress-bar mode="indeterminate" aria-label="Carregando" class="my-4" />
+        <p class="loading-text">Carregando dados…</p>
       } @else {
-        <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
-          <h3 class="col-12 section-title">Identificação da proposta</h3>
-
-          <mat-form-field
-            appearance="outline"
-            floatLabel="always"
-            subscriptSizing="dynamic"
-            class="col-4"
-          >
-            <mat-label>Código da proposta *</mat-label>
-            <input
-              matInput
-              id="code"
-              formControlName="code"
-              placeholder="ex.: OF-2026-L1"
-              maxlength="50"
-            />
-            @if (errorFor('code')) {
-              <mat-error>{{ errorFor('code') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field
-            appearance="outline"
-            floatLabel="always"
-            subscriptSizing="dynamic"
-            class="col-8"
-          >
-            <mat-label>Nome da proposta / lote *</mat-label>
-            <input
-              matInput
-              id="name"
-              formControlName="name"
-              placeholder="ex.: Lote 1 - Linhas de Transmissão Sul"
-              maxlength="200"
-            />
-            @if (errorFor('name')) {
-              <mat-error>{{ errorFor('name') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field
-            appearance="outline"
-            floatLabel="always"
-            subscriptSizing="dynamic"
-            class="col-8"
-          >
-            <mat-label>Cliente / Concessionária *</mat-label>
-            <input
-              matInput
-              id="clientName"
-              formControlName="clientName"
-              placeholder="ex.: Axia Energia Transmissão S.A."
-              maxlength="200"
-            />
-            @if (errorFor('clientName')) {
-              <mat-error>{{ errorFor('clientName') }}</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field
-            appearance="outline"
-            floatLabel="always"
-            subscriptSizing="dynamic"
-            class="col-4"
-          >
-            <mat-label>Moeda base *</mat-label>
-            <mat-select id="baseCurrency" formControlName="baseCurrency">
-              <mat-option value="BRL">BRL (Real Brasileiro)</mat-option>
-              <mat-option value="USD">USD (Dólar Americano)</mat-option>
-              <mat-option value="EUR">EUR (Euro)</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          @if (!editId()) {
-            <h3 class="col-12 section-title">
-              Parâmetros da revisão inicial (R0)
-            </h3>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-6"
-            >
-              <mat-label>Edital / Leilão *</mat-label>
-              <input
-                matInput
-                id="auctionName"
-                formControlName="auctionName"
-                placeholder="ex.: Leilão 01/2026 - ANEEL"
-                maxlength="100"
-              />
-              @if (errorFor('auctionName')) {
-                <mat-error>{{ errorFor('auctionName') }}</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-6"
-            >
-              <mat-label>Lote *</mat-label>
-              <input
-                matInput
-                id="lotName"
-                formControlName="lotName"
-                placeholder="ex.: Lote 1"
-                maxlength="100"
-              />
-              @if (errorFor('lotName')) {
-                <mat-error>{{ errorFor('lotName') }}</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-3"
-            >
-              <mat-label>Data da oferta *</mat-label>
-              <input
-                matInput
-                id="offerDate"
-                formControlName="offerDate"
-                placeholder="AAAA-MM-DD"
-              />
-              @if (errorFor('offerDate')) {
-                <mat-error>{{ errorFor('offerDate') }}</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-3"
-            >
-              <mat-label>Data do leilão</mat-label>
-              <input
-                matInput
-                id="auctionDate"
-                formControlName="auctionDate"
-                placeholder="AAAA-MM-DD"
-              />
-              @if (errorFor('auctionDate')) {
-                <mat-error>{{ errorFor('auctionDate') }}</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-3"
-            >
-              <mat-label>Início do cronograma</mat-label>
-              <input
-                matInput
-                id="scheduleStartDate"
-                formControlName="scheduleStartDate"
-                placeholder="AAAA-MM-DD"
-              />
-              @if (errorFor('scheduleStartDate')) {
-                <mat-error>{{ errorFor('scheduleStartDate') }}</mat-error>
-              }
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-3"
-            >
-              <mat-label>Entrada em operação (Edital)</mat-label>
-              <input
-                matInput
-                id="commercialOperationDate"
-                formControlName="commercialOperationDate"
-                placeholder="AAAA-MM-DD"
-              />
-              @if (errorFor('commercialOperationDate')) {
-                <mat-error>{{ errorFor('commercialOperationDate') }}</mat-error>
-              }
-            </mat-form-field>
-
-            @if (hasScheduleInconsistency()) {
-              <div class="col-12 alert-schedule" role="alert">
-                <mat-icon>warning</mat-icon>
-                <span>
-                  <strong>Alerta de Cronograma (RN-02):</strong> A data de
-                  início do cronograma é posterior à data prevista de entrada em
-                  operação do edital.
-                </span>
+        <form [formGroup]="form" (ngSubmit)="save()" class="offer-form-layout">
+          <!-- Left Column: General Info & Location -->
+          <div class="form-col-left">
+            <!-- Section 1: Informações Gerais -->
+            <fieldset class="panel-card technical-border fieldset-card">
+              <div class="panel-header">
+                <mat-icon class="panel-icon">info</mat-icon>
+                <legend class="panel-title font-label-caps">Informações Gerais da Obra</legend>
               </div>
+
+              <div class="fieldset-content form-grid">
+                <div class="col-12">
+                  <label class="form-label font-label-caps" for="name">NOME DA OBRA / PROJETO *</label>
+                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <input
+                      matInput
+                      id="name"
+                      formControlName="name"
+                      placeholder="Ex: Linha de Transmissão 500kV - Setor Norte"
+                      maxlength="200"
+                    />
+                    @if (errorFor('name')) {
+                      <mat-error>{{ errorFor('name') }}</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-6">
+                  <label class="form-label font-label-caps" for="code">CÓDIGO INTERNO *</label>
+                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <input
+                      matInput
+                      id="code"
+                      formControlName="code"
+                      placeholder="Ex: OBR-2026-001"
+                      maxlength="50"
+                      class="font-numeric-tabular"
+                    />
+                    @if (errorFor('code')) {
+                      <mat-error>{{ errorFor('code') }}</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-6">
+                  <label class="form-label font-label-caps" for="clientName">CLIENTE / CONCESSIONÁRIA *</label>
+                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <input
+                      matInput
+                      id="clientName"
+                      formControlName="clientName"
+                      placeholder="Ex: Axia Energia Transmissão S.A."
+                      maxlength="200"
+                    />
+                    @if (errorFor('clientName')) {
+                      <mat-error>{{ errorFor('clientName') }}</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label font-label-caps" for="baseCurrency">MOEDA BASE *</label>
+                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <mat-select id="baseCurrency" formControlName="baseCurrency">
+                      <mat-option value="BRL">BRL (Real Brasileiro)</mat-option>
+                      <mat-option value="USD">USD (Dólar Americano)</mat-option>
+                      <mat-option value="EUR">EUR (Euro)</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </fieldset>
+
+            @if (!editId()) {
+              <!-- Section 2: Premissas do Leilão / Lote -->
+              <fieldset class="panel-card technical-border fieldset-card">
+                <div class="panel-header">
+                  <mat-icon class="panel-icon">gavel</mat-icon>
+                  <legend class="panel-title font-label-caps">Premissas do Leilão &amp; Lote (R0)</legend>
+                </div>
+
+                <div class="fieldset-content form-grid">
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="auctionName">EDITAL / LEILÃO *</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="auctionName"
+                        formControlName="auctionName"
+                        placeholder="Ex: Leilão 01/2026 - ANEEL"
+                        maxlength="100"
+                      />
+                      @if (errorFor('auctionName')) {
+                        <mat-error>{{ errorFor('auctionName') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="lotName">LOTE / CIRCUITO *</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="lotName"
+                        formControlName="lotName"
+                        placeholder="Ex: Lote 1"
+                        maxlength="100"
+                      />
+                      @if (errorFor('lotName')) {
+                        <mat-error>{{ errorFor('lotName') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="offerDate">DATA DA OFERTA *</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="offerDate"
+                        formControlName="offerDate"
+                        placeholder="AAAA-MM-DD"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('offerDate')) {
+                        <mat-error>{{ errorFor('offerDate') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="auctionDate">DATA DO LEILÃO</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="auctionDate"
+                        formControlName="auctionDate"
+                        placeholder="AAAA-MM-DD"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('auctionDate')) {
+                        <mat-error>{{ errorFor('auctionDate') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="scheduleStartDate">INÍCIO DO CRONOGRAMA</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="scheduleStartDate"
+                        formControlName="scheduleStartDate"
+                        placeholder="AAAA-MM-DD"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('scheduleStartDate')) {
+                        <mat-error>{{ errorFor('scheduleStartDate') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label font-label-caps" for="commercialOperationDate">ENTRADA EM OPERAÇÃO</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="commercialOperationDate"
+                        formControlName="commercialOperationDate"
+                        placeholder="AAAA-MM-DD"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('commercialOperationDate')) {
+                        <mat-error>{{ errorFor('commercialOperationDate') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  @if (hasScheduleInconsistency()) {
+                    <div class="col-12 alert-schedule technical-border" role="alert">
+                      <mat-icon>warning</mat-icon>
+                      <span>
+                        <strong>Alerta de Cronograma (RN-02):</strong> A data de início do cronograma é posterior à data prevista de entrada em operação do edital.
+                      </span>
+                    </div>
+                  }
+                </div>
+              </fieldset>
+
+              <!-- Section 3: Premissas Financeiras -->
+              <fieldset class="panel-card technical-border fieldset-card">
+                <div class="panel-header">
+                  <mat-icon class="panel-icon">payments</mat-icon>
+                  <legend class="panel-title font-label-caps">Valores Estimados (CAPEX &amp; RAP)</legend>
+                </div>
+
+                <div class="fieldset-content form-grid">
+                  <div class="col-4">
+                    <label class="form-label font-label-caps" for="estimatedCapex">CAPEX ANEEL</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="estimatedCapex"
+                        formControlName="estimatedCapex"
+                        inputmode="decimal"
+                        placeholder="Ex: 150000000.00"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('estimatedCapex')) {
+                        <mat-error>{{ errorFor('estimatedCapex') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-4">
+                    <label class="form-label font-label-caps" for="maxRap">RAP MÁXIMA</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="maxRap"
+                        formControlName="maxRap"
+                        inputmode="decimal"
+                        placeholder="Ex: 25000000.00"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('maxRap')) {
+                        <mat-error>{{ errorFor('maxRap') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-4">
+                    <label class="form-label font-label-caps" for="winningRap">RAP ESTIMADA</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <input
+                        matInput
+                        id="winningRap"
+                        formControlName="winningRap"
+                        inputmode="decimal"
+                        placeholder="Ex: 21000000.00"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('winningRap')) {
+                        <mat-error>{{ errorFor('winningRap') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label font-label-caps" for="notes">NOTAS E PREMISSAS CONTRATUAIS</label>
+                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                      <textarea
+                        matInput
+                        id="notes"
+                        formControlName="notes"
+                        rows="2"
+                        placeholder="Observações, escopo inicial e premissas de projeto..."
+                        maxlength="1000"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </fieldset>
             }
+          </div>
 
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-4"
-            >
-              <mat-label>CAPEX estimado ANEEL</mat-label>
-              <input
-                matInput
-                id="estimatedCapex"
-                formControlName="estimatedCapex"
-                inputmode="decimal"
-                placeholder="ex.: 150000000.00"
-              />
-              <mat-hint>Em branco = não informado</mat-hint>
-              @if (errorFor('estimatedCapex')) {
-                <mat-error>{{ errorFor('estimatedCapex') }}</mat-error>
-              }
-            </mat-form-field>
+          <!-- Right Column: Structure Type Cards & Audit Info -->
+          <div class="form-col-right">
+            <div class="panel-card technical-border fieldset-card">
+              <div class="panel-header">
+                <mat-icon class="panel-icon">settings_input_component</mat-icon>
+                <span class="panel-title font-label-caps">Configuração da Estrutura</span>
+              </div>
 
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-4"
-            >
-              <mat-label>RAP Máxima do edital</mat-label>
-              <input
-                matInput
-                id="maxRap"
-                formControlName="maxRap"
-                inputmode="decimal"
-                placeholder="ex.: 25000000.00"
-              />
-              <mat-hint>Em branco = não informado</mat-hint>
-              @if (errorFor('maxRap')) {
-                <mat-error>{{ errorFor('maxRap') }}</mat-error>
-              }
-            </mat-form-field>
+              <div class="fieldset-content space-y-4">
+                <div class="structure-type-card selected">
+                  <div class="struct-radio-box">
+                    <mat-icon class="struct-check">check_circle</mat-icon>
+                  </div>
+                  <div class="struct-info">
+                    <span class="struct-title">Torre Autoportante</span>
+                    <span class="struct-desc">Estrutura rígida treliçada com 4 pés. Alta estabilidade e fixação por fundação profunda/direta.</span>
+                  </div>
+                </div>
 
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-4"
-            >
-              <mat-label>RAP Vencedora estimada</mat-label>
-              <input
-                matInput
-                id="winningRap"
-                formControlName="winningRap"
-                inputmode="decimal"
-                placeholder="ex.: 21000000.00"
-              />
-              <mat-hint>Em branco = não informado</mat-hint>
-              @if (errorFor('winningRap')) {
-                <mat-error>{{ errorFor('winningRap') }}</mat-error>
-              }
-            </mat-form-field>
+                <div class="structure-type-card">
+                  <div class="struct-radio-box">
+                    <mat-icon class="struct-circle">radio_button_unchecked</mat-icon>
+                  </div>
+                  <div class="struct-info">
+                    <span class="struct-title">Torre Estaiada</span>
+                    <span class="struct-desc">Mastro central suportado por cabos tensores externos. Ideal para grandes vãos e terrenos nivelados.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <mat-form-field
-              appearance="outline"
-              floatLabel="always"
-              subscriptSizing="dynamic"
-              class="col-12"
-            >
-              <mat-label>Notas descritivas da revisão inicial</mat-label>
-              <textarea
-                matInput
-                id="notes"
-                formControlName="notes"
-                rows="2"
-                placeholder="Observações, premissas contratuais e escopo inicial"
-                maxlength="1000"
-              ></textarea>
-            </mat-form-field>
-          }
+            <!-- Action Box -->
+            <div class="action-card-box technical-border">
+              <button
+                type="submit"
+                class="btn-primary-gradient w-full submit-large-btn"
+                [disabled]="saving() || form.invalid"
+              >
+                <mat-icon>{{ saving() ? 'sync' : editId() ? 'save' : 'add_task' }}</mat-icon>
+                <span>{{
+                  saving()
+                    ? 'Processando...'
+                    : editId()
+                      ? 'Salvar Alterações'
+                      : 'Criar Projeto'
+                }}</span>
+              </button>
 
-          <div class="col-12 actions">
-            <a matButton="outlined" [routerLink]="cancelLink()">Cancelar</a>
-            <button
-              matButton="filled"
-              type="submit"
-              [disabled]="saving() || form.invalid"
-            >
-              {{
-                saving()
-                  ? 'Salvando…'
-                  : editId()
-                    ? 'Salvar alterações'
-                    : 'Criar proposta'
-              }}
-            </button>
+              <a matButton="outlined" [routerLink]="cancelLink()" class="btn-secondary-outline w-full cancel-btn">
+                Cancelar
+              </a>
+
+              <p class="audit-hint font-label-caps">
+                Os dados serão auditados e registrados no histórico do sistema.
+              </p>
+            </div>
           </div>
         </form>
       }
     </section>
   `,
   styles: `
-    .subtitle {
-      color: var(--mat-sys-on-surface-variant);
-      margin-top: -0.25rem;
-      font: var(--mat-sys-body-medium);
-      margin-bottom: 1.5rem;
+    .offer-form-page {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 1rem;
-      max-width: 54rem;
+
+    .page-sub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--solaris-outline-variant);
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 16px;
+      }
     }
-    .col-12 {
-      grid-column: span 12;
+
+    .breadcrumb-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--solaris-on-surface-variant);
+      margin-bottom: 4px;
+
+      .breadcrumb-link {
+        color: var(--solaris-on-surface-variant);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--solaris-primary);
+        }
+      }
+
+      .breadcrumb-sep {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+
+      .breadcrumb-current {
+        font-weight: 700;
+        color: var(--solaris-primary);
+      }
     }
-    .col-8 {
-      grid-column: span 8;
+
+    .page-title {
+      margin: 0;
     }
-    .col-6 {
-      grid-column: span 6;
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--solaris-on-surface-variant);
+      margin: 4px 0 0;
     }
-    .col-4 {
-      grid-column: span 4;
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .col-3 {
-      grid-column: span 3;
+
+    .offer-form-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+
+      @media (max-width: 1024px) {
+        flex-direction: column;
+      }
     }
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--mat-sys-primary);
-      margin-top: 1rem;
-      margin-bottom: 0.25rem;
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
-      padding-bottom: 0.35rem;
+
+    .form-col-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
     }
+
+    .form-col-right {
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex-shrink: 0;
+
+      @media (max-width: 1024px) {
+        width: 100%;
+      }
+    }
+
+    .panel-card {
+      background: var(--solaris-surface-container-lowest);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: var(--mat-sys-level1);
+    }
+
+    .panel-header {
+      padding: 10px 16px;
+      background: var(--solaris-surface-container-low);
+      border-bottom: 1px solid var(--solaris-outline-variant);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .panel-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: var(--solaris-primary);
+      }
+
+      .panel-title {
+        margin: 0;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--solaris-on-surface);
+      }
+    }
+
+    .fieldset-card {
+      border: 1px solid var(--solaris-outline-variant);
+      margin: 0;
+      padding: 0;
+    }
+
+    .fieldset-content {
+      padding: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 10px;
+      color: var(--solaris-on-surface-variant);
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .structure-type-card {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--solaris-outline-variant);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: var(--solaris-surface-container-lowest);
+
+      &:hover {
+        background: var(--solaris-surface-container-low);
+      }
+
+      &.selected {
+        border-color: var(--solaris-primary);
+        background: #f0f4ff;
+
+        .struct-check {
+          color: var(--solaris-primary);
+        }
+      }
+
+      .struct-radio-box {
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          color: var(--solaris-outline);
+        }
+      }
+
+      .struct-info {
+        display: flex;
+        flex-direction: column;
+
+        .struct-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--solaris-on-surface);
+        }
+
+        .struct-desc {
+          font-size: 11px;
+          color: var(--solaris-on-surface-variant);
+          margin-top: 2px;
+          line-height: 1.4;
+        }
+      }
+    }
+
+    .action-card-box {
+      background: var(--solaris-surface-container-lowest);
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .submit-large-btn {
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .cancel-btn {
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .audit-hint {
+        font-size: 10px;
+        text-align: center;
+        color: var(--solaris-on-surface-variant);
+        margin: 4px 0 0;
+      }
+    }
+
     .alert-schedule {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
       background: #fef3c7;
       color: #92400e;
       border: 1px solid #fde68a;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
-    }
-    .alert-schedule mat-icon {
-      color: #b45309;
-    }
-    .actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-      margin-top: 1.5rem;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+
+      mat-icon {
+        color: #b45309;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
     }
   `,
 })

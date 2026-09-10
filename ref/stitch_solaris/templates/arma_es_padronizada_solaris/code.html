@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary": "#ffffff", "secondary-fixed-dim": "#c2c7cc", "on-surface": "#1b1c1d", "inverse-surface": "#303031", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#524600", "surface-container-low": "#f5f3f4", secondary: "#5a5f63", "inverse-on-surface": "#f2f0f1", "primary-fixed": "#d9e2ff", "on-primary": "#ffffff", "surface-bright": "#faf9fa", "tertiary-fixed-dim": "#dcc661", "surface-container": "#efedee", "secondary-fixed": "#dfe3e8", "on-error-container": "#93000a", "on-secondary-fixed-variant": "#42474b", "tertiary-container": "#bfab49", "primary-fixed-dim": "#b1c5ff", "on-secondary-fixed": "#171c20", "error-container": "#ffdad6", "on-primary-fixed": "#001946", "surface-container-lowest": "#ffffff", "on-tertiary": "#ffffff", background: "#faf9fa", "primary-container": "#3366cc", surface: "#faf9fa", "surface-container-high": "#e9e8e9", primary: "#094cb2", "surface-variant": "#e3e2e3", outline: "#737784", "on-background": "#1b1c1d", "on-tertiary-fixed": "#211b00", error: "#ba1a1a", "on-secondary-container": "#606569", "tertiary-fixed": "#f9e37a", "surface-tint": "#2259bf", "surface-container-highest": "#e3e2e3", "secondary-container": "#dfe3e8", "on-surface-variant": "#434653", "on-primary-container": "#e7ebff", tertiary: "#6d5e00", "outline-variant": "#c3c6d5", "on-primary-fixed-variant": "#00419d", "inverse-primary": "#b1c5ff", "on-tertiary-container": "#4a3f00", "surface-dim": "#dbdadb", "excel-yellow": "#fde047", "excel-blue": "#dbeafe", "excel-grey": "#e2e8f0", "excel-orange": "#ffedd5" }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" }, spacing: { "container-padding": "24px", "gutter-dense": "8px", unit: "4px", "stack-sm": "4px", "stack-md": "12px", "gutter-normal": "16px" }, fontFamily: { "numeric-tabular": ["Inter"], "body-sm": ["Inter"], "title-sm": ["Inter"], "label-caps": ["Inter"], "body-md": ["Inter"], "display-lg": ["Inter"], "headline-md": ["Inter"], headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"] }, fontSize: { "numeric-tabular": ["14px", { lineHeight: "20px", fontWeight: "400" }], "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }], "title-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "display-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } };</script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .technical-border {
+            border: 1px solid #c3c6d7;
+        }
+
+        /* using outline-variant */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-5deg);
+            font-size: 120px;
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.05);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        .excel-table th,
+        .excel-table td {
+            border: 1px solid #c3c6d7;
+            padding: 4px 8px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .excel-table thead th {
+            font-weight: 700;
+            background-color: #f3f3fe;
+            /* surface-container-low */
+            text-transform: uppercase;
+            color: #191b23;
+            /* on-surface */
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface antialiased overflow-hidden">
+    <!-- Sidebar -->
+    <aside
+        class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col py-container-padding z-50">
+        <div class="px-6 mb-8">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-primary-container rounded flex items-center justify-center text-on-primary-container font-black">
+                    S</div>
+                <div>
+                    <h1 class="font-headline-md text-headline-md font-bold text-primary">OFERTA</h1>
+                    <p class="font-label-caps text-label-caps text-on-surface-variant opacity-70">Linha de transmissão
+                    </p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-1 px-3">
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-label-caps text-label-caps uppercase">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">cell_tower</span>
+                <span class="font-label-caps text-label-caps uppercase">Torres</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container font-bold rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">cable</span>
+                <span class="font-label-caps text-label-caps uppercase">Estaiadas</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">cloud_upload</span>
+                <span class="font-label-caps text-label-caps uppercase">Upload</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">list_alt</span>
+                <span class="font-label-caps text-label-caps uppercase">Catálogo</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">calculate</span>
+                <span class="font-label-caps text-label-caps uppercase">Cálculos</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">description</span>
+                <span class="font-label-caps text-label-caps uppercase">Documentos</span>
+            </a>
+        </nav>
+        <div class="px-3 mt-auto space-y-1">
+            <button
+                class="w-full flex items-center justify-center gap-2 py-2 mb-4 border border-primary text-primary font-bold rounded hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-size: 18px;">construction</span>
+                <span class="font-label-caps text-label-caps">Modo Técnico</span>
+            </button>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded"
+                href="#">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="font-label-caps text-label-caps">Configurações</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded"
+                href="#">
+                <span class="material-symbols-outlined">help</span>
+                <span class="font-label-caps text-label-caps">Suporte</span>
+            </a>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="ml-64 h-screen flex flex-col relative">
+        <!-- Top Nav Bar -->
+        <header
+            class="h-14 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter-normal sticky top-0 z-40">
+            <div class="flex items-center gap-6">
+                <nav class="flex h-14">
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Resumo</a>
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Locação Estais</a>
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Fundação MC</a>
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Fundação Estais</a>
+                    <a class="flex items-center px-4 text-primary font-bold border-b-2 border-primary"
+                        href="#">Armações</a>
+                    <a class="flex items-center px-4 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                        href="#">Documentos</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <div
+                    class="flex items-center gap-2 bg-surface-container border border-outline-variant px-3 py-1.5 rounded text-body-sm">
+                    <span class="material-symbols-outlined text-primary" style="font-size: 18px;">folder</span>
+                    <span class="font-bold">Seletor de Projeto</span>
+                    <span class="material-symbols-outlined" style="font-size: 16px;">expand_more</span>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+                <img alt="Avatar" class="w-8 h-8 rounded-full border border-outline-variant"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsW1p3GfnoMuNDS6YtN4FPesZXByPVyi7j7-JNikh8viWp9S0lzlk8GWYazM8skFDgHJGw1wc_eGcVE0oO100eFNqiRyvCaft8tutkWrM_wtE9bHY7O4aLmG1aONFpsFGqLi1zxLzwGfnEanaQifjoXygHnysZ0dciRIjYpo9Ye4EEJZbOchUbX7zJP6IeYWC7R1Octx3kD8QxGMlTLCQ_EFKAVJREGNH_zz-A8XOXnly6r_XsC-Eettm8DlHz4WkVbd-g3h4kOVma" />
+            </div>
+        </header>
+        <!-- Page Header -->
+        <div
+            class="bg-surface-container-lowest px-container-padding py-4 border-b border-outline-variant flex justify-between items-center shrink-0">
+            <div>
+                <nav class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-1">
+                    <span>Estaiadas</span>
+                    <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+                    <span>Projetos</span>
+                    <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+                    <span class="text-primary font-bold">Torre 08A</span>
+                </nav>
+                <h2 class="font-display-lg text-display-lg font-black tracking-tight text-primary">Detalhamento de
+                    Armações</h2>
+            </div>
+            <div class="flex gap-3">
+                <button
+                    class="flex items-center gap-2 px-4 py-2 border border-outline text-on-surface-variant rounded font-bold hover:bg-surface-container transition-colors">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">history</span>
+                    Histórico
+                </button>
+                <button
+                    class="flex items-center gap-2 px-6 py-2 bg-primary text-on-primary rounded font-bold shadow-sm hover:opacity-90 transition-all">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">save</span>
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+        <!-- Dashboard Body -->
+        <div class="flex-1 overflow-y-auto bg-background p-container-padding relative">
+            <div class="watermark">Página 1</div>
+            <div class="flex gap-gutter-normal relative z-10">
+                <!-- Left Column: Detailed Tables -->
+                <div class="flex-1 space-y-gutter-normal">
+                    <!-- Header Section (Summary Bar) -->
+                    <div
+                        class="bg-white border-t-4 border-excel-yellow technical-border rounded overflow-hidden shadow-sm">
+                        <div
+                            class="grid grid-cols-12 text-[10px] font-bold text-center bg-surface-container-low uppercase text-on-surface">
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Torre No:</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Tipo</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Altura Útil</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Fundação Central</div>
+                            <div class="col-span-4 p-2 border-r border-outline-variant">Fundação Estais</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">DH</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Hc</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">Angulo DFX</div>
+                            <div class="col-span-1 p-2">Ang. Inclin. Estais</div>
+                        </div>
+                        <div class="grid grid-cols-12 text-[10px] text-center bg-white">
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-4 grid grid-cols-4 border-r border-outline-variant">
+                                <div class="p-2 border-r border-outline-variant">A: #N/D</div>
+                                <div class="p-2 border-r border-outline-variant">D: #N/D</div>
+                                <div class="p-2 border-r border-outline-variant">B: #N/D</div>
+                                <div class="p-2">C: #N/D</div>
+                            </div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2 border-r border-outline-variant">#N/D</div>
+                            <div class="col-span-1 p-2">#N/D</div>
+                        </div>
+                    </div>
+                    <!-- Section 1: Estais (Group) -->
+                    <div class="space-y-4">
+                        <!-- Estai A and B Pair -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="technical-border rounded overflow-hidden border-t-4 border-excel-blue">
+                                <div
+                                    class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                                    Estai A</div>
+                                <table class="w-full excel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Posição</th>
+                                            <th>Bitola</th>
+                                            <th>C. Unit</th>
+                                            <th>Quant.</th>
+                                            <th>C. Tot</th>
+                                            <th>P. Unit</th>
+                                            <th>P. Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white">
+                                        <tr>
+                                            <td>P1</td>
+                                            <td>10.0</td>
+                                            <td>1.45</td>
+                                            <td>12</td>
+                                            <td>17.40</td>
+                                            <td>0.617</td>
+                                            <td>10.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2</td>
+                                            <td>8.0</td>
+                                            <td>0.85</td>
+                                            <td>8</td>
+                                            <td>6.80</td>
+                                            <td>0.395</td>
+                                            <td>2.68</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P3</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                        </tr>
+                                        <tr class="font-bold bg-surface-container-low/30">
+                                            <td>S Total</td>
+                                            <td colspan="5"></td>
+                                            <td>13.41</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="technical-border rounded overflow-hidden border-t-4 border-excel-blue">
+                                <div
+                                    class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                                    Estai B</div>
+                                <table class="w-full excel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Posição</th>
+                                            <th>Bitola</th>
+                                            <th>C. Unit</th>
+                                            <th>Quant.</th>
+                                            <th>C. Tot</th>
+                                            <th>P. Unit</th>
+                                            <th>P. Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white">
+                                        <tr>
+                                            <td>P1</td>
+                                            <td>10.0</td>
+                                            <td>1.45</td>
+                                            <td>12</td>
+                                            <td>17.40</td>
+                                            <td>0.617</td>
+                                            <td>10.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2</td>
+                                            <td>8.0</td>
+                                            <td>0.85</td>
+                                            <td>8</td>
+                                            <td>6.80</td>
+                                            <td>0.395</td>
+                                            <td>2.68</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P3</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                        </tr>
+                                        <tr class="font-bold bg-surface-container-low/30">
+                                            <td>S Total</td>
+                                            <td colspan="5"></td>
+                                            <td>13.41</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Estai D and C Pair -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="technical-border rounded overflow-hidden border-t-4 border-excel-blue">
+                                <div
+                                    class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                                    Estai D</div>
+                                <table class="w-full excel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Posição</th>
+                                            <th>Bitola</th>
+                                            <th>C. Unit</th>
+                                            <th>Quant.</th>
+                                            <th>C. Tot</th>
+                                            <th>P. Unit</th>
+                                            <th>P. Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white">
+                                        <tr>
+                                            <td>P1</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                            <td>#N/D</td>
+                                        </tr>
+                                        <tr class="font-bold bg-surface-container-low/30">
+                                            <td>S Total</td>
+                                            <td colspan="5"></td>
+                                            <td>0.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="technical-border rounded overflow-hidden border-t-4 border-excel-blue">
+                                <div
+                                    class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                                    Estai C</div>
+                                <table class="w-full excel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Posição</th>
+                                            <th>Bitola</th>
+                                            <th>C. Unit</th>
+                                            <th>Quant.</th>
+                                            <th>C. Tot</th>
+                                            <th>P. Unit</th>
+                                            <th>P. Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white">
+                                        <tr>
+                                            <td>P1</td>
+                                            <td>10.0</td>
+                                            <td>1.45</td>
+                                            <td>12</td>
+                                            <td>17.40</td>
+                                            <td>0.617</td>
+                                            <td>10.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2</td>
+                                            <td>8.0</td>
+                                            <td>0.85</td>
+                                            <td>8</td>
+                                            <td>6.80</td>
+                                            <td>0.395</td>
+                                            <td>2.68</td>
+                                        </tr>
+                                        <tr class="font-bold bg-surface-container-low/30">
+                                            <td>S Total</td>
+                                            <td colspan="5"></td>
+                                            <td>13.41</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Section 2: Mastro Central -->
+                    <div class="technical-border rounded overflow-hidden border-t-4 border-excel-grey">
+                        <div
+                            class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                            Aço para Mastro Central</div>
+                        <table class="w-full excel-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Posições</th>
+                                    <th rowspan="2">Bitola</th>
+                                    <th rowspan="2">Quant / Fund</th>
+                                    <th rowspan="2">Quant Total</th>
+                                    <th colspan="2">Comprimento (m)</th>
+                                    <th colspan="2">Peso (kg)</th>
+                                </tr>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th>Total</th>
+                                    <th>Unit</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td>N1</td>
+                                    <td>12.5</td>
+                                    <td>16</td>
+                                    <td>16</td>
+                                    <td>2.10</td>
+                                    <td>33.60</td>
+                                    <td>0.963</td>
+                                    <td>32.35</td>
+                                </tr>
+                                <tr>
+                                    <td>N2</td>
+                                    <td>12.5</td>
+                                    <td>12</td>
+                                    <td>12</td>
+                                    <td>1.80</td>
+                                    <td>21.60</td>
+                                    <td>0.963</td>
+                                    <td>20.80</td>
+                                </tr>
+                                <tr>
+                                    <td>N3</td>
+                                    <td>10.0</td>
+                                    <td>24</td>
+                                    <td>24</td>
+                                    <td>0.90</td>
+                                    <td>21.60</td>
+                                    <td>0.617</td>
+                                    <td>13.32</td>
+                                </tr>
+                                <tr>
+                                    <td>N4</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                    <td>#N/D</td>
+                                </tr>
+                                <tr class="font-bold bg-surface-container-low/30">
+                                    <td colspan="7">S Total</td>
+                                    <td>66.47</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Section 3: Placas -->
+                    <div class="technical-border rounded overflow-hidden border-t-4 border-excel-orange">
+                        <div
+                            class="bg-surface-container-low p-1.5 text-center font-bold text-[11px] border-b border-outline-variant uppercase text-on-surface">
+                            Aço para Placas Premoldadas</div>
+                        <table class="w-full excel-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Posições</th>
+                                    <th rowspan="2">Bitola</th>
+                                    <th rowspan="2">Quant / Fund</th>
+                                    <th rowspan="2">Quant Total</th>
+                                    <th colspan="2">Comprimento</th>
+                                    <th colspan="2">Peso (kg)</th>
+                                </tr>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th>Total</th>
+                                    <th>Unit</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="py-4 text-on-surface-variant/50 italic" colspan="8">Utilizar detalhamento
+                                        padrão (Doc. SOL-PRM-02)</td>
+                                </tr>
+                                <tr class="font-bold bg-surface-container-low/30">
+                                    <td colspan="7">S Total</td>
+                                    <td>0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Right Sidebar: Summary Panels -->
+                <aside class="w-72 space-y-gutter-normal">
+                    <!-- Project Status -->
+                    <div class="bg-surface-container-lowest technical-border rounded shadow-sm p-3">
+                        <h3
+                            class="text-[11px] font-bold text-on-surface-variant mb-2 text-center uppercase border-b border-outline-variant pb-1">
+                            Projeto da Fundação</h3>
+                        <div class="grid grid-cols-2 gap-1">
+                            <div
+                                class="flex items-center justify-between p-1.5 border border-outline-variant rounded bg-surface">
+                                <span class="text-[11px] font-bold">A</span>
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-1.5 border border-outline-variant rounded bg-surface">
+                                <span class="text-[11px] font-bold">B</span>
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-1.5 border border-outline-variant rounded bg-surface">
+                                <span class="text-[11px] font-bold">C</span>
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-1.5 border border-outline-variant rounded bg-surface">
+                                <span class="text-[11px] font-bold">D</span>
+                                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Summary by Gauge -->
+                    <div
+                        class="bg-surface-container-lowest technical-border rounded shadow-sm border-t-2 border-primary">
+                        <div class="bg-surface-container-low px-3 py-1.5 border-b border-outline-variant">
+                            <h3 class="text-[10px] font-bold text-on-surface uppercase text-center">Resumo por Bitola
+                            </h3>
+                        </div>
+                        <table class="w-full text-center text-[11px] excel-table border-0">
+                            <thead class="bg-surface-container-low">
+                                <tr>
+                                    <th class="px-3 py-1 border-r border-outline-variant">Bitola mm</th>
+                                    <th class="px-3 py-1">Peso kg</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">5,00</td>
+                                    <td class="px-3 py-1">#N/D</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">8,00</td>
+                                    <td class="px-3 py-1 font-bold">14.32</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">10,00</td>
+                                    <td class="px-3 py-1 font-bold">45.51</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">12,50</td>
+                                    <td class="px-3 py-1 font-bold">53.15</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-surface-container-low/50">
+                                <tr class="font-bold">
+                                    <td class="px-3 py-1.5 border-r border-outline-variant">Total</td>
+                                    <td class="px-3 py-1.5 text-primary">112.98 kg</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- Summary by Element -->
+                    <div
+                        class="bg-surface-container-lowest technical-border rounded shadow-sm border-t-2 border-primary">
+                        <div class="bg-surface-container-low px-3 py-1.5 border-b border-outline-variant">
+                            <h3 class="text-[10px] font-bold text-on-surface uppercase text-center">Resumo Por Estai/MC
+                            </h3>
+                        </div>
+                        <table class="w-full text-center text-[11px] excel-table border-0">
+                            <thead class="bg-surface-container-low">
+                                <tr>
+                                    <th class="px-3 py-1 border-r border-outline-variant uppercase">Estai/MC</th>
+                                    <th class="px-3 py-1 uppercase">Peso (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">A</td>
+                                    <td class="px-3 py-1 font-bold">13.41</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">B</td>
+                                    <td class="px-3 py-1 font-bold">13.41</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">C</td>
+                                    <td class="px-3 py-1 font-bold">13.41</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">D</td>
+                                    <td class="px-3 py-1 font-bold">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-1 border-r border-outline-variant">MC+Placa</td>
+                                    <td class="px-3 py-1 font-bold">66.47</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-surface-container-low/50">
+                                <tr class="font-bold">
+                                    <td class="px-3 py-1.5 border-r border-outline-variant">Total</td>
+                                    <td class="px-3 py-1.5 text-primary">112.98 kg</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- Footer Technical Diagram Placeholder -->
+                    <div class="bg-surface-container-lowest technical-border rounded shadow-sm overflow-hidden">
+                        <div class="bg-surface-container-low px-3 py-1.5 border-b border-outline-variant">
+                            <h3 class="text-[10px] font-bold text-on-surface uppercase">Esquema Armadura</h3>
+                        </div>
+                        <div class="aspect-video bg-white flex items-center justify-center p-2">
+                            <img class="w-full h-full object-contain opacity-60 mix-blend-multiply"
+                                data-alt="Technical drawing"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDusCJRLJq3M5jIrouGfP8wZFpRH3AF2KyV47xiCWc5G35yQxFiUcP4HlAe49e9V0grCIf52zbewPIMyS10nOTb435_9vXH2xcIqtqAkf1ki7OWlXs1c3vYA6TRicn0kTNXFerSZuMgsy2TyFL3tYt0ius1-jUSWtd3njzw8BiwdwoF6eBl4OuKRwkTL0_m9UB2lyQMk1lFoiTIKxJUzFVfAf2x_GLHLB-oii4TJLUTayX_t9zYNyONbTQBy7TGJ_EXUHuq2MKu3bFf" />
+                        </div>
+                        <div
+                            class="p-2 bg-surface-container-low text-[9px] text-on-surface-variant leading-tight border-t border-outline-variant italic">
+                            Ref: SOL-DET-T08A. V.02
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <!-- Footer / Feedback -->
+        <footer
+            class="bg-surface-container-lowest h-8 border-t border-outline-variant flex items-center justify-between px-gutter-normal text-[10px] text-on-surface-variant uppercase tracking-widest shrink-0">
+            <div class="flex gap-4">
+                <span>Calculado por: Eng. Rodrigues</span>
+                <span>Data: 24/10/2023</span>
+                <span>Verificação: Automática (OK)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span>Conectado ao Servidor Central</span>
+            </div>
+        </footer>
+    </main>
+</body>
+
+</html>

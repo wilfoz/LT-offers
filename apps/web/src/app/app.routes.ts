@@ -4,7 +4,17 @@ export const appRoutes: Route[] = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'offers',
+    redirectTo: 'dashboard',
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then((m) => m.DashboardComponent),
+  },
+  {
+    path: 'upload',
+    loadComponent: () =>
+      import('./upload/upload.component').then((m) => m.UploadComponent),
   },
   {
     path: 'offers',
@@ -17,3 +27,4 @@ export const appRoutes: Route[] = [
       import('./catalogs/catalogs.routes').then((m) => m.CATALOGS_ROUTES),
   },
 ];
+

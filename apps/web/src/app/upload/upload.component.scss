@@ -1,0 +1,356 @@
+.upload-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--solaris-outline-variant);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--solaris-on-surface-variant);
+  margin-bottom: 4px;
+
+  .breadcrumb-sep {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .breadcrumb-current {
+    font-weight: 700;
+    color: var(--solaris-primary);
+  }
+}
+
+.page-title {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-block {
+  .section-title {
+    margin: 0 0 4px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--solaris-on-surface-variant);
+    margin: 0;
+  }
+}
+
+.upload-grid-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+.upload-col-left {
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
+.upload-col-right {
+  flex: 1;
+  min-width: 0;
+}
+
+// Dropzone
+.drop-zone {
+  background: var(--solaris-surface-container-lowest);
+  border: 2px dashed rgba(9, 76, 178, 0.3);
+  border-radius: 6px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover, &.dragging {
+    border-color: var(--solaris-primary);
+    background: #f0f4ff;
+  }
+
+  .drop-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e0ebff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: var(--solaris-primary);
+    }
+  }
+
+  .drop-title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--solaris-on-surface);
+  }
+
+  .drop-subtitle {
+    font-size: 12px;
+    color: var(--solaris-on-surface-variant);
+    margin: 0 0 16px;
+  }
+
+  .select-files-btn {
+    font-size: 12px;
+  }
+}
+
+.panel-card {
+  background: var(--solaris-surface-container-lowest);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--mat-sys-level1);
+}
+
+.panel-header {
+  padding: 10px 16px;
+  background: var(--solaris-surface-container-low);
+  border-bottom: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &.queue-header {
+    background: var(--solaris-surface-container);
+  }
+}
+
+.files-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--solaris-outline-variant);
+  transition: background-color 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--solaris-surface-container-low);
+  }
+
+  .file-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+
+    .file-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--solaris-outline);
+    }
+
+    .file-meta {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .file-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--solaris-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 240px;
+      }
+
+      .file-type-size {
+        font-size: 10px;
+        color: var(--solaris-on-surface-variant);
+      }
+    }
+  }
+
+  .btn-delete {
+    color: var(--solaris-error);
+  }
+}
+
+.panel-footer {
+  padding: 12px 16px;
+  background: var(--solaris-surface-container-low);
+  border-top: 1px solid var(--solaris-outline-variant);
+}
+
+.btn-process-batch {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  background: var(--solaris-secondary-container);
+  color: var(--solaris-on-secondary-container);
+  font-family: 'Public Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Queue Card
+.queue-card {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--solaris-primary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.progress-bar-wrapper {
+  margin-bottom: 4px;
+
+  .progress-track {
+    height: 6px;
+    width: 100%;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .progress-fill {
+      height: 100%;
+      background: var(--solaris-primary);
+      transition: width 0.3s ease;
+
+      &.progress-complete {
+        background: var(--solaris-success);
+      }
+
+      &.progress-warning {
+        background: var(--solaris-tertiary);
+      }
+    }
+  }
+}
+
+.progress-status-label {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.text-success {
+    color: var(--solaris-success);
+  }
+
+  &.text-warning {
+    color: var(--solaris-tertiary);
+  }
+
+  &.text-info {
+    color: var(--solaris-primary);
+  }
+
+  .spin-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    animation: spin 1.5s linear infinite;
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.queue-status-footer {
+  margin-top: auto;
+  padding: 12px 16px;
+  background: var(--solaris-surface-container-low);
+  border-top: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--solaris-on-surface-variant);
+
+  .queue-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}

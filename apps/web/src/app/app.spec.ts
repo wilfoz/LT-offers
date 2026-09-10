@@ -36,9 +36,9 @@ describe('App (casca de navegação)', () => {
     expect(el.querySelector('h1')?.textContent).toContain(
       'Orçamentação de Linhas de Transmissão',
     );
-    const items = Array.from(el.querySelectorAll('mat-nav-list a')).map((a) =>
-      a.textContent?.trim(),
-    );
+    const items = Array.from(
+      el.querySelectorAll('mat-nav-list a [matListItemTitle]'),
+    ).map((a) => a.textContent?.trim());
     expect(items).toEqual([
       'Ofertas',
       'Cabos condutores',

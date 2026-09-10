@@ -41,6 +41,7 @@ import { SoilTypesApi } from '../catalogs/soil-types-api.service';
 import { PlsCaddImportDialogComponent } from './pls-cadd-import-dialog.component';
 import { PreliminaryStakingFormComponent } from './preliminary-staking-form.component';
 import { StakingApi } from './staking-api.service';
+import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.component';
 
 @Component({
   selector: 'app-staking-table',
@@ -61,64 +62,69 @@ import { StakingApi } from './staking-api.service';
     DecimalPipe,
     PlsCaddImportDialogComponent,
     PreliminaryStakingFormComponent,
+    TowerFoundationSchematicComponent,
   ],
   template: `
     <div class="staking-container">
       <!-- Summary / Metrics Bar -->
       <div class="metrics-grid">
-        <div class="metric-card">
-          <span class="metric-label">Total de Estruturas</span>
-          <span class="metric-val mono">{{ summary().totalTowers }}</span>
+        <div class="kpi-card">
+          <span class="kpi-label">Total de Estruturas</span>
+          <span class="kpi-value mono">{{ summary().totalTowers }}</span>
+          <span class="kpi-subtext">Estaqueamento ativo</span>
         </div>
-        <div class="metric-card">
-          <span class="metric-label">Extensão de Estacas</span>
-          <span class="metric-val mono">
-            {{ summary().minStationMeters }} m →
-            {{ summary().maxStationMeters }} m
+        <div class="kpi-card">
+          <span class="kpi-label">Extensão de Estacas</span>
+          <span class="kpi-value mono text-primary">
+            {{ summary().minStationMeters }} m → {{ summary().maxStationMeters }} m
           </span>
+          <span class="kpi-subtext">Vão total acumulado</span>
         </div>
         <div
-          class="metric-card"
+          class="kpi-card"
           [class.has-issue]="summary().unassignedSoilCount > 0"
         >
-          <span class="metric-label">Solos Pendentes</span>
+          <span class="kpi-label">Solos Pendentes</span>
           <span
-            class="metric-val mono"
+            class="kpi-value mono"
             [class.text-danger]="summary().unassignedSoilCount > 0"
           >
             {{ summary().unassignedSoilCount }}
           </span>
+          <span class="kpi-subtext">{{ summary().unassignedSoilCount > 0 ? 'Requer sondagem/catálogo' : '100% atribuído' }}</span>
         </div>
         <div
-          class="metric-card"
+          class="kpi-card"
           [class.has-issue]="summary().unassignedFoundationCount > 0"
         >
-          <span class="metric-label">Fundações Pendentes</span>
+          <span class="kpi-label">Fundações Pendentes</span>
           <span
-            class="metric-val mono"
+            class="kpi-value mono"
             [class.text-danger]="summary().unassignedFoundationCount > 0"
           >
             {{ summary().unassignedFoundationCount }}
           </span>
+          <span class="kpi-subtext">{{ summary().unassignedFoundationCount > 0 ? 'Pendente dimensionamento' : '100% definido' }}</span>
         </div>
         <div
-          class="metric-card"
+          class="kpi-card"
           [class.has-issue]="summary().invalidCombinationsCount > 0"
         >
-          <span class="metric-label">Inconsistências (RN-13)</span>
+          <span class="kpi-label">Inconsistências (RN-13)</span>
           <span
-            class="metric-val mono"
+            class="kpi-value mono"
             [class.text-danger]="summary().invalidCombinationsCount > 0"
           >
             {{ summary().invalidCombinationsCount }}
           </span>
+          <span class="kpi-subtext">{{ summary().invalidCombinationsCount > 0 ? 'Incompatibilidade estrutural' : 'Conformidade OK' }}</span>
         </div>
       </div>
 
       <!-- Integrity Warnings Banner -->
       @if (integritySummary()?.invalidCombinations?.length; as invCount) {
         @if (invCount > 0) {
-          <div class="integrity-alert danger" role="alert">
+          <div class="integrity-alert danger technical-border" role="alert">
             <mat-icon>gpp_bad</mat-icon>
             <div class="alert-content">
               <strong
@@ -153,7 +159,7 @@ import { StakingApi } from './staking-api.service';
       }
 
       @if (integritySummary()?.lengthDiscrepancyKm; as diff) {
-        <div class="integrity-alert warning">
+        <div class="integrity-alert warning technical-border">
           <mat-icon>warning</mat-icon>
           <div class="alert-content">
             <strong>Divergência de Traçado Geométrico:</strong>
@@ -169,7 +175,7 @@ import { StakingApi } from './staking-api.service';
       }
 
       <!-- Action & Filter Bar -->
-      <div class="actions-bar">
+      <div class="actions-bar technical-border p-3 bg-surface">
         <div class="search-filter-group">
           <mat-form-field
             appearance="outline"
@@ -258,6 +264,14 @@ import { StakingApi } from './staking-api.service';
           <button
             mat-stroked-button
             type="button"
+            (click)="toggleSchematics()"
+          >
+            <mat-icon>architecture</mat-icon>
+            {{ showSchematics() ? 'Ocultar Esquemas' : 'Esquemas Técnicos' }}
+          </button>
+          <button
+            mat-stroked-button
+            type="button"
             (click)="openBatchAssignModal()"
             [disabled]="totalCount() === 0"
           >
@@ -273,6 +287,17 @@ import { StakingApi } from './staking-api.service';
         </div>
       </div>
 
+      <!-- Schematics Section -->
+      @if (showSchematics()) {
+        <div class="schematics-section">
+          <div class="section-title-wrap">
+            <h4 class="font-display">Esquemas Estruturais & Gabaritos de Locação</h4>
+            <span class="font-label-caps badge badge-primary">Padrão OFERTA CAD</span>
+          </div>
+          <app-tower-foundation-schematic />
+        </div>
+      }
+
       <!-- Preliminary Form Toggle Section -->
       @if (showPreliminary()) {
         <app-preliminary-staking-form
@@ -287,9 +312,9 @@ import { StakingApi } from './staking-api.service';
         <mat-progress-bar mode="indeterminate" aria-label="Carregando torres" />
       }
 
-      <div class="table-card">
+      <div class="table-card technical-border">
         <div class="table-wrapper">
-          <table mat-table [dataSource]="towers()" class="staking-data-table">
+          <table mat-table [dataSource]="towers()" class="technical-table staking-data-table">
             <!-- Torre -->
             <ng-container matColumnDef="towerNumber">
               <th mat-header-cell *matHeaderCellDef>Torre</th>
@@ -347,7 +372,7 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Tipo Torre</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.towerType) {
-                  <span class="badge-cat mono">{{ t.towerType.code }}</span>
+                  <span class="badge badge-primary mono">{{ t.towerType.code }}</span>
                 } @else {
                   <span class="text-muted">—</span>
                 }
@@ -359,11 +384,11 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Solo</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.soilType) {
-                  <span class="badge-cat mono success">{{
+                  <span class="badge badge-valid mono">{{
                     t.soilType.code
                   }}</span>
                 } @else {
-                  <span class="badge-pending">Não atribuído</span>
+                  <span class="badge badge-error">Não atribuído</span>
                 }
               </td>
             </ng-container>
@@ -373,11 +398,11 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Fundação</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.foundationType) {
-                  <span class="badge-cat mono primary">{{
+                  <span class="badge badge-primary mono">{{
                     t.foundationType.code
                   }}</span>
                 } @else {
-                  <span class="badge-pending">Não atribuído</span>
+                  <span class="badge badge-error">Não atribuído</span>
                 }
               </td>
             </ng-container>
@@ -387,9 +412,10 @@ import { StakingApi } from './staking-api.service';
               <th mat-header-cell *matHeaderCellDef>Acesso</th>
               <td mat-cell *matCellDef="let t">
                 <span
-                  class="badge-access"
-                  [class.difficult]="t.accessDifficulty === 'DIFFICULT'"
-                  [class.crossing]="t.accessDifficulty === 'CROSSING'"
+                  class="badge"
+                  [class.badge-warning]="t.accessDifficulty === 'DIFFICULT'"
+                  [class.badge-analysis]="t.accessDifficulty === 'CROSSING'"
+                  [class.badge-neutral]="t.accessDifficulty !== 'DIFFICULT' && t.accessDifficulty !== 'CROSSING'"
                 >
                   {{ getAccessLabel(t.accessDifficulty) }}
                 </span>
@@ -783,31 +809,8 @@ import { StakingApi } from './staking-api.service';
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
       }
-      .metric-card {
-        background: var(--mat-sys-surface-container-low, #f8fafc);
-        border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-        border-radius: 8px;
-        padding: 0.85rem 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-      }
-      .metric-card.has-issue {
-        border-color: #fecaca;
-        background: #fff5f5;
-      }
-      .metric-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--mat-sys-on-surface-variant, #64748b);
-      }
-      .metric-val {
-        font-size: 1.2rem;
-        font-weight: 600;
-      }
       .text-danger {
-        color: #dc2626;
+        color: var(--solaris-error);
       }
       .integrity-alert {
         display: flex;
@@ -820,12 +823,12 @@ import { StakingApi } from './staking-api.service';
       .integrity-alert.danger {
         background: #fee2e2;
         color: #991b1b;
-        border: 1px solid #fca5a5;
+        border-color: #fca5a5;
       }
       .integrity-alert.warning {
         background: #fef3c7;
         color: #92400e;
-        border: 1px solid #fcd34d;
+        border-color: #fcd34d;
       }
       .alert-content {
         display: flex;
@@ -843,6 +846,7 @@ import { StakingApi } from './staking-api.service';
         align-items: center;
         flex-wrap: wrap;
         gap: 0.75rem;
+        border-radius: 8px;
       }
       .search-filter-group {
         display: flex;
@@ -851,11 +855,11 @@ import { StakingApi } from './staking-api.service';
         gap: 0.5rem;
       }
       .search-input {
-        width: 200px;
+        width: 180px;
         margin-bottom: -1.25rem;
       }
       .filter-select {
-        width: 150px;
+        width: 140px;
         margin-bottom: -1.25rem;
       }
       .action-buttons {
@@ -864,9 +868,27 @@ import { StakingApi } from './staking-api.service';
         gap: 0.5rem;
         flex-wrap: wrap;
       }
+      .schematics-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        background: var(--solaris-surface-low);
+        border: 1px solid var(--solaris-outline-variant);
+        border-radius: 8px;
+      }
+      .section-title-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .section-title-wrap h4 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+      }
       .table-card {
-        background: var(--mat-sys-surface, #ffffff);
-        border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+        background: var(--solaris-surface);
         border-radius: 8px;
         overflow: hidden;
         display: flex;
@@ -878,45 +900,6 @@ import { StakingApi } from './staking-api.service';
       .staking-data-table {
         width: 100%;
       }
-      .badge-cat {
-        display: inline-block;
-        padding: 2px 6px;
-        border-radius: 4px;
-        background: #f1f5f9;
-        font-size: 0.78rem;
-      }
-      .badge-cat.success {
-        background: #dcfce7;
-        color: #166534;
-      }
-      .badge-cat.primary {
-        background: #e0f2fe;
-        color: #0369a1;
-      }
-      .badge-pending {
-        display: inline-block;
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: #dc2626;
-        background: #fee2e2;
-        padding: 2px 6px;
-        border-radius: 4px;
-      }
-      .badge-access {
-        display: inline-block;
-        font-size: 0.75rem;
-        padding: 2px 6px;
-        border-radius: 4px;
-        background: #f1f5f9;
-      }
-      .badge-access.difficult {
-        background: #fef3c7;
-        color: #92400e;
-      }
-      .badge-access.crossing {
-        background: #f3e8ff;
-        color: #6b21a8;
-      }
       .unassigned-row {
         background: #fffbfb;
       }
@@ -927,7 +910,7 @@ import { StakingApi } from './staking-api.service';
         justify-content: center;
         gap: 0.75rem;
         padding: 3rem 1rem;
-        color: var(--mat-sys-on-surface-variant, #64748b);
+        color: var(--solaris-on-surface-variant);
       }
       .empty-icon {
         font-size: 40px;
@@ -939,8 +922,8 @@ import { StakingApi } from './staking-api.service';
         justify-content: space-between;
         align-items: center;
         padding: 0.75rem 1.25rem;
-        border-top: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
-        background: var(--mat-sys-surface-container-lowest, #f8fafc);
+        border-top: 1px solid var(--solaris-outline-variant);
+        background: var(--solaris-surface-low);
         font-size: 0.85rem;
       }
       .page-size-selector {
@@ -949,10 +932,11 @@ import { StakingApi } from './staking-api.service';
         gap: 0.5rem;
       }
       .page-select {
-        border: 1px solid #cbd5e1;
+        border: 1px solid var(--solaris-outline-variant);
         border-radius: 4px;
         padding: 2px 6px;
         font-size: 0.85rem;
+        background: var(--solaris-surface);
       }
       .pagination-buttons {
         display: flex;
@@ -994,7 +978,7 @@ import { StakingApi } from './staking-api.service';
         gap: 0.75rem;
       }
       .header-icon {
-        color: #0284c7;
+        color: var(--solaris-primary);
         font-size: 26px;
         width: 26px;
         height: 26px;
@@ -1023,18 +1007,17 @@ import { StakingApi } from './staking-api.service';
         gap: 0.75rem;
         padding: 1rem 1.5rem;
       }
-      .mono {
-        font-family:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      }
-      .font-bold {
-        font-weight: 600;
-      }
       .text-right {
         text-align: right;
       }
       .text-muted {
-        color: #94a3b8;
+        color: var(--solaris-on-surface-variant);
+      }
+      .p-3 {
+        padding: 0.75rem;
+      }
+      .bg-surface {
+        background: var(--solaris-surface);
       }
     `,
   ],
@@ -1105,6 +1088,7 @@ export class StakingTableComponent implements OnInit {
   // View toggles & Modals
   readonly showImportDialog = signal<boolean>(false);
   readonly showPreliminary = signal<boolean>(false);
+  readonly showSchematics = signal<boolean>(false);
   readonly showBatchAssignModal = signal<boolean>(false);
   readonly applyingBatch = signal<boolean>(false);
 
@@ -1207,6 +1191,10 @@ export class StakingTableComponent implements OnInit {
 
   togglePreliminaryMode(): void {
     this.showPreliminary.update((v) => !v);
+  }
+
+  toggleSchematics(): void {
+    this.showSchematics.update((v) => !v);
   }
 
   onPreliminarySaved(): void {

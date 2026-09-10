@@ -1,43 +1,501 @@
-// Shell da aplicação: toolbar sticky (único z-index manual do app) sobre o
-// contêiner de navegação; alturas com dvh, nunca 100vh (DESIGN.md).
+// Shell da aplicação OFERTA Engineering System
 :host {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
+// Top Toolbar
 .app-toolbar {
+  height: 56px;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--mat-sys-surface-container);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: var(--solaris-surface-container-lowest);
+  border-bottom: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--solaris-primary);
+    color: #ffffff;
+    font-weight: 900;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .brand-text {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-weight: 800;
+    color: var(--solaris-primary);
+    font-size: 16px;
+  }
 }
 
 .app-title {
-  font: var(--mat-sys-title-large);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--solaris-on-surface);
   margin: 0;
-  // A toolbar é flex: sem min-width 0 o título não encolhe e estica a página
-  // na horizontal em telas estreitas (bug pego no QA — regressão coberta pelo
-  // cenário E2E "tabela larga em tela estreita" do qa/e2e.mjs)
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.project-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--solaris-surface-container-low);
+  border: 1px solid var(--solaris-outline-variant);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--solaris-surface-container);
+  }
+
+  .selector-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--solaris-primary);
+  }
+
+  .selector-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--solaris-on-surface);
+    font-family: 'Public Sans', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .selector-arrow {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--solaris-on-surface-variant);
+  }
+}
+
+.global-search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--solaris-surface-container-low);
+  border: 1px solid var(--solaris-outline-variant);
+  padding: 4px 12px;
+  border-radius: 20px;
+  width: 280px;
+
+  .search-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--solaris-on-surface-variant);
+  }
+
+  input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    color: var(--solaris-on-surface);
+
+    &::placeholder {
+      color: var(--solaris-on-surface-variant);
+      opacity: 0.7;
+    }
+  }
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notif-btn {
+  position: relative;
+
+  .notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 7px;
+    height: 7px;
+    background-color: var(--solaris-error);
+    border-radius: 50%;
+    border: 1.5px solid var(--solaris-surface-container-lowest);
+  }
+}
+
+.user-avatar-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 20px;
+  background: var(--solaris-surface-container-low);
+  border: 1px solid var(--solaris-outline-variant);
+  cursor: pointer;
+
+  .avatar-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--solaris-primary-container);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--solaris-on-surface);
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+}
+
+// Sidenav Container & Sidebar
 .app-container {
   flex: 1;
+  height: calc(100dvh - 56px);
+  overflow: hidden;
 }
 
-mat-sidenav {
-  width: 16rem;
-  background: var(--mat-sys-surface-container);
-  border-right: 1px solid var(--mat-sys-outline-variant);
+.solaris-sidenav {
+  width: 260px;
+  background: var(--solaris-surface-container-lowest);
+  border-right: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.02);
 }
 
-// Item ativo: barra de 2px primary à esquerda, peso 500 (DESIGN.md)
-a.active-link {
-  border-left: 2px solid var(--mat-sys-primary);
-  font-weight: 500;
+.sidenav-brand {
+  padding: 20px 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--solaris-surface-container);
+
+  .logo-box {
+    width: 38px;
+    height: 38px;
+    background: var(--solaris-primary);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(9, 76, 178, 0.3);
+  }
+
+  .brand-info {
+    display: flex;
+    flex-direction: column;
+
+    .brand-name {
+      font-family: 'Noto Serif', Georgia, serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--solaris-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--solaris-on-surface-variant);
+      opacity: 0.75;
+    }
+  }
+}
+
+.system-nav-section {
+  padding: 8px 8px 4px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.system-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--solaris-on-surface);
+  background: var(--solaris-surface-container-low);
+  border: 1px solid var(--solaris-outline-variant);
+  transition: all 0.15s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--solaris-primary);
+  }
+
+  &:hover {
+    background: var(--solaris-surface-container-high);
+  }
+
+  &.active-sys {
+    background: var(--solaris-primary);
+    color: #ffffff;
+    border-color: var(--solaris-primary);
+
+    mat-icon {
+      color: #ffffff;
+    }
+  }
+}
+
+.nav-section-divider {
+  padding: 10px 16px 4px 16px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--solaris-on-surface-variant);
+  opacity: 0.8;
+}
+
+.solaris-nav-list {
+  flex: 1;
+  padding: 4px 8px 12px 8px;
+  overflow-y: auto;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--solaris-on-surface-variant);
+    margin-right: 10px;
+  }
+
+  .nav-label {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  a {
+    border-radius: 4px;
+    margin-bottom: 2px;
+    height: 38px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--solaris-surface-container-high);
+    }
+
+    &.active-link {
+      background: var(--solaris-primary-container);
+      color: #ffffff !important;
+
+      mat-icon {
+        color: #ffffff;
+        font-variation-settings: 'FILL' 1;
+      }
+
+      .nav-label {
+        font-weight: 800;
+      }
+    }
+  }
+}
+
+.sidenav-footer {
+  padding: 12px;
+  border-top: 1px solid var(--solaris-outline-variant);
+  background: var(--solaris-surface-container-lowest);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tech-mode-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--solaris-primary);
+  background: transparent;
+  color: var(--solaris-primary);
+  font-family: 'Public Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover,
+  &.tech-active {
+    background: var(--solaris-primary);
+    color: #ffffff;
+  }
+}
+
+.engineer-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 4px;
+  background: var(--solaris-surface-container-low);
+  border: 1px solid var(--solaris-outline-variant);
+
+  .engineer-avatar {
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: var(--solaris-primary);
+    }
+  }
+
+  .engineer-info {
+    display: flex;
+    flex-direction: column;
+
+    .engineer-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--solaris-on-surface);
+    }
+
+    .engineer-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--solaris-success);
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+// Main Content & Status Footer
+.solaris-main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--solaris-surface);
+}
+
+.content-container {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-status-footer {
+  height: 32px;
+  background: var(--solaris-surface-container-lowest);
+  border-top: 1px solid var(--solaris-outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--solaris-on-surface-variant);
+  flex-shrink: 0;
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .footer-sep {
+      color: var(--solaris-outline-variant);
+    }
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .server-status {
+      color: var(--solaris-success);
+    }
+  }
 }
