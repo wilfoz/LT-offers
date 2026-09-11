@@ -16,6 +16,8 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
   DRAFT: 'Rascunho',
   FROZEN: 'Fechada',
   DELIVERED: 'Entregue',
+  WON: 'Vencedora (Ganha)',
+  IN_EXECUTION: 'Em Execução',
 };
 
 @Component({
@@ -408,6 +410,18 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
       background: #dcfce7;
       color: #15803d;
       border: 1px solid #86efac;
+    }
+
+    .status-chip[data-status='WON'] {
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #fde047;
+    }
+
+    .status-chip[data-status='IN_EXECUTION'] {
+      background: #ede9fe;
+      color: #6b21a8;
+      border: 1px solid #c4b5fd;
     }
 
     .badge-icon {
