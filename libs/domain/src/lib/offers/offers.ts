@@ -8,6 +8,8 @@ export const OFFER_REVISION_STATUSES = [
   'DRAFT',
   'FROZEN',
   'DELIVERED',
+  'WON',
+  'IN_EXECUTION',
 ] as const;
 export type OfferRevisionStatus = (typeof OFFER_REVISION_STATUSES)[number];
 
@@ -16,6 +18,8 @@ export const OFFER_REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> =
     DRAFT: 'Em edição',
     FROZEN: 'Fechada',
     DELIVERED: 'Entregue',
+    WON: 'Vencedora (Ganha)',
+    IN_EXECUTION: 'Em Execução',
   };
 
 export const SCOPE_RESPONSIBLE_PARTIES = ['CONTRACTOR', 'CLIENT'] as const;

@@ -49,6 +49,7 @@ import { OfferRisksComponent } from './offer-risks.component';
 import { OfferChecksComponent } from './offer-checks.component';
 import { OfferAuditComponent } from './offer-audit.component';
 import { OfferExportComponent } from './offer-export.component';
+import { WorkTrackingComponent } from './work-tracking.component';
 import { ChecksApiService } from './checks-api.service';
 import { AuthService } from '../auth/auth.service';
 import { OfferHealthSummary, CheckNavigationTarget } from '@lt-offers/domain';
@@ -115,6 +116,7 @@ const BRAZILIAN_UFS = [
     OfferChecksComponent,
     OfferAuditComponent,
     OfferExportComponent,
+    WorkTrackingComponent,
   ],
   template: `
     <section class="offer-detail-page">
@@ -1443,6 +1445,20 @@ const BRAZILIAN_UFS = [
                   [offerId]="offer()!.id"
                   [offerName]="offer()!.name"
                 />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 17: ACOMPANHAMENTO DE OBRA, CURVA S & INTEGRAÇÃO ERP (FASE F7) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">insights</mat-icon>
+              Acompanhamento de Obra (F7)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-work-tracking [offerId]="offer()!.id" />
               }
             </div>
           </mat-tab>

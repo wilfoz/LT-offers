@@ -424,7 +424,7 @@ export class OffersService {
         dataToUpdate.notes = payload.notes?.trim() || null;
       }
       if (payload.status !== undefined) {
-        dataToUpdate.status = payload.status;
+        dataToUpdate.status = payload.status as any;
         if (payload.status === 'FROZEN' && !revision.closedAt) {
           dataToUpdate.closedAt = new Date();
         } else if (payload.status === 'DELIVERED' && !revision.deliveredAt) {

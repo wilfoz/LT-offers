@@ -34,3 +34,4 @@ export * from './lib/checks/consistency-check';
 export * from './lib/governance/rbac';
 export * from './lib/audit/audit-event';
 export * from './lib/export';
+export * from './lib/execution';

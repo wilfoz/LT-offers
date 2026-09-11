@@ -19,3 +19,4 @@ export * from './lib/cashflow/cashflow-calculator';
 export * from './lib/risks/risk-calculator';
 export * from './lib/checks/consistency-engine';
 export * from './lib/export';
+export * from './lib/execution';
