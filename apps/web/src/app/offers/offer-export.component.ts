@@ -176,13 +176,15 @@ import { ExportApiService } from './export-api.service';
                 (click)="downloadTenderSheet()"
                 [disabled]="isDownloading() !== null"
               >
-                @if (isDownloading() === 'tender') {
-                  <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
-                  Gerando XLSX...
-                } @else {
-                  <mat-icon>download</mat-icon>
-                  Baixar Planilha do Edital (.xlsx)
-                }
+                <span class="btn-inner">
+                  @if (isDownloading() === 'tender') {
+                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <span>Gerando XLSX...</span>
+                  } @else {
+                    <mat-icon>download</mat-icon>
+                    <span>Baixar Planilha do Edital (.xlsx)</span>
+                  }
+                </span>
               </button>
             </mat-card-actions>
           </mat-card>
@@ -215,13 +217,15 @@ import { ExportApiService } from './export-api.service';
                 (click)="downloadMeasurementSheet()"
                 [disabled]="isDownloading() !== null"
               >
-                @if (isDownloading() === 'measurement') {
-                  <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
-                  Gerando XLSX...
-                } @else {
-                  <mat-icon>download</mat-icon>
-                  Baixar Folha de Medição (.xlsx)
-                }
+                <span class="btn-inner">
+                  @if (isDownloading() === 'measurement') {
+                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <span>Gerando XLSX...</span>
+                  } @else {
+                    <mat-icon>download</mat-icon>
+                    <span>Baixar Folha de Medição (.xlsx)</span>
+                  }
+                </span>
               </button>
             </mat-card-actions>
           </mat-card>
@@ -253,13 +257,15 @@ import { ExportApiService } from './export-api.service';
                 (click)="downloadCashflowSheet()"
                 [disabled]="isDownloading() !== null"
               >
-                @if (isDownloading() === 'cashflow') {
-                  <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
-                  Gerando XLSX...
-                } @else {
-                  <mat-icon>download</mat-icon>
-                  Baixar Cronograma (.xlsx)
-                }
+                <span class="btn-inner">
+                  @if (isDownloading() === 'cashflow') {
+                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <span>Gerando XLSX...</span>
+                  } @else {
+                    <mat-icon>download</mat-icon>
+                    <span>Baixar Cronograma (.xlsx)</span>
+                  }
+                </span>
               </button>
             </mat-card-actions>
           </mat-card>
@@ -290,13 +296,15 @@ import { ExportApiService } from './export-api.service';
                 (click)="downloadFullPackageJson()"
                 [disabled]="isDownloading() !== null"
               >
-                @if (isDownloading() === 'json') {
-                  <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
-                  Gerando JSON...
-                } @else {
-                  <mat-icon>code</mat-icon>
-                  Exportar Pacote Aberto (.json)
-                }
+                <span class="btn-inner">
+                  @if (isDownloading() === 'json') {
+                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <span>Gerando JSON...</span>
+                  } @else {
+                    <mat-icon>code</mat-icon>
+                    <span>Exportar Pacote Aberto (.json)</span>
+                  }
+                </span>
               </button>
             </mat-card-actions>
           </mat-card>
@@ -684,6 +692,13 @@ import { ExportApiService } from './export-api.service';
         height: 42px;
         font-weight: 600;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-inner {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
