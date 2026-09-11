@@ -1,9 +1,7 @@
 ## Purpose
 
 Gestão centralizada de ofertas de leilão de linhas de transmissão (origem: abas `Info&Cond`, `Datos` e `Aux` da planilha), contemplando o cadastro de parâmetros gerais do lote, controle formal de revisões imutáveis com histórico de auditoria (RF-01, RF-02, RF-03), parametrização flexível de linhas de transmissão (1 a n, sem limite fixo de 10 linhas — RF-05, RN-01, RNF-03), matriz de responsabilidade de escopo com 4 eixos de risco/tributos (RF-04, RN-03, RN-04) e clonagem integral de ofertas (RF-06).
-
 ## Requirements
-
 ### Requirement: Manter cadastro de ofertas
 
 O sistema SHALL permitir criar e editar ofertas com leilão (ex.: `Leilão 01/2026`), lote (ex.: `Lote 1`), cliente/concessionária (ex.: `Axia Energia`), data da oferta, data do leilão, data de início do cronograma, data prevista de entrada em operação do edital, CAPEX estimado ANEEL (decimal monetário ≥ 0), RAP máxima (decimal monetário ≥ 0), RAP vencedora estimada (decimal monetário ≥ 0) e moeda base (código ISO ex.: `BRL`, `USD`). O sistema SHALL registrar automaticamente autor e data/hora da última alteração (RF-01, RF-03). O sistema SHALL emitir alerta quando a data de início de cronograma ou término for inconsistente com o prazo do edital (RN-02).
@@ -20,7 +18,7 @@ O sistema SHALL permitir criar e editar ofertas com leilão (ex.: `Leilão 01/20
 
 ### Requirement: Gerenciar histórico de revisões de oferta
 
-O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `R1`, `R2`...), onde cada revisão registra número sequencial, status (em edição, fechada, entregue), data de fechamento, data de entrega ao cliente, autor responsável, notas descritivas das alterações realizadas e vínculo com a trilha de auditoria (RF-02, RF-03, RF-65). Quando uma revisão é marcada como fechada ou entregue, seus dados de parâmetros, linhas e matriz de escopo tornam-se imutáveis, permitindo comparações item a item entre revisões históricas (RNF-05). Toda transição de status ou criação de revisão SHALL emitir um evento para a trilha de auditoria com identificação do autor e timestamp UTC (RF-65, RNF-12).
+O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `R1`, `R2`...), onde cada revisão registra número sequencial, status (em edição, fechada, entregue, vencedora/ganha, em execução), data de fechamento, data de entrega ao cliente, autor responsável, notas descritivas das alterações realizadas e vínculo com a trilha de auditoria (RF-02, RF-03, RF-65). Quando uma revisão é marcada como fechada, entregue ou vencedora (`WON`), seus dados de parâmetros, linhas e matriz de escopo tornam-se imutáveis, permitindo comparações item a item entre revisões históricas (RNF-05). Toda transição de status ou criação de revisão SHALL emitir um evento para a trilha de auditoria com identificação do autor e timestamp UTC (RF-65, RNF-12). A marcação como vencedora (`WON`) ou início de execução (`IN_EXECUTION`) SHALL disparar a criação da Linha de Base Contratual da Obra (Baseline Data 0).
 
 #### Scenario: Criação de nova revisão a partir da anterior
 - **WHEN** um usuário cria uma nova revisão `R1` a partir da revisão `R0` fechada
@@ -34,7 +32,9 @@ O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `
 - **WHEN** o gestor comercial fecha a revisão `R0` da proposta
 - **THEN** o sistema altera o status para fechada e emite automaticamente um evento de auditoria `FREEZE` contendo o autor, a data UTC e o número da revisão
 
----
+#### Scenario: Marcação de proposta vencedora dispara criação da baseline da obra
+- **WHEN** a diretoria comercial marca a revisão R2 como vencedora (`WON`)
+- **THEN** o sistema registra o status, emite evento de auditoria e cria a Linha de Base da Obra (Baseline Data 0)
 
 ### Requirement: Configurar linhas de transmissão do lote
 
@@ -85,3 +85,4 @@ O sistema SHALL exibir a listagem de ofertas com busca textual por leilão, lote
 #### Scenario: Oferta sem linhas cadastradas exibe pendência
 - **WHEN** uma oferta foi criada mas ainda não possui nenhuma linha de transmissão cadastrada na revisão ativa
 - **THEN** a listagem exibe a oferta com sinalização visual de pendência indicando a ausência de linhas
+
