@@ -45,6 +45,13 @@ import { ResourceHistogramsComponent } from './resource-histograms.component';
 import { ServiceBudgetComponent } from './service-budget.component';
 import { EconomicResultComponent } from './economic-result.component';
 import { CashflowComponent } from './cashflow.component';
+import { OfferRisksComponent } from './offer-risks.component';
+import { OfferChecksComponent } from './offer-checks.component';
+import { OfferAuditComponent } from './offer-audit.component';
+import { OfferExportComponent } from './offer-export.component';
+import { ChecksApiService } from './checks-api.service';
+import { AuthService } from '../auth/auth.service';
+import { OfferHealthSummary, CheckNavigationTarget } from '@lt-offers/domain';
 
 const BRAZILIAN_UFS = [
   'AC',
@@ -104,6 +111,10 @@ const BRAZILIAN_UFS = [
     ServiceBudgetComponent,
     EconomicResultComponent,
     CashflowComponent,
+    OfferRisksComponent,
+    OfferChecksComponent,
+    OfferAuditComponent,
+    OfferExportComponent,
   ],
   template: `
     <section class="offer-detail-page">
@@ -195,6 +206,26 @@ const BRAZILIAN_UFS = [
             >
               {{ statusLabel(currentRevision()?.status ?? 'DRAFT') }}
             </span>
+
+            @if (offerHealth(); as health) {
+              <button
+                type="button"
+                class="health-badge-btn"
+                [class.healthy]="health.status === 'HEALTHY'"
+                [class.warning]="health.status === 'WARNINGS_ONLY'"
+                [class.critical]="health.status === 'CRITICAL_ERRORS'"
+                (click)="activeTabIndex.set(13)"
+                matTooltip="Ver diagnósticos de consistência e integridade (M12)"
+              >
+                @if (health.status === 'HEALTHY') {
+                  ✓ Integridade 100%
+                } @else if (health.status === 'WARNINGS_ONLY') {
+                  ⚠ {{ health.warningCount }} Alerta(s)
+                } @else {
+                  ✕ {{ health.criticalCount }} Erro(s) Crítico(s)
+                }
+              </button>
+            }
 
             @if (isDraft()) {
               <button
@@ -1164,7 +1195,41 @@ const BRAZILIAN_UFS = [
             </div>
           </mat-tab>
 
-          <!-- ABA 12: PARÂMETROS E DATAS DA REVISÃO -->
+          <!-- ABA 12: MATRIZ DE RISCOS (M12) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">warning_amber</mat-icon>
+              Matriz de Riscos (M12)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-offer-risks
+                  [offerId]="offer()!.id"
+                  [lines]="transmissionLineOptions()"
+                />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 13: VERIFICAÇÕES DE INTEGRIDADE (M12) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">rule</mat-icon>
+              Verificações & Integridade (M12)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-offer-checks
+                  [offerId]="offer()!.id"
+                  (navigateTo)="handleNavigateFromChecks($event)"
+                />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 14: PARÂMETROS E DATAS DA REVISÃO -->
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">event_note</mat-icon>
@@ -1350,6 +1415,37 @@ const BRAZILIAN_UFS = [
               </form>
             </div>
           </mat-tab>
+
+          <!-- ABA 15: TRILHA DE AUDITORIA IMUTÁVEL (M12, RF-65) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">history_edu</mat-icon>
+              Trilha de Auditoria (RF-65)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-offer-audit [offerId]="offer()!.id.toString()" />
+              }
+            </div>
+          </mat-tab>
+
+          <!-- ABA 16: CENTRAL DE EXPORTAÇÕES CONTRATUAIS (M12, RF-47, RF-48, RF-50, RF-60, RNF-18) -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">file_download</mat-icon>
+              Central de Exportação (M12)
+            </ng-template>
+
+            <div class="tab-content">
+              @if (offer()) {
+                <app-offer-export
+                  [offerId]="offer()!.id"
+                  [offerName]="offer()!.name"
+                />
+              }
+            </div>
+          </mat-tab>
         </mat-tab-group>
       }
     </section>
@@ -1532,6 +1628,36 @@ const BRAZILIAN_UFS = [
       background: #dcfce7;
       color: #15803d;
       border: 1px solid #86efac;
+    }
+    .health-badge-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .health-badge-btn.healthy {
+      background: #dcfce7;
+      color: #15803d;
+      border-color: #86efac;
+    }
+    .health-badge-btn.warning {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #fde68a;
+    }
+    .health-badge-btn.critical {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+    .health-badge-btn:hover {
+      filter: brightness(0.95);
     }
     .immutable-banner {
       display: flex;
@@ -1776,12 +1902,15 @@ const BRAZILIAN_UFS = [
 })
 export class OfferDetailComponent {
   private readonly api = inject(OffersApi);
+  private readonly checksApi = inject(ChecksApiService);
+  readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
 
   readonly ufs = BRAZILIAN_UFS;
   readonly offer = signal<OfferDetail | null>(null);
+  readonly offerHealth = signal<OfferHealthSummary | null>(null);
   readonly selectedRevisionNumber = signal<number>(0);
   readonly activeTabIndex = signal<number>(0);
   readonly selectedStakingLineId = signal<number | null>(null);
@@ -2252,6 +2381,7 @@ export class OfferDetailComponent {
           latestRev ? latestRev.revisionNumber : 0,
         );
         this.syncRevisionToForm();
+        this.loadOfferHealth(id);
         this.loading.set(false);
       },
       error: () => {
@@ -2261,6 +2391,47 @@ export class OfferDetailComponent {
         );
       },
     });
+  }
+
+  loadOfferHealth(id: number): void {
+    this.checksApi.getHealthChecks(id).subscribe({
+      next: (summary) => this.offerHealth.set(summary),
+      error: () => {},
+    });
+  }
+
+  handleNavigateFromChecks(target: CheckNavigationTarget): void {
+    const tabMap: Record<string, number> = {
+      lines: 0,
+      scope: 1,
+      staking: 2,
+      foundations: 3,
+      electro: 4,
+      pricing: 5,
+      tax: 5,
+      schedule: 6,
+      camps: 7,
+      histogram: 8,
+      services: 9,
+      result: 10,
+      cashflow: 11,
+      risks: 12,
+      checks: 13,
+      params: 14,
+    };
+    const idx = tabMap[target.tab];
+    if (idx !== undefined) {
+      this.activeTabIndex.set(idx);
+    }
+    if (target.lineId) {
+      const numId = Number(target.lineId);
+      this.selectedStakingLineId.set(numId);
+      this.selectedFoundationLineId.set(numId);
+      this.selectedElectroLineId.set(numId);
+      this.selectedPricingLineId.set(numId);
+      this.selectedScheduleLineId.set(numId);
+      this.selectedHistogramLineId.set(numId);
+    }
   }
 
   private syncRevisionToForm(): void {

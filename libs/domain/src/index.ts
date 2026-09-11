@@ -29,3 +29,8 @@ export * from './lib/histogram/histogram';
 export * from './lib/services/service-budget';
 export * from './lib/pricing/economic-result';
 export * from './lib/cashflow/cashflow';
+export * from './lib/risks/risk';
+export * from './lib/checks/consistency-check';
+export * from './lib/governance/rbac';
+export * from './lib/audit/audit-event';
+export * from './lib/export';

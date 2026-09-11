@@ -4,11 +4,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { map } from 'rxjs';
+import { AuthService } from './auth/auth.service';
+import { UserProfile, UserRole } from '@lt-offers/domain';
 
 // Casca da aplicação OFERTA Engineering System (Alexandria Design System)
 // Barra superior com seletor de projeto e busca + Sidebar técnica com logo OFERTA
@@ -20,6 +23,7 @@ import { map } from 'rxjs';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     MatTooltipModule,
   ],
   selector: 'app-root',
@@ -33,6 +37,7 @@ export class App {
   protected technicalMode = signal(false);
 
   private readonly breakpoints = inject(BreakpointObserver);
+  readonly authService = inject(AuthService);
 
   // Sidenav fixa (side) a partir de 1024px; sobreposta (over) abaixo
   protected readonly wide = toSignal(
@@ -80,5 +85,8 @@ export class App {
       this.menuOpen.set(false);
     }
   }
-}
 
+  protected selectUser(user: UserProfile): void {
+    this.authService.switchUser(user);
+  }
+}

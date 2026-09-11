@@ -369,6 +369,15 @@ export class OffersService {
       );
     }
 
+    if (payload.status === 'FROZEN' || payload.status === 'DELIVERED') {
+      const lines = revision.transmissionLines;
+      if (!lines || lines.length === 0) {
+        throw new BadRequestException(
+          'Não é possível fechar ou congelar uma revisão sem linhas de transmissão cadastradas (RF-63).',
+        );
+      }
+    }
+
     if (payload.transmissionLines) {
       this.validateLines(payload.transmissionLines);
     }

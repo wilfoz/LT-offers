@@ -16,9 +16,11 @@ O sistema SHALL permitir criar e editar ofertas com leilão (ex.: `Leilão 01/20
 - **WHEN** um usuário define uma data de início ou prazo cuja conclusão ultrapassa a data limite de entrada em operação do edital
 - **THEN** o sistema alerta o usuário sobre a inconformidade de prazo mantendo a sinalização na revisão
 
+---
+
 ### Requirement: Gerenciar histórico de revisões de oferta
 
-O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `R1`, `R2`...), onde cada revisão registra número sequencial, status (em edição, fechada, entregue), data de fechamento, data de entrega ao cliente, autor responsável e notas descritivas das alterações realizadas (RF-02, RF-03). Quando uma revisão é marcada como fechada ou entregue, seus dados de parâmetros, linhas e matriz de escopo tornam-se imutáveis, permitindo comparações item a item entre revisões históricas (RNF-05).
+O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `R1`, `R2`...), onde cada revisão registra número sequencial, status (em edição, fechada, entregue), data de fechamento, data de entrega ao cliente, autor responsável, notas descritivas das alterações realizadas e vínculo com a trilha de auditoria (RF-02, RF-03, RF-65). Quando uma revisão é marcada como fechada ou entregue, seus dados de parâmetros, linhas e matriz de escopo tornam-se imutáveis, permitindo comparações item a item entre revisões históricas (RNF-05). Toda transição de status ou criação de revisão SHALL emitir um evento para a trilha de auditoria com identificação do autor e timestamp UTC (RF-65, RNF-12).
 
 #### Scenario: Criação de nova revisão a partir da anterior
 - **WHEN** um usuário cria uma nova revisão `R1` a partir da revisão `R0` fechada
@@ -27,6 +29,12 @@ O sistema SHALL manter um histórico de revisões para cada oferta (ex.: `R0`, `
 #### Scenario: Bloqueio de edição em revisão fechada
 - **WHEN** um usuário tenta alterar dados de uma revisão com status fechada ou entregue
 - **THEN** o sistema rejeita a alteração informando que revisões concluídas são imutáveis
+
+#### Scenario: Transição de status da revisão gera evento de auditoria
+- **WHEN** o gestor comercial fecha a revisão `R0` da proposta
+- **THEN** o sistema altera o status para fechada e emite automaticamente um evento de auditoria `FREEZE` contendo o autor, a data UTC e o número da revisão
+
+---
 
 ### Requirement: Configurar linhas de transmissão do lote
 
@@ -39,6 +47,8 @@ O sistema SHALL permitir adicionar, editar e remover linhas de transmissão vinc
 #### Scenario: Rateio de UFs diferente de 100% é rejeitado
 - **WHEN** um usuário informa percentuais de rateio entre UF 1 e UF 2 que não somam 100,00%
 - **THEN** o sistema rejeita a gravação informando a inconsistência do rateio territorial em português
+
+---
 
 ### Requirement: Gerenciar matriz de responsabilidade de escopo
 
@@ -56,6 +66,8 @@ O sistema SHALL manter uma matriz de responsabilidade por item padronizado de es
 - **WHEN** o faturamento direto é ativado para um item elegível fornecido por terceiros
 - **THEN** o sistema registra o aceite de faturamento direto para que o motor tributário desonere PIS/COFINS na etapa de precificação
 
+---
+
 ### Requirement: Clonar oferta existente
 
 O sistema SHALL permitir duplicar uma oferta completa (incluindo parâmetros de leilão, linhas de transmissão e matriz de responsabilidade de escopo) para criar uma nova proposta, gerando uma revisão `R0` inicial e registrando o vínculo da oferta de origem para fins de rastreabilidade e histórico (RF-06).
@@ -63,6 +75,8 @@ O sistema SHALL permitir duplicar uma oferta completa (incluindo parâmetros de 
 #### Scenario: Clonagem com novo código de lote e leilão
 - **WHEN** um usuário clona a oferta `Lote 1 - Leilão 01/2025` informando como destino `Lote 3 - Leilão 02/2026`
 - **THEN** o sistema cria a nova oferta independente com todas as linhas e matriz de escopo replicadas e registra a origem da clonagem
+
+---
 
 ### Requirement: Listar, buscar e sinalizar pendências de ofertas
 

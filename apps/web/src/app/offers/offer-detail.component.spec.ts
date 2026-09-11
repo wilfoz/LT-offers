@@ -7,11 +7,14 @@ import { vi } from 'vitest';
 import { OfferDetailComponent } from './offer-detail.component';
 import { OffersApi } from './offers-api.service';
 
+import { provideHttpClient } from '@angular/common/http';
 import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
 import { SoilTypesApi } from '../catalogs/soil-types-api.service';
 import { TowerTypesApi } from '../catalogs/tower-types-api.service';
 import { StakingApi } from './staking-api.service';
 import { FoundationsApi } from './foundations-api.service';
+import { ChecksApiService } from './checks-api.service';
+import { RisksApiService } from './risks-api.service';
 
 const mockDetail = (overrides: Partial<OfferDetail> = {}): OfferDetail => ({
   id: 1,
@@ -195,6 +198,40 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
                 pendingTowers: 0,
                 hasErrors: false,
                 missingCombinations: [],
+              }),
+            ),
+          },
+        },
+        provideHttpClient(),
+        {
+          provide: ChecksApiService,
+          useValue: {
+            getHealthChecks: vi.fn().mockReturnValue(
+              of({
+                offerId: '1',
+                status: 'HEALTHY',
+                criticalCount: 0,
+                warningCount: 0,
+                infoCount: 0,
+                findings: [],
+                canCloseRevision: true,
+                requiresJustification: false,
+              }),
+            ),
+          },
+        },
+        {
+          provide: RisksApiService,
+          useValue: {
+            getRisks: vi.fn().mockReturnValue(
+              of({
+                offerId: '1',
+                items: [],
+                totalEstimatedImpact: '0.00',
+                totalWeightedSeverity: '0.00',
+                bdiContingencyAmount: '0.00',
+                commercialAssumptionAmount: '0.00',
+                categoryBreakdown: [],
               }),
             ),
           },

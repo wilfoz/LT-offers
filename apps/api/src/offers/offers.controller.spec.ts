@@ -9,6 +9,7 @@ import { UpdateOfferGeneralDto } from './dto/update-offer-general.dto';
 import { UpdateOfferRevisionDto } from './dto/update-offer-revision.dto';
 import { OffersController } from './offers.controller';
 import { OffersService } from './offers.service';
+import { AuthService } from '../auth/auth.service';
 
 describe('OffersController', () => {
   const serviceMock = {
@@ -29,7 +30,10 @@ describe('OffersController', () => {
     jest.resetAllMocks();
     const moduleRef = await Test.createTestingModule({
       controllers: [OffersController],
-      providers: [{ provide: OffersService, useValue: serviceMock }],
+      providers: [
+        { provide: OffersService, useValue: serviceMock },
+        AuthService,
+      ],
     }).compile();
 
     controller = moduleRef.get(OffersController);

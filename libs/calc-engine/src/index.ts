@@ -16,3 +16,6 @@ export * from './lib/histogram/histogram-calculator';
 export * from './lib/services/service-budget-calculator';
 export * from './lib/pricing/economic-result-calculator';
 export * from './lib/cashflow/cashflow-calculator';
+export * from './lib/risks/risk-calculator';
+export * from './lib/checks/consistency-engine';
+export * from './lib/export';

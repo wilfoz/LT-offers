@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CatalogsModule } from '../catalogs/catalogs.module';
 import { FoundationsModule } from '../foundations/foundations.module';
 import { OffersModule } from '../offers/offers.module';
@@ -11,6 +12,12 @@ import { HistogramModule } from '../histogram/histogram.module';
 import { ServiceBudgetModule } from '../service-budget/service-budget.module';
 import { EconomicResultModule } from '../economic-result/economic-result.module';
 import { CashflowModule } from '../cashflow/cashflow.module';
+import { RisksModule } from '../risks/risks.module';
+import { ChecksModule } from '../checks/checks.module';
+import { ExportModule } from '../export/export.module';
+import { AuthModule } from '../auth/auth.module';
+import { AuditModule } from '../audit/audit.module';
+import { AuditInterceptor } from '../audit/audit.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma.module';
@@ -18,6 +25,8 @@ import { PrismaModule } from './prisma.module';
 @Module({
   imports: [
     PrismaModule,
+    AuthModule,
+    AuditModule,
     CatalogsModule,
     OffersModule,
     StakingModule,
@@ -30,8 +39,17 @@ import { PrismaModule } from './prisma.module';
     ServiceBudgetModule,
     EconomicResultModule,
     CashflowModule,
+    RisksModule,
+    ChecksModule,
+    ExportModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+  ],
 })
 export class AppModule {}
