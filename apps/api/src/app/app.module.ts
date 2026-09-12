@@ -16,6 +16,7 @@ import { RisksModule } from '../risks/risks.module';
 import { ChecksModule } from '../checks/checks.module';
 import { ExportModule } from '../export/export.module';
 import { BaselineModule } from '../baseline/baseline.module';
+import { ParityModule } from '../parity/parity.module';
 import { AuthModule } from '../auth/auth.module';
 import { AuditModule } from '../audit/audit.module';
 import { AuditInterceptor } from '../audit/audit.interceptor';
@@ -44,6 +45,7 @@ import { PrismaModule } from './prisma.module';
     ChecksModule,
     ExportModule,
     BaselineModule,
+    ParityModule,
   ],
   controllers: [AppController],
   providers: [

@@ -20,3 +20,4 @@ export * from './lib/risks/risk-calculator';
 export * from './lib/checks/consistency-engine';
 export * from './lib/export';
 export * from './lib/execution';
+export * from './lib/parity';
