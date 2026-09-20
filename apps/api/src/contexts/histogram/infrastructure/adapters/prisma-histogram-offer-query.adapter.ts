@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../../app/prisma.service';
 import { HistogramOfferData, HistogramOfferQueryPort } from '../../domain';
@@ -6,6 +6,7 @@ import { HistogramOfferData, HistogramOfferQueryPort } from '../../domain';
 @Injectable()
 export class PrismaHistogramOfferQueryAdapter implements HistogramOfferQueryPort {
   constructor(
+    @Inject(PrismaService)
     private readonly prisma: PrismaService | Prisma.TransactionClient,
   ) {}
 

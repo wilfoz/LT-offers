@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../../app/prisma.service';
 import {
@@ -13,6 +13,7 @@ import { ScheduleCalculationInput } from '@lt-offers/calc-engine';
 @Injectable()
 export class PrismaScheduleDataQueryAdapter implements ScheduleDataQueryPort {
   constructor(
+    @Inject(PrismaService)
     private readonly prisma: PrismaService | Prisma.TransactionClient,
   ) {}
 

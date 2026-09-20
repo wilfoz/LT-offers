@@ -10,8 +10,8 @@ import { ElectromechanicalModule } from '../contexts/electromechanical/infrastru
 import { ScheduleModule } from '../contexts/schedule/infrastructure/schedule.module';
 import { HistogramModule } from '../contexts/histogram/infrastructure/histogram.module';
 import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
-import { RisksModule } from '../risks/risks.module';
-import { ChecksModule } from '../checks/checks.module';
+import { RisksModule } from '../contexts/risks/infrastructure/risks.module';
+import { ChecksModule } from '../contexts/checks/infrastructure/checks.module';
 import { ExportModule } from '../export/export.module';
 import { BaselineModule } from '../contexts/baseline/infrastructure/baseline.module';
 import { ParityModule } from '../parity/parity.module';
