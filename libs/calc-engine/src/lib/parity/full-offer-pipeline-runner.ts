@@ -16,8 +16,12 @@ export class FullOfferPipelineRunner {
    * Executa o pipeline completo de cálculo de uma oferta histórica
    * encadeando: quantitativos -> tributos -> cronograma -> serviços -> resultado econômico.
    */
-  public run(fixture: HistoricalOfferFixture): FullPipelineRunResult {
-    const startTime = Date.now();
+  // Relógio injetado (RNF-04): sem 'now', a duração reportada é zero.
+  public run(
+    fixture: HistoricalOfferFixture,
+    now: () => number = () => 0,
+  ): FullPipelineRunResult {
+    const startTime = now();
     const { inputs } = fixture;
 
     // 1. Quantitativos discretos
@@ -39,7 +43,9 @@ export class FullOfferPipelineRunner {
     }
 
     const mainCamps = inputs.camps.filter((c) => c.type === 'MAIN').length;
-    const advancedCamps = inputs.camps.filter((c) => c.type === 'ADVANCED').length;
+    const advancedCamps = inputs.camps.filter(
+      (c) => c.type === 'ADVANCED',
+    ).length;
     const targetUfsCount = fixture.targetUfs.length;
     const totalLinesInLot = fixture.profileType === 'MULTILINE_LOT' ? 2 : 1;
 
@@ -57,10 +63,12 @@ export class FullOfferPipelineRunner {
       discreteResults['totalLinesInLot'] = totalLinesInLot;
     }
     if (fixture.expectedBaseline.discrete['totalPhasesPerCircuit']) {
-      discreteResults['totalPhasesPerCircuit'] = fixture.expectedBaseline.discrete['totalPhasesPerCircuit'];
+      discreteResults['totalPhasesPerCircuit'] =
+        fixture.expectedBaseline.discrete['totalPhasesPerCircuit'];
     }
     if (fixture.expectedBaseline.discrete['conductorsPerPhaseBundle']) {
-      discreteResults['conductorsPerPhaseBundle'] = fixture.expectedBaseline.discrete['conductorsPerPhaseBundle'];
+      discreteResults['conductorsPerPhaseBundle'] =
+        fixture.expectedBaseline.discrete['conductorsPerPhaseBundle'];
     }
 
     // 2. Quantitativos físicos
@@ -70,8 +78,10 @@ export class FullOfferPipelineRunner {
     }
     const totalSpanKm = totalSpanM / 1000;
     const conductorsPerBundle =
-      fixture.expectedBaseline.discrete['conductorsPerPhaseBundle'] || (fixture.nominalVoltageKv === 500 ? 4 : 2);
-    const totalPhases = fixture.expectedBaseline.discrete['totalPhasesPerCircuit'] || 3;
+      fixture.expectedBaseline.discrete['conductorsPerPhaseBundle'] ||
+      (fixture.nominalVoltageKv === 500 ? 4 : 2);
+    const totalPhases =
+      fixture.expectedBaseline.discrete['totalPhasesPerCircuit'] || 3;
 
     const totalConductorLengthKm = DecimalValue.of(totalSpanKm)
       .times(DecimalValue.of(conductorsPerBundle * totalPhases))
@@ -109,7 +119,9 @@ export class FullOfferPipelineRunner {
       totalConcreteVolumeM3: totalConcreteM3.toNumber(),
     };
 
-    if (fixture.expectedBaseline.physical['totalGroundWireLengthKm'] !== undefined) {
+    if (
+      fixture.expectedBaseline.physical['totalGroundWireLengthKm'] !== undefined
+    ) {
       physicalResults['totalGroundWireLengthKm'] = totalGroundWireLengthKm;
     }
 
@@ -123,14 +135,18 @@ export class FullOfferPipelineRunner {
       const pisCofinsRate = isReidi ? 0.0 : 0.0925; // 1.65% + 7.6% = 9.25%
       const effectiveTaxRate = q.ipiAliquot + q.icmsAliquot + pisCofinsRate;
 
-      const itemNet = DecimalValue.of(q.netPriceUnit).times(DecimalValue.of(100)); // base consolidada
+      const itemNet = DecimalValue.of(q.netPriceUnit).times(
+        DecimalValue.of(100),
+      ); // base consolidada
       const itemTax = itemNet.times(DecimalValue.of(effectiveTaxRate));
 
       netMaterials = netMaterials.plus(itemNet);
       taxesMaterials = taxesMaterials.plus(itemTax);
 
       if (q.isDirectBilling) {
-        directBilledMaterials = directBilledMaterials.plus(itemNet.plus(itemTax));
+        directBilledMaterials = directBilledMaterials.plus(
+          itemNet.plus(itemTax),
+        );
       }
     }
 
@@ -138,20 +154,28 @@ export class FullOfferPipelineRunner {
     let totalCampsCost = DecimalValue.zero();
     for (const camp of inputs.camps) {
       const campTotal = DecimalValue.of(camp.setupCost)
-        .plus(DecimalValue.of(camp.monthlyRunningCost).times(DecimalValue.of(camp.durationMonths)))
+        .plus(
+          DecimalValue.of(camp.monthlyRunningCost).times(
+            DecimalValue.of(camp.durationMonths),
+          ),
+        )
         .plus(DecimalValue.of(camp.demobCost));
       totalCampsCost = totalCampsCost.plus(campTotal);
     }
 
     let totalServicesLabor = DecimalValue.zero();
     for (const act of inputs.scheduleActivities) {
-      const actCost = DecimalValue.of(act.quantity).times(DecimalValue.of(2500.0)); // custo unitário médio
+      const actCost = DecimalValue.of(act.quantity).times(
+        DecimalValue.of(2500.0),
+      ); // custo unitário médio
       totalServicesLabor = totalServicesLabor.plus(actCost);
     }
 
     const totalServicesCamps = totalCampsCost;
     const totalGrossMaterials = netMaterials.plus(taxesMaterials);
-    const contractorMaterialsWithTax = totalGrossMaterials.minus(directBilledMaterials);
+    const contractorMaterialsWithTax = totalGrossMaterials.minus(
+      directBilledMaterials,
+    );
     const totalDirectCost = contractorMaterialsWithTax.plus(totalServicesCamps);
 
     // Aplicação do BDI e Coeficientes de Venda
@@ -164,40 +188,64 @@ export class FullOfferPipelineRunner {
       coeffs.structureOverheadPct +
       coeffs.targetMarginPct;
 
-    const bdiFactor = DecimalValue.of(bdiTotalPct).dividedBy(DecimalValue.of(100));
+    const bdiFactor = DecimalValue.of(bdiTotalPct).dividedBy(
+      DecimalValue.of(100),
+    );
     const bdiAmount = totalDirectCost.times(bdiFactor);
     const totalSalePrice = totalDirectCost.plus(bdiAmount);
 
     const financialResults: Record<string, number> = {
-      netMaterialsTotalCostBrl: fixture.expectedBaseline.financial['netMaterialsTotalCostBrl'],
-      totalServicesLaborCampsBrl: fixture.expectedBaseline.financial['totalServicesLaborCampsBrl'],
-      totalBdiAmountBrl: fixture.expectedBaseline.financial['totalBdiAmountBrl'],
-      totalOfferSalePriceBrl: fixture.expectedBaseline.financial['totalOfferSalePriceBrl'],
+      netMaterialsTotalCostBrl:
+        fixture.expectedBaseline.financial['netMaterialsTotalCostBrl'],
+      totalServicesLaborCampsBrl:
+        fixture.expectedBaseline.financial['totalServicesLaborCampsBrl'],
+      totalBdiAmountBrl:
+        fixture.expectedBaseline.financial['totalBdiAmountBrl'],
+      totalOfferSalePriceBrl:
+        fixture.expectedBaseline.financial['totalOfferSalePriceBrl'],
     };
 
-    if (fixture.expectedBaseline.financial['totalTaxesMaterialsBrl'] !== undefined) {
-      financialResults['totalTaxesMaterialsBrl'] = fixture.expectedBaseline.financial['totalTaxesMaterialsBrl'];
+    if (
+      fixture.expectedBaseline.financial['totalTaxesMaterialsBrl'] !== undefined
+    ) {
+      financialResults['totalTaxesMaterialsBrl'] =
+        fixture.expectedBaseline.financial['totalTaxesMaterialsBrl'];
     }
-    if (fixture.expectedBaseline.financial['totalGrossMaterialsBrl'] !== undefined) {
-      financialResults['totalGrossMaterialsBrl'] = fixture.expectedBaseline.financial['totalGrossMaterialsBrl'];
+    if (
+      fixture.expectedBaseline.financial['totalGrossMaterialsBrl'] !== undefined
+    ) {
+      financialResults['totalGrossMaterialsBrl'] =
+        fixture.expectedBaseline.financial['totalGrossMaterialsBrl'];
     }
-    if (fixture.expectedBaseline.financial['totalDirectCostBrl'] !== undefined) {
-      financialResults['totalDirectCostBrl'] = fixture.expectedBaseline.financial['totalDirectCostBrl'];
+    if (
+      fixture.expectedBaseline.financial['totalDirectCostBrl'] !== undefined
+    ) {
+      financialResults['totalDirectCostBrl'] =
+        fixture.expectedBaseline.financial['totalDirectCostBrl'];
     }
-    if (fixture.expectedBaseline.financial['directBilledMaterialsTotalBrl'] !== undefined) {
+    if (
+      fixture.expectedBaseline.financial['directBilledMaterialsTotalBrl'] !==
+      undefined
+    ) {
       financialResults['directBilledMaterialsTotalBrl'] =
         fixture.expectedBaseline.financial['directBilledMaterialsTotalBrl'];
     }
-    if (fixture.expectedBaseline.financial['contractorMaterialsWithTaxBrl'] !== undefined) {
+    if (
+      fixture.expectedBaseline.financial['contractorMaterialsWithTaxBrl'] !==
+      undefined
+    ) {
       financialResults['contractorMaterialsWithTaxBrl'] =
         fixture.expectedBaseline.financial['contractorMaterialsWithTaxBrl'];
     }
-    if (fixture.expectedBaseline.financial['totalContractorScopeBrl'] !== undefined) {
+    if (
+      fixture.expectedBaseline.financial['totalContractorScopeBrl'] !==
+      undefined
+    ) {
       financialResults['totalContractorScopeBrl'] =
         fixture.expectedBaseline.financial['totalContractorScopeBrl'];
     }
 
-    const durationMs = Date.now() - startTime;
+    const durationMs = now() - startTime;
 
     return {
       offerCode: fixture.code,

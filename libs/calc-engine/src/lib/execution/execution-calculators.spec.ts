@@ -50,11 +50,21 @@ describe('Execution Calculators (Fase F7)', () => {
     });
 
     it('deve determinar status executivo corretamente para diferentes combinações de SPI e CPI', () => {
-      expect(EarnedValueCalculator.determineStatusSummary('1.0000', '1.0000')).toBe('ON_TRACK');
-      expect(EarnedValueCalculator.determineStatusSummary('1.0800', '1.0200')).toBe('AHEAD_OF_SCHEDULE');
-      expect(EarnedValueCalculator.determineStatusSummary('0.9200', '1.0000')).toBe('BEHIND_SCHEDULE');
-      expect(EarnedValueCalculator.determineStatusSummary('0.9800', '0.9100')).toBe('COST_OVERRUN');
-      expect(EarnedValueCalculator.determineStatusSummary('0.8500', '0.8800')).toBe('CRITICAL_DEVIATION');
+      expect(
+        EarnedValueCalculator.determineStatusSummary('1.0000', '1.0000'),
+      ).toBe('ON_TRACK');
+      expect(
+        EarnedValueCalculator.determineStatusSummary('1.0800', '1.0200'),
+      ).toBe('AHEAD_OF_SCHEDULE');
+      expect(
+        EarnedValueCalculator.determineStatusSummary('0.9200', '1.0000'),
+      ).toBe('BEHIND_SCHEDULE');
+      expect(
+        EarnedValueCalculator.determineStatusSummary('0.9800', '0.9100'),
+      ).toBe('COST_OVERRUN');
+      expect(
+        EarnedValueCalculator.determineStatusSummary('0.8500', '0.8800'),
+      ).toBe('CRITICAL_DEVIATION');
     });
 
     it('deve gerar a série temporal completa da Curva S a partir de registros mensais', () => {
@@ -118,9 +128,13 @@ describe('Execution Calculators (Fase F7)', () => {
       expect(curveData.baselineId).toBe(1);
       expect(curveData.monthlySeries.length).toBe(3);
       // Mês 1: no prazo, custo menor
-      expect(curveData.monthlySeries[0].schedulePerformanceIndex).toBe('1.0000');
+      expect(curveData.monthlySeries[0].schedulePerformanceIndex).toBe(
+        '1.0000',
+      );
       // Mês 2: atraso leve
-      expect(curveData.monthlySeries[1].schedulePerformanceIndex).toBe('0.8640'); // 21.6M / 25M = 0.864
+      expect(curveData.monthlySeries[1].schedulePerformanceIndex).toBe(
+        '0.8640',
+      ); // 21.6M / 25M = 0.864
       // Mês 3: ainda sem medição (futuro)
       expect(curveData.monthlySeries[2].plannedValue).toBe('45000000.00');
       expect(curveData.monthlySeries[2].earnedValue).toBe('0.00');
@@ -150,13 +164,15 @@ describe('Execution Calculators (Fase F7)', () => {
           id: 2,
           baselineId: 1,
           code: 'AD-02',
-          title: 'Aditivo de escopo - torre adicional para travessia de rodovia',
+          title:
+            'Aditivo de escopo - torre adicional para travessia de rodovia',
           type: 'SCOPE_ADDITION' as ChangeOrderType,
           status: 'APPROVED',
           requestedCostDelta: '600000.00',
           approvedCostDelta: '550000.00',
           scheduleDeltaMonths: 0,
-          description: 'Nova torre de ancoragem solicitada pela concessionária da rodovia',
+          description:
+            'Nova torre de ancoragem solicitada pela concessionária da rodovia',
           justification: 'Exigência da concessionária CCR',
           createdBy: 'eng.geral@engevix.com.br',
           createdAt: '2026-05-10T10:00:00.000Z',
@@ -171,8 +187,10 @@ describe('Execution Calculators (Fase F7)', () => {
           status: 'SUBMITTED',
           requestedCostDelta: '900000.00',
           scheduleDeltaMonths: 1,
-          description: 'Pleito de ressarcimento de custos indiretos por excesso pluviométrico',
-          justification: 'Índices pluviométricos 3x acima da média histórica de 30 anos',
+          description:
+            'Pleito de ressarcimento de custos indiretos por excesso pluviométrico',
+          justification:
+            'Índices pluviométricos 3x acima da média histórica de 30 anos',
           createdBy: 'juridico@engevix.com.br',
           createdAt: '2026-06-01T10:00:00.000Z',
           updatedAt: '2026-06-01T10:00:00.000Z',
@@ -209,7 +227,10 @@ describe('Execution Calculators (Fase F7)', () => {
       expect(workPackages[2].category).toBe('CIVIL_FOUNDATIONS');
       expect(workPackages[2].budgetedCost).toBe('27000000.00');
 
-      const totalWeight = workPackages.reduce((sum, wp) => sum + parseFloat(wp.weightPercent), 0);
+      const totalWeight = workPackages.reduce(
+        (sum, wp) => sum + parseFloat(wp.weightPercent),
+        0,
+      );
       expect(Math.round(totalWeight)).toBe(100);
     });
 
@@ -232,13 +253,16 @@ describe('Execution Calculators (Fase F7)', () => {
         targetSystem: 'SAP',
         companyCode: '1000',
         generatedBy: 'controladoria@engevix.com.br',
+        generatedAt: new Date('2026-01-15T12:00:00Z'),
       });
 
       expect(erpPackage.targetSystem).toBe('SAP');
       expect(erpPackage.companyCode).toBe('1000');
       expect(erpPackage.accounts.length).toBe(7);
       expect(erpPackage.monthlySchedule.length).toBe(7 * 12); // 7 contas x 12 meses
-      expect(erpPackage.accounts[0].costCenterCode).toContain('CC-OFR-2026-001-0101');
+      expect(erpPackage.accounts[0].costCenterCode).toContain(
+        'CC-OFR-2026-001-0101',
+      );
     });
   });
 });

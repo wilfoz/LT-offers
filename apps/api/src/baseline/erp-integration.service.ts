@@ -52,7 +52,9 @@ export class ErpIntegrationService {
     payload: GenerateErpPackagePayload,
     user: string,
   ): Promise<ErpIntegrationPackage> {
-    const baseline = await this.baselineService.getBaselineById(payload.baselineId);
+    const baseline = await this.baselineService.getBaselineById(
+      payload.baselineId,
+    );
     const offer = await this.prisma.offer.findUnique({
       where: { id: baseline.offerId },
     });
@@ -67,7 +69,9 @@ export class ErpIntegrationService {
       revisionNumber: baseline.baselineNumber,
       targetSystem: payload.targetSystem,
       companyCode: payload.companyCode,
-      generatedBy: user || payload.generatedBy || 'controladoria@engevix.com.br',
+      generatedBy:
+        user || payload.generatedBy || 'controladoria@engevix.com.br',
+      generatedAt: new Date(),
     });
 
     // Auditoria
@@ -116,11 +120,20 @@ export class ErpIntegrationService {
       { prop: 'Revisão Contratual', val: `R${erpPackage.revisionNumber}` },
       { prop: 'Sistema ERP Alvo', val: erpPackage.targetSystem },
       { prop: 'Código da Empresa / Coligada', val: erpPackage.companyCode },
-      { prop: 'Data de Congelamento da Baseline', val: erpPackage.baselineFrozenAt },
+      {
+        prop: 'Data de Congelamento da Baseline',
+        val: erpPackage.baselineFrozenAt,
+      },
       { prop: 'Data de Geração do Pacote', val: erpPackage.generatedAt },
       { prop: 'Gerado por', val: erpPackage.generatedBy },
-      { prop: 'Valor Total do Contrato (R$)', val: parseFloat(erpPackage.totalContractValue) },
-      { prop: 'Custo Orçado Total (R$)', val: parseFloat(erpPackage.totalBudgetCost) },
+      {
+        prop: 'Valor Total do Contrato (R$)',
+        val: parseFloat(erpPackage.totalContractValue),
+      },
+      {
+        prop: 'Custo Orçado Total (R$)',
+        val: parseFloat(erpPackage.totalBudgetCost),
+      },
       { prop: 'Moeda Padrão', val: erpPackage.currency },
     ];
 

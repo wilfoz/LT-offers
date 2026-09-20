@@ -26,15 +26,29 @@ export class WbsGenerator {
     lineCode?: string;
   }): WorkPackageItem[] {
     const totalBudget = DecimalValue.of(params.totalBudgetCost || '10000000');
-    
+
     // Custos por categoria ou estimativa ponderada padrão do setor LT
-    const engCost = params.engineeringCost ? DecimalValue.of(params.engineeringCost) : totalBudget.times(DecimalValue.of('0.05')).round(2, 'half-up');
-    const envCost = params.environmentalCost ? DecimalValue.of(params.environmentalCost) : totalBudget.times(DecimalValue.of('0.08')).round(2, 'half-up');
-    const civCost = params.civilCost ? DecimalValue.of(params.civilCost) : totalBudget.times(DecimalValue.of('0.27')).round(2, 'half-up');
-    const elmCost = params.electromechanicalCost ? DecimalValue.of(params.electromechanicalCost) : totalBudget.times(DecimalValue.of('0.30')).round(2, 'half-up');
-    const cabCost = params.cablesCost ? DecimalValue.of(params.cablesCost) : totalBudget.times(DecimalValue.of('0.15')).round(2, 'half-up');
-    const comCost = params.commissioningCost ? DecimalValue.of(params.commissioningCost) : totalBudget.times(DecimalValue.of('0.03')).round(2, 'half-up');
-    const indCost = params.indirectsCost ? DecimalValue.of(params.indirectsCost) : totalBudget.times(DecimalValue.of('0.12')).round(2, 'half-up');
+    const engCost = params.engineeringCost
+      ? DecimalValue.of(params.engineeringCost)
+      : totalBudget.times(DecimalValue.of('0.05')).round(2, 'half-up');
+    const envCost = params.environmentalCost
+      ? DecimalValue.of(params.environmentalCost)
+      : totalBudget.times(DecimalValue.of('0.08')).round(2, 'half-up');
+    const civCost = params.civilCost
+      ? DecimalValue.of(params.civilCost)
+      : totalBudget.times(DecimalValue.of('0.27')).round(2, 'half-up');
+    const elmCost = params.electromechanicalCost
+      ? DecimalValue.of(params.electromechanicalCost)
+      : totalBudget.times(DecimalValue.of('0.30')).round(2, 'half-up');
+    const cabCost = params.cablesCost
+      ? DecimalValue.of(params.cablesCost)
+      : totalBudget.times(DecimalValue.of('0.15')).round(2, 'half-up');
+    const comCost = params.commissioningCost
+      ? DecimalValue.of(params.commissioningCost)
+      : totalBudget.times(DecimalValue.of('0.03')).round(2, 'half-up');
+    const indCost = params.indirectsCost
+      ? DecimalValue.of(params.indirectsCost)
+      : totalBudget.times(DecimalValue.of('0.12')).round(2, 'half-up');
 
     const rawPackages: Array<{
       wbsCode: string;
@@ -110,11 +124,17 @@ export class WbsGenerator {
       },
     ];
 
-    const sumCost = rawPackages.reduce((acc, p) => acc.plus(p.cost), DecimalValue.zero());
+    const sumCost = rawPackages.reduce(
+      (acc, p) => acc.plus(p.cost),
+      DecimalValue.zero(),
+    );
     const denom = sumCost.isZero() ? DecimalValue.of(1) : sumCost;
 
     return rawPackages.map((p, idx) => {
-      const weight = p.cost.times(DecimalValue.of(100)).dividedBy(denom).round(2, 'half-up');
+      const weight = p.cost
+        .times(DecimalValue.of(100))
+        .dividedBy(denom)
+        .round(2, 'half-up');
       return {
         id: idx + 1,
         wbsCode: p.wbsCode,
@@ -141,30 +161,35 @@ export class WbsGenerator {
     targetSystem: ErpTargetSystem;
     companyCode?: string;
     generatedBy: string;
+    generatedAt: Date;
   }): ErpIntegrationPackage {
-    const companyCode = params.companyCode || (params.targetSystem === 'SAP' ? '1000' : 'COLIG-01');
+    const companyCode =
+      params.companyCode ||
+      (params.targetSystem === 'SAP' ? '1000' : 'COLIG-01');
 
-    const accounts: ErpAccountMapping[] = params.baseline.workPackages.map((wp, index) => {
-      const ccCode = `CC-${params.offerCode}-${wp.wbsCode.replace('.', '')}`;
-      const glAccount = `1.1.05.00${index + 1}`;
-      const budgetAccount = `ORC-${wp.category.substring(0, 3)}-${wp.wbsCode.replace('.', '')}`;
+    const accounts: ErpAccountMapping[] = params.baseline.workPackages.map(
+      (wp, index) => {
+        const ccCode = `CC-${params.offerCode}-${wp.wbsCode.replace('.', '')}`;
+        const glAccount = `1.1.05.00${index + 1}`;
+        const budgetAccount = `ORC-${wp.category.substring(0, 3)}-${wp.wbsCode.replace('.', '')}`;
 
-      return {
-        costCenterCode: ccCode,
-        costCenterName: `${wp.name.substring(0, 35)}`,
-        generalLedgerAccount: glAccount,
-        budgetAccountCode: budgetAccount,
-        wbsCode: wp.wbsCode,
-        description: wp.name,
-        unit: wp.unit,
-        totalBudgetedCost: wp.budgetedCost,
-      };
-    });
+        return {
+          costCenterCode: ccCode,
+          costCenterName: `${wp.name.substring(0, 35)}`,
+          generalLedgerAccount: glAccount,
+          budgetAccountCode: budgetAccount,
+          wbsCode: wp.wbsCode,
+          description: wp.name,
+          unit: wp.unit,
+          totalBudgetedCost: wp.budgetedCost,
+        };
+      },
+    );
 
     // Distribuição linear padrão nos meses da baseline
     const months = params.baseline.scheduleMonths || 12;
     const monthlySchedule: ErpScheduleEntry[] = [];
-    const baseYear = new Date().getFullYear();
+    const baseYear = params.generatedAt.getFullYear();
 
     for (let m = 1; m <= months; m++) {
       const monthStr = m < 10 ? `0${m}` : `${m}`;
@@ -172,7 +197,9 @@ export class WbsGenerator {
 
       for (const acc of accounts) {
         const total = DecimalValue.of(acc.totalBudgetedCost);
-        const monthlyCost = total.dividedBy(DecimalValue.of(months)).round(2, 'half-up');
+        const monthlyCost = total
+          .dividedBy(DecimalValue.of(months))
+          .round(2, 'half-up');
 
         monthlySchedule.push({
           monthNumber: m,
@@ -193,7 +220,7 @@ export class WbsGenerator {
       baselineNumber: params.baseline.baselineNumber,
       baselineFrozenAt: params.baseline.frozenAt,
       targetSystem: params.targetSystem,
-      generatedAt: new Date().toISOString(),
+      generatedAt: params.generatedAt.toISOString(),
       generatedBy: params.generatedBy,
       companyCode,
       totalContractValue: params.baseline.totalContractValue,

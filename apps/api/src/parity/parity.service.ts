@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  HistoricalOfferFixture,
-  ParityReport,
-} from '@lt-offers/domain';
+import { HistoricalOfferFixture, ParityReport } from '@lt-offers/domain';
 import {
   FullOfferPipelineRunner,
   ParityEvaluator,
@@ -27,7 +24,12 @@ export class ParityService {
   /**
    * Retorna a lista de perfis de referência disponíveis.
    */
-  getAvailableProfiles(): Array<{ key: string; code: string; name: string; description: string }> {
+  getAvailableProfiles(): Array<{
+    key: string;
+    code: string;
+    name: string;
+    description: string;
+  }> {
     return Object.entries(this.fixtures).map(([key, f]) => ({
       key,
       code: f.code,
@@ -42,11 +44,14 @@ export class ParityService {
   evaluateProfile(profileKey: string): ParityReport {
     const fixture = this.fixtures[profileKey.toLowerCase()];
     if (!fixture) {
-      throw new NotFoundException(`Perfil histórico '${profileKey}' não encontrado.`);
+      throw new NotFoundException(
+        `Perfil histórico '${profileKey}' não encontrado.`,
+      );
     }
 
-    const runResult = this.runner.run(fixture);
-    return this.evaluator.evaluate(fixture, runResult);
+    // Borda do sistema: o relógio é resolvido aqui e injetado no motor (RNF-04).
+    const runResult = this.runner.run(fixture, () => Date.now());
+    return this.evaluator.evaluate(fixture, runResult, new Date());
   }
 
   /**

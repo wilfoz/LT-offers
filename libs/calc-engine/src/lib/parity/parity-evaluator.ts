@@ -25,7 +25,11 @@ export class ParityEvaluator {
     };
   }
 
-  public evaluate(fixture: HistoricalOfferFixture, runResult: FullPipelineRunResult): ParityReport {
+  public evaluate(
+    fixture: HistoricalOfferFixture,
+    runResult: FullPipelineRunResult,
+    executedAt: Date,
+  ): ParityReport {
     const comparisons: ParityMetricComparison[] = [];
     const knownCorrections = fixture.expectedBaseline.knownCorrections || {};
 
@@ -39,7 +43,7 @@ export class ParityEvaluator {
       'un',
       this.config.discreteMaxDelta,
       true,
-      comparisons
+      comparisons,
     );
 
     // 2. Avaliar Físicos Contínuos
@@ -52,7 +56,7 @@ export class ParityEvaluator {
       'qtd',
       this.config.physicalMaxRelativePct,
       false,
-      comparisons
+      comparisons,
     );
 
     // 3. Avaliar Financeiros Agregados
@@ -65,7 +69,7 @@ export class ParityEvaluator {
       'BRL',
       this.config.financialMaxRelativePct,
       false,
-      comparisons
+      comparisons,
     );
 
     // Resumo por módulo
@@ -84,8 +88,12 @@ export class ParityEvaluator {
 
     for (const [moduleName, items] of modulesMap.entries()) {
       const conformeCount = items.filter((i) => i.status === 'CONFORME').length;
-      const correcaoCount = items.filter((i) => i.status === 'CORRECAO_HOMOLOGADA').length;
-      const desvioCount = items.filter((i) => i.status === 'DESVIO_DETECTADO').length;
+      const correcaoCount = items.filter(
+        (i) => i.status === 'CORRECAO_HOMOLOGADA',
+      ).length;
+      const desvioCount = items.filter(
+        (i) => i.status === 'DESVIO_DETECTADO',
+      ).length;
 
       totalConforme += conformeCount;
       totalCorrecao += correcaoCount;
@@ -105,7 +113,7 @@ export class ParityEvaluator {
       offerCode: fixture.code,
       offerName: fixture.name,
       profileDescription: fixture.description,
-      executedAt: new Date().toISOString(),
+      executedAt: executedAt.toISOString(),
       executionDurationMs: runResult.executionDurationMs,
       totalMetrics: comparisons.length,
       conformeCount: totalConforme,
@@ -123,11 +131,14 @@ export class ParityEvaluator {
     category: ParityCategory,
     baseline: Record<string, number>,
     calculated: Record<string, number>,
-    knownCorrections: Record<string, { baselineLegacyValue: number; correctedValue: number; note: string }>,
+    knownCorrections: Record<
+      string,
+      { baselineLegacyValue: number; correctedValue: number; note: string }
+    >,
     unit: string,
     maxThreshold: number,
     isAbsoluteThreshold: boolean,
-    targetList: ParityMetricComparison[]
+    targetList: ParityMetricComparison[],
   ): void {
     for (const [key, baseVal] of Object.entries(baseline)) {
       const calcVal = calculated[key] ?? 0;
@@ -142,14 +153,16 @@ export class ParityEvaluator {
         (k) =>
           k.toLowerCase() === key.toLowerCase() ||
           k.toLowerCase().includes(key.toLowerCase()) ||
-          key.toLowerCase().includes(k.toLowerCase())
+          key.toLowerCase().includes(k.toLowerCase()),
       );
       if (matchingCorrectionKey) {
         const corr = knownCorrections[matchingCorrectionKey];
         status = 'CORRECAO_HOMOLOGADA';
         technicalNote = corr.note;
       } else {
-        const isExceeded = isAbsoluteThreshold ? deltaAbs > maxThreshold : deltaPct > maxThreshold;
+        const isExceeded = isAbsoluteThreshold
+          ? deltaAbs > maxThreshold
+          : deltaPct > maxThreshold;
         if (isExceeded) {
           status = 'DESVIO_DETECTADO';
           technicalNote = `Desvio acima do limite tolerado (${isAbsoluteThreshold ? `delta máx ${maxThreshold}` : `${maxThreshold}%`}).`;
