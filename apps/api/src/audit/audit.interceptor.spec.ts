@@ -18,7 +18,11 @@ describe('AuditInterceptor', () => {
     interceptor = new AuditInterceptor(reflector, authService, auditService);
   });
 
-  function createMockContext(method: string, body: any, headers: Record<string, string>): ExecutionContext {
+  function createMockContext(
+    method: string,
+    body: any,
+    headers: Record<string, string>,
+  ): ExecutionContext {
     return {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -34,7 +38,9 @@ describe('AuditInterceptor', () => {
   }
 
   it('não registra auditoria para requisições GET', (done) => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue({ resource: 'OFFER' });
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue({ resource: 'OFFER' });
     const logSpy = jest.spyOn(auditService, 'logEvent');
 
     const ctx = createMockContext('GET', {}, {});
@@ -56,8 +62,14 @@ describe('AuditInterceptor', () => {
     });
     const logSpy = jest.spyOn(auditService, 'logEvent');
 
-    const ctx = createMockContext('POST', { name: 'Oferta Nova' }, { 'x-user-role': 'COMMERCIAL' });
-    const next: CallHandler = { handle: () => of({ id: '10', name: 'Oferta Nova' }) };
+    const ctx = createMockContext(
+      'POST',
+      { name: 'Oferta Nova' },
+      { 'x-user-role': 'COMMERCIAL' },
+    );
+    const next: CallHandler = {
+      handle: () => of({ id: '10', name: 'Oferta Nova' }),
+    };
 
     interceptor.intercept(ctx, next).subscribe({
       next: () => {
@@ -67,7 +79,7 @@ describe('AuditInterceptor', () => {
             action: 'CREATE',
             offerId: '10',
             userRole: 'COMMERCIAL',
-          })
+          }),
         );
         done();
       },

@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ExportApiService } from './export-api.service';
@@ -59,7 +62,9 @@ describe('ExportApiService', () => {
       expect(res.consolidated.costPerKm).toBe('1200000.00');
     });
 
-    const req = httpMock.expectOne('/api/offers/1/export/performance-indicators');
+    const req = httpMock.expectOne(
+      '/api/offers/1/export/performance-indicators',
+    );
     expect(req.request.method).toBe('GET');
     req.flush(mockSummary);
   });
@@ -82,25 +87,33 @@ describe('ExportApiService', () => {
       expect(res.layout).toBe('ANEEL_STANDARD');
     });
 
-    const req = httpMock.expectOne('/api/offers/1/export/tender-sheet/data?layout=ANEEL_STANDARD');
+    const req = httpMock.expectOne(
+      '/api/offers/1/export/tender-sheet/data?layout=ANEEL_STANDARD',
+    );
     expect(req.request.method).toBe('GET');
     req.flush(mockTender);
   });
 
   it('should download tender sheet blob (RNF-11)', () => {
-    const fakeBlob = new Blob(['fake xlsx data'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fakeBlob = new Blob(['fake xlsx data'], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
 
     service.downloadTenderSheet(1, 'ANEEL_STANDARD').subscribe((res) => {
       expect(res).toBeInstanceOf(Blob);
     });
 
-    const req = httpMock.expectOne('/api/offers/1/export/tender-sheet?layout=ANEEL_STANDARD');
+    const req = httpMock.expectOne(
+      '/api/offers/1/export/tender-sheet?layout=ANEEL_STANDARD',
+    );
     expect(req.request.method).toBe('GET');
     req.flush(fakeBlob);
   });
 
   it('should download measurement sheet blob (RF-48)', () => {
-    const fakeBlob = new Blob(['fake xlsx data'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fakeBlob = new Blob(['fake xlsx data'], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
 
     service.downloadMeasurementSheet(1).subscribe((res) => {
       expect(res).toBeInstanceOf(Blob);
@@ -112,7 +125,9 @@ describe('ExportApiService', () => {
   });
 
   it('should download cashflow schedule blob (RF-60)', () => {
-    const fakeBlob = new Blob(['fake xlsx data'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fakeBlob = new Blob(['fake xlsx data'], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
 
     service.downloadCashflowSheet(1).subscribe((res) => {
       expect(res).toBeInstanceOf(Blob);

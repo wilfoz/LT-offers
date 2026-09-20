@@ -13,8 +13,12 @@ export class ChangeOrderCalculator {
     baseline: WorkBaseline;
     changeOrders: ContractChangeOrder[];
   }): CurrentWorkingEstimate {
-    const baseContractValue = DecimalValue.of(params.baseline.totalContractValue || '0');
-    const baseBudgetCost = DecimalValue.of(params.baseline.totalBudgetCost || '0');
+    const baseContractValue = DecimalValue.of(
+      params.baseline.totalContractValue || '0',
+    );
+    const baseBudgetCost = DecimalValue.of(
+      params.baseline.totalBudgetCost || '0',
+    );
     const baseScheduleMonths = params.baseline.scheduleMonths || 0;
 
     let totalApproved = DecimalValue.zero();
@@ -24,7 +28,9 @@ export class ChangeOrderCalculator {
 
     for (const co of params.changeOrders) {
       if (co.status === 'APPROVED') {
-        const approvedCost = DecimalValue.of(co.approvedCostDelta || co.requestedCostDelta || '0');
+        const approvedCost = DecimalValue.of(
+          co.approvedCostDelta || co.requestedCostDelta || '0',
+        );
         totalApproved = totalApproved.plus(approvedCost);
         approvedScheduleDelta += co.scheduleDeltaMonths || 0;
         approvedCount++;

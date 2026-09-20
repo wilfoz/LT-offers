@@ -16,7 +16,11 @@ export class AuditService {
       action: 'CREATE',
       description: 'Criação inicial da oferta Lote 1 - Leilão 01/2026',
       diffs: [
-        { field: 'name', previousValue: null, newValue: 'Lote 1 - Leilão 01/2026' },
+        {
+          field: 'name',
+          previousValue: null,
+          newValue: 'Lote 1 - Leilão 01/2026',
+        },
         { field: 'revision', previousValue: null, newValue: 'R0' },
       ],
     },
@@ -72,10 +76,16 @@ export class AuditService {
       if (filter.action && evt.action !== filter.action) {
         return false;
       }
-      if (filter.startDate && new Date(evt.timestamp) < new Date(filter.startDate)) {
+      if (
+        filter.startDate &&
+        new Date(evt.timestamp) < new Date(filter.startDate)
+      ) {
         return false;
       }
-      if (filter.endDate && new Date(evt.timestamp) > new Date(filter.endDate)) {
+      if (
+        filter.endDate &&
+        new Date(evt.timestamp) > new Date(filter.endDate)
+      ) {
         return false;
       }
       return true;

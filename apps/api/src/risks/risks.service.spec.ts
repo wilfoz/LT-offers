@@ -31,8 +31,12 @@ describe('RisksService', () => {
       treatment: 'CONTINGENCY_BDI',
     });
 
-    expect(created.items.some((i) => i.description.includes('vegetação'))).toBe(true);
-    const envSummary = created.categoryBreakdown.find((c) => c.category === 'ENVIRONMENTAL');
+    expect(created.items.some((i) => i.description.includes('vegetação'))).toBe(
+      true,
+    );
+    const envSummary = created.categoryBreakdown.find(
+      (c) => c.category === 'ENVIRONMENTAL',
+    );
     expect(envSummary?.count).toBe(1);
     expect(envSummary?.totalImpact).toBe('300000.00');
     expect(envSummary?.totalWeightedSeverity).toBe('150000.00');

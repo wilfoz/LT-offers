@@ -11,7 +11,7 @@ export class CashflowController {
     @Param('lineId', ParseIntPipe) lineId: number,
     @Query('advanceRate') advanceRate?: string,
     @Query('retentionRate') retentionRate?: string,
-    @Query('billingLag') billingLag?: string
+    @Query('billingLag') billingLag?: string,
   ): Promise<CashflowSummary> {
     const adv = advanceRate ? parseFloat(advanceRate) : undefined;
     const ret = retentionRate ? parseFloat(retentionRate) : undefined;
@@ -28,7 +28,7 @@ export class CashflowController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Query('advanceRate') advanceRate?: string,
     @Query('retentionRate') retentionRate?: string,
-    @Query('billingLag') billingLag?: string
+    @Query('billingLag') billingLag?: string,
   ): Promise<CashflowSummary> {
     const adv = advanceRate ? parseFloat(advanceRate) : undefined;
     const ret = retentionRate ? parseFloat(retentionRate) : undefined;

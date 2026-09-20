@@ -204,14 +204,14 @@ describe('ElectromechanicalQuantitiesComponent', () => {
   beforeEach(async () => {
     apiSpy = {
       getLineElectromechanicalSummary: vi.fn().mockReturnValue(of(mockSummary)),
-      getLineElectromechanicalTraceability: vi.fn().mockReturnValue(of(mockTraceability)),
+      getLineElectromechanicalTraceability: vi
+        .fn()
+        .mockReturnValue(of(mockTraceability)),
     };
 
     await TestBed.configureTestingModule({
       imports: [ElectromechanicalQuantitiesComponent],
-      providers: [
-        { provide: ElectromechanicalApiService, useValue: apiSpy },
-      ],
+      providers: [{ provide: ElectromechanicalApiService, useValue: apiSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ElectromechanicalQuantitiesComponent);
@@ -256,7 +256,9 @@ describe('ElectromechanicalQuantitiesComponent', () => {
 
     component.openTraceabilityModal();
     expect(component.showTraceabilityModal()).toBe(true);
-    expect(apiSpy.getLineElectromechanicalTraceability).toHaveBeenCalledWith(10);
+    expect(apiSpy.getLineElectromechanicalTraceability).toHaveBeenCalledWith(
+      10,
+    );
     expect(component.traceabilityData()).toEqual(mockTraceability);
 
     // Filtrar por texto
@@ -271,8 +273,14 @@ describe('ElectromechanicalQuantitiesComponent', () => {
   });
 
   it('deve retornar o label correto para as famílias de suprimentos', () => {
-    expect(component.getFamilyLabel('TOWERS')).toBe('Torres e Estruturas Metálicas');
-    expect(component.getFamilyLabel('CONDUCTORS')).toBe('Cabos Condutores de Alumínio');
-    expect(component.getFamilyLabel('INSULATORS')).toBe('Cadeias de Isoladores');
+    expect(component.getFamilyLabel('TOWERS')).toBe(
+      'Torres e Estruturas Metálicas',
+    );
+    expect(component.getFamilyLabel('CONDUCTORS')).toBe(
+      'Cabos Condutores de Alumínio',
+    );
+    expect(component.getFamilyLabel('INSULATORS')).toBe(
+      'Cadeias de Isoladores',
+    );
   });
 });

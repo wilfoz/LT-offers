@@ -13,7 +13,9 @@ export class CommodityCalculator {
   /**
    * Calcula o preço formado da tonelada de commodity (em BRL).
    */
-  static calculatePricePerTon(config: CommodityPricingConfig): FormedCommodityPrice {
+  static calculatePricePerTon(
+    config: CommodityPricingConfig,
+  ): FormedCommodityPrice {
     if (
       config.pricingMode === 'FUTURES_WEIGHTED' &&
       config.futuresCurve &&
@@ -86,7 +88,9 @@ export class CommodityCalculator {
       return this.calculateSpotPrice(config);
     }
 
-    const effectiveLme = sumProductLme.dividedBy(totalWeight).round(2, 'half-up');
+    const effectiveLme = sumProductLme
+      .dividedBy(totalWeight)
+      .round(2, 'half-up');
     const effectiveMidwest = sumProductMidwest
       .dividedBy(totalWeight)
       .round(2, 'half-up');

@@ -34,8 +34,10 @@ export class ChangeOrderService {
         requestedCostDelta: '1850000.00',
         approvedCostDelta: '1850000.00',
         scheduleDeltaMonths: 1,
-        description: 'Substituição de fundações tubulão por estacas raiz com injeção de calda de cimento em rocha branda.',
-        justification: 'Relatório de sondagens rotativas complementares SRLT-02.',
+        description:
+          'Substituição de fundações tubulão por estacas raiz com injeção de calda de cimento em rocha branda.',
+        justification:
+          'Relatório de sondagens rotativas complementares SRLT-02.',
         wbsCodeAffected: '03.01',
         approvedBy: 'gerente.contrato@cliente.com.br',
         approvedAt: '2026-03-15T10:00:00.000Z',
@@ -53,7 +55,8 @@ export class ChangeOrderService {
         requestedCostDelta: '720000.00',
         approvedCostDelta: '680000.00',
         scheduleDeltaMonths: 0,
-        description: 'Instalação de estrutura estaiada tipo E-30 adicional para garantir vão de segurança exigido pela TBG.',
+        description:
+          'Instalação de estrutura estaiada tipo E-30 adicional para garantir vão de segurança exigido pela TBG.',
         justification: 'Diretriz de segurança da Transpetro/TBG.',
         wbsCodeAffected: '04.01',
         approvedBy: 'fiscal.obra@cliente.com.br',
@@ -71,8 +74,10 @@ export class ChangeOrderService {
         status: 'SUBMITTED',
         requestedCostDelta: '950000.00',
         scheduleDeltaMonths: 1,
-        description: 'Custos de manutenção de canteiro e desmobilização provisória devido a cheias no Vale do Itajaí.',
-        justification: 'Boletins pluviométricos INMET e decretação de estado de calamidade regional.',
+        description:
+          'Custos de manutenção de canteiro e desmobilização provisória devido a cheias no Vale do Itajaí.',
+        justification:
+          'Boletins pluviométricos INMET e decretação de estado de calamidade regional.',
         wbsCodeAffected: '07.01',
         createdBy: 'juridico@engevix.com.br',
         createdAt: '2026-04-20T16:00:00.000Z',
@@ -91,9 +96,13 @@ export class ChangeOrderService {
     payload: CreateChangeOrderPayload,
     user: string,
   ): Promise<ContractChangeOrder> {
-    const baseline = await this.baselineService.getBaselineById(payload.baselineId);
+    const baseline = await this.baselineService.getBaselineById(
+      payload.baselineId,
+    );
     if (!baseline) {
-      throw new NotFoundException(`Linha de Base ID ${payload.baselineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de Base ID ${payload.baselineId} não encontrada.`,
+      );
     }
 
     const orders = this.changeOrders.get(payload.baselineId) || [];
@@ -131,8 +140,16 @@ export class ChangeOrderService {
       action: 'CREATE',
       description: `Cadastro de Aditivo/Pleito ${newOrder.code} - ${newOrder.title} (Valor Solicitado: R$ ${newOrder.requestedCostDelta})`,
       diffs: [
-        { field: 'changeOrderCode', previousValue: null, newValue: newOrder.code },
-        { field: 'requestedCostDelta', previousValue: null, newValue: newOrder.requestedCostDelta },
+        {
+          field: 'changeOrderCode',
+          previousValue: null,
+          newValue: newOrder.code,
+        },
+        {
+          field: 'requestedCostDelta',
+          previousValue: null,
+          newValue: newOrder.requestedCostDelta,
+        },
       ],
     });
 
@@ -151,24 +168,47 @@ export class ChangeOrderService {
     const orders = this.changeOrders.get(baselineId) || [];
     const index = orders.findIndex((o) => o.id === changeOrderId);
     if (index === -1) {
-      throw new NotFoundException(`Change Order ID ${changeOrderId} não encontrada na baseline ${baselineId}.`);
+      throw new NotFoundException(
+        `Change Order ID ${changeOrderId} não encontrada na baseline ${baselineId}.`,
+      );
     }
 
     const existing = orders[index];
-    const isApproving = payload.status === 'APPROVED' && existing.status !== 'APPROVED';
+    const isApproving =
+      payload.status === 'APPROVED' && existing.status !== 'APPROVED';
 
     const updated: ContractChangeOrder = {
       ...existing,
       title: payload.title !== undefined ? payload.title : existing.title,
       type: payload.type !== undefined ? payload.type : existing.type,
       status: payload.status !== undefined ? payload.status : existing.status,
-      requestedCostDelta: payload.requestedCostDelta !== undefined ? payload.requestedCostDelta : existing.requestedCostDelta,
-      approvedCostDelta: payload.approvedCostDelta !== undefined ? payload.approvedCostDelta : existing.approvedCostDelta,
-      scheduleDeltaMonths: payload.scheduleDeltaMonths !== undefined ? payload.scheduleDeltaMonths : existing.scheduleDeltaMonths,
-      description: payload.description !== undefined ? payload.description : existing.description,
-      justification: payload.justification !== undefined ? payload.justification : existing.justification,
-      wbsCodeAffected: payload.wbsCodeAffected !== undefined ? payload.wbsCodeAffected : existing.wbsCodeAffected,
-      approvedBy: isApproving ? (payload.approvedBy || user || 'diretoria@cliente.com.br') : existing.approvedBy,
+      requestedCostDelta:
+        payload.requestedCostDelta !== undefined
+          ? payload.requestedCostDelta
+          : existing.requestedCostDelta,
+      approvedCostDelta:
+        payload.approvedCostDelta !== undefined
+          ? payload.approvedCostDelta
+          : existing.approvedCostDelta,
+      scheduleDeltaMonths:
+        payload.scheduleDeltaMonths !== undefined
+          ? payload.scheduleDeltaMonths
+          : existing.scheduleDeltaMonths,
+      description:
+        payload.description !== undefined
+          ? payload.description
+          : existing.description,
+      justification:
+        payload.justification !== undefined
+          ? payload.justification
+          : existing.justification,
+      wbsCodeAffected:
+        payload.wbsCodeAffected !== undefined
+          ? payload.wbsCodeAffected
+          : existing.wbsCodeAffected,
+      approvedBy: isApproving
+        ? payload.approvedBy || user || 'diretoria@cliente.com.br'
+        : existing.approvedBy,
       approvedAt: isApproving ? new Date().toISOString() : existing.approvedAt,
       updatedAt: new Date().toISOString(),
     };
@@ -187,8 +227,16 @@ export class ChangeOrderService {
       action: 'UPDATE',
       description: `Atualização de Aditivo/Pleito ${updated.code} - Status: ${updated.status}`,
       diffs: [
-        { field: 'status', previousValue: existing.status, newValue: updated.status },
-        { field: 'approvedCostDelta', previousValue: existing.approvedCostDelta, newValue: updated.approvedCostDelta },
+        {
+          field: 'status',
+          previousValue: existing.status,
+          newValue: updated.status,
+        },
+        {
+          field: 'approvedCostDelta',
+          previousValue: existing.approvedCostDelta,
+          newValue: updated.approvedCostDelta,
+        },
       ],
     });
 
@@ -205,7 +253,9 @@ export class ChangeOrderService {
   /**
    * Calcula e retorna a Projeção do Current Working Estimate (CWE).
    */
-  async getCurrentWorkingEstimate(baselineId: number): Promise<CurrentWorkingEstimate> {
+  async getCurrentWorkingEstimate(
+    baselineId: number,
+  ): Promise<CurrentWorkingEstimate> {
     const baseline = await this.baselineService.getBaselineById(baselineId);
     const orders = this.changeOrders.get(baselineId) || [];
 

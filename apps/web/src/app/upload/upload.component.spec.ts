@@ -16,7 +16,9 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
 
-    expect(el.querySelector('.page-title')?.textContent).toContain('Gestão de Documentos');
+    expect(el.querySelector('.page-title')?.textContent).toContain(
+      'Gestão de Documentos',
+    );
     expect(el.textContent).toContain('Arraste arquivos aqui');
     expect(el.textContent).toContain('Fila de Processamento Analítico');
   });

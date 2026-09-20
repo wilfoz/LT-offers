@@ -3,7 +3,8 @@ import { HistoricalOfferFixture } from '@lt-offers/domain';
 export const REIDI_DIRECT_BILL_FIXTURE: HistoricalOfferFixture = {
   code: 'OF-2025-055-REIDI',
   name: 'LT 500 kV Interligação com Regime REIDI e Faturamento Direto',
-  description: 'Proposta com benefício fiscal REIDI (suspensão de PIS/COFINS) e faturamento direto de torres e condutores pelo cliente concessionário.',
+  description:
+    'Proposta com benefício fiscal REIDI (suspensão de PIS/COFINS) e faturamento direto de torres e condutores pelo cliente concessionário.',
   profileType: 'REIDI_DIRECT_BILL',
   nominalVoltageKv: 500,
   totalLengthKm: 180.0,

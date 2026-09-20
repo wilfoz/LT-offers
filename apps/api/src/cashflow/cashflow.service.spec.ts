@@ -69,14 +69,16 @@ describe('CashflowService (NestJS)', () => {
         },
       ],
     });
-    mockPrismaService.transmissionLine.findUnique.mockImplementation(({ where }) => {
-      return Promise.resolve({
-        id: where.id,
-        name: `LT ${where.id}`,
-        refinedLengthKm: '100',
-        offerRevision: { id: 10, offerId: 100, offer: { id: 100 } },
-      });
-    });
+    mockPrismaService.transmissionLine.findUnique.mockImplementation(
+      ({ where }) => {
+        return Promise.resolve({
+          id: where.id,
+          name: `LT ${where.id}`,
+          refinedLengthKm: '100',
+          offerRevision: { id: 10, offerId: 100, offer: { id: 100 } },
+        });
+      },
+    );
 
     const result = await service.getConsolidatedCashflow(100);
 

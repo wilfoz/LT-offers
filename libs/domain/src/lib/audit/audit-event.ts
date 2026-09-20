@@ -4,13 +4,7 @@ import { UserRole } from '../governance/rbac';
  * Ações auditáveis no sistema (RF-65, RNF-12).
  */
 export type AuditAction =
-  | 'CREATE'
-  | 'UPDATE'
-  | 'DELETE'
-  | 'FREEZE'
-  | 'CLONE'
-  | 'SIMULATE'
-  | 'EXPORT';
+  'CREATE' | 'UPDATE' | 'DELETE' | 'FREEZE' | 'CLONE' | 'SIMULATE' | 'EXPORT';
 
 /**
  * Recursos auditáveis no sistema.

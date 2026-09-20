@@ -76,7 +76,8 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
         <div class="kpi-card">
           <span class="kpi-label">Extensão de Estacas</span>
           <span class="kpi-value mono text-primary">
-            {{ summary().minStationMeters }} m → {{ summary().maxStationMeters }} m
+            {{ summary().minStationMeters }} m →
+            {{ summary().maxStationMeters }} m
           </span>
           <span class="kpi-subtext">Vão total acumulado</span>
         </div>
@@ -91,7 +92,11 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
           >
             {{ summary().unassignedSoilCount }}
           </span>
-          <span class="kpi-subtext">{{ summary().unassignedSoilCount > 0 ? 'Requer sondagem/catálogo' : '100% atribuído' }}</span>
+          <span class="kpi-subtext">{{
+            summary().unassignedSoilCount > 0
+              ? 'Requer sondagem/catálogo'
+              : '100% atribuído'
+          }}</span>
         </div>
         <div
           class="kpi-card"
@@ -104,7 +109,11 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
           >
             {{ summary().unassignedFoundationCount }}
           </span>
-          <span class="kpi-subtext">{{ summary().unassignedFoundationCount > 0 ? 'Pendente dimensionamento' : '100% definido' }}</span>
+          <span class="kpi-subtext">{{
+            summary().unassignedFoundationCount > 0
+              ? 'Pendente dimensionamento'
+              : '100% definido'
+          }}</span>
         </div>
         <div
           class="kpi-card"
@@ -117,7 +126,11 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
           >
             {{ summary().invalidCombinationsCount }}
           </span>
-          <span class="kpi-subtext">{{ summary().invalidCombinationsCount > 0 ? 'Incompatibilidade estrutural' : 'Conformidade OK' }}</span>
+          <span class="kpi-subtext">{{
+            summary().invalidCombinationsCount > 0
+              ? 'Incompatibilidade estrutural'
+              : 'Conformidade OK'
+          }}</span>
         </div>
       </div>
 
@@ -261,11 +274,7 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
                 : 'Distribuição Paramétrica'
             }}
           </button>
-          <button
-            mat-stroked-button
-            type="button"
-            (click)="toggleSchematics()"
-          >
+          <button mat-stroked-button type="button" (click)="toggleSchematics()">
             <mat-icon>architecture</mat-icon>
             {{ showSchematics() ? 'Ocultar Esquemas' : 'Esquemas Técnicos' }}
           </button>
@@ -291,8 +300,12 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
       @if (showSchematics()) {
         <div class="schematics-section">
           <div class="section-title-wrap">
-            <h4 class="font-display">Esquemas Estruturais & Gabaritos de Locação</h4>
-            <span class="font-label-caps badge badge-primary">Padrão OFERTA CAD</span>
+            <h4 class="font-display">
+              Esquemas Estruturais & Gabaritos de Locação
+            </h4>
+            <span class="font-label-caps badge badge-primary"
+              >Padrão OFERTA CAD</span
+            >
           </div>
           <app-tower-foundation-schematic />
         </div>
@@ -314,7 +327,11 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
 
       <div class="table-card technical-border">
         <div class="table-wrapper">
-          <table mat-table [dataSource]="towers()" class="technical-table staking-data-table">
+          <table
+            mat-table
+            [dataSource]="towers()"
+            class="technical-table staking-data-table"
+          >
             <!-- Torre -->
             <ng-container matColumnDef="towerNumber">
               <th mat-header-cell *matHeaderCellDef>Torre</th>
@@ -372,7 +389,9 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
               <th mat-header-cell *matHeaderCellDef>Tipo Torre</th>
               <td mat-cell *matCellDef="let t">
                 @if (t.towerType) {
-                  <span class="badge badge-primary mono">{{ t.towerType.code }}</span>
+                  <span class="badge badge-primary mono">{{
+                    t.towerType.code
+                  }}</span>
                 } @else {
                   <span class="text-muted">—</span>
                 }
@@ -415,7 +434,10 @@ import { TowerFoundationSchematicComponent } from './tower-foundation-schematic.
                   class="badge"
                   [class.badge-warning]="t.accessDifficulty === 'DIFFICULT'"
                   [class.badge-analysis]="t.accessDifficulty === 'CROSSING'"
-                  [class.badge-neutral]="t.accessDifficulty !== 'DIFFICULT' && t.accessDifficulty !== 'CROSSING'"
+                  [class.badge-neutral]="
+                    t.accessDifficulty !== 'DIFFICULT' &&
+                    t.accessDifficulty !== 'CROSSING'
+                  "
                 >
                   {{ getAccessLabel(t.accessDifficulty) }}
                 </span>

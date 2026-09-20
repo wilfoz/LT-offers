@@ -62,7 +62,9 @@ export class TaxCalculator {
       const shareRateDec = DecimalValue.of(dest.sharePercent).dividedBy(
         DecimalValue.of(100),
       );
-      const allocatedBaseDec = netTotalDec.times(shareRateDec).round(2, 'half-up');
+      const allocatedBaseDec = netTotalDec
+        .times(shareRateDec)
+        .round(2, 'half-up');
 
       const destBreakdown = this.calculateDestinationIcmsAndDifal(
         input.originState,
@@ -77,7 +79,9 @@ export class TaxCalculator {
       totalIcmsOriginDec = totalIcmsOriginDec.plus(
         DecimalValue.of(destBreakdown.icmsOriginAmount),
       );
-      totalDifalDec = totalDifalDec.plus(DecimalValue.of(destBreakdown.difalAmount));
+      totalDifalDec = totalDifalDec.plus(
+        DecimalValue.of(destBreakdown.difalAmount),
+      );
       totalFecoepDec = totalFecoepDec.plus(
         DecimalValue.of(destBreakdown.fecoepAmount),
       );
@@ -85,7 +89,8 @@ export class TaxCalculator {
 
     // 3. PIS / COFINS & Benefício REIDI
     let pisRate = pisCofinsRule?.pisRatePercent ?? this.DEFAULT_PIS_RATE;
-    let cofinsRate = pisCofinsRule?.cofinsRatePercent ?? this.DEFAULT_COFINS_RATE;
+    let cofinsRate =
+      pisCofinsRule?.cofinsRatePercent ?? this.DEFAULT_COFINS_RATE;
 
     const isReidiOrDirect =
       input.taxRegime === 'REIDI' || input.taxRegime === 'DIRECT_BILLING';
@@ -95,11 +100,15 @@ export class TaxCalculator {
     let reidiBenefitDec = DecimalValue.zero();
 
     const standardPisDec = netTotalDec
-      .times(DecimalValue.of(this.DEFAULT_PIS_RATE).dividedBy(DecimalValue.of(100)))
+      .times(
+        DecimalValue.of(this.DEFAULT_PIS_RATE).dividedBy(DecimalValue.of(100)),
+      )
       .round(2, 'half-up');
     const standardCofinsDec = netTotalDec
       .times(
-        DecimalValue.of(this.DEFAULT_COFINS_RATE).dividedBy(DecimalValue.of(100)),
+        DecimalValue.of(this.DEFAULT_COFINS_RATE).dividedBy(
+          DecimalValue.of(100),
+        ),
       )
       .round(2, 'half-up');
 
@@ -169,7 +178,8 @@ export class TaxCalculator {
     const rule = icmsRulesMap ? icmsRulesMap[pairKey] : undefined;
 
     // Resolução de Alíquotas e Métodos
-    const isInternal = originState.toUpperCase() === destinationState.toUpperCase();
+    const isInternal =
+      originState.toUpperCase() === destinationState.toUpperCase();
     let interstateRate = isInternal ? 18.0 : 12.0;
     let internalRate = 18.0;
     let fecoepRate = 0.0;
@@ -186,8 +196,14 @@ export class TaxCalculator {
       // Regras padrão de ICMS interestadual
       if (isImportedProduct) {
         interstateRate = this.IMPORTED_INTERSTATE_RATE;
-      } else if (['SP', 'RJ', 'MG', 'PR', 'SC', 'RS'].includes(originState.toUpperCase()) &&
-                 !['SP', 'RJ', 'MG', 'PR', 'SC', 'RS'].includes(destinationState.toUpperCase())) {
+      } else if (
+        ['SP', 'RJ', 'MG', 'PR', 'SC', 'RS'].includes(
+          originState.toUpperCase(),
+        ) &&
+        !['SP', 'RJ', 'MG', 'PR', 'SC', 'RS'].includes(
+          destinationState.toUpperCase(),
+        )
+      ) {
         interstateRate = 7.0; // Sul/Sudeste para N/NE/CO/ES
       }
     }
@@ -218,7 +234,9 @@ export class TaxCalculator {
         if (rateDiff.greaterThan(DecimalValue.zero())) {
           difalAmountDec = allocatedBase.times(rateDiff).round(2, 'half-up');
         }
-        fecoepAmountDec = allocatedBase.times(fecoepRateDec).round(2, 'half-up');
+        fecoepAmountDec = allocatedBase
+          .times(fecoepRateDec)
+          .round(2, 'half-up');
       } else {
         // Base Dupla (Reconstituição por dentro no destino)
         // Base2 = (BaseOrigem - ICMS_Origem) / (1 - (AliqInterna + AliqFecoep))
@@ -227,7 +245,9 @@ export class TaxCalculator {
 
         if (!divisor.isZero() && divisor.greaterThan(DecimalValue.zero())) {
           const numerator = allocatedBase.minus(icmsOriginAmountDec);
-          reconstitutedBaseDec = numerator.dividedBy(divisor).round(2, 'half-up');
+          reconstitutedBaseDec = numerator
+            .dividedBy(divisor)
+            .round(2, 'half-up');
 
           const totalDestIcms = reconstitutedBaseDec
             .times(internalRateDec)

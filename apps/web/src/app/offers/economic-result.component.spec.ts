@@ -110,7 +110,10 @@ describe('EconomicResultComponent', () => {
     fixture = TestBed.createComponent(EconomicResultComponent);
     component = fixture.componentInstance;
     component.offerId = 10;
-    component.lines = [{ id: 1, name: 'LT 500kV Curitiba' }, { id: 2, name: 'LT 500kV Blumenau' }];
+    component.lines = [
+      { id: 1, name: 'LT 500kV Curitiba' },
+      { id: 2, name: 'LT 500kV Blumenau' },
+    ];
     fixture.detectChanges();
   });
 
@@ -125,7 +128,10 @@ describe('EconomicResultComponent', () => {
     component.setLine(2);
     expect(component.viewScope()).toBe('LINE');
     expect(component.selectedLineId()).toBe(2);
-    expect(apiSpy.calculateLineWithCoefficients).toHaveBeenCalledWith(2, expect.any(Object));
+    expect(apiSpy.calculateLineWithCoefficients).toHaveBeenCalledWith(
+      2,
+      expect.any(Object),
+    );
   });
 
   it('deve alternar escopo para consolidado', () => {

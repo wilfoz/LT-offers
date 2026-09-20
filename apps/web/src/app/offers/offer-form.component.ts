@@ -63,7 +63,11 @@ import { OffersApi } from './offers-api.service';
         </div>
 
         <div class="header-actions">
-          <a matButton="outlined" [routerLink]="cancelLink()" class="btn-secondary-outline">
+          <a
+            matButton="outlined"
+            [routerLink]="cancelLink()"
+            class="btn-secondary-outline"
+          >
             Cancelar
           </a>
           <button
@@ -72,7 +76,9 @@ import { OffersApi } from './offers-api.service';
             (click)="save()"
             [disabled]="saving() || form.invalid"
           >
-            <mat-icon>{{ saving() ? 'sync' : editId() ? 'save' : 'add_task' }}</mat-icon>
+            <mat-icon>{{
+              saving() ? 'sync' : editId() ? 'save' : 'add_task'
+            }}</mat-icon>
             <span>{{
               saving()
                 ? 'Processando...'
@@ -85,7 +91,11 @@ import { OffersApi } from './offers-api.service';
       </div>
 
       @if (loading()) {
-        <mat-progress-bar mode="indeterminate" aria-label="Carregando" class="my-4" />
+        <mat-progress-bar
+          mode="indeterminate"
+          aria-label="Carregando"
+          class="my-4"
+        />
         <p class="loading-text">Carregando dados…</p>
       } @else {
         <form [formGroup]="form" (ngSubmit)="save()" class="offer-form-layout">
@@ -95,13 +105,22 @@ import { OffersApi } from './offers-api.service';
             <fieldset class="panel-card technical-border fieldset-card">
               <div class="panel-header">
                 <mat-icon class="panel-icon">info</mat-icon>
-                <legend class="panel-title font-label-caps">Informações Gerais da Obra</legend>
+                <legend class="panel-title font-label-caps">
+                  Informações Gerais da Obra
+                </legend>
               </div>
 
               <div class="fieldset-content form-grid">
                 <div class="col-12">
-                  <label class="form-label font-label-caps" for="name">NOME DA OBRA / PROJETO *</label>
-                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                  <label class="form-label font-label-caps" for="name"
+                    >NOME DA OBRA / PROJETO *</label
+                  >
+                  <mat-form-field
+                    appearance="outline"
+                    floatLabel="always"
+                    subscriptSizing="dynamic"
+                    class="w-full"
+                  >
                     <input
                       matInput
                       id="name"
@@ -116,8 +135,15 @@ import { OffersApi } from './offers-api.service';
                 </div>
 
                 <div class="col-6">
-                  <label class="form-label font-label-caps" for="code">CÓDIGO INTERNO *</label>
-                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                  <label class="form-label font-label-caps" for="code"
+                    >CÓDIGO INTERNO *</label
+                  >
+                  <mat-form-field
+                    appearance="outline"
+                    floatLabel="always"
+                    subscriptSizing="dynamic"
+                    class="w-full"
+                  >
                     <input
                       matInput
                       id="code"
@@ -133,8 +159,15 @@ import { OffersApi } from './offers-api.service';
                 </div>
 
                 <div class="col-6">
-                  <label class="form-label font-label-caps" for="clientName">CLIENTE / CONCESSIONÁRIA *</label>
-                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                  <label class="form-label font-label-caps" for="clientName"
+                    >CLIENTE / CONCESSIONÁRIA *</label
+                  >
+                  <mat-form-field
+                    appearance="outline"
+                    floatLabel="always"
+                    subscriptSizing="dynamic"
+                    class="w-full"
+                  >
                     <input
                       matInput
                       id="clientName"
@@ -149,9 +182,19 @@ import { OffersApi } from './offers-api.service';
                 </div>
 
                 <div class="col-12">
-                  <label class="form-label font-label-caps" for="baseCurrency">MOEDA BASE *</label>
-                  <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
-                    <mat-select id="baseCurrency" formControlName="baseCurrency">
+                  <label class="form-label font-label-caps" for="baseCurrency"
+                    >MOEDA BASE *</label
+                  >
+                  <mat-form-field
+                    appearance="outline"
+                    floatLabel="always"
+                    subscriptSizing="dynamic"
+                    class="w-full"
+                  >
+                    <mat-select
+                      id="baseCurrency"
+                      formControlName="baseCurrency"
+                    >
                       <mat-option value="BRL">BRL (Real Brasileiro)</mat-option>
                       <mat-option value="USD">USD (Dólar Americano)</mat-option>
                       <mat-option value="EUR">EUR (Euro)</mat-option>
@@ -166,13 +209,22 @@ import { OffersApi } from './offers-api.service';
               <fieldset class="panel-card technical-border fieldset-card">
                 <div class="panel-header">
                   <mat-icon class="panel-icon">gavel</mat-icon>
-                  <legend class="panel-title font-label-caps">Premissas do Leilão &amp; Lote (R0)</legend>
+                  <legend class="panel-title font-label-caps">
+                    Premissas do Leilão &amp; Lote (R0)
+                  </legend>
                 </div>
 
                 <div class="fieldset-content form-grid">
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="auctionName">EDITAL / LEILÃO *</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="auctionName"
+                      >EDITAL / LEILÃO *</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="auctionName"
@@ -187,8 +239,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="lotName">LOTE / CIRCUITO *</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="lotName"
+                      >LOTE / CIRCUITO *</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="lotName"
@@ -203,8 +262,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="offerDate">DATA DA OFERTA *</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="offerDate"
+                      >DATA DA OFERTA *</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="offerDate"
@@ -219,8 +285,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="auctionDate">DATA DO LEILÃO</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="auctionDate"
+                      >DATA DO LEILÃO</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="auctionDate"
@@ -235,8 +308,17 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="scheduleStartDate">INÍCIO DO CRONOGRAMA</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label
+                      class="form-label font-label-caps"
+                      for="scheduleStartDate"
+                      >INÍCIO DO CRONOGRAMA</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="scheduleStartDate"
@@ -245,14 +327,25 @@ import { OffersApi } from './offers-api.service';
                         class="font-numeric-tabular"
                       />
                       @if (errorFor('scheduleStartDate')) {
-                        <mat-error>{{ errorFor('scheduleStartDate') }}</mat-error>
+                        <mat-error>{{
+                          errorFor('scheduleStartDate')
+                        }}</mat-error>
                       }
                     </mat-form-field>
                   </div>
 
                   <div class="col-6">
-                    <label class="form-label font-label-caps" for="commercialOperationDate">ENTRADA EM OPERAÇÃO</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label
+                      class="form-label font-label-caps"
+                      for="commercialOperationDate"
+                      >ENTRADA EM OPERAÇÃO</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="commercialOperationDate"
@@ -261,16 +354,23 @@ import { OffersApi } from './offers-api.service';
                         class="font-numeric-tabular"
                       />
                       @if (errorFor('commercialOperationDate')) {
-                        <mat-error>{{ errorFor('commercialOperationDate') }}</mat-error>
+                        <mat-error>{{
+                          errorFor('commercialOperationDate')
+                        }}</mat-error>
                       }
                     </mat-form-field>
                   </div>
 
                   @if (hasScheduleInconsistency()) {
-                    <div class="col-12 alert-schedule technical-border" role="alert">
+                    <div
+                      class="col-12 alert-schedule technical-border"
+                      role="alert"
+                    >
                       <mat-icon>warning</mat-icon>
                       <span>
-                        <strong>Alerta de Cronograma (RN-02):</strong> A data de início do cronograma é posterior à data prevista de entrada em operação do edital.
+                        <strong>Alerta de Cronograma (RN-02):</strong> A data de
+                        início do cronograma é posterior à data prevista de
+                        entrada em operação do edital.
                       </span>
                     </div>
                   }
@@ -281,13 +381,24 @@ import { OffersApi } from './offers-api.service';
               <fieldset class="panel-card technical-border fieldset-card">
                 <div class="panel-header">
                   <mat-icon class="panel-icon">payments</mat-icon>
-                  <legend class="panel-title font-label-caps">Valores Estimados (CAPEX &amp; RAP)</legend>
+                  <legend class="panel-title font-label-caps">
+                    Valores Estimados (CAPEX &amp; RAP)
+                  </legend>
                 </div>
 
                 <div class="fieldset-content form-grid">
                   <div class="col-4">
-                    <label class="form-label font-label-caps" for="estimatedCapex">CAPEX ANEEL</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label
+                      class="form-label font-label-caps"
+                      for="estimatedCapex"
+                      >CAPEX ANEEL</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="estimatedCapex"
@@ -303,8 +414,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-4">
-                    <label class="form-label font-label-caps" for="maxRap">RAP MÁXIMA</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="maxRap"
+                      >RAP MÁXIMA</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="maxRap"
@@ -320,8 +438,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-4">
-                    <label class="form-label font-label-caps" for="winningRap">RAP ESTIMADA</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="winningRap"
+                      >RAP ESTIMADA</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <input
                         matInput
                         id="winningRap"
@@ -337,8 +462,15 @@ import { OffersApi } from './offers-api.service';
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label font-label-caps" for="notes">NOTAS E PREMISSAS CONTRATUAIS</label>
-                    <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="w-full">
+                    <label class="form-label font-label-caps" for="notes"
+                      >NOTAS E PREMISSAS CONTRATUAIS</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
                       <textarea
                         matInput
                         id="notes"
@@ -359,7 +491,9 @@ import { OffersApi } from './offers-api.service';
             <div class="panel-card technical-border fieldset-card">
               <div class="panel-header">
                 <mat-icon class="panel-icon">settings_input_component</mat-icon>
-                <span class="panel-title font-label-caps">Configuração da Estrutura</span>
+                <span class="panel-title font-label-caps"
+                  >Configuração da Estrutura</span
+                >
               </div>
 
               <div class="fieldset-content space-y-4">
@@ -369,17 +503,25 @@ import { OffersApi } from './offers-api.service';
                   </div>
                   <div class="struct-info">
                     <span class="struct-title">Torre Autoportante</span>
-                    <span class="struct-desc">Estrutura rígida treliçada com 4 pés. Alta estabilidade e fixação por fundação profunda/direta.</span>
+                    <span class="struct-desc"
+                      >Estrutura rígida treliçada com 4 pés. Alta estabilidade e
+                      fixação por fundação profunda/direta.</span
+                    >
                   </div>
                 </div>
 
                 <div class="structure-type-card">
                   <div class="struct-radio-box">
-                    <mat-icon class="struct-circle">radio_button_unchecked</mat-icon>
+                    <mat-icon class="struct-circle"
+                      >radio_button_unchecked</mat-icon
+                    >
                   </div>
                   <div class="struct-info">
                     <span class="struct-title">Torre Estaiada</span>
-                    <span class="struct-desc">Mastro central suportado por cabos tensores externos. Ideal para grandes vãos e terrenos nivelados.</span>
+                    <span class="struct-desc"
+                      >Mastro central suportado por cabos tensores externos.
+                      Ideal para grandes vãos e terrenos nivelados.</span
+                    >
                   </div>
                 </div>
               </div>
@@ -392,7 +534,9 @@ import { OffersApi } from './offers-api.service';
                 class="btn-primary-gradient w-full submit-large-btn"
                 [disabled]="saving() || form.invalid"
               >
-                <mat-icon>{{ saving() ? 'sync' : editId() ? 'save' : 'add_task' }}</mat-icon>
+                <mat-icon>{{
+                  saving() ? 'sync' : editId() ? 'save' : 'add_task'
+                }}</mat-icon>
                 <span>{{
                   saving()
                     ? 'Processando...'
@@ -402,7 +546,11 @@ import { OffersApi } from './offers-api.service';
                 }}</span>
               </button>
 
-              <a matButton="outlined" [routerLink]="cancelLink()" class="btn-secondary-outline w-full cancel-btn">
+              <a
+                matButton="outlined"
+                [routerLink]="cancelLink()"
+                class="btn-secondary-outline w-full cancel-btn"
+              >
                 Cancelar
               </a>
 

@@ -37,17 +37,20 @@ describe('HistogramService (M08, RF-42..RF-45, RN-17)', () => {
           revisions: [
             {
               id: 1,
-              transmissionLines: [
-                { id: 1, name: 'LT 500 kV Linha 1' },
-              ],
+              transmissionLines: [{ id: 1, name: 'LT 500 kV Linha 1' }],
             },
           ],
         }),
       },
     };
 
-    scheduleService = new ScheduleService(prismaMock as unknown as PrismaService);
-    service = new HistogramService(scheduleService, prismaMock as unknown as PrismaService);
+    scheduleService = new ScheduleService(
+      prismaMock as unknown as PrismaService,
+    );
+    service = new HistogramService(
+      scheduleService,
+      prismaMock as unknown as PrismaService,
+    );
   });
 
   it('deve gerar o histograma de recursos da linha com separação de direto/indireto e balanço de frota', async () => {

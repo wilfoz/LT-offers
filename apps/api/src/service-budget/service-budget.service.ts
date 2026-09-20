@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  ServiceBudgetSummary,
-  ServiceBudgetItem,
-} from '@lt-offers/domain';
+import { ServiceBudgetSummary, ServiceBudgetItem } from '@lt-offers/domain';
 import {
   ServiceBudgetCalculator,
   ServiceItemCalculationInput,
@@ -26,7 +23,9 @@ export class ServiceBudgetService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
     const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);

@@ -35,10 +35,14 @@ export interface ElectromechanicalSummaryInput {
 }
 
 export class ElectromechanicalSummaryCalculator {
-  static calculateSummary(input: ElectromechanicalSummaryInput): ElectromechanicalSummary {
+  static calculateSummary(
+    input: ElectromechanicalSummaryInput,
+  ): ElectromechanicalSummary {
     let totTowerSteelTons = DecimalValue.zero();
     for (const t of input.towers) {
-      totTowerSteelTons = totTowerSteelTons.plus(DecimalValue.of(t.totalWeightTons));
+      totTowerSteelTons = totTowerSteelTons.plus(
+        DecimalValue.of(t.totalWeightTons),
+      );
     }
 
     let totCondKm = DecimalValue.zero();
@@ -176,7 +180,10 @@ export class ElectromechanicalSummaryCalculator {
         family: 'GROUNDING',
         unit: g.unit,
         theoreticalQuantity: g.theoreticalQuantity,
-        extraQuantity: DecimalValue.of(g.totalQuantity).minus(DecimalValue.of(g.theoreticalQuantity)).round(2, 'half-up').toNumber(),
+        extraQuantity: DecimalValue.of(g.totalQuantity)
+          .minus(DecimalValue.of(g.theoreticalQuantity))
+          .round(2, 'half-up')
+          .toNumber(),
         spareQuantity: 0,
         totalQuantity: g.totalQuantity,
       });

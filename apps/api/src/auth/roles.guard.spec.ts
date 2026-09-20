@@ -15,7 +15,9 @@ describe('RolesGuard', () => {
     guard = new RolesGuard(reflector, authService);
   });
 
-  function createMockContext(headers: Record<string, string>): ExecutionContext {
+  function createMockContext(
+    headers: Record<string, string>,
+  ): ExecutionContext {
     const request = {
       headers,
       user: undefined,

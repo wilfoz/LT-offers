@@ -3,7 +3,8 @@ import { HistoricalOfferFixture } from '@lt-offers/domain';
 export const SOLARIS_MG_500KV_FIXTURE: HistoricalOfferFixture = {
   code: 'OF-2025-029-SOLARIS',
   name: 'LT 500 kV Solaris MG - Linha Única',
-  description: 'Proposta de referência para linha única 500 kV em Minas Gerais com terreno misto, condutor 4x Rail e DIFAL padrão.',
+  description:
+    'Proposta de referência para linha única 500 kV em Minas Gerais com terreno misto, condutor 4x Rail e DIFAL padrão.',
   profileType: 'SINGLE_LINE',
   nominalVoltageKv: 500,
   totalLengthKm: 211.2,
@@ -214,7 +215,9 @@ export const SOLARIS_MG_500KV_FIXTURE: HistoricalOfferFixture = {
       unforeseenContingencyPct: 1.5,
       structureOverheadPct: 4.8,
       targetMarginPct: 12.0,
-      monthlyIpcaPct: [0.35, 0.4, 0.38, 0.42, 0.36, 0.39, 0.41, 0.37, 0.35, 0.4, 0.42, 0.38],
+      monthlyIpcaPct: [
+        0.35, 0.4, 0.38, 0.42, 0.36, 0.39, 0.41, 0.37, 0.35, 0.4, 0.42, 0.38,
+      ],
     },
   },
   expectedBaseline: {

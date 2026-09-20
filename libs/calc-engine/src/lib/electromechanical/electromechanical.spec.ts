@@ -30,7 +30,9 @@ describe('Electromechanical Calculators (M05, RF-23, RF-25, RF-26, RF-27, RN-10,
         },
       ];
 
-      const res = TowerQuantityCalculator.calculate(towers, { extraPercent: 0.5 });
+      const res = TowerQuantityCalculator.calculate(towers, {
+        extraPercent: 0.5,
+      });
 
       expect(res.items).toHaveLength(1);
       // Theoretical: (14500 + 300) + 14500 = 29300 kg
@@ -142,7 +144,11 @@ describe('Electromechanical Calculators (M05, RF-23, RF-25, RF-26, RF-27, RN-10,
 
     it('deve calcular áreas de limpeza de faixa de servidão e acessos', () => {
       const accesses = AccessQuantityCalculator.calculateAccesses([
-        { accessType: 'OPENING_NEW', description: 'Abertura de Picada em Terreno Ondulado', lengthKm: 25.5 },
+        {
+          accessType: 'OPENING_NEW',
+          description: 'Abertura de Picada em Terreno Ondulado',
+          lengthKm: 25.5,
+        },
       ]);
       expect(accesses[0].lengthKm).toBe(25.5);
 

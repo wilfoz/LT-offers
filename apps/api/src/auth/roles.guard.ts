@@ -13,18 +13,18 @@ import { AuthService } from './auth.service';
 export class RolesGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
       ROLES_KEY,
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     const requiredScopes = this.reflector.getAllAndOverride<PermissionScope[]>(
       SCOPES_KEY,
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     // Se nenhuma restrição foi declarada, permite acesso
@@ -45,17 +45,19 @@ export class RolesGuard implements CanActivate {
       const hasRoleMatch = requiredRoles.includes(user.role);
       if (!hasRoleMatch) {
         throw new ForbiddenException(
-          `Acesso não autorizado para o perfil '${user.role}'. Papéis permitidos: ${requiredRoles.join(', ')}.`
+          `Acesso não autorizado para o perfil '${user.role}'. Papéis permitidos: ${requiredRoles.join(', ')}.`,
         );
       }
     }
 
     // Validação por escopos de permissão
     if (requiredScopes?.length) {
-      const hasAllScopes = requiredScopes.every((scope) => hasScope(user, scope));
+      const hasAllScopes = requiredScopes.every((scope) =>
+        hasScope(user, scope),
+      );
       if (!hasAllScopes) {
         throw new ForbiddenException(
-          `Acesso não autorizado. O usuário '${user.name}' (${user.role}) não possui os escopos necessários: ${requiredScopes.join(', ')}.`
+          `Acesso não autorizado. O usuário '${user.name}' (${user.role}) não possui os escopos necessários: ${requiredScopes.join(', ')}.`,
         );
       }
     }

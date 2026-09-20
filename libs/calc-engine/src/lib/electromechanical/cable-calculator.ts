@@ -1,5 +1,8 @@
 import { DecimalValue } from '../decimal-value';
-import { ConductorQuantityItem, GroundWireQuantityItem } from '@lt-offers/domain';
+import {
+  ConductorQuantityItem,
+  GroundWireQuantityItem,
+} from '@lt-offers/domain';
 
 export interface ConductorInputData {
   cableCode: string;
@@ -39,21 +42,35 @@ export interface CableCalculationResult {
 }
 
 export class CableQuantityCalculator {
-  static calculateConductors(conductors: ConductorInputData[]): ConductorQuantityItem[] {
+  static calculateConductors(
+    conductors: ConductorInputData[],
+  ): ConductorQuantityItem[] {
     return conductors.map((c) => {
       const phases = c.phasesPerCircuit ?? 3;
       const sagPct = c.sagFactorPercent ?? 2.5; // RN-11
       const wastePct = c.wasteFactorPercent ?? 3.0; // RN-10
       const sparePct = c.sparePercent ?? 0.0;
 
-      const numPhases = DecimalValue.of(c.circuits).times(DecimalValue.of(phases)).times(DecimalValue.of(c.subconductorsPerPhase));
-      const sagMultiplier = DecimalValue.of(1).plus(DecimalValue.of(sagPct).dividedBy(DecimalValue.of(100)));
-      
-      const theoreticalKm = DecimalValue.of(c.routeLengthKm).times(numPhases).times(sagMultiplier);
-      const wasteKm = theoreticalKm.times(DecimalValue.of(wastePct).dividedBy(DecimalValue.of(100)));
-      const spareKm = theoreticalKm.times(DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)));
+      const numPhases = DecimalValue.of(c.circuits)
+        .times(DecimalValue.of(phases))
+        .times(DecimalValue.of(c.subconductorsPerPhase));
+      const sagMultiplier = DecimalValue.of(1).plus(
+        DecimalValue.of(sagPct).dividedBy(DecimalValue.of(100)),
+      );
+
+      const theoreticalKm = DecimalValue.of(c.routeLengthKm)
+        .times(numPhases)
+        .times(sagMultiplier);
+      const wasteKm = theoreticalKm.times(
+        DecimalValue.of(wastePct).dividedBy(DecimalValue.of(100)),
+      );
+      const spareKm = theoreticalKm.times(
+        DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)),
+      );
       const totalKm = theoreticalKm.plus(wasteKm).plus(spareKm);
-      const totalTons = totalKm.times(DecimalValue.of(c.weightKgPerKm)).dividedBy(DecimalValue.of(1000));
+      const totalTons = totalKm
+        .times(DecimalValue.of(c.weightKgPerKm))
+        .dividedBy(DecimalValue.of(1000));
 
       return {
         cableCode: c.cableCode,
@@ -76,7 +93,9 @@ export class CableQuantityCalculator {
     });
   }
 
-  static calculateGroundWires(groundWires: GroundWireInputData[]): GroundWireQuantityItem[] {
+  static calculateGroundWires(
+    groundWires: GroundWireInputData[],
+  ): GroundWireQuantityItem[] {
     return groundWires.map((gw) => {
       const sagPct = gw.sagFactorPercent ?? 1.5;
       const wastePct = gw.wasteFactorPercent ?? 3.0;
@@ -84,15 +103,27 @@ export class CableQuantityCalculator {
       const splicingCount = gw.splicingTowersCount ?? 0;
       const downleadM = gw.downleadPerTowerM ?? 40;
 
-      const sagMultiplier = DecimalValue.of(1).plus(DecimalValue.of(sagPct).dividedBy(DecimalValue.of(100)));
-      const routeWithSagKm = DecimalValue.of(gw.routeLengthKm).times(sagMultiplier);
-      const downleadKm = DecimalValue.of(splicingCount).times(DecimalValue.of(downleadM)).dividedBy(DecimalValue.of(1000));
+      const sagMultiplier = DecimalValue.of(1).plus(
+        DecimalValue.of(sagPct).dividedBy(DecimalValue.of(100)),
+      );
+      const routeWithSagKm = DecimalValue.of(gw.routeLengthKm).times(
+        sagMultiplier,
+      );
+      const downleadKm = DecimalValue.of(splicingCount)
+        .times(DecimalValue.of(downleadM))
+        .dividedBy(DecimalValue.of(1000));
 
       const theoreticalKm = routeWithSagKm.plus(downleadKm);
-      const wasteKm = theoreticalKm.times(DecimalValue.of(wastePct).dividedBy(DecimalValue.of(100)));
-      const spareKm = theoreticalKm.times(DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)));
+      const wasteKm = theoreticalKm.times(
+        DecimalValue.of(wastePct).dividedBy(DecimalValue.of(100)),
+      );
+      const spareKm = theoreticalKm.times(
+        DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)),
+      );
       const totalKm = theoreticalKm.plus(wasteKm).plus(spareKm);
-      const totalTons = totalKm.times(DecimalValue.of(gw.weightKgPerKm)).dividedBy(DecimalValue.of(1000));
+      const totalTons = totalKm
+        .times(DecimalValue.of(gw.weightKgPerKm))
+        .dividedBy(DecimalValue.of(1000));
 
       return {
         cableCode: gw.cableCode,

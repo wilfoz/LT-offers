@@ -47,7 +47,9 @@ describe('BaselineController', () => {
   const mockChangeOrderService = {
     listChangeOrders: jest.fn().mockResolvedValue([]),
     createChangeOrder: jest.fn().mockResolvedValue({ id: 1, code: 'AD-01' }),
-    updateChangeOrder: jest.fn().mockResolvedValue({ id: 1, status: 'APPROVED' }),
+    updateChangeOrder: jest
+      .fn()
+      .mockResolvedValue({ id: 1, status: 'APPROVED' }),
     getCurrentWorkingEstimate: jest.fn().mockResolvedValue({
       baselineId: 1,
       currentWorkingEstimateValue: '126000000.00',
@@ -67,7 +69,10 @@ describe('BaselineController', () => {
       controllers: [BaselineController],
       providers: [
         { provide: BaselineService, useValue: mockBaselineService },
-        { provide: ProgressTrackingService, useValue: mockProgressTrackingService },
+        {
+          provide: ProgressTrackingService,
+          useValue: mockProgressTrackingService,
+        },
         { provide: ChangeOrderService, useValue: mockChangeOrderService },
         { provide: ErpIntegrationService, useValue: mockErpIntegrationService },
       ],
@@ -88,7 +93,10 @@ describe('BaselineController', () => {
   it('deve retornar os dados da curva S', async () => {
     const curveS = await controller.getCurveS(1);
     expect(curveS).toBeDefined();
-    expect(mockProgressTrackingService.getCurveS).toHaveBeenCalledWith(1, undefined);
+    expect(mockProgressTrackingService.getCurveS).toHaveBeenCalledWith(
+      1,
+      undefined,
+    );
   });
 
   it('deve retornar a estimativa corrente (CWE)', async () => {

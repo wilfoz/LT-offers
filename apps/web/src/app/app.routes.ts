@@ -9,7 +9,9 @@ export const appRoutes: Route[] = [
   {
     path: 'dashboard',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import('./dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent,
+      ),
   },
   {
     path: 'upload',
@@ -27,4 +29,3 @@ export const appRoutes: Route[] = [
       import('./catalogs/catalogs.routes').then((m) => m.CATALOGS_ROUTES),
   },
 ];
-

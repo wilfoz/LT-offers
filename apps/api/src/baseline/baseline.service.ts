@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import {
   CreateBaselinePayload,
   WorkBaseline,
@@ -44,7 +48,8 @@ export class BaselineService {
       scheduleMonths: 18,
       frozenAt: new Date(Date.now() - 3600000 * 48).toISOString(),
       frozenBy: 'diretor.comercial@engevix.com.br',
-      notes: 'Linha de base contratual congelada após vitória no Leilão Aneel 01/2026.',
+      notes:
+        'Linha de base contratual congelada após vitória no Leilão Aneel 01/2026.',
       workPackages: seedPackages,
       createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
       updatedAt: new Date(Date.now() - 3600000 * 48).toISOString(),
@@ -57,7 +62,10 @@ export class BaselineService {
   /**
    * Congela a Linha de Base Contratual da Obra (Data 0) a partir da proposta vencedora (RF-02, RF-03, Fase F7).
    */
-  async freezeBaseline(payload: CreateBaselinePayload, user: string): Promise<WorkBaseline> {
+  async freezeBaseline(
+    payload: CreateBaselinePayload,
+    user: string,
+  ): Promise<WorkBaseline> {
     const offer = await this.prisma.offer.findUnique({
       where: { id: payload.offerId },
       include: {
@@ -70,7 +78,9 @@ export class BaselineService {
     });
 
     if (!offer) {
-      throw new NotFoundException(`Oferta ID ${payload.offerId} não encontrada.`);
+      throw new NotFoundException(
+        `Oferta ID ${payload.offerId} não encontrada.`,
+      );
     }
 
     // Busca valores de resultado econômico ou fallback consistente
@@ -79,7 +89,10 @@ export class BaselineService {
     let marginPercent = '8.00';
 
     try {
-      const econ = await this.economicResultService.getConsolidatedEconomicResult(payload.offerId);
+      const econ =
+        await this.economicResultService.getConsolidatedEconomicResult(
+          payload.offerId,
+        );
       if (econ) {
         contractValue = econ.totalSalePrice || contractValue;
         budgetCost = econ.totalNetCost || budgetCost;
@@ -109,7 +122,9 @@ export class BaselineService {
       scheduleMonths: 18,
       frozenAt: new Date().toISOString(),
       frozenBy: user || payload.frozenBy || 'sistema@engevix.com.br',
-      notes: payload.notes || 'Linha de base congelada a partir da proposta vencedora.',
+      notes:
+        payload.notes ||
+        'Linha de base congelada a partir da proposta vencedora.',
       workPackages,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -130,7 +145,11 @@ export class BaselineService {
       diffs: [
         { field: 'status', previousValue: 'DELIVERED', newValue: 'WON' },
         { field: 'baselineNumber', previousValue: null, newValue: 0 },
-        { field: 'totalContractValue', previousValue: null, newValue: contractValue },
+        {
+          field: 'totalContractValue',
+          previousValue: null,
+          newValue: contractValue,
+        },
       ],
     });
 
@@ -156,7 +175,9 @@ export class BaselineService {
       };
     }
 
-    throw new NotFoundException(`Nenhuma Linha de Base ativa encontrada para a oferta ${offerId}.`);
+    throw new NotFoundException(
+      `Nenhuma Linha de Base ativa encontrada para a oferta ${offerId}.`,
+    );
   }
 
   /**

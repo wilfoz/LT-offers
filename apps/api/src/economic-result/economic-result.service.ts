@@ -30,7 +30,7 @@ export class EconomicResultService {
 
   async getLineEconomicResult(
     lineId: number,
-    customCoeffs?: Partial<SaleCoefficients>
+    customCoeffs?: Partial<SaleCoefficients>,
   ): Promise<EconomicResultSummary> {
     const line = await this.prisma.transmissionLine.findUnique({
       where: { id: lineId },
@@ -44,7 +44,9 @@ export class EconomicResultService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
     const coeffs: SaleCoefficients = {
@@ -98,7 +100,7 @@ export class EconomicResultService {
 
   async getConsolidatedEconomicResult(
     offerId: number,
-    customCoeffs?: Partial<SaleCoefficients>
+    customCoeffs?: Partial<SaleCoefficients>,
   ): Promise<EconomicResultSummary> {
     const offer = await this.prisma.offer.findUnique({
       where: { id: offerId },
@@ -115,17 +117,21 @@ export class EconomicResultService {
       throw new NotFoundException(`Oferta ID ${offerId} não encontrada.`);
     }
 
-    const latestRevision = offer.revisions && offer.revisions.length > 0
-      ? offer.revisions[offer.revisions.length - 1]
-      : null;
-    const lines: Array<{ id: number }> = (latestRevision && (latestRevision as any).transmissionLines) || [];
+    const latestRevision =
+      offer.revisions && offer.revisions.length > 0
+        ? offer.revisions[offer.revisions.length - 1]
+        : null;
+    const lines: Array<{ id: number }> =
+      (latestRevision && (latestRevision as any).transmissionLines) || [];
 
     if (lines.length === 0) {
       return this.getLineEconomicResult(1, customCoeffs);
     }
 
     const lineSummaries = await Promise.all(
-      lines.map((l: { id: number }) => this.getLineEconomicResult(l.id, customCoeffs))
+      lines.map((l: { id: number }) =>
+        this.getLineEconomicResult(l.id, customCoeffs),
+      ),
     );
 
     // Consolida somando os totais
@@ -154,7 +160,10 @@ export class EconomicResultService {
     }
 
     const grossProfit = totalSalePrice - totalCostWithTaxes;
-    const grossMarginPercent = totalSalePrice > 0 ? ((grossProfit / totalSalePrice) * 100).toFixed(2) : '0.00';
+    const grossMarginPercent =
+      totalSalePrice > 0
+        ? ((grossProfit / totalSalePrice) * 100).toFixed(2)
+        : '0.00';
 
     const coeffs: SaleCoefficients = {
       ...DEFAULT_COEFFICIENTS,
@@ -190,7 +199,7 @@ export class EconomicResultService {
   async simulateMarginOrPrice(
     offerId: number,
     simInput: MarginSimulationInput,
-    lineId?: number
+    lineId?: number,
   ): Promise<MarginSimulationOutput> {
     const summary = lineId
       ? await this.getLineEconomicResult(lineId)
@@ -202,16 +211,20 @@ export class EconomicResultService {
   async compareRevisions(
     offerId: number,
     baseRevNum: number,
-    targetRevNum: number
+    targetRevNum: number,
   ): Promise<RevisionComparisonResult> {
-    const baseSummary = await this.getConsolidatedEconomicResult(offerId, { targetMarginRate: '8.00' });
-    const targetSummary = await this.getConsolidatedEconomicResult(offerId, { targetMarginRate: '10.00' });
+    const baseSummary = await this.getConsolidatedEconomicResult(offerId, {
+      targetMarginRate: '8.00',
+    });
+    const targetSummary = await this.getConsolidatedEconomicResult(offerId, {
+      targetMarginRate: '10.00',
+    });
 
     return EconomicResultCalculator.compareRevisions(
       baseSummary,
       targetSummary,
       baseRevNum,
-      targetRevNum
+      targetRevNum,
     );
   }
 }

@@ -60,7 +60,17 @@ describe('ScheduleGanttComponent', () => {
   beforeEach(async () => {
     apiSpy = {
       getLineSchedule: vi.fn().mockReturnValue(of(mockSchedule)),
-      getLineCamps: vi.fn().mockReturnValue(of({ lineId: 1, camps: [], totalImplementationCost: '0', totalOperatingCost: '0', totalDemobilizationCost: '0', totalCampsCost: '0', monthlyDistribution: [] })),
+      getLineCamps: vi.fn().mockReturnValue(
+        of({
+          lineId: 1,
+          camps: [],
+          totalImplementationCost: '0',
+          totalOperatingCost: '0',
+          totalDemobilizationCost: '0',
+          totalCampsCost: '0',
+          monthlyDistribution: [],
+        }),
+      ),
     };
 
     await TestBed.configureTestingModule({

@@ -2,9 +2,7 @@
  * Layouts padrão suportados para emissão da Planilha de Preços do Edital (RF-50).
  */
 export type TenderSheetLayout =
-  | 'ANEEL_STANDARD'
-  | 'CELEO_STANDARD'
-  | 'GENERIC_EPC';
+  'ANEEL_STANDARD' | 'CELEO_STANDARD' | 'GENERIC_EPC';
 
 /**
  * Linha hierárquica da Planilha de Preços do Edital com código CIP (RF-47, RF-50).

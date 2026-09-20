@@ -73,12 +73,23 @@ export class ExcelGeneratorService {
     worksheet.mergeCells('A1:I1');
     const titleCell = worksheet.getCell('A1');
     titleCell.value = `PLANILHA DE PREÇOS DO EDITAL - ${data.offerName.toUpperCase()}`;
-    titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FF1E3A8A' } };
+    titleCell.font = {
+      name: 'Calibri',
+      size: 14,
+      bold: true,
+      color: { argb: 'FF1E3A8A' },
+    };
     titleCell.alignment = { horizontal: 'left', vertical: 'middle' };
     worksheet.getRow(1).height = 26;
 
-    worksheet.getCell('A2').value = `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Layout: ${data.layout} | Data de Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
-    worksheet.getCell('A2').font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF6B7280' } };
+    worksheet.getCell('A2').value =
+      `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Layout: ${data.layout} | Data de Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
+    worksheet.getCell('A2').font = {
+      name: 'Calibri',
+      size: 10,
+      italic: true,
+      color: { argb: 'FF6B7280' },
+    };
     worksheet.getRow(2).height = 18;
 
     // 2. Cabeçalho das Colunas
@@ -127,7 +138,11 @@ export class ExcelGeneratorService {
     headerRow.eachCell((cell) => {
       cell.fill = HEADER_FILL;
       cell.font = HEADER_FONT;
-      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      cell.alignment = {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      };
       cell.border = BORDER_THIN;
     });
 
@@ -213,7 +228,9 @@ export class ExcelGeneratorService {
   /**
    * Gera a Folha de Medição Contratual e Preços Unitários em XLSX (RF-48, RNF-11).
    */
-  async generateMeasurementSheet(data: MeasurementSheetExportData): Promise<Buffer> {
+  async generateMeasurementSheet(
+    data: MeasurementSheetExportData,
+  ): Promise<Buffer> {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'LT-Offers Engine';
     workbook.created = new Date();
@@ -226,12 +243,23 @@ export class ExcelGeneratorService {
     worksheet.mergeCells('A1:H1');
     const titleCell = worksheet.getCell('A1');
     titleCell.value = `FOLHA DE MEDIÇÃO CONTRATUAL E PREÇOS UNITÁRIOS - ${data.offerName.toUpperCase()}`;
-    titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FF1E3A8A' } };
+    titleCell.font = {
+      name: 'Calibri',
+      size: 14,
+      bold: true,
+      color: { argb: 'FF1E3A8A' },
+    };
     titleCell.alignment = { horizontal: 'left', vertical: 'middle' };
     worksheet.getRow(1).height = 26;
 
-    worksheet.getCell('A2').value = `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Data de Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
-    worksheet.getCell('A2').font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF6B7280' } };
+    worksheet.getCell('A2').value =
+      `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Data de Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
+    worksheet.getCell('A2').font = {
+      name: 'Calibri',
+      size: 10,
+      italic: true,
+      color: { argb: 'FF6B7280' },
+    };
     worksheet.getRow(2).height = 18;
 
     const headers = [
@@ -251,7 +279,11 @@ export class ExcelGeneratorService {
     headerRow.eachCell((cell) => {
       cell.fill = HEADER_FILL;
       cell.font = HEADER_FONT;
-      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      cell.alignment = {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      };
       cell.border = BORDER_THIN;
     });
 
@@ -282,7 +314,11 @@ export class ExcelGeneratorService {
         if (colNumber === 1 || colNumber === 4) {
           cell.alignment = { horizontal: 'center', vertical: 'middle' };
         } else if (colNumber === 2 || colNumber === 3 || colNumber === 6) {
-          cell.alignment = { horizontal: 'left', vertical: 'middle', wrapText: true };
+          cell.alignment = {
+            horizontal: 'left',
+            vertical: 'middle',
+            wrapText: true,
+          };
         } else if (colNumber === 5) {
           cell.alignment = { horizontal: 'right', vertical: 'middle' };
           cell.numFmt = NUMBER_FORMAT;
@@ -350,12 +386,23 @@ export class ExcelGeneratorService {
     worksheet.mergeCells('A1:J1');
     const titleCell = worksheet.getCell('A1');
     titleCell.value = `CRONOGRAMA DE FATURAMENTO E DESEMBOLSO MENSAL - ${data.offerName.toUpperCase()}`;
-    titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FF1E3A8A' } };
+    titleCell.font = {
+      name: 'Calibri',
+      size: 14,
+      bold: true,
+      color: { argb: 'FF1E3A8A' },
+    };
     titleCell.alignment = { horizontal: 'left', vertical: 'middle' };
     worksheet.getRow(1).height = 26;
 
-    worksheet.getCell('A2').value = `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Pico de Exposição: Mês ${data.peakExposureMonth} (R$ ${Number(data.peakExposureAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}) | Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
-    worksheet.getCell('A2').font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF6B7280' } };
+    worksheet.getCell('A2').value =
+      `Oferta ID: ${data.offerId} | Revisão: R${data.revisionNumber} | Pico de Exposição: Mês ${data.peakExposureMonth} (R$ ${Number(data.peakExposureAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}) | Emissão: ${new Date(data.generatedAt).toLocaleString('pt-BR')}`;
+    worksheet.getCell('A2').font = {
+      name: 'Calibri',
+      size: 10,
+      italic: true,
+      color: { argb: 'FF6B7280' },
+    };
     worksheet.getRow(2).height = 18;
 
     const headers = [
@@ -377,7 +424,11 @@ export class ExcelGeneratorService {
     headerRow.eachCell((cell) => {
       cell.fill = HEADER_FILL;
       cell.font = HEADER_FONT;
-      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      cell.alignment = {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      };
       cell.border = BORDER_THIN;
     });
 

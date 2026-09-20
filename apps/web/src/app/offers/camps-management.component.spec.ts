@@ -19,9 +19,7 @@ describe('CampsManagementComponent', () => {
     totalOperatingCost: '1200000.00',
     totalDemobilizationCost: '110000.00',
     totalCampsCost: '1660000.00',
-    monthlyDistribution: [
-      { month: 1, cost: '416666.67' },
-    ],
+    monthlyDistribution: [{ month: 1, cost: '416666.67' }],
     camps: [
       {
         id: 'camp-1',

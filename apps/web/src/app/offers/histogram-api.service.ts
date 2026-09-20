@@ -12,16 +12,18 @@ export class HistogramApiService {
    */
   getLineHistogram(lineId: number): Observable<ResourceHistogramSummary> {
     return this.http.get<ResourceHistogramSummary>(
-      `/api/lines/${lineId}/histograms/resources`
+      `/api/lines/${lineId}/histograms/resources`,
     );
   }
 
   /**
    * Obtém o histograma consolidado de recursos de toda a oferta (M08).
    */
-  getOfferConsolidatedHistogram(offerId: number): Observable<ResourceHistogramSummary> {
+  getOfferConsolidatedHistogram(
+    offerId: number,
+  ): Observable<ResourceHistogramSummary> {
     return this.http.get<ResourceHistogramSummary>(
-      `/api/offers/${offerId}/histograms/consolidated`
+      `/api/offers/${offerId}/histograms/consolidated`,
     );
   }
 }

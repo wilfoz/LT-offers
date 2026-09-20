@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { ParityReport } from '@lt-offers/domain';
 import { ParityService } from './parity.service';
@@ -19,7 +13,12 @@ export class ParityController {
    * Lista todos os perfis históricos de referência disponíveis.
    */
   @Get('profiles')
-  getProfiles(): Array<{ key: string; code: string; name: string; description: string }> {
+  getProfiles(): Array<{
+    key: string;
+    code: string;
+    name: string;
+    description: string;
+  }> {
     return this.parityService.getAvailableProfiles();
   }
 
@@ -45,7 +44,7 @@ export class ParityController {
   @Get('reports/:profileKey/markdown')
   getMarkdownReport(
     @Param('profileKey') profileKey: string,
-    @Res() res: Response
+    @Res() res: Response,
   ): void {
     const md = this.parityService.getProfileMarkdownReport(profileKey);
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');

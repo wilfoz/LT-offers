@@ -18,30 +18,32 @@ export class EconomicResultApiService {
 
   getLineEconomicResult(lineId: number): Observable<EconomicResultSummary> {
     return this.http.get<EconomicResultSummary>(
-      `${this.baseUrl}/lines/${lineId}/economic-result`
+      `${this.baseUrl}/lines/${lineId}/economic-result`,
     );
   }
 
   calculateLineWithCoefficients(
     lineId: number,
-    coeffs: Partial<SaleCoefficients>
+    coeffs: Partial<SaleCoefficients>,
   ): Observable<EconomicResultSummary> {
     return this.http.post<EconomicResultSummary>(
       `${this.baseUrl}/lines/${lineId}/economic-result`,
-      coeffs
+      coeffs,
     );
   }
 
-  getConsolidatedEconomicResult(offerId: number): Observable<EconomicResultSummary> {
+  getConsolidatedEconomicResult(
+    offerId: number,
+  ): Observable<EconomicResultSummary> {
     return this.http.get<EconomicResultSummary>(
-      `${this.baseUrl}/offers/${offerId}/economic-result/consolidated`
+      `${this.baseUrl}/offers/${offerId}/economic-result/consolidated`,
     );
   }
 
   simulateMarginOrPrice(
     offerId: number,
     simInput: MarginSimulationInput,
-    lineId?: number
+    lineId?: number,
   ): Observable<MarginSimulationOutput> {
     const url = lineId
       ? `${this.baseUrl}/offers/${offerId}/economic-result/simulate?lineId=${lineId}`
@@ -52,10 +54,10 @@ export class EconomicResultApiService {
   compareRevisions(
     offerId: number,
     baseRev = 0,
-    targetRev = 1
+    targetRev = 1,
   ): Observable<RevisionComparisonResult> {
     return this.http.get<RevisionComparisonResult>(
-      `${this.baseUrl}/offers/${offerId}/economic-result/compare?baseRev=${baseRev}&targetRev=${targetRev}`
+      `${this.baseUrl}/offers/${offerId}/economic-result/compare?baseRev=${baseRev}&targetRev=${targetRev}`,
     );
   }
 }

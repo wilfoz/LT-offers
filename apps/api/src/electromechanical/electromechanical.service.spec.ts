@@ -28,7 +28,9 @@ describe('ElectromechanicalService (M05, RF-23..RF-27)', () => {
       },
     };
 
-    service = new ElectromechanicalService(prismaMock as unknown as PrismaService);
+    service = new ElectromechanicalService(
+      prismaMock as unknown as PrismaService,
+    );
   });
 
   it('deve calcular o resumo completo de quantitativos eletromecânicos da linha', async () => {

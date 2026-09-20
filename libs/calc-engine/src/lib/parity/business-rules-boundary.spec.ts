@@ -35,9 +35,27 @@ describe('Validação de Casos Limite de Regras de Negócio (RN-01..RN-26 & RNF-
         spotExchangeRateBrl: 5.6,
         fabricationPremiumBrlPerTon: 2500,
         futuresCurve: [
-          { monthIndex: 1, deliveryWeightTons: 20, lmePriceUsdPerTon: 2420, midwestPremiumUsdPerTon: 400, projectedExchangeRateBrl: 5.62 },
-          { monthIndex: 2, deliveryWeightTons: 30, lmePriceUsdPerTon: 2440, midwestPremiumUsdPerTon: 400, projectedExchangeRateBrl: 5.64 },
-          { monthIndex: 3, deliveryWeightTons: 50, lmePriceUsdPerTon: 2480, midwestPremiumUsdPerTon: 400, projectedExchangeRateBrl: 5.68 },
+          {
+            monthIndex: 1,
+            deliveryWeightTons: 20,
+            lmePriceUsdPerTon: 2420,
+            midwestPremiumUsdPerTon: 400,
+            projectedExchangeRateBrl: 5.62,
+          },
+          {
+            monthIndex: 2,
+            deliveryWeightTons: 30,
+            lmePriceUsdPerTon: 2440,
+            midwestPremiumUsdPerTon: 400,
+            projectedExchangeRateBrl: 5.64,
+          },
+          {
+            monthIndex: 3,
+            deliveryWeightTons: 50,
+            lmePriceUsdPerTon: 2480,
+            midwestPremiumUsdPerTon: 400,
+            projectedExchangeRateBrl: 5.68,
+          },
         ],
       });
 
@@ -52,7 +70,8 @@ describe('Validação de Casos Limite de Regras de Negócio (RN-01..RN-26 & RNF-
       const levelExtreme = PrecipitationCalculator.classifyLevel(320); // 320 mm
 
       const factorDry = PrecipitationCalculator.getProductivityFactor(levelDry);
-      const factorExtreme = PrecipitationCalculator.getProductivityFactor(levelExtreme);
+      const factorExtreme =
+        PrecipitationCalculator.getProductivityFactor(levelExtreme);
 
       expect(factorDry.toNumber()).toBe(1.0);
       expect(factorExtreme.toNumber()).toBe(0.65); // Redução de 35%

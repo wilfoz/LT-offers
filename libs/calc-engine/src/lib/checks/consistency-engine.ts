@@ -13,7 +13,11 @@ export interface StakingCheckData {
   declaredTowersCount?: number;
   actualStakingCount: number;
   invalidSoilFoundationPairsCount?: number;
-  invalidPairsSample?: Array<{ structureNumber: string | number; soil: string; foundation: string }>;
+  invalidPairsSample?: Array<{
+    structureNumber: string | number;
+    soil: string;
+    foundation: string;
+  }>;
 }
 
 export interface MaterialCheckData {
@@ -107,7 +111,10 @@ export class ConsistencyEngine {
           });
         }
 
-        if (st.invalidSoilFoundationPairsCount && st.invalidSoilFoundationPairsCount > 0) {
+        if (
+          st.invalidSoilFoundationPairsCount &&
+          st.invalidSoilFoundationPairsCount > 0
+        ) {
           findings.push({
             id: nextId(),
             ruleId: 'STK-002',
@@ -141,7 +148,10 @@ export class ConsistencyEngine {
           module: 'MATERIALS_TAX',
           severity: 'CRITICAL',
           title: 'Materiais com Quantitativo sem Cotação Selecionada (RF-29)',
-          message: `Existem ${missingQuotes.length} item(ns) com quantitativo calculado sem fornecedor/preço selecionado (ex.: ${missingQuotes.slice(0, 3).map((m) => m.materialName).join(', ')}).`,
+          message: `Existem ${missingQuotes.length} item(ns) com quantitativo calculado sem fornecedor/preço selecionado (ex.: ${missingQuotes
+            .slice(0, 3)
+            .map((m) => m.materialName)
+            .join(', ')}).`,
           navigationTarget: {
             tab: 'pricing',
             field: 'quoteSelection',
@@ -219,7 +229,7 @@ export class ConsistencyEngine {
     // 4. Verificações de Histogramas & Canteiros (HISTOGRAM_CAMPS)
     if (input.histogramDeficits) {
       const uncoveredDeficits = input.histogramDeficits.filter(
-        (h) => h.deficitCount > 0 && !h.hasStrategy
+        (h) => h.deficitCount > 0 && !h.hasStrategy,
       );
 
       if (uncoveredDeficits.length > 0) {
@@ -228,7 +238,8 @@ export class ConsistencyEngine {
           ruleId: 'HST-001',
           module: 'HISTOGRAM_CAMPS',
           severity: 'WARNING',
-          title: 'Déficit de Equipamento sem Estratégia de Locação/Compra (RF-44)',
+          title:
+            'Déficit de Equipamento sem Estratégia de Locação/Compra (RF-44)',
           message: `Existem ${uncoveredDeficits.length} ocorrência(s) de déficit de equipamentos próprios no histograma sem definição de aluguel ou compra associada.`,
           navigationTarget: {
             tab: 'histogram',
@@ -284,10 +295,17 @@ export class ConsistencyEngine {
 
     // 6. Verificações de Desembolso & Caixa (CASHFLOW_DISBURSEMENT)
     if (input.cashflow) {
-      const disbSale = DecimalValue.of(input.cashflow.totalDisbursementSale || '0').round(2, 'half-up');
-      const econSale = DecimalValue.of(input.cashflow.totalEconomicResultSale || '0').round(2, 'half-up');
+      const disbSale = DecimalValue.of(
+        input.cashflow.totalDisbursementSale || '0',
+      ).round(2, 'half-up');
+      const econSale = DecimalValue.of(
+        input.cashflow.totalEconomicResultSale || '0',
+      ).round(2, 'half-up');
 
-      if (!disbSale.equals(econSale) && (!disbSale.isZero() || !econSale.isZero())) {
+      if (
+        !disbSale.equals(econSale) &&
+        (!disbSale.isZero() || !econSale.isZero())
+      ) {
         findings.push({
           id: nextId(),
           ruleId: 'CSH-001',

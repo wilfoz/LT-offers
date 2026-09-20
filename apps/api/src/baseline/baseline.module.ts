@@ -10,12 +10,7 @@ import { EconomicResultModule } from '../economic-result/economic-result.module'
 import { CashflowModule } from '../cashflow/cashflow.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    AuditModule,
-    EconomicResultModule,
-    CashflowModule,
-  ],
+  imports: [PrismaModule, AuditModule, EconomicResultModule, CashflowModule],
   controllers: [BaselineController],
   providers: [
     BaselineService,

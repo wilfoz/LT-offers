@@ -46,7 +46,9 @@ export class HistogramCalculator {
   /**
    * Agrega e projeta o histograma mensal de recursos (mão de obra e máquinas) (RF-42..RF-45, RN-17).
    */
-  static calculateHistogram(input: HistogramCalculationInput): ResourceHistogramSummary {
+  static calculateHistogram(
+    input: HistogramCalculationInput,
+  ): ResourceHistogramSummary {
     const crewMap = new Map<number, WorkCrewComposition>();
     for (const c of input.crews) {
       crewMap.set(c.id, c);
@@ -103,7 +105,9 @@ export class HistogramCalculator {
 
     // 1. Processar Atividades do Cronograma
     for (const act of input.activities) {
-      const crew = act.assignedCrewId ? crewMap.get(act.assignedCrewId) : undefined;
+      const crew = act.assignedCrewId
+        ? crewMap.get(act.assignedCrewId)
+        : undefined;
       const isDirect = act.group !== 'INDIRECTS' && act.group !== 'CAMPS';
       const crewCount = Math.max(1, act.crewCount);
 
@@ -145,7 +149,8 @@ export class HistogramCalculator {
             }
             const eqRecord = equipmentMap.get(eq.equipmentId)!;
             const deltaEq = eq.quantity * crewCount;
-            eqRecord.monthlyDemands[m] = (eqRecord.monthlyDemands[m] || 0) + deltaEq;
+            eqRecord.monthlyDemands[m] =
+              (eqRecord.monthlyDemands[m] || 0) + deltaEq;
           }
         }
       }
@@ -237,10 +242,16 @@ export class HistogramCalculator {
         const required = eq.monthlyDemands[m] || 0;
         const ownUsed = Math.min(required, ownUnits);
         const deficit = Math.max(0, required - ownUnits);
-        const monthlyCost = DecimalValue.of(deficit).times(unitRentalRateDec).round(2, 'half-up');
+        const monthlyCost = DecimalValue.of(deficit)
+          .times(unitRentalRateDec)
+          .round(2, 'half-up');
 
-        totalMachineMonthsDec = totalMachineMonthsDec.plus(DecimalValue.of(required));
-        totalRentalMachineMonthsDec = totalRentalMachineMonthsDec.plus(DecimalValue.of(deficit));
+        totalMachineMonthsDec = totalMachineMonthsDec.plus(
+          DecimalValue.of(required),
+        );
+        totalRentalMachineMonthsDec = totalRentalMachineMonthsDec.plus(
+          DecimalValue.of(deficit),
+        );
         totalRentalCostDec = totalRentalCostDec.plus(monthlyCost);
 
         monthlyDemand.push({
@@ -314,7 +325,9 @@ export class HistogramCalculator {
           totalEq += pt.totalRequired;
           ownEq += pt.ownUsed;
           rentedEq += pt.deficitToRent;
-          monthRentalCost = monthRentalCost.plus(DecimalValue.of(pt.estimatedRentalCost));
+          monthRentalCost = monthRentalCost.plus(
+            DecimalValue.of(pt.estimatedRentalCost),
+          );
         }
       }
 
@@ -351,7 +364,9 @@ export class HistogramCalculator {
     }
 
     const drivingActivities = activitiesActiveInMonth.get(peakManMonth) || [];
-    const grandTotalManMonths = grandTotalDirectManMonths.plus(grandTotalIndirectManMonths);
+    const grandTotalManMonths = grandTotalDirectManMonths.plus(
+      grandTotalIndirectManMonths,
+    );
 
     return {
       lineId: input.lineId,

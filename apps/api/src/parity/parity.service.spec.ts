@@ -40,11 +40,15 @@ describe('ParityService', () => {
 
   it('deve gerar o relatório em markdown', () => {
     const md = service.getProfileMarkdownReport('solaris');
-    expect(md).toContain('# Relatório de Paridade Numérica e Conformidade Técnica (§14)');
+    expect(md).toContain(
+      '# Relatório de Paridade Numérica e Conformidade Técnica (§14)',
+    );
     expect(md).toContain('OF-2025-029-SOLARIS');
   });
 
   it('deve lançar NotFoundException para perfil inexistente', () => {
-    expect(() => service.evaluateProfile('inexistente')).toThrow(NotFoundException);
+    expect(() => service.evaluateProfile('inexistente')).toThrow(
+      NotFoundException,
+    );
   });
 });

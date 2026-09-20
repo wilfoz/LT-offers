@@ -8,7 +8,7 @@ export class ChecksController {
 
   @Get()
   async getHealthChecks(
-    @Param('offerId', ParseIntPipe) offerId: number
+    @Param('offerId', ParseIntPipe) offerId: number,
   ): Promise<OfferHealthSummary> {
     return this.checksService.runOfferChecks(offerId);
   }

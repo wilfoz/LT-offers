@@ -77,6 +77,9 @@ describe('OfferChecksComponent', () => {
   it('deve emitir evento de navegação ao clicar no botão de ir para pendência', () => {
     const spy = vi.spyOn(component.navigateTo, 'emit');
     component.onNavigate({ tab: 'staking', field: 'declaredTowersCount' });
-    expect(spy).toHaveBeenCalledWith({ tab: 'staking', field: 'declaredTowersCount' });
+    expect(spy).toHaveBeenCalledWith({
+      tab: 'staking',
+      field: 'declaredTowersCount',
+    });
   });
 });

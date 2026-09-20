@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OfferHealthSummary } from '@lt-offers/domain';
-import { ConsistencyEngine, ConsistencyEngineInput } from '@lt-offers/calc-engine';
+import {
+  ConsistencyEngine,
+  ConsistencyEngineInput,
+} from '@lt-offers/calc-engine';
 import { PrismaService } from '../app/prisma.service';
 
 @Injectable()

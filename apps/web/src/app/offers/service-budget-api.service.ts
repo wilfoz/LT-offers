@@ -12,13 +12,13 @@ export class ServiceBudgetApiService {
 
   getLineServiceBudget(lineId: number): Observable<ServiceBudgetSummary> {
     return this.http.get<ServiceBudgetSummary>(
-      `${this.baseUrl}/lines/${lineId}/services/summary`
+      `${this.baseUrl}/lines/${lineId}/services/summary`,
     );
   }
 
   getLineMeasurementSheet(lineId: number): Observable<ServiceBudgetItem[]> {
     return this.http.get<ServiceBudgetItem[]>(
-      `${this.baseUrl}/lines/${lineId}/services/measurement-sheet`
+      `${this.baseUrl}/lines/${lineId}/services/measurement-sheet`,
     );
   }
 }

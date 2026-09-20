@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ElectromechanicalService } from './electromechanical.service';
 import {
   ElectromechanicalSummary,
@@ -27,6 +22,8 @@ export class ElectromechanicalController {
   async getTraceability(
     @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<TowerTraceabilityDetail[]> {
-    return this.electromechanicalService.getLineElectromechanicalTraceability(lineId);
+    return this.electromechanicalService.getLineElectromechanicalTraceability(
+      lineId,
+    );
   }
 }

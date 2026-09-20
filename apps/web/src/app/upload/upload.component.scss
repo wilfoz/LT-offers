@@ -99,7 +99,8 @@
   transition: all 0.2s ease;
   cursor: pointer;
 
-  &:hover, &.dragging {
+  &:hover,
+  &.dragging {
     border-color: var(--solaris-primary);
     background: #f0f4ff;
   }

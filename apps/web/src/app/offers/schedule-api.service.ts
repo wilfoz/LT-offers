@@ -13,7 +13,7 @@ export class ScheduleApiService {
    */
   getLineSchedule(lineId: number): Observable<ScheduleSummary> {
     return this.http.get<ScheduleSummary>(
-      `${this.baseUrl}/${lineId}/schedule/summary`
+      `${this.baseUrl}/${lineId}/schedule/summary`,
     );
   }
 
@@ -22,7 +22,7 @@ export class ScheduleApiService {
    */
   getLineCamps(lineId: number): Observable<CampCostSummary> {
     return this.http.get<CampCostSummary>(
-      `${this.baseUrl}/${lineId}/schedule/camps`
+      `${this.baseUrl}/${lineId}/schedule/camps`,
     );
   }
 }

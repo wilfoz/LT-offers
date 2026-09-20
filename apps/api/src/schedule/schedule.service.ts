@@ -5,10 +5,7 @@ import {
   MilestoneContract,
   CampDefinition,
 } from '@lt-offers/domain';
-import {
-  ScheduleCalculator,
-  CampCalculator,
-} from '@lt-offers/calc-engine';
+import { ScheduleCalculator, CampCalculator } from '@lt-offers/calc-engine';
 import { PrismaService } from '../app/prisma.service';
 
 @Injectable()
@@ -28,7 +25,9 @@ export class ScheduleService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
     const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
@@ -179,10 +178,15 @@ export class ScheduleService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
-    const rawCamps: Omit<CampDefinition, 'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'>[] = [
+    const rawCamps: Omit<
+      CampDefinition,
+      'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'
+    >[] = [
       {
         id: `camp-central-${lineId}`,
         lineId,

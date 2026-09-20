@@ -17,15 +17,16 @@ export const WORK_PACKAGE_CATEGORIES = [
 ] as const;
 export type WorkPackageCategory = (typeof WORK_PACKAGE_CATEGORIES)[number];
 
-export const WORK_PACKAGE_CATEGORY_LABELS: Record<WorkPackageCategory, string> = {
-  PROJECT_TOPOGRAPHY: 'Projetos Executivos & Topografia',
-  ENVIRONMENT_EASEMENT: 'Meio Ambiente, Faixa & Acessos',
-  CIVIL_FOUNDATIONS: 'Obras Civis & Fundações',
-  ELECTROMECHANICAL_ASSEMBLY: 'Montagem Eletromecânica',
-  CABLE_STRINGING: 'Lançamento & Tensionamento de Cabos',
-  COMMISSIONING: 'Comissionamento, Ensaios & Energização',
-  INDIRECTS_MANAGEMENT: 'Administração Local, Indiretos & Canteiro',
-};
+export const WORK_PACKAGE_CATEGORY_LABELS: Record<WorkPackageCategory, string> =
+  {
+    PROJECT_TOPOGRAPHY: 'Projetos Executivos & Topografia',
+    ENVIRONMENT_EASEMENT: 'Meio Ambiente, Faixa & Acessos',
+    CIVIL_FOUNDATIONS: 'Obras Civis & Fundações',
+    ELECTROMECHANICAL_ASSEMBLY: 'Montagem Eletromecânica',
+    CABLE_STRINGING: 'Lançamento & Tensionamento de Cabos',
+    COMMISSIONING: 'Comissionamento, Ensaios & Energização',
+    INDIRECTS_MANAGEMENT: 'Administração Local, Indiretos & Canteiro',
+  };
 
 export interface WorkPackageItem {
   id?: number;

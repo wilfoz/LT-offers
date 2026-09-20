@@ -20,7 +20,8 @@ describe('RiskCalculator', () => {
         lineId: 'line-1',
         category: 'LAND_EASEMENT',
         description: 'Faixa de servidão em área urbana consolidada',
-        situation: 'Estudo preliminar indica possíveis desapropriações judiciais',
+        situation:
+          'Estudo preliminar indica possíveis desapropriações judiciais',
         mitigationAction: 'Adiantar contato com cartórios e proprietários',
         estimatedImpact: '1000000.00',
         probabilityPercent: '50.00',
@@ -46,7 +47,8 @@ describe('RiskCalculator', () => {
         category: 'THIRD_PARTY_MARKET',
         description: 'Variação de frete rodoviário',
         situation: 'Possível alta do diesel',
-        mitigationAction: 'Negociação de contrato com transportadora com cláusula de teto',
+        mitigationAction:
+          'Negociação de contrato com transportadora com cláusula de teto',
         estimatedImpact: '200000.00',
         probabilityPercent: '25.00',
         weightedSeverity: '0',
@@ -62,7 +64,7 @@ describe('RiskCalculator', () => {
     expect(assessment.commercialAssumptionAmount).toBe('50000.00'); // 50k
 
     const landSummary = assessment.categoryBreakdown.find(
-      (c) => c.category === 'LAND_EASEMENT'
+      (c) => c.category === 'LAND_EASEMENT',
     );
     expect(landSummary?.count).toBe(1);
     expect(landSummary?.totalImpact).toBe('1000000.00');
@@ -71,11 +73,17 @@ describe('RiskCalculator', () => {
 
   it('deve converter montante de contingência em taxa percentual sobre o custo próprio', () => {
     // R$ 700.000,00 de contingência sobre R$ 35.000.000,00 de custo próprio = 2.00%
-    const rate = RiskCalculator.calculateContingencyRateFromAmount('700000.00', '35000000.00');
+    const rate = RiskCalculator.calculateContingencyRateFromAmount(
+      '700000.00',
+      '35000000.00',
+    );
     expect(rate).toBe('2.00');
 
     // Base zero não deve lançar divisão por zero
-    const zeroRate = RiskCalculator.calculateContingencyRateFromAmount('700000.00', '0');
+    const zeroRate = RiskCalculator.calculateContingencyRateFromAmount(
+      '700000.00',
+      '0',
+    );
     expect(zeroRate).toBe('0.00');
   });
 });

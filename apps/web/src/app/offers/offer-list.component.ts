@@ -43,14 +43,21 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
             <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
             <span class="breadcrumb-current">Gestão de Ofertas</span>
           </nav>
-          <h2 class="font-display-lg page-title">Gestão de Ofertas e Propostas</h2>
+          <h2 class="font-display-lg page-title">
+            Gestão de Ofertas e Propostas
+          </h2>
           <p class="page-subtitle">
-            Controle de parâmetros de leilão, revisões, linhas de transmissão e matriz de escopo
+            Controle de parâmetros de leilão, revisões, linhas de transmissão e
+            matriz de escopo
           </p>
         </div>
 
         <div class="header-actions">
-          <a matButton="filled" routerLink="new" class="btn-primary-gradient new-offer-btn">
+          <a
+            matButton="filled"
+            routerLink="new"
+            class="btn-primary-gradient new-offer-btn"
+          >
             <mat-icon>add</mat-icon>
             <span>Nova Proposta</span>
           </a>
@@ -61,19 +68,27 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
       <div class="kpis-bar">
         <div class="kpi-mini-card">
           <span class="kpi-mini-label">Total de Propostas</span>
-          <span class="kpi-mini-val font-numeric-tabular">{{ items().length }}</span>
+          <span class="kpi-mini-val font-numeric-tabular">{{
+            items().length
+          }}</span>
         </div>
         <div class="kpi-mini-card">
           <span class="kpi-mini-label">Extensão Total</span>
-          <span class="kpi-mini-val font-numeric-tabular">{{ totalExtension() }} km</span>
+          <span class="kpi-mini-val font-numeric-tabular"
+            >{{ totalExtension() }} km</span
+          >
         </div>
         <div class="kpi-mini-card">
           <span class="kpi-mini-label">Propostas Válidas</span>
-          <span class="kpi-mini-val font-numeric-tabular text-success">{{ validCount() }}</span>
+          <span class="kpi-mini-val font-numeric-tabular text-success">{{
+            validCount()
+          }}</span>
         </div>
         <div class="kpi-mini-card">
           <span class="kpi-mini-label">Com Pendências</span>
-          <span class="kpi-mini-val font-numeric-tabular text-pending">{{ pendingCount() }}</span>
+          <span class="kpi-mini-val font-numeric-tabular text-pending">{{
+            pendingCount()
+          }}</span>
         </div>
       </div>
 
@@ -99,7 +114,11 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
       </div>
 
       @if (loading()) {
-        <mat-progress-bar mode="indeterminate" aria-label="Carregando" class="my-4" />
+        <mat-progress-bar
+          mode="indeterminate"
+          aria-label="Carregando"
+          class="my-4"
+        />
         <p class="loading-text">Carregando ofertas…</p>
       } @else if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
@@ -117,7 +136,11 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
             <table mat-table [dataSource]="items()" class="technical-table">
               <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef scope="col">Código</th>
-                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                <td
+                  mat-cell
+                  *matCellDef="let item"
+                  class="font-numeric-tabular"
+                >
                   <a [routerLink]="[item.id]" class="offer-code-link font-bold">
                     {{ item.code }}
                   </a>
@@ -146,7 +169,11 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
                 <th mat-header-cell *matHeaderCellDef scope="col">
                   Leilão / Lote
                 </th>
-                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                <td
+                  mat-cell
+                  *matCellDef="let item"
+                  class="font-numeric-tabular"
+                >
                   {{ item.auctionName }} • {{ item.lotName }}
                 </td>
               </ng-container>
@@ -170,13 +197,19 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
                 <th mat-header-cell *matHeaderCellDef scope="col">
                   Linhas / Extensão
                 </th>
-                <td mat-cell *matCellDef="let item" class="font-numeric-tabular">
+                <td
+                  mat-cell
+                  *matCellDef="let item"
+                  class="font-numeric-tabular"
+                >
                   {{ item.lineCount }} LT ({{ item.totalLengthKm }} km)
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="issues">
-                <th mat-header-cell *matHeaderCellDef scope="col">Pendências</th>
+                <th mat-header-cell *matHeaderCellDef scope="col">
+                  Pendências
+                </th>
                 <td mat-cell *matCellDef="let item">
                   @if (item.hasPendingIssues) {
                     <span
@@ -187,15 +220,28 @@ export const REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> = {
                     </span>
                   } @else {
                     <span class="badge badge-valid">
-                      <mat-icon class="badge-icon">check_circle</mat-icon> Válida
+                      <mat-icon class="badge-icon">check_circle</mat-icon>
+                      Válida
                     </span>
                   }
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef scope="col" style="text-align: right;">Ações</th>
-                <td mat-cell *matCellDef="let item" class="actions-cell" style="text-align: right;">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  scope="col"
+                  style="text-align: right;"
+                >
+                  Ações
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let item"
+                  class="actions-cell"
+                  style="text-align: right;"
+                >
                   <a
                     matButton="outlined"
                     [routerLink]="[item.id]"
@@ -478,7 +524,10 @@ export class OfferListComponent {
   }
 
   totalExtension(): number {
-    const sum = this.items().reduce((acc, curr) => acc + (Number(curr.totalLengthKm) || 0), 0);
+    const sum = this.items().reduce(
+      (acc, curr) => acc + (Number(curr.totalLengthKm) || 0),
+      0,
+    );
     return Math.round(sum * 10) / 10;
   }
 

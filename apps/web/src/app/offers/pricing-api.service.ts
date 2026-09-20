@@ -23,7 +23,9 @@ export class PricingApiService {
   /**
    * Obtém o resumo consolidado de preços e tributos de materiais da linha.
    */
-  getLinePricingSummary(lineId: number): Observable<LineMaterialPricingSummary> {
+  getLinePricingSummary(
+    lineId: number,
+  ): Observable<LineMaterialPricingSummary> {
     return this.http.get<LineMaterialPricingSummary>(
       `${this.baseUrl}/${lineId}/pricing/summary`,
     );

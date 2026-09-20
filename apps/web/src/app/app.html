@@ -1,6 +1,11 @@
 <mat-toolbar class="app-toolbar">
   @if (!wide()) {
-  <button matIconButton type="button" aria-label="Abrir menu de navegação" (click)="toggleMenu()">
+  <button
+    matIconButton
+    type="button"
+    aria-label="Abrir menu de navegação"
+    (click)="toggleMenu()"
+  >
     <mat-icon>menu</mat-icon>
   </button>
   }
@@ -14,7 +19,10 @@
   </div>
 
   <div class="toolbar-center">
-    <div class="project-selector" matTooltip="Selecionar projeto ou lote em andamento">
+    <div
+      class="project-selector"
+      matTooltip="Selecionar projeto ou lote em andamento"
+    >
       <mat-icon class="selector-icon">folder</mat-icon>
       <span class="selector-text">Seletor de Projeto</span>
       <mat-icon class="selector-arrow">expand_more</mat-icon>
@@ -22,27 +30,50 @@
 
     <div class="global-search-box">
       <mat-icon class="search-icon">search</mat-icon>
-      <input type="search" placeholder="Buscar torre, projeto ou cálculo..." aria-label="Buscar no sistema" />
+      <input
+        type="search"
+        placeholder="Buscar torre, projeto ou cálculo..."
+        aria-label="Buscar no sistema"
+      />
     </div>
   </div>
 
   <div class="toolbar-actions">
-    <button matIconButton type="button" matTooltip="Alternar Modo Técnico" (click)="toggleTechnicalMode()"
-      [class.active-tech]="technicalMode()">
+    <button
+      matIconButton
+      type="button"
+      matTooltip="Alternar Modo Técnico"
+      (click)="toggleTechnicalMode()"
+      [class.active-tech]="technicalMode()"
+    >
       <mat-icon>construction</mat-icon>
     </button>
 
-    <button matIconButton type="button" matTooltip="Notificações do sistema" class="notif-btn">
+    <button
+      matIconButton
+      type="button"
+      matTooltip="Notificações do sistema"
+      class="notif-btn"
+    >
       <mat-icon>notifications</mat-icon>
       <span class="notif-dot"></span>
     </button>
 
     <!-- Seletor de Perfil Ativo (RF-64 RBAC) -->
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-avatar-chip" matTooltip="Alternar Perfil / Usuário Ativo">
-      <div class="avatar-circle">{{ authService.currentUser().name.substring(0, 2).toUpperCase() }}</div>
+    <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      class="user-avatar-chip"
+      matTooltip="Alternar Perfil / Usuário Ativo"
+    >
+      <div class="avatar-circle">
+        {{ authService.currentUser().name.substring(0, 2).toUpperCase() }}
+      </div>
       <div class="avatar-info-box">
         <span class="avatar-name">{{ authService.currentUser().name }}</span>
-        <span class="avatar-role-label">[{{ authService.currentUser().role }}]</span>
+        <span class="avatar-role-label"
+          >[{{ authService.currentUser().role }}]</span
+        >
       </div>
       <mat-icon class="dropdown-icon">expand_more</mat-icon>
     </button>
@@ -50,23 +81,34 @@
     <mat-menu #userMenu="matMenu" class="user-select-menu">
       <div class="menu-header-label">Simular Perfil de Usuário (RF-64)</div>
       @for (u of authService.availableUsers; track u.id) {
-        <button mat-menu-item (click)="selectUser(u)" [class.active-user-item]="u.id === authService.currentUser().id">
-          <mat-icon [color]="u.id === authService.currentUser().id ? 'primary' : ''">
-            {{ u.id === authService.currentUser().id ? 'check_circle' : 'account_circle' }}
-          </mat-icon>
-          <div class="user-menu-entry">
-            <span class="entry-name">{{ u.name }}</span>
-            <span class="entry-role">({{ u.role }})</span>
-          </div>
-        </button>
+      <button
+        mat-menu-item
+        (click)="selectUser(u)"
+        [class.active-user-item]="u.id === authService.currentUser().id"
+      >
+        <mat-icon
+          [color]="u.id === authService.currentUser().id ? 'primary' : ''"
+        >
+          {{ u.id === authService.currentUser().id ? 'check_circle' :
+          'account_circle' }}
+        </mat-icon>
+        <div class="user-menu-entry">
+          <span class="entry-name">{{ u.name }}</span>
+          <span class="entry-role">({{ u.role }})</span>
+        </div>
+      </button>
       }
     </mat-menu>
   </div>
 </mat-toolbar>
 
 <mat-sidenav-container class="app-container">
-  <mat-sidenav [mode]="wide() ? 'side' : 'over'" [opened]="wide() || menuOpen()" (closedStart)="menuOpen.set(false)"
-    class="solaris-sidenav">
+  <mat-sidenav
+    [mode]="wide() ? 'side' : 'over'"
+    [opened]="wide() || menuOpen()"
+    (closedStart)="menuOpen.set(false)"
+    class="solaris-sidenav"
+  >
     <!-- Brand Header -->
     <div class="sidenav-brand">
       <div class="logo-box">
@@ -81,7 +123,12 @@
     <!-- System Section -->
     <div class="system-nav-section">
       @for (slink of systemLinks; track slink.path) {
-      <a [routerLink]="slink.path" routerLinkActive="active-sys" class="system-nav-link" (click)="closeAfterNavigate()">
+      <a
+        [routerLink]="slink.path"
+        routerLinkActive="active-sys"
+        class="system-nav-link"
+        (click)="closeAfterNavigate()"
+      >
         <mat-icon>{{ slink.icon }}</mat-icon>
         <span>{{ slink.label }}</span>
       </a>
@@ -95,8 +142,15 @@
     <!-- Navigation List -->
     <mat-nav-list aria-label="Navegação principal" class="solaris-nav-list">
       @for (link of links; track link.path) {
-      <a mat-list-item [routerLink]="link.path" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive"
-        [class.active-link]="rla.isActive" (click)="closeAfterNavigate()">
+      <a
+        mat-list-item
+        [routerLink]="link.path"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [activated]="rla.isActive"
+        [class.active-link]="rla.isActive"
+        (click)="closeAfterNavigate()"
+      >
         <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
         <span matListItemTitle class="nav-label">{{ link.label }}</span>
       </a>
@@ -105,7 +159,12 @@
 
     <!-- Bottom Sidebar Controls -->
     <div class="sidenav-footer">
-      <button type="button" class="tech-mode-btn" (click)="toggleTechnicalMode()" [class.tech-active]="technicalMode()">
+      <button
+        type="button"
+        class="tech-mode-btn"
+        (click)="toggleTechnicalMode()"
+        [class.tech-active]="technicalMode()"
+      >
         <mat-icon>engineering</mat-icon>
         <span>Modo Técnico</span>
       </button>
@@ -135,7 +194,13 @@
       <div class="footer-left">
         <span class="footer-item">OFERTA ENGINEERING SYSTEM © 2026</span>
         <span class="footer-sep">•</span>
-        <span class="footer-item">Perfil Ativo: <strong>{{ authService.currentUser().name }} ({{ authService.currentUser().role }})</strong></span>
+        <span class="footer-item"
+          >Perfil Ativo:
+          <strong
+            >{{ authService.currentUser().name }} ({{
+            authService.currentUser().role }})</strong
+          ></span
+        >
         <span class="footer-sep">•</span>
         <span class="footer-item">DB: OFERTA_PROD_04</span>
       </div>

@@ -2,11 +2,7 @@
  * Papéis de usuário canônicos do sistema (RF-64).
  */
 export type UserRole =
-  | 'ENGINEERING'
-  | 'PROCUREMENT'
-  | 'PLANNING'
-  | 'COMMERCIAL'
-  | 'ADMIN';
+  'ENGINEERING' | 'PROCUREMENT' | 'PLANNING' | 'COMMERCIAL' | 'ADMIN';
 
 /**
  * Escopos granulares de permissão de acesso (RF-64, RNF-17).

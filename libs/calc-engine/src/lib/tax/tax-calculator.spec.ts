@@ -1,8 +1,4 @@
-import {
-  ItemTaxCalculationInput,
-  IcmsRule,
-  IpiRule,
-} from '@lt-offers/domain';
+import { ItemTaxCalculationInput, IcmsRule, IpiRule } from '@lt-offers/domain';
 import { TaxCalculator } from './tax-calculator';
 
 describe('TaxCalculator (RN-04, RN-05, RN-06, RF-32, RF-34)', () => {

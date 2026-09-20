@@ -27,12 +27,42 @@ describe('ServiceBudgetComponent', () => {
       salePricePerTower: '6250.00',
     },
     byGroup: {
-      PRELIMINARY_WORKS: { totalDirectCost: '100000.00', totalSalePrice: '125000.00', costPerKm: '1000.00', costPerTower: '500.00' },
-      CIVIL_WORKS: { totalDirectCost: '500000.00', totalSalePrice: '625000.00', costPerKm: '5000.00', costPerTower: '2500.00' },
-      ASSEMBLY_WORKS: { totalDirectCost: '400000.00', totalSalePrice: '500000.00', costPerKm: '4000.00', costPerTower: '2000.00' },
-      STRINGING_WORKS: { totalDirectCost: '0.00', totalSalePrice: '0.00', costPerKm: '0.00', costPerTower: '0.00' },
-      COMMISSIONING: { totalDirectCost: '0.00', totalSalePrice: '0.00', costPerKm: '0.00', costPerTower: '0.00' },
-      INDIRECTS_SUPPORT: { totalDirectCost: '0.00', totalSalePrice: '0.00', costPerKm: '0.00', costPerTower: '0.00' },
+      PRELIMINARY_WORKS: {
+        totalDirectCost: '100000.00',
+        totalSalePrice: '125000.00',
+        costPerKm: '1000.00',
+        costPerTower: '500.00',
+      },
+      CIVIL_WORKS: {
+        totalDirectCost: '500000.00',
+        totalSalePrice: '625000.00',
+        costPerKm: '5000.00',
+        costPerTower: '2500.00',
+      },
+      ASSEMBLY_WORKS: {
+        totalDirectCost: '400000.00',
+        totalSalePrice: '500000.00',
+        costPerKm: '4000.00',
+        costPerTower: '2000.00',
+      },
+      STRINGING_WORKS: {
+        totalDirectCost: '0.00',
+        totalSalePrice: '0.00',
+        costPerKm: '0.00',
+        costPerTower: '0.00',
+      },
+      COMMISSIONING: {
+        totalDirectCost: '0.00',
+        totalSalePrice: '0.00',
+        costPerKm: '0.00',
+        costPerTower: '0.00',
+      },
+      INDIRECTS_SUPPORT: {
+        totalDirectCost: '0.00',
+        totalSalePrice: '0.00',
+        costPerKm: '0.00',
+        costPerTower: '0.00',
+      },
     },
     items: [
       {
@@ -84,7 +114,10 @@ describe('ServiceBudgetComponent', () => {
     fixture = TestBed.createComponent(ServiceBudgetComponent);
     component = fixture.componentInstance;
     component.offerId = 10;
-    component.lines = [{ id: 1, name: 'LT 500kV Curitiba' }, { id: 2, name: 'LT 500kV Blumenau' }];
+    component.lines = [
+      { id: 1, name: 'LT 500kV Curitiba' },
+      { id: 2, name: 'LT 500kV Blumenau' },
+    ];
     fixture.detectChanges();
   });
 
@@ -113,9 +146,15 @@ describe('ServiceBudgetComponent', () => {
   });
 
   it('deve retornar rótulos amigáveis de grupos e origens de custo', () => {
-    expect(component.getGroupLabel('CIVIL_WORKS')).toBe('Obras Civis e Fundações');
-    expect(component.getCostSourceLabel('SCHEDULE_DIRECT')).toBe('Cronograma Direto');
-    expect(component.getCostSourceLabel('PARAMETRIC_ADJUSTED')).toBe('Paramétrico Ajustado');
+    expect(component.getGroupLabel('CIVIL_WORKS')).toBe(
+      'Obras Civis e Fundações',
+    );
+    expect(component.getCostSourceLabel('SCHEDULE_DIRECT')).toBe(
+      'Cronograma Direto',
+    );
+    expect(component.getCostSourceLabel('PARAMETRIC_ADJUSTED')).toBe(
+      'Paramétrico Ajustado',
+    );
     expect(component.formatCurrency('1000.50')).toContain('1.000,50');
   });
 });

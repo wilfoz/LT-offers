@@ -126,7 +126,9 @@ export class MaterialPricingCalculator {
       itemsBreakdowns.push(itemBreakdown);
 
       // Acumulação nos Totais da Linha
-      totalNetDec = totalNetDec.plus(DecimalValue.of(itemBreakdown.netTotalAmount));
+      totalNetDec = totalNetDec.plus(
+        DecimalValue.of(itemBreakdown.netTotalAmount),
+      );
       totalIpiDec = totalIpiDec.plus(DecimalValue.of(itemBreakdown.ipiAmount));
       totalIcmsOriginDec = totalIcmsOriginDec.plus(
         DecimalValue.of(itemBreakdown.totalIcmsOriginAmount),
@@ -176,7 +178,9 @@ export class MaterialPricingCalculator {
       totalTaxesAmount: totalTaxesDec.round(2, 'half-up').toNumber(),
       totalGrossAmount: totalGrossDec.round(2, 'half-up').toNumber(),
       directBillingAmount: directBillingDec.round(2, 'half-up').toNumber(),
-      contractorBilledAmount: contractorBilledDec.round(2, 'half-up').toNumber(),
+      contractorBilledAmount: contractorBilledDec
+        .round(2, 'half-up')
+        .toNumber(),
       totalReidiSavings: totalReidiSavingsDec.round(2, 'half-up').toNumber(),
       items: itemsBreakdowns,
       missingPriceItemCodes,

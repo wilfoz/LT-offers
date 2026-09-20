@@ -33,9 +33,12 @@
   </div>
 
   <div class="intro-block">
-    <h3 class="font-headline-md section-title">Importação Analítica de Fundações</h3>
+    <h3 class="font-headline-md section-title">
+      Importação Analítica de Fundações
+    </h3>
     <p class="section-subtitle">
-      Arraste os arquivos de fundação para extração e validação automática no catálogo de engenharia.
+      Arraste os arquivos de fundação para extração e validação automática no
+      catálogo de engenharia.
     </p>
   </div>
 
@@ -55,7 +58,9 @@
           <mat-icon>cloud_upload</mat-icon>
         </div>
         <h4 class="drop-title">Arraste arquivos aqui</h4>
-        <p class="drop-subtitle">Suporta PDF (Stub / Locação) e Excel (Cargas e Planilhas).</p>
+        <p class="drop-subtitle">
+          Suporta PDF (Stub / Locação) e Excel (Cargas e Planilhas).
+        </p>
         <button type="button" class="btn-primary-gradient select-files-btn">
           Procurar Arquivos
         </button>
@@ -64,7 +69,9 @@
       <!-- Attached Files Card -->
       <div class="panel-card technical-border">
         <div class="panel-header">
-          <span class="font-label-caps">Arquivos Anexados ({{ attachedFiles().length }})</span>
+          <span class="font-label-caps"
+            >Arquivos Anexados ({{ attachedFiles().length }})</span
+          >
         </div>
 
         <div class="files-list">
@@ -74,7 +81,9 @@
                 <mat-icon class="file-icon">{{ file.icon }}</mat-icon>
                 <div class="file-meta">
                   <span class="file-name">{{ file.name }}</span>
-                  <span class="file-type-size">{{ file.type }} • {{ file.size }}</span>
+                  <span class="file-type-size"
+                    >{{ file.type }} • {{ file.size }}</span
+                  >
                 </div>
               </div>
               <button
@@ -118,20 +127,25 @@
           <table class="technical-table">
             <thead>
               <tr>
-                <th style="width: 35%;">Arquivo / Tipo</th>
-                <th style="width: 15%; text-align: center;">Torre</th>
-                <th style="width: 30%;">Progresso de Extração</th>
-                <th style="width: 20%;">Última Atualização</th>
+                <th style="width: 35%">Arquivo / Tipo</th>
+                <th style="width: 15%; text-align: center">Torre</th>
+                <th style="width: 30%">Progresso de Extração</th>
+                <th style="width: 20%">Última Atualização</th>
               </tr>
             </thead>
             <tbody>
               @for (item of processingQueue(); track item.id) {
                 <tr>
                   <td>
-                    <div class="filename-cell font-bold">{{ item.filename }}</div>
+                    <div class="filename-cell font-bold">
+                      {{ item.filename }}
+                    </div>
                     <span class="badge badge-analysis">{{ item.tag }}</span>
                   </td>
-                  <td style="text-align: center;" class="font-numeric-tabular font-bold">
+                  <td
+                    style="text-align: center"
+                    class="font-numeric-tabular font-bold"
+                  >
                     {{ item.tower }}
                   </td>
                   <td>
@@ -141,7 +155,9 @@
                           class="progress-fill"
                           [style.width.%]="item.progress"
                           [class.progress-complete]="item.progress === 100"
-                          [class.progress-warning]="item.statusType === 'warning'"
+                          [class.progress-warning]="
+                            item.statusType === 'warning'
+                          "
                         ></div>
                       </div>
                     </div>
@@ -157,7 +173,9 @@
                       {{ item.statusText }}
                     </div>
                   </td>
-                  <td class="font-numeric-tabular text-sub">{{ item.lastUpdate }}</td>
+                  <td class="font-numeric-tabular text-sub">
+                    {{ item.lastUpdate }}
+                  </td>
                 </tr>
               }
             </tbody>

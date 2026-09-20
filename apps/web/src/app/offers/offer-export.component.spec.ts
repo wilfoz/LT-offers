@@ -115,7 +115,9 @@ describe('OfferExportComponent (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-11, RNF-1
     downloadMeasurementSheet: vi.fn().mockReturnValue(of(new Blob())),
     getCashflowExportData: vi.fn().mockReturnValue(of(mockCashflow)),
     downloadCashflowSheet: vi.fn().mockReturnValue(of(new Blob())),
-    getFullOfferPackage: vi.fn().mockReturnValue(of({ metadata: { schemaVersion: 'open-lt-offer-v1' } })),
+    getFullOfferPackage: vi
+      .fn()
+      .mockReturnValue(of({ metadata: { schemaVersion: 'open-lt-offer-v1' } })),
     saveBlob: vi.fn(),
     saveJson: vi.fn(),
   };
@@ -123,7 +125,9 @@ describe('OfferExportComponent (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-11, RNF-1
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OfferExportComponent],
-      providers: [{ provide: ExportApiService, useValue: mockExportApiService }],
+      providers: [
+        { provide: ExportApiService, useValue: mockExportApiService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OfferExportComponent);
@@ -135,9 +139,16 @@ describe('OfferExportComponent (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-11, RNF-1
 
   it('should initialize and load all export and indicators data (RF-49)', () => {
     expect(component).toBeTruthy();
-    expect(mockExportApiService.getPerformanceIndicators).toHaveBeenCalledWith(1);
-    expect(mockExportApiService.getTenderSheetData).toHaveBeenCalledWith(1, 'ANEEL_STANDARD');
-    expect(mockExportApiService.getMeasurementSheetData).toHaveBeenCalledWith(1);
+    expect(mockExportApiService.getPerformanceIndicators).toHaveBeenCalledWith(
+      1,
+    );
+    expect(mockExportApiService.getTenderSheetData).toHaveBeenCalledWith(
+      1,
+      'ANEEL_STANDARD',
+    );
+    expect(mockExportApiService.getMeasurementSheetData).toHaveBeenCalledWith(
+      1,
+    );
     expect(mockExportApiService.getCashflowExportData).toHaveBeenCalledWith(1);
 
     expect(component.indicators()).toEqual(mockIndicators);
@@ -147,18 +158,26 @@ describe('OfferExportComponent (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-11, RNF-1
   it('should change layout and reload tender sheet (RF-50)', () => {
     component.onLayoutChange('CELEO_STANDARD');
     expect(component.selectedLayout()).toBe('CELEO_STANDARD');
-    expect(mockExportApiService.getTenderSheetData).toHaveBeenCalledWith(1, 'CELEO_STANDARD');
+    expect(mockExportApiService.getTenderSheetData).toHaveBeenCalledWith(
+      1,
+      'CELEO_STANDARD',
+    );
   });
 
   it('should download tender sheet XLSX on button click', () => {
     component.downloadTenderSheet();
-    expect(mockExportApiService.downloadTenderSheet).toHaveBeenCalledWith(1, 'ANEEL_STANDARD');
+    expect(mockExportApiService.downloadTenderSheet).toHaveBeenCalledWith(
+      1,
+      'ANEEL_STANDARD',
+    );
     expect(mockExportApiService.saveBlob).toHaveBeenCalled();
   });
 
   it('should download measurement sheet XLSX on button click (RF-48)', () => {
     component.downloadMeasurementSheet();
-    expect(mockExportApiService.downloadMeasurementSheet).toHaveBeenCalledWith(1);
+    expect(mockExportApiService.downloadMeasurementSheet).toHaveBeenCalledWith(
+      1,
+    );
     expect(mockExportApiService.saveBlob).toHaveBeenCalled();
   });
 

@@ -64,7 +64,9 @@ export class EarnedValueCalculator {
       costVariance: cv.toFixed(2, 'half-up'),
       schedulePerformanceIndex: spi.toFixed(4, 'half-up'),
       costPerformanceIndex: cpi.toFixed(4, 'half-up'),
-      physicalProgressPercent: DecimalValue.of(params.physicalProgressPercent || '0').toFixed(2, 'half-up'),
+      physicalProgressPercent: DecimalValue.of(
+        params.physicalProgressPercent || '0',
+      ).toFixed(2, 'half-up'),
       monthlyMeasuredAmount: params.monthlyMeasuredAmount
         ? DecimalValue.of(params.monthlyMeasuredAmount).toFixed(2, 'half-up')
         : undefined,
@@ -82,7 +84,10 @@ export class EarnedValueCalculator {
     const thresholdAhead = DecimalValue.of('1.05');
     const one = DecimalValue.of('1.00');
 
-    if (spiVal.lessThan(thresholdCritical) && cpiVal.lessThan(thresholdCritical)) {
+    if (
+      spiVal.lessThan(thresholdCritical) &&
+      cpiVal.lessThan(thresholdCritical)
+    ) {
       return 'CRITICAL_DEVIATION';
     }
     if (spiVal.lessThan(thresholdWarning)) {
@@ -105,7 +110,11 @@ export class EarnedValueCalculator {
     plannedSchedule: PlannedMonthlyScheduleItem[];
     progressRecords: MonthlyProgressRecord[];
   }): CurveSData {
-    const totalPlanned = DecimalValue.of(params.baseline.totalContractValue || params.baseline.totalBudgetCost || '0');
+    const totalPlanned = DecimalValue.of(
+      params.baseline.totalContractValue ||
+        params.baseline.totalBudgetCost ||
+        '0',
+    );
     const recordsMap = new Map<number, MonthlyProgressRecord>();
     for (const rec of params.progressRecords) {
       recordsMap.set(rec.monthNumber, rec);
@@ -116,57 +125,68 @@ export class EarnedValueCalculator {
     let latestCpi = '1.0000';
     let latestProgress = '0.00';
 
-    const monthlySeries: EarnedValueMetrics[] = params.plannedSchedule.map((planItem) => {
-      const record = recordsMap.get(planItem.monthNumber);
-      const pv = planItem.plannedCumulativeAmount;
+    const monthlySeries: EarnedValueMetrics[] = params.plannedSchedule.map(
+      (planItem) => {
+        const record = recordsMap.get(planItem.monthNumber);
+        const pv = planItem.plannedCumulativeAmount;
 
-      if (record) {
-        // Se houver medição registrada no mês
-        const measured = DecimalValue.of(record.monthlyMeasuredAmount || '0');
-        runningActualCost = runningActualCost.plus(measured);
+        if (record) {
+          // Se houver medição registrada no mês
+          const measured = DecimalValue.of(record.monthlyMeasuredAmount || '0');
+          runningActualCost = runningActualCost.plus(measured);
 
-        const physPercent = DecimalValue.of(record.physicalProgressPercent || '0');
-        latestProgress = physPercent.toFixed(2, 'half-up');
+          const physPercent = DecimalValue.of(
+            record.physicalProgressPercent || '0',
+          );
+          latestProgress = physPercent.toFixed(2, 'half-up');
 
-        // EV = Total Planejado * (% Físico / 100) se não informado diretamente
-        let evStr = record.earnedValueCumulative;
-        if (!evStr || evStr === '0' || evStr === '0.00') {
-          const evDec = totalPlanned.times(physPercent).dividedBy(DecimalValue.of(100));
-          evStr = evDec.toFixed(2, 'half-up');
+          // EV = Total Planejado * (% Físico / 100) se não informado diretamente
+          let evStr = record.earnedValueCumulative;
+          if (!evStr || evStr === '0' || evStr === '0.00') {
+            const evDec = totalPlanned
+              .times(physPercent)
+              .dividedBy(DecimalValue.of(100));
+            evStr = evDec.toFixed(2, 'half-up');
+          }
+
+          const metrics = EarnedValueCalculator.calculatePeriodMetrics({
+            monthNumber: planItem.monthNumber,
+            periodDate: planItem.periodDate,
+            plannedValue: pv,
+            earnedValue: evStr,
+            actualCost: runningActualCost.toFixed(2, 'half-up'),
+            physicalProgressPercent: physPercent.toFixed(2, 'half-up'),
+            monthlyMeasuredAmount: measured.toFixed(2, 'half-up'),
+          });
+
+          latestSpi = metrics.schedulePerformanceIndex;
+          latestCpi = metrics.costPerformanceIndex;
+
+          return metrics;
+        } else {
+          // Mês futuro planejado sem medição ainda
+          return {
+            monthNumber: planItem.monthNumber,
+            periodDate: planItem.periodDate,
+            plannedValue: DecimalValue.of(pv).toFixed(2, 'half-up'),
+            earnedValue: '0.00',
+            actualCost: '0.00',
+            scheduleVariance: DecimalValue.zero()
+              .minus(DecimalValue.of(pv))
+              .toFixed(2, 'half-up'),
+            costVariance: '0.00',
+            schedulePerformanceIndex: '0.0000',
+            costPerformanceIndex: '1.0000',
+            physicalProgressPercent: '0.00',
+          };
         }
+      },
+    );
 
-        const metrics = EarnedValueCalculator.calculatePeriodMetrics({
-          monthNumber: planItem.monthNumber,
-          periodDate: planItem.periodDate,
-          plannedValue: pv,
-          earnedValue: evStr,
-          actualCost: runningActualCost.toFixed(2, 'half-up'),
-          physicalProgressPercent: physPercent.toFixed(2, 'half-up'),
-          monthlyMeasuredAmount: measured.toFixed(2, 'half-up'),
-        });
-
-        latestSpi = metrics.schedulePerformanceIndex;
-        latestCpi = metrics.costPerformanceIndex;
-
-        return metrics;
-      } else {
-        // Mês futuro planejado sem medição ainda
-        return {
-          monthNumber: planItem.monthNumber,
-          periodDate: planItem.periodDate,
-          plannedValue: DecimalValue.of(pv).toFixed(2, 'half-up'),
-          earnedValue: '0.00',
-          actualCost: '0.00',
-          scheduleVariance: DecimalValue.zero().minus(DecimalValue.of(pv)).toFixed(2, 'half-up'),
-          costVariance: '0.00',
-          schedulePerformanceIndex: '0.0000',
-          costPerformanceIndex: '1.0000',
-          physicalProgressPercent: '0.00',
-        };
-      }
-    });
-
-    const statusSummary = EarnedValueCalculator.determineStatusSummary(latestSpi, latestCpi);
+    const statusSummary = EarnedValueCalculator.determineStatusSummary(
+      latestSpi,
+      latestCpi,
+    );
 
     return {
       baselineId: params.baseline.id,

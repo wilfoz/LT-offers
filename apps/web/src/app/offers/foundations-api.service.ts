@@ -31,7 +31,9 @@ export class FoundationsApi {
 
   getTraceability(
     lineId: number,
-  ): Observable<Record<FoundationVolumeQuantityField, FoundationTraceabilityItem>> {
+  ): Observable<
+    Record<FoundationVolumeQuantityField, FoundationTraceabilityItem>
+  > {
     return this.http.get<
       Record<FoundationVolumeQuantityField, FoundationTraceabilityItem>
     >(`${this.baseUrl}/${lineId}/foundations/traceability`);

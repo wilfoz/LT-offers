@@ -18,7 +18,13 @@ describe('AuditService', () => {
       offerId: '10',
       action: 'UPDATE',
       description: 'Alteração do tipo de fundação da torre T-12',
-      diffs: [{ field: 'foundationType', previousValue: 'GRELHA', newValue: 'TUBULAÇÃO' }],
+      diffs: [
+        {
+          field: 'foundationType',
+          previousValue: 'GRELHA',
+          newValue: 'TUBULAÇÃO',
+        },
+      ],
     });
 
     expect(event.id).toBeDefined();

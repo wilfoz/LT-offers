@@ -49,7 +49,9 @@ describe('EconomicResultService (NestJS)', () => {
 
     expect(result).toBeDefined();
     expect(result.lines.length).toBeGreaterThanOrEqual(3);
-    expect(Number(result.totalSalePrice)).toBeGreaterThan(Number(result.totalCostWithTaxes));
+    expect(Number(result.totalSalePrice)).toBeGreaterThan(
+      Number(result.totalCostWithTaxes),
+    );
     expect(result.bdi).toBeDefined();
     expect(result.coefficients).toBeDefined();
   });
@@ -62,9 +64,7 @@ describe('EconomicResultService (NestJS)', () => {
         {
           id: 10,
           isCurrent: true,
-          transmissionLines: [
-            { id: 1, name: 'LT 1', refinedLengthKm: '100' },
-          ],
+          transmissionLines: [{ id: 1, name: 'LT 1', refinedLengthKm: '100' }],
         },
       ],
     });
@@ -75,7 +75,9 @@ describe('EconomicResultService (NestJS)', () => {
       offerRevision: { id: 10, offerId: 100, offer: { id: 100 } },
     });
 
-    const sim = await service.simulateMarginOrPrice(100, { targetMarginRate: '10.00' });
+    const sim = await service.simulateMarginOrPrice(100, {
+      targetMarginRate: '10.00',
+    });
 
     expect(sim).toBeDefined();
     expect(sim.resultingNetMarginRate).toBe('10.00');

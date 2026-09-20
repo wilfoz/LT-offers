@@ -20,11 +20,7 @@
         <span>Exportar Relatórios</span>
       </button>
 
-      <button
-        type="button"
-        class="btn-primary-gradient"
-        (click)="syncData()"
-      >
+      <button type="button" class="btn-primary-gradient" (click)="syncData()">
         <mat-icon>sync</mat-icon>
         <span>Sincronizar Dados</span>
       </button>
@@ -73,22 +69,27 @@
           <table class="technical-table">
             <thead>
               <tr>
-                <th style="width: 100px;">ID Torre</th>
+                <th style="width: 100px">ID Torre</th>
                 <th>Projeto / Obra</th>
                 <th>Tipo de Problema</th>
-                <th style="width: 110px; text-align: center;">Status</th>
-                <th style="width: 80px; text-align: center;">Ação</th>
+                <th style="width: 110px; text-align: center">Status</th>
+                <th style="width: 80px; text-align: center">Ação</th>
               </tr>
             </thead>
             <tbody>
               @for (item of pendingActions(); track item.id) {
                 <tr>
-                  <td class="font-numeric-tabular font-bold">{{ item.towerId }}</td>
+                  <td class="font-numeric-tabular font-bold">
+                    {{ item.towerId }}
+                  </td>
                   <td>{{ item.project }}</td>
-                  <td [class.text-error]="item.status === 'critical'" [class.text-pending]="item.status === 'pending'">
+                  <td
+                    [class.text-error]="item.status === 'critical'"
+                    [class.text-pending]="item.status === 'pending'"
+                  >
                     {{ item.issue }}
                   </td>
-                  <td style="text-align: center;">
+                  <td style="text-align: center">
                     <span
                       class="badge"
                       [class.badge-critical]="item.status === 'critical'"
@@ -98,7 +99,7 @@
                       {{ item.statusLabel }}
                     </span>
                   </td>
-                  <td style="text-align: center;">
+                  <td style="text-align: center">
                     <a
                       [routerLink]="item.routeLink"
                       class="action-btn"
@@ -122,7 +123,9 @@
           </div>
           <div class="shortcut-info">
             <span class="shortcut-title">Nova Obra / Proposta</span>
-            <span class="shortcut-desc">Cadastrar novo lote e parâmetros técnicos</span>
+            <span class="shortcut-desc"
+              >Cadastrar novo lote e parâmetros técnicos</span
+            >
           </div>
         </a>
 
@@ -132,7 +135,9 @@
           </div>
           <div class="shortcut-info">
             <span class="shortcut-title">Upload &amp; Processamento</span>
-            <span class="shortcut-desc">Importação OCR e validação de topografia</span>
+            <span class="shortcut-desc"
+              >Importação OCR e validação de topografia</span
+            >
           </div>
         </a>
 
@@ -142,7 +147,9 @@
           </div>
           <div class="shortcut-info">
             <span class="shortcut-title">Matriz de Volumes</span>
-            <span class="shortcut-desc">Consultar e parametrizar volumes de fundação</span>
+            <span class="shortcut-desc"
+              >Consultar e parametrizar volumes de fundação</span
+            >
           </div>
         </a>
       </div>
@@ -157,23 +164,43 @@
         </div>
         <div class="chart-container">
           <div class="bar-col">
-            <div class="bar-fill" style="height: 80%;" matTooltip="TM: 58 torres (80%)"></div>
+            <div
+              class="bar-fill"
+              style="height: 80%"
+              matTooltip="TM: 58 torres (80%)"
+            ></div>
             <span class="bar-label">TM</span>
           </div>
           <div class="bar-col">
-            <div class="bar-fill" style="height: 60%;" matTooltip="TE: 42 torres (60%)"></div>
+            <div
+              class="bar-fill"
+              style="height: 60%"
+              matTooltip="TE: 42 torres (60%)"
+            ></div>
             <span class="bar-label">TE</span>
           </div>
           <div class="bar-col">
-            <div class="bar-fill" style="height: 45%;" matTooltip="TR: 28 torres (45%)"></div>
+            <div
+              class="bar-fill"
+              style="height: 45%"
+              matTooltip="TR: 28 torres (45%)"
+            ></div>
             <span class="bar-label">TR</span>
           </div>
           <div class="bar-col">
-            <div class="bar-fill" style="height: 30%;" matTooltip="S: 16 torres (30%)"></div>
+            <div
+              class="bar-fill"
+              style="height: 30%"
+              matTooltip="S: 16 torres (30%)"
+            ></div>
             <span class="bar-label">S</span>
           </div>
           <div class="bar-col">
-            <div class="bar-fill" style="height: 20%;" matTooltip="SM: 10 torres (20%)"></div>
+            <div
+              class="bar-fill"
+              style="height: 20%"
+              matTooltip="SM: 10 torres (20%)"
+            ></div>
             <span class="bar-label">SM</span>
           </div>
         </div>
@@ -188,7 +215,7 @@
           <thead>
             <tr>
               <th>Status</th>
-              <th style="text-align: right;">Contagem</th>
+              <th style="text-align: right">Contagem</th>
             </tr>
           </thead>
           <tbody>
@@ -199,7 +226,12 @@
                   <span>Liberadas</span>
                 </div>
               </td>
-              <td class="font-numeric-tabular font-bold" style="text-align: right;">138</td>
+              <td
+                class="font-numeric-tabular font-bold"
+                style="text-align: right"
+              >
+                138
+              </td>
             </tr>
             <tr>
               <td>
@@ -208,7 +240,12 @@
                   <span>Pendentes</span>
                 </div>
               </td>
-              <td class="font-numeric-tabular font-bold" style="text-align: right;">12</td>
+              <td
+                class="font-numeric-tabular font-bold"
+                style="text-align: right"
+              >
+                12
+              </td>
             </tr>
             <tr>
               <td>
@@ -217,13 +254,20 @@
                   <span>Críticas</span>
                 </div>
               </td>
-              <td class="font-numeric-tabular font-bold" style="text-align: right;">4</td>
+              <td
+                class="font-numeric-tabular font-bold"
+                style="text-align: right"
+              >
+                4
+              </td>
             </tr>
           </tbody>
           <tfoot>
             <tr class="font-bold">
               <td>Total</td>
-              <td style="text-align: right; color: var(--solaris-primary);">154 Torres</td>
+              <td style="text-align: right; color: var(--solaris-primary)">
+                154 Torres
+              </td>
             </tr>
           </tfoot>
         </table>

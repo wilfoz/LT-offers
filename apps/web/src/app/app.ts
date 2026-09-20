@@ -57,18 +57,58 @@ export class App {
 
   protected readonly links = [
     { path: '/offers', label: 'Ofertas', icon: 'topic' },
-    { path: '/catalogs/conductor-cables', label: 'Cabos condutores', icon: 'cable' },
-    { path: '/catalogs/ground-wires', label: 'Cabos de guarda', icon: 'shield' },
-    { path: '/catalogs/guy-wires', label: 'Cabos de tirante', icon: 'line_weight' },
+    {
+      path: '/catalogs/conductor-cables',
+      label: 'Cabos condutores',
+      icon: 'cable',
+    },
+    {
+      path: '/catalogs/ground-wires',
+      label: 'Cabos de guarda',
+      icon: 'shield',
+    },
+    {
+      path: '/catalogs/guy-wires',
+      label: 'Cabos de tirante',
+      icon: 'line_weight',
+    },
     { path: '/catalogs/insulators', label: 'Isoladores', icon: 'bolt' },
-    { path: '/catalogs/structure-series', label: 'Séries de estruturas', icon: 'cell_tower' },
+    {
+      path: '/catalogs/structure-series',
+      label: 'Séries de estruturas',
+      icon: 'cell_tower',
+    },
     { path: '/catalogs/soil-types', label: 'Tipos de solo', icon: 'terrain' },
-    { path: '/catalogs/foundation-types', label: 'Tipos de fundação', icon: 'foundation' },
-    { path: '/catalogs/foundation-volumes', label: 'Matriz de volumes', icon: 'view_in_ar' },
-    { path: '/catalogs/labor-roles', label: 'Mão de obra', icon: 'engineering' },
-    { path: '/catalogs/equipment', label: 'Equipamentos', icon: 'precision_manufacturing' },
-    { path: '/catalogs/fixed-costs', label: 'Custos fixos', icon: 'receipt_long' },
-    { path: '/catalogs/work-crews', label: 'Equipes de trabalho', icon: 'groups' },
+    {
+      path: '/catalogs/foundation-types',
+      label: 'Tipos de fundação',
+      icon: 'foundation',
+    },
+    {
+      path: '/catalogs/foundation-volumes',
+      label: 'Matriz de volumes',
+      icon: 'view_in_ar',
+    },
+    {
+      path: '/catalogs/labor-roles',
+      label: 'Mão de obra',
+      icon: 'engineering',
+    },
+    {
+      path: '/catalogs/equipment',
+      label: 'Equipamentos',
+      icon: 'precision_manufacturing',
+    },
+    {
+      path: '/catalogs/fixed-costs',
+      label: 'Custos fixos',
+      icon: 'receipt_long',
+    },
+    {
+      path: '/catalogs/work-crews',
+      label: 'Equipes de trabalho',
+      icon: 'groups',
+    },
   ];
 
   protected toggleMenu(): void {

@@ -37,8 +37,12 @@ export class TowerQuantityCalculator {
     const extraPercent = options.extraPercent ?? 0.5; // RN-10: 0,5%
     const sparePercent = options.sparePercent ?? 0.0;
 
-    const extraRate = DecimalValue.of(extraPercent).dividedBy(DecimalValue.of(100));
-    const spareRate = DecimalValue.of(sparePercent).dividedBy(DecimalValue.of(100));
+    const extraRate = DecimalValue.of(extraPercent).dividedBy(
+      DecimalValue.of(100),
+    );
+    const spareRate = DecimalValue.of(sparePercent).dividedBy(
+      DecimalValue.of(100),
+    );
 
     const groupedMap = new Map<
       string,
@@ -60,7 +64,9 @@ export class TowerQuantityCalculator {
     for (const t of towers) {
       const legExtM = t.legExtensionM ?? 0;
       const legRateKgPerM = t.legWeightKgPerM ?? 150; // peso aproximado de extensão de perna
-      const legWeight = DecimalValue.of(legExtM).times(DecimalValue.of(legRateKgPerM));
+      const legWeight = DecimalValue.of(legExtM).times(
+        DecimalValue.of(legRateKgPerM),
+      );
       const structureWeight = DecimalValue.of(t.baseWeightKg).plus(legWeight);
 
       totalTheoretical = totalTheoretical.plus(structureWeight);
@@ -80,7 +86,8 @@ export class TowerQuantityCalculator {
       const existing = groupedMap.get(groupKey);
       if (existing) {
         existing.count += 1;
-        existing.totalTheoreticalWeight = existing.totalTheoreticalWeight.plus(structureWeight);
+        existing.totalTheoreticalWeight =
+          existing.totalTheoreticalWeight.plus(structureWeight);
       } else {
         groupedMap.set(groupKey, {
           towerTypeId: t.towerTypeId,
@@ -135,7 +142,9 @@ export class TowerQuantityCalculator {
       totalExtraWeightKg: grandExtra.round(2, 'half-up'),
       totalSpareWeightKg: grandSpare.round(2, 'half-up'),
       totalWeightKg: grandTotalKg.round(2, 'half-up'),
-      totalWeightTons: grandTotalKg.dividedBy(DecimalValue.of(1000)).round(3, 'half-up'),
+      totalWeightTons: grandTotalKg
+        .dividedBy(DecimalValue.of(1000))
+        .round(3, 'half-up'),
       traceability,
     };
   }

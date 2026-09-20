@@ -52,9 +52,13 @@ describe('Baseline & Execution Services (Fase F7)', () => {
     }).compile();
 
     baselineService = module.get<BaselineService>(BaselineService);
-    progressTrackingService = module.get<ProgressTrackingService>(ProgressTrackingService);
+    progressTrackingService = module.get<ProgressTrackingService>(
+      ProgressTrackingService,
+    );
     changeOrderService = module.get<ChangeOrderService>(ChangeOrderService);
-    erpIntegrationService = module.get<ErpIntegrationService>(ErpIntegrationService);
+    erpIntegrationService = module.get<ErpIntegrationService>(
+      ErpIntegrationService,
+    );
   });
 
   describe('BaselineService', () => {
@@ -104,7 +108,7 @@ describe('Baseline & Execution Services (Fase F7)', () => {
       const curveS = await progressTrackingService.getCurveS(1, 1);
       expect(curveS.baselineId).toBe(1);
       expect(curveS.monthlySeries.length).toBe(18);
-      expect(parseFloat(curveS.currentPhysicalProgressPercent)).toBe(28.50);
+      expect(parseFloat(curveS.currentPhysicalProgressPercent)).toBe(28.5);
     });
   });
 
@@ -144,7 +148,9 @@ describe('Baseline & Execution Services (Fase F7)', () => {
 
       const cwe = await changeOrderService.getCurrentWorkingEstimate(1);
       expect(cwe.approvedChangeOrdersCount).toBeGreaterThanOrEqual(3);
-      expect(parseFloat(cwe.currentWorkingEstimateValue)).toBeGreaterThan(parseFloat(cwe.baselineContractValue));
+      expect(parseFloat(cwe.currentWorkingEstimateValue)).toBeGreaterThan(
+        parseFloat(cwe.baselineContractValue),
+      );
     });
   });
 

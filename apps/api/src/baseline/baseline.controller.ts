@@ -110,7 +110,9 @@ export class BaselineController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Query('baselineId') baselineId?: string,
   ): Promise<MonthlyProgressRecord[]> {
-    const bId = baselineId ? parseInt(baselineId, 10) : (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId = baselineId
+      ? parseInt(baselineId, 10)
+      : (await this.baselineService.getActiveBaseline(offerId)).id;
     return this.progressTrackingService.listProgressRecords(bId);
   }
 
@@ -122,7 +124,9 @@ export class BaselineController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Query('baselineId') baselineId?: string,
   ): Promise<ContractChangeOrder[]> {
-    const bId = baselineId ? parseInt(baselineId, 10) : (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId = baselineId
+      ? parseInt(baselineId, 10)
+      : (await this.baselineService.getActiveBaseline(offerId)).id;
     return this.changeOrderService.listChangeOrders(bId);
   }
 
@@ -151,7 +155,9 @@ export class BaselineController {
     @Param('changeOrderId', ParseIntPipe) changeOrderId: number,
     @Body() payload: UpdateChangeOrderPayload & { baselineId?: number },
   ): Promise<ContractChangeOrder> {
-    const bId = payload.baselineId || (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId =
+      payload.baselineId ||
+      (await this.baselineService.getActiveBaseline(offerId)).id;
     return this.changeOrderService.updateChangeOrder(
       bId,
       changeOrderId,
@@ -168,7 +174,9 @@ export class BaselineController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Query('baselineId') baselineId?: string,
   ): Promise<CurrentWorkingEstimate> {
-    const bId = baselineId ? parseInt(baselineId, 10) : (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId = baselineId
+      ? parseInt(baselineId, 10)
+      : (await this.baselineService.getActiveBaseline(offerId)).id;
     return this.changeOrderService.getCurrentWorkingEstimate(bId);
   }
 
@@ -180,7 +188,9 @@ export class BaselineController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Body() payload: Partial<GenerateErpPackagePayload>,
   ): Promise<ErpIntegrationPackage> {
-    const bId = payload.baselineId || (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId =
+      payload.baselineId ||
+      (await this.baselineService.getActiveBaseline(offerId)).id;
     return this.erpIntegrationService.generateErpJson(
       {
         baselineId: bId,
@@ -201,7 +211,9 @@ export class BaselineController {
     @Body() payload: Partial<GenerateErpPackagePayload>,
     @Res() res: Response,
   ): Promise<void> {
-    const bId = payload.baselineId || (await this.baselineService.getActiveBaseline(offerId)).id;
+    const bId =
+      payload.baselineId ||
+      (await this.baselineService.getActiveBaseline(offerId)).id;
     const targetSystem = payload.targetSystem || 'SAP';
     const buffer = await this.erpIntegrationService.generateErpXlsx(
       {

@@ -19,7 +19,12 @@ import {
   canViewSensitiveCommercialData,
 } from '@lt-offers/domain';
 import { RolesGuard } from '../auth/roles.guard';
-import { CurrentUser, RequireScopes, Roles, Audited } from '../auth/auth.decorators';
+import {
+  CurrentUser,
+  RequireScopes,
+  Roles,
+  Audited,
+} from '../auth/auth.decorators';
 
 @Controller()
 @UseGuards(RolesGuard)
@@ -28,7 +33,7 @@ export class EconomicResultController {
 
   private maskSensitiveEconomicData(
     summary: EconomicResultSummary,
-    user: UserProfile
+    user: UserProfile,
   ): EconomicResultSummary {
     if (canViewSensitiveCommercialData(user)) {
       return summary;
@@ -65,21 +70,29 @@ export class EconomicResultController {
   @RequireScopes('OFFER_READ')
   async getLineEconomicResult(
     @Param('lineId', ParseIntPipe) lineId: number,
-    @CurrentUser() user: UserProfile
+    @CurrentUser() user: UserProfile,
   ): Promise<EconomicResultSummary> {
-    const result = await this.economicResultService.getLineEconomicResult(lineId);
+    const result =
+      await this.economicResultService.getLineEconomicResult(lineId);
     return this.maskSensitiveEconomicData(result, user);
   }
 
   @Post('lines/:lineId/economic-result')
   @RequireScopes('COMMERCIAL_WRITE')
-  @Audited({ resource: 'ECONOMIC_RESULT', action: 'UPDATE', description: 'Recálculo de coeficientes comerciais da linha' })
+  @Audited({
+    resource: 'ECONOMIC_RESULT',
+    action: 'UPDATE',
+    description: 'Recálculo de coeficientes comerciais da linha',
+  })
   async calculateLineWithCustomCoefficients(
     @Param('lineId', ParseIntPipe) lineId: number,
     @Body() customCoeffs: Partial<SaleCoefficients>,
-    @CurrentUser() user: UserProfile
+    @CurrentUser() user: UserProfile,
   ): Promise<EconomicResultSummary> {
-    const result = await this.economicResultService.getLineEconomicResult(lineId, customCoeffs);
+    const result = await this.economicResultService.getLineEconomicResult(
+      lineId,
+      customCoeffs,
+    );
     return this.maskSensitiveEconomicData(result, user);
   }
 
@@ -87,22 +100,31 @@ export class EconomicResultController {
   @RequireScopes('OFFER_READ')
   async getConsolidatedEconomicResult(
     @Param('offerId', ParseIntPipe) offerId: number,
-    @CurrentUser() user: UserProfile
+    @CurrentUser() user: UserProfile,
   ): Promise<EconomicResultSummary> {
-    const result = await this.economicResultService.getConsolidatedEconomicResult(offerId);
+    const result =
+      await this.economicResultService.getConsolidatedEconomicResult(offerId);
     return this.maskSensitiveEconomicData(result, user);
   }
 
   @Post('offers/:offerId/economic-result/simulate')
   @RequireScopes('COMMERCIAL_WRITE')
-  @Audited({ resource: 'ECONOMIC_RESULT', action: 'SIMULATE', description: 'Simulação interativa de preço e margem comercial' })
+  @Audited({
+    resource: 'ECONOMIC_RESULT',
+    action: 'SIMULATE',
+    description: 'Simulação interativa de preço e margem comercial',
+  })
   async simulateMarginOrPrice(
     @Param('offerId', ParseIntPipe) offerId: number,
     @Body() simInput: MarginSimulationInput,
-    @Query('lineId') lineId?: string
+    @Query('lineId') lineId?: string,
   ): Promise<MarginSimulationOutput> {
     const parsedLineId = lineId ? parseInt(lineId, 10) : undefined;
-    return this.economicResultService.simulateMarginOrPrice(offerId, simInput, parsedLineId);
+    return this.economicResultService.simulateMarginOrPrice(
+      offerId,
+      simInput,
+      parsedLineId,
+    );
   }
 
   @Get('offers/:offerId/economic-result/compare')
@@ -110,7 +132,7 @@ export class EconomicResultController {
   async compareRevisions(
     @Param('offerId', ParseIntPipe) offerId: number,
     @Query('baseRev') baseRev: string,
-    @Query('targetRev') targetRev: string
+    @Query('targetRev') targetRev: string,
   ): Promise<RevisionComparisonResult> {
     const base = baseRev ? parseInt(baseRev, 10) : 0;
     const target = targetRev ? parseInt(targetRev, 10) : 1;

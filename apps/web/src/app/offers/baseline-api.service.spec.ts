@@ -4,7 +4,11 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { BaselineApiService } from './baseline-api.service';
-import { WorkBaseline, CurveSData, CurrentWorkingEstimate } from '@lt-offers/domain';
+import {
+  WorkBaseline,
+  CurveSData,
+  CurrentWorkingEstimate,
+} from '@lt-offers/domain';
 
 describe('BaselineApiService', () => {
   let service: BaselineApiService;

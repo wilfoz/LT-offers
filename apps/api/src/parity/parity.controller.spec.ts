@@ -48,7 +48,10 @@ describe('ParityController', () => {
     } as any;
 
     controller.getMarkdownReport('solaris', resMock);
-    expect(resMock.setHeader).toHaveBeenCalledWith('Content-Type', 'text/markdown; charset=utf-8');
+    expect(resMock.setHeader).toHaveBeenCalledWith(
+      'Content-Type',
+      'text/markdown; charset=utf-8',
+    );
     expect(resMock.send).toHaveBeenCalled();
   });
 });

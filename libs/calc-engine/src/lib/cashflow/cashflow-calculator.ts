@@ -39,7 +39,8 @@ export class CashflowCalculator {
     const totalSalePriceDec = DecimalValue.of(input.totalSalePrice || '0');
     const advanceRateDec = DecimalValue.of(input.advancePaymentRate || '0');
     const retentionRateDec = DecimalValue.of(input.retentionRate || '0');
-    const billingLag = input.billingLagMonths !== undefined ? input.billingLagMonths : 1;
+    const billingLag =
+      input.billingLagMonths !== undefined ? input.billingLagMonths : 1;
 
     const monthlyPoints: CashflowMonthPoint[] = [];
 
@@ -65,7 +66,9 @@ export class CashflowCalculator {
       const itemTotalCost = DecimalValue.of(item.totalCost || '0');
       for (let m = 1; m <= totalMonths; m++) {
         const pctRaw = item.monthlyCostPercentages?.[m] || '0';
-        const pctDec = DecimalValue.of(pctRaw).dividedBy(DecimalValue.of('100'));
+        const pctDec = DecimalValue.of(pctRaw).dividedBy(
+          DecimalValue.of('100'),
+        );
         const monthCost = itemTotalCost.times(pctDec);
 
         if (item.type === 'MATERIALS') {
@@ -104,22 +107,42 @@ export class CashflowCalculator {
       // Medição associada ao progresso físico com defasagem de faturamento
       const progressMonth = m - billingLag;
       if (progressMonth >= 1 && progressMonth <= totalMonths) {
-        const progPctRaw = input.monthlyPhysicalProgressPercentages?.[progressMonth] || '0';
-        const progPctDec = DecimalValue.of(progPctRaw).dividedBy(DecimalValue.of('100'));
+        const progPctRaw =
+          input.monthlyPhysicalProgressPercentages?.[progressMonth] || '0';
+        const progPctDec = DecimalValue.of(progPctRaw).dividedBy(
+          DecimalValue.of('100'),
+        );
         // Aplica desconto de retenção técnica
-        const retentionMult = DecimalValue.of('1').minus(retentionRateDec.dividedBy(DecimalValue.of('100')));
-        measurementBillingDec = netBillableByMeasurement.times(progPctDec).times(retentionMult).round(2, 'half-up');
+        const retentionMult = DecimalValue.of('1').minus(
+          retentionRateDec.dividedBy(DecimalValue.of('100')),
+        );
+        measurementBillingDec = netBillableByMeasurement
+          .times(progPctDec)
+          .times(retentionMult)
+          .round(2, 'half-up');
       }
 
       // No último mês, liquida medições residuais devido a defasagem (lag) e libera a retenção técnica
       if (m === totalMonths) {
         if (billingLag > 0) {
-          for (let lagM = totalMonths - billingLag + 1; lagM <= totalMonths; lagM++) {
-            const progPctRaw = input.monthlyPhysicalProgressPercentages?.[lagM] || '0';
-            const progPctDec = DecimalValue.of(progPctRaw).dividedBy(DecimalValue.of('100'));
-            const retentionMult = DecimalValue.of('1').minus(retentionRateDec.dividedBy(DecimalValue.of('100')));
+          for (
+            let lagM = totalMonths - billingLag + 1;
+            lagM <= totalMonths;
+            lagM++
+          ) {
+            const progPctRaw =
+              input.monthlyPhysicalProgressPercentages?.[lagM] || '0';
+            const progPctDec = DecimalValue.of(progPctRaw).dividedBy(
+              DecimalValue.of('100'),
+            );
+            const retentionMult = DecimalValue.of('1').minus(
+              retentionRateDec.dividedBy(DecimalValue.of('100')),
+            );
             measurementBillingDec = measurementBillingDec.plus(
-              netBillableByMeasurement.times(progPctDec).times(retentionMult).round(2, 'half-up')
+              netBillableByMeasurement
+                .times(progPctDec)
+                .times(retentionMult)
+                .round(2, 'half-up'),
             );
           }
         }
@@ -162,7 +185,9 @@ export class CashflowCalculator {
       });
     }
 
-    const recommendedCapital = maxNegativeExp.times(DecimalValue.of('1.10')).round(2, 'half-up');
+    const recommendedCapital = maxNegativeExp
+      .times(DecimalValue.of('1.10'))
+      .round(2, 'half-up');
 
     const exposure: FinancialExposurePeak = {
       peakMonth: peakExpMonth,

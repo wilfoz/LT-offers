@@ -80,9 +80,13 @@ export class ProgressTrackingService {
     payload: RecordMonthlyProgressPayload,
     user: string,
   ): Promise<MonthlyProgressRecord> {
-    const baseline = await this.baselineService.getBaselineById(payload.baselineId);
+    const baseline = await this.baselineService.getBaselineById(
+      payload.baselineId,
+    );
     if (!baseline) {
-      throw new NotFoundException(`Linha de base ID ${payload.baselineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de base ID ${payload.baselineId} não encontrada.`,
+      );
     }
 
     const records = this.progressRecords.get(payload.baselineId) || [];
@@ -105,7 +109,9 @@ export class ProgressTrackingService {
     };
 
     // Atualiza ou insere o registro do mês
-    const existingIndex = records.findIndex((r) => r.monthNumber === payload.monthNumber);
+    const existingIndex = records.findIndex(
+      (r) => r.monthNumber === payload.monthNumber,
+    );
     if (existingIndex >= 0) {
       records[existingIndex] = record;
     } else {
@@ -125,7 +131,11 @@ export class ProgressTrackingService {
       action: 'UPDATE',
       description: `Lançamento do Boletim de Medição Mês ${payload.monthNumber} (${payload.periodDate}) - Avanço Físico: ${payload.physicalProgressPercent}%, Medição: R$ ${payload.monthlyMeasuredAmount}`,
       diffs: [
-        { field: `progress_month_${payload.monthNumber}`, previousValue: null, newValue: payload.physicalProgressPercent },
+        {
+          field: `progress_month_${payload.monthNumber}`,
+          previousValue: null,
+          newValue: payload.physicalProgressPercent,
+        },
       ],
     });
 
@@ -145,7 +155,9 @@ export class ProgressTrackingService {
 
     // Constrói a série planejada linear/acumulada
     const plannedSchedule: PlannedMonthlyScheduleItem[] = [];
-    const totalContract = parseFloat(baseline.totalContractValue || '120000000');
+    const totalContract = parseFloat(
+      baseline.totalContractValue || '120000000',
+    );
     const monthlyRate = totalContract / monthsCount;
     let runningPlanned = 0;
 
@@ -174,7 +186,9 @@ export class ProgressTrackingService {
   /**
    * Lista todos os boletins de medição de uma baseline.
    */
-  async listProgressRecords(baselineId: number): Promise<MonthlyProgressRecord[]> {
+  async listProgressRecords(
+    baselineId: number,
+  ): Promise<MonthlyProgressRecord[]> {
     return this.progressRecords.get(baselineId) || [];
   }
 }

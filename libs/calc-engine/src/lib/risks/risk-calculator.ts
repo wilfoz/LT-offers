@@ -11,7 +11,10 @@ export class RiskCalculator {
    * Calcula a severidade ponderada de um item de risco:
    * Severidade = Impacto Estimado (R$) x Probabilidade (%) / 100 (RF-61).
    */
-  static calculateItemSeverity(impact: number | string, probabilityPercent: number | string): string {
+  static calculateItemSeverity(
+    impact: number | string,
+    probabilityPercent: number | string,
+  ): string {
     const impactDec = DecimalValue.of(impact || '0');
     const probDec = DecimalValue.of(probabilityPercent || '0');
 
@@ -28,7 +31,7 @@ export class RiskCalculator {
   static assessRisks(
     offerId: string,
     items: RiskItem[],
-    lineId?: string
+    lineId?: string,
   ): RiskAssessmentSummary {
     const allCategories: RiskCategory[] = [
       'LAND_EASEMENT',
@@ -62,7 +65,7 @@ export class RiskCalculator {
     const processedItems: RiskItem[] = items.map((item) => {
       const severity = this.calculateItemSeverity(
         item.estimatedImpact,
-        item.probabilityPercent
+        item.probabilityPercent,
       );
       const impactDec = DecimalValue.of(item.estimatedImpact || '0');
       const severityDec = DecimalValue.of(severity);
@@ -73,7 +76,8 @@ export class RiskCalculator {
       if (item.treatment === 'CONTINGENCY_BDI') {
         bdiContingencyAmountDec = bdiContingencyAmountDec.plus(severityDec);
       } else {
-        commercialAssumptionAmountDec = commercialAssumptionAmountDec.plus(severityDec);
+        commercialAssumptionAmountDec =
+          commercialAssumptionAmountDec.plus(severityDec);
       }
 
       const catStat = categoryMap.get(item.category) || {
@@ -92,24 +96,36 @@ export class RiskCalculator {
       };
     });
 
-    const categoryBreakdown: RiskCategorySummary[] = allCategories.map((cat) => {
-      const stat = categoryMap.get(cat)!;
-      return {
-        category: cat,
-        count: stat.count,
-        totalImpact: stat.impactDec.round(2, 'half-up').toFixed(2),
-        totalWeightedSeverity: stat.weightedDec.round(2, 'half-up').toFixed(2),
-      };
-    });
+    const categoryBreakdown: RiskCategorySummary[] = allCategories.map(
+      (cat) => {
+        const stat = categoryMap.get(cat)!;
+        return {
+          category: cat,
+          count: stat.count,
+          totalImpact: stat.impactDec.round(2, 'half-up').toFixed(2),
+          totalWeightedSeverity: stat.weightedDec
+            .round(2, 'half-up')
+            .toFixed(2),
+        };
+      },
+    );
 
     return {
       offerId,
       lineId,
       items: processedItems,
-      totalEstimatedImpact: totalEstimatedImpactDec.round(2, 'half-up').toFixed(2),
-      totalWeightedSeverity: totalWeightedSeverityDec.round(2, 'half-up').toFixed(2),
-      bdiContingencyAmount: bdiContingencyAmountDec.round(2, 'half-up').toFixed(2),
-      commercialAssumptionAmount: commercialAssumptionAmountDec.round(2, 'half-up').toFixed(2),
+      totalEstimatedImpact: totalEstimatedImpactDec
+        .round(2, 'half-up')
+        .toFixed(2),
+      totalWeightedSeverity: totalWeightedSeverityDec
+        .round(2, 'half-up')
+        .toFixed(2),
+      bdiContingencyAmount: bdiContingencyAmountDec
+        .round(2, 'half-up')
+        .toFixed(2),
+      commercialAssumptionAmount: commercialAssumptionAmountDec
+        .round(2, 'half-up')
+        .toFixed(2),
       categoryBreakdown,
     };
   }
@@ -120,7 +136,7 @@ export class RiskCalculator {
    */
   static calculateContingencyRateFromAmount(
     bdiContingencyAmount: number | string,
-    baseOwnCost: number | string
+    baseOwnCost: number | string,
   ): string {
     const contingencyDec = DecimalValue.of(bdiContingencyAmount || '0');
     const ownCostDec = DecimalValue.of(baseOwnCost || '0');

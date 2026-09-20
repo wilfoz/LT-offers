@@ -173,14 +173,17 @@ describe('Fase F5 Calculation Engines (M09, M10, M11)', () => {
         coefficients: coeffs,
       };
 
-      const baseSummary = EconomicResultCalculator.calculateEconomicResult(input);
+      const baseSummary =
+        EconomicResultCalculator.calculateEconomicResult(input);
 
       // Simulação 1: Forçar margem de 12%
       const sim1 = EconomicResultCalculator.simulateMarginOrPrice(baseSummary, {
         targetMarginRate: '12.00',
       });
       expect(sim1.resultingNetMarginRate).toBe('12.00');
-      expect(Number(sim1.simulatedSalePrice)).toBeGreaterThan(Number(baseSummary.totalSalePrice));
+      expect(Number(sim1.simulatedSalePrice)).toBeGreaterThan(
+        Number(baseSummary.totalSalePrice),
+      );
 
       // Simulação 2: Forçar preço fixo menor (desconto)
       const forcedPrice = '20000000.00';
@@ -194,7 +197,15 @@ describe('Fase F5 Calculation Engines (M09, M10, M11)', () => {
     it('should compare two revisions and decompose variations by cause (RF-56)', () => {
       const input1: EconomicResultInput = {
         offerId: 'offer-1',
-        materials: { netCost: '10000000', pisCofins: '0', ipi: '0', icmsOrigin: '0', difal: '0', fecoep: '0', costWithTaxes: '10000000' },
+        materials: {
+          netCost: '10000000',
+          pisCofins: '0',
+          ipi: '0',
+          icmsOrigin: '0',
+          difal: '0',
+          fecoep: '0',
+          costWithTaxes: '10000000',
+        },
         services: { netCost: '5000000', costWithTaxes: '5000000' },
         indirectsCamps: { netCost: '1000000', costWithTaxes: '1000000' },
         coefficients: coeffs,
@@ -202,7 +213,15 @@ describe('Fase F5 Calculation Engines (M09, M10, M11)', () => {
 
       const input2: EconomicResultInput = {
         offerId: 'offer-1',
-        materials: { netCost: '12000000', pisCofins: '0', ipi: '0', icmsOrigin: '0', difal: '0', fecoep: '0', costWithTaxes: '12000000' },
+        materials: {
+          netCost: '12000000',
+          pisCofins: '0',
+          ipi: '0',
+          icmsOrigin: '0',
+          difal: '0',
+          fecoep: '0',
+          costWithTaxes: '12000000',
+        },
         services: { netCost: '6000000', costWithTaxes: '6000000' },
         indirectsCamps: { netCost: '1000000', costWithTaxes: '1000000' },
         coefficients: coeffs,
@@ -211,7 +230,12 @@ describe('Fase F5 Calculation Engines (M09, M10, M11)', () => {
       const rev0 = EconomicResultCalculator.calculateEconomicResult(input1);
       const rev1 = EconomicResultCalculator.calculateEconomicResult(input2);
 
-      const comparison = EconomicResultCalculator.compareRevisions(rev0, rev1, 0, 1);
+      const comparison = EconomicResultCalculator.compareRevisions(
+        rev0,
+        rev1,
+        0,
+        1,
+      );
 
       expect(comparison.baseRevisionNumber).toBe(0);
       expect(comparison.targetRevisionNumber).toBe(1);

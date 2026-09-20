@@ -19,17 +19,23 @@ describe('ExportController (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-18)', () => {
       layout: 'ANEEL_STANDARD',
       rows: [],
     }),
-    exportTenderSheet: jest.fn().mockResolvedValue(Buffer.from('fake-xlsx-content')),
+    exportTenderSheet: jest
+      .fn()
+      .mockResolvedValue(Buffer.from('fake-xlsx-content')),
     getMeasurementSheetData: jest.fn().mockResolvedValue({
       offerId: '1',
       items: [],
     }),
-    exportMeasurementSheet: jest.fn().mockResolvedValue(Buffer.from('fake-xlsx-content')),
+    exportMeasurementSheet: jest
+      .fn()
+      .mockResolvedValue(Buffer.from('fake-xlsx-content')),
     getCashflowExportData: jest.fn().mockResolvedValue({
       offerId: '1',
       months: [],
     }),
-    exportCashflowSheet: jest.fn().mockResolvedValue(Buffer.from('fake-xlsx-content')),
+    exportCashflowSheet: jest
+      .fn()
+      .mockResolvedValue(Buffer.from('fake-xlsx-content')),
     getFullOfferPackage: jest.fn().mockResolvedValue({
       metadata: { schemaVersion: 'open-lt-offer-v1' },
       offer: { id: 1 },
@@ -58,7 +64,10 @@ describe('ExportController (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-18)', () => {
   it('should return tender sheet structured data', async () => {
     const res = await controller.getTenderSheetData(1, 'ANEEL_STANDARD');
     expect(res.offerId).toBe('1');
-    expect(service.getTenderSheetData).toHaveBeenCalledWith(1, 'ANEEL_STANDARD');
+    expect(service.getTenderSheetData).toHaveBeenCalledWith(
+      1,
+      'ANEEL_STANDARD',
+    );
   });
 
   it('should download tender sheet XLSX binary file', async () => {

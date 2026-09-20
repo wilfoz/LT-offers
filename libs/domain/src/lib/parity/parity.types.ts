@@ -1,6 +1,8 @@
-export type ParityCategory = 'DISCRETE' | 'PHYSICAL_CONTINUOUS' | 'FINANCIAL_AGGREGATE';
+export type ParityCategory =
+  'DISCRETE' | 'PHYSICAL_CONTINUOUS' | 'FINANCIAL_AGGREGATE';
 
-export type ParityMetricStatus = 'CONFORME' | 'CORRECAO_HOMOLOGADA' | 'DESVIO_DETECTADO';
+export type ParityMetricStatus =
+  'CONFORME' | 'CORRECAO_HOMOLOGADA' | 'DESVIO_DETECTADO';
 
 export interface ParityToleranceConfig {
   discreteMaxDelta: number; // Padrão: 0 (exato)
@@ -51,7 +53,11 @@ export interface HistoricalOfferFixture {
   code: string;
   name: string;
   description: string;
-  profileType: 'SINGLE_LINE' | 'MULTILINE_LOT' | 'REIDI_DIRECT_BILL' | 'SPECIAL_FOUNDATION';
+  profileType:
+    | 'SINGLE_LINE'
+    | 'MULTILINE_LOT'
+    | 'REIDI_DIRECT_BILL'
+    | 'SPECIAL_FOUNDATION';
   nominalVoltageKv: number;
   totalLengthKm: number;
   targetUfs: string[];
@@ -83,7 +89,14 @@ export interface HistoricalOfferFixture {
     }>;
     quotes: Array<{
       itemCode: string;
-      category: 'TOWER' | 'CONDUCTOR' | 'GROUND_WIRE' | 'OPGW' | 'GUY_WIRE' | 'INSULATOR' | 'HARDWARE';
+      category:
+        | 'TOWER'
+        | 'CONDUCTOR'
+        | 'GROUND_WIRE'
+        | 'OPGW'
+        | 'GUY_WIRE'
+        | 'INSULATOR'
+        | 'HARDWARE';
       supplier: string;
       originUf: string;
       currency: string;
@@ -95,7 +108,11 @@ export interface HistoricalOfferFixture {
     commodities: {
       lmeSpotUsdPerTon: number;
       midwestPremiumUsdPerTon: number;
-      monthlyFuturesLme: Array<{ monthIndex: number; lmeUsdPerTon: number; exchangeRateUsd: number }>;
+      monthlyFuturesLme: Array<{
+        monthIndex: number;
+        lmeUsdPerTon: number;
+        exchangeRateUsd: number;
+      }>;
       deliverySchedulePct: Array<{ monthIndex: number; conductorPct: number }>;
     };
     camps: Array<{
@@ -132,6 +149,9 @@ export interface HistoricalOfferFixture {
     discrete: Record<string, number>;
     physical: Record<string, number>;
     financial: Record<string, number>;
-    knownCorrections?: Record<string, { baselineLegacyValue: number; correctedValue: number; note: string }>;
+    knownCorrections?: Record<
+      string,
+      { baselineLegacyValue: number; correctedValue: number; note: string }
+    >;
   };
 }

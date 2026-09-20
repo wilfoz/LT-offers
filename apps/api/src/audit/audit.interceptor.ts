@@ -17,13 +17,13 @@ export class AuditInterceptor implements NestInterceptor {
   constructor(
     private readonly reflector: Reflector,
     private readonly authService: AuthService,
-    private readonly auditService: AuditService
+    private readonly auditService: AuditService,
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const auditedOptions = this.reflector.getAllAndOverride<AuditedOptions>(
       AUDITED_KEY,
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     if (!auditedOptions) {
@@ -41,7 +41,8 @@ export class AuditInterceptor implements NestInterceptor {
 
     const user = this.authService.resolveUserFromRequest(request);
     const offerId = request.params?.offerId || request.body?.offerId;
-    const resourceId = request.params?.id || request.params?.lineId || request.params?.riskId;
+    const resourceId =
+      request.params?.id || request.params?.lineId || request.params?.riskId;
 
     let defaultAction: AuditAction = 'UPDATE';
     if (method === 'POST') defaultAction = 'CREATE';
@@ -74,7 +75,7 @@ export class AuditInterceptor implements NestInterceptor {
           description,
           diffs: diffs.length > 0 ? diffs : undefined,
         });
-      })
+      }),
     );
   }
 }

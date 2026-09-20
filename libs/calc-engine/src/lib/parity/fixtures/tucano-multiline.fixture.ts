@@ -3,7 +3,8 @@ import { HistoricalOfferFixture } from '@lt-offers/domain';
 export const TUCANO_MULTILINE_FIXTURE: HistoricalOfferFixture = {
   code: 'OF-2025-042-TUCANO',
   name: 'Lote Multilinhas Tucano 230 kV (BA / PE)',
-  description: 'Proposta para lote com duas linhas simultâneas (LT 230 kV Tucano-Juazeiro e LT 230 kV Juazeiro-Petrolina), canteiro compartilhado e ponderação de futuros LME.',
+  description:
+    'Proposta para lote com duas linhas simultâneas (LT 230 kV Tucano-Juazeiro e LT 230 kV Juazeiro-Petrolina), canteiro compartilhado e ponderação de futuros LME.',
   profileType: 'MULTILINE_LOT',
   nominalVoltageKv: 230,
   totalLengthKm: 215.0,

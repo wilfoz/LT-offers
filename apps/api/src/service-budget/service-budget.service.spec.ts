@@ -50,13 +50,17 @@ describe('ServiceBudgetService (NestJS)', () => {
     expect(result.lineId).toBe('1');
     expect(result.items.length).toBe(6);
     expect(Number(result.totalDirectCost)).toBeGreaterThan(0);
-    expect(Number(result.totalSalePrice)).toBeGreaterThan(Number(result.totalDirectCost));
+    expect(Number(result.totalSalePrice)).toBeGreaterThan(
+      Number(result.totalDirectCost),
+    );
     expect(result.ratios.costPerKm).toBeDefined();
   });
 
   it('should throw NotFoundException if line does not exist', async () => {
     mockPrismaService.transmissionLine.findUnique.mockResolvedValue(null);
 
-    await expect(service.getLineServiceBudget(999)).rejects.toThrow(NotFoundException);
+    await expect(service.getLineServiceBudget(999)).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

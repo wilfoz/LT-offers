@@ -4,7 +4,8 @@
  * - PARAMETRIC_ADJUSTED: Cronograma parametrizado com fatores de ajuste/dificuldade.
  * - SUBCONTRACT_QUOTED: Subcontratação direta com cotação fechada de terceiros.
  */
-export type ServiceCostSource = 'SCHEDULE_DIRECT' | 'PARAMETRIC_ADJUSTED' | 'SUBCONTRACT_QUOTED';
+export type ServiceCostSource =
+  'SCHEDULE_DIRECT' | 'PARAMETRIC_ADJUSTED' | 'SUBCONTRACT_QUOTED';
 
 /**
  * Grupos padrão de serviços de Linhas de Transmissão.

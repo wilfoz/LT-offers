@@ -13,7 +13,11 @@ export class CashflowService {
 
   async getLineCashflow(
     lineId: number,
-    params?: { advanceRate?: number; retentionRate?: number; billingLag?: number }
+    params?: {
+      advanceRate?: number;
+      retentionRate?: number;
+      billingLag?: number;
+    },
   ): Promise<CashflowSummary> {
     const line = await this.prisma.transmissionLine.findUnique({
       where: { id: lineId },
@@ -27,16 +31,21 @@ export class CashflowService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
     const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
     const totalTowers = Math.max(1, Math.round(lengthKm * 2.5));
 
-    const totalMaterialsCost = lengthKm * 125000 * 1.3425 + totalTowers * 45000 * 1.3425;
-    const totalServicesCost = lengthKm * 55000 * 1.0925 + totalTowers * 27500 * 1.0925;
+    const totalMaterialsCost =
+      lengthKm * 125000 * 1.3425 + totalTowers * 45000 * 1.3425;
+    const totalServicesCost =
+      lengthKm * 55000 * 1.0925 + totalTowers * 27500 * 1.0925;
     const totalIndirectsCost = lengthKm * 18000;
-    const totalCost = totalMaterialsCost + totalServicesCost + totalIndirectsCost;
+    const totalCost =
+      totalMaterialsCost + totalServicesCost + totalIndirectsCost;
     const totalSalePrice = totalCost * 1.3063; // BDI 30.63%
 
     const totalMonths = 18;
@@ -124,9 +133,12 @@ export class CashflowService {
       lineName: line.name || `Linha de Transmissão ${lineId}`,
       totalMonths,
       totalSalePrice: totalSalePrice.toFixed(2),
-      advancePaymentRate: params?.advanceRate !== undefined ? params.advanceRate : 10,
-      retentionRate: params?.retentionRate !== undefined ? params.retentionRate : 5,
-      billingLagMonths: params?.billingLag !== undefined ? params.billingLag : 1,
+      advancePaymentRate:
+        params?.advanceRate !== undefined ? params.advanceRate : 10,
+      retentionRate:
+        params?.retentionRate !== undefined ? params.retentionRate : 5,
+      billingLagMonths:
+        params?.billingLag !== undefined ? params.billingLag : 1,
       disbursements,
       monthlyPhysicalProgressPercentages: physicalProgress,
       supplyDeliveries: [
@@ -166,7 +178,11 @@ export class CashflowService {
 
   async getConsolidatedCashflow(
     offerId: number,
-    params?: { advanceRate?: number; retentionRate?: number; billingLag?: number }
+    params?: {
+      advanceRate?: number;
+      retentionRate?: number;
+      billingLag?: number;
+    },
   ): Promise<CashflowSummary> {
     const offer = await this.prisma.offer.findUnique({
       where: { id: offerId },
@@ -183,17 +199,19 @@ export class CashflowService {
       throw new NotFoundException(`Oferta ID ${offerId} não encontrada.`);
     }
 
-    const latestRevision = offer.revisions && offer.revisions.length > 0
-      ? offer.revisions[offer.revisions.length - 1]
-      : null;
-    const lines: Array<{ id: number }> = (latestRevision && (latestRevision as any).transmissionLines) || [];
+    const latestRevision =
+      offer.revisions && offer.revisions.length > 0
+        ? offer.revisions[offer.revisions.length - 1]
+        : null;
+    const lines: Array<{ id: number }> =
+      (latestRevision && (latestRevision as any).transmissionLines) || [];
 
     if (lines.length === 0) {
       return this.getLineCashflow(1, params);
     }
 
     const lineCashflows = await Promise.all(
-      lines.map((l: { id: number }) => this.getLineCashflow(l.id, params))
+      lines.map((l: { id: number }) => this.getLineCashflow(l.id, params)),
     );
 
     const totalMonths = lineCashflows[0].totalMonths;

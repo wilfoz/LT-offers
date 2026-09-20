@@ -65,7 +65,10 @@ describe('CashflowComponent', () => {
     fixture = TestBed.createComponent(CashflowComponent);
     component = fixture.componentInstance;
     component.offerId = 10;
-    component.lines = [{ id: 1, name: 'LT 500kV Curitiba' }, { id: 2, name: 'LT 500kV Blumenau' }];
+    component.lines = [
+      { id: 1, name: 'LT 500kV Curitiba' },
+      { id: 2, name: 'LT 500kV Blumenau' },
+    ];
     fixture.detectChanges();
   });
 

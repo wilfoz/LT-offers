@@ -8,14 +8,14 @@ export class ServiceBudgetController {
 
   @Get('summary')
   async getServiceBudget(
-    @Param('lineId', ParseIntPipe) lineId: number
+    @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<ServiceBudgetSummary> {
     return this.serviceBudgetService.getLineServiceBudget(lineId);
   }
 
   @Get('measurement-sheet')
   async getMeasurementSheet(
-    @Param('lineId', ParseIntPipe) lineId: number
+    @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<ServiceBudgetItem[]> {
     return this.serviceBudgetService.getLineMeasurementSheet(lineId);
   }

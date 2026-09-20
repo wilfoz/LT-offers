@@ -65,7 +65,15 @@ describe('ResourceHistogramsComponent', () => {
         equipmentCode: 'BETON',
         equipmentDescription: 'Betoneira',
         ownUnitsAvailable: 2,
-        monthlyDemand: [{ month: 1, totalRequired: 2, ownUsed: 2, deficitToRent: 0, estimatedRentalCost: '0.00' }],
+        monthlyDemand: [
+          {
+            month: 1,
+            totalRequired: 2,
+            ownUsed: 2,
+            deficitToRent: 0,
+            estimatedRentalCost: '0.00',
+          },
+        ],
         peakDemand: 2,
         peakMonth: 1,
         totalMachineMonths: '2.00',

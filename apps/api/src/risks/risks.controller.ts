@@ -17,7 +17,7 @@ export class RisksController {
   @Get()
   getRisks(
     @Param('offerId') offerId: string,
-    @Query('lineId') lineId?: string
+    @Query('lineId') lineId?: string,
   ): RiskAssessmentSummary {
     return this.risksService.getOfferRisks(offerId, lineId);
   }
@@ -25,7 +25,7 @@ export class RisksController {
   @Post()
   saveRisk(
     @Param('offerId') offerId: string,
-    @Body() item: Partial<RiskItem>
+    @Body() item: Partial<RiskItem>,
   ): RiskAssessmentSummary {
     return this.risksService.saveRisk(offerId, item);
   }
@@ -34,7 +34,7 @@ export class RisksController {
   deleteRisk(
     @Param('offerId') offerId: string,
     @Param('riskId') riskId: string,
-    @Query('lineId') lineId?: string
+    @Query('lineId') lineId?: string,
   ): RiskAssessmentSummary {
     return this.risksService.deleteRisk(offerId, riskId, lineId);
   }

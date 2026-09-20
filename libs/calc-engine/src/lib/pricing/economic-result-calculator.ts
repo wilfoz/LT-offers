@@ -54,7 +54,9 @@ export class EconomicResultCalculator {
     const countryRisk = DecimalValue.of(coeffs.countryRiskRate || '0');
     const financialCost = DecimalValue.of(coeffs.financialCostRate || '0');
     const contingency = DecimalValue.of(coeffs.contingencyRate || '0');
-    const centralStructure = DecimalValue.of(coeffs.centralStructureRate || '0');
+    const centralStructure = DecimalValue.of(
+      coeffs.centralStructureRate || '0',
+    );
     const targetMargin = DecimalValue.of(coeffs.targetMarginRate || '0');
     const productionTax = DecimalValue.of(coeffs.productionTaxRate || '0');
 
@@ -68,17 +70,24 @@ export class EconomicResultCalculator {
       .plus(centralStructure);
 
     // Numerador = 1 + (K_indiretos / 100)
-    const numerator = DecimalValue.of('1').plus(totalIndirectRate.dividedBy(DecimalValue.of('100')));
+    const numerator = DecimalValue.of('1').plus(
+      totalIndirectRate.dividedBy(DecimalValue.of('100')),
+    );
 
     // Denominador = 1 - ((Impostos s/ faturamento + Margem) / 100)
     const deductionsRate = productionTax.plus(targetMargin);
-    const denominator = DecimalValue.of('1').minus(deductionsRate.dividedBy(DecimalValue.of('100')));
+    const denominator = DecimalValue.of('1').minus(
+      deductionsRate.dividedBy(DecimalValue.of('100')),
+    );
 
-    const safeDenominator = denominator.isZero() || denominator.isNegative()
-      ? DecimalValue.of('0.01')
-      : denominator;
+    const safeDenominator =
+      denominator.isZero() || denominator.isNegative()
+        ? DecimalValue.of('0.01')
+        : denominator;
 
-    const bdiMultiplier = numerator.dividedBy(safeDenominator).round(4, 'half-up');
+    const bdiMultiplier = numerator
+      .dividedBy(safeDenominator)
+      .round(4, 'half-up');
     const effectiveBdiRate = bdiMultiplier
       .minus(DecimalValue.of('1'))
       .times(DecimalValue.of('100'))
@@ -101,7 +110,9 @@ export class EconomicResultCalculator {
   /**
    * Constrói o Quadro R completo com consolidação de custos, impostos e preço de venda (RF-51..RF-56).
    */
-  static calculateEconomicResult(input: EconomicResultInput): EconomicResultSummary {
+  static calculateEconomicResult(
+    input: EconomicResultInput,
+  ): EconomicResultSummary {
     const bdi = this.calculateBdi(input.coefficients);
     const bdiMultiplier = DecimalValue.of(bdi.bdiMultiplier);
 
@@ -117,7 +128,7 @@ export class EconomicResultCalculator {
       difal: number | string,
       fecoep: number | string,
       costWithTaxes: number | string,
-      directBilling: number | string = 0
+      directBilling: number | string = 0,
     ) => {
       const netDec = DecimalValue.of(net || '0');
       const pisCofinsDec = DecimalValue.of(pisCofins || '0');
@@ -129,7 +140,10 @@ export class EconomicResultCalculator {
       const directBillingDec = DecimalValue.of(directBilling || '0');
 
       const ownCostDec = costWithTaxesDec.minus(directBillingDec);
-      const salePriceDec = ownCostDec.times(bdiMultiplier).plus(directBillingDec).round(2, 'half-up');
+      const salePriceDec = ownCostDec
+        .times(bdiMultiplier)
+        .plus(directBillingDec)
+        .round(2, 'half-up');
 
       lines.push({
         category,
@@ -158,7 +172,7 @@ export class EconomicResultCalculator {
       input.materials.difal,
       input.materials.fecoep,
       input.materials.costWithTaxes,
-      input.materials.directBilling || 0
+      input.materials.directBilling || 0,
     );
 
     // 2. Serviços
@@ -172,7 +186,7 @@ export class EconomicResultCalculator {
       0,
       0,
       input.services.costWithTaxes,
-      input.services.directBilling || 0
+      input.services.directBilling || 0,
     );
 
     // 3. Indiretos e Canteiros
@@ -186,7 +200,7 @@ export class EconomicResultCalculator {
       0,
       0,
       input.indirectsCamps.costWithTaxes,
-      0
+      0,
     );
 
     // 4. Sobressalentes (se houver)
@@ -201,7 +215,7 @@ export class EconomicResultCalculator {
         0,
         0,
         input.spareParts.costWithTaxes,
-        0
+        0,
       );
     }
 
@@ -224,8 +238,12 @@ export class EconomicResultCalculator {
       totalIcms = totalIcms.plus(DecimalValue.of(l.icmsOrigin));
       totalDifal = totalDifal.plus(DecimalValue.of(l.difal));
       totalFecoep = totalFecoep.plus(DecimalValue.of(l.fecoep));
-      totalCostWithTaxes = totalCostWithTaxes.plus(DecimalValue.of(l.costWithTaxes));
-      totalDirectBilling = totalDirectBilling.plus(DecimalValue.of(l.directBilling));
+      totalCostWithTaxes = totalCostWithTaxes.plus(
+        DecimalValue.of(l.costWithTaxes),
+      );
+      totalDirectBilling = totalDirectBilling.plus(
+        DecimalValue.of(l.directBilling),
+      );
       totalOwnCost = totalOwnCost.plus(DecimalValue.of(l.ownCost));
       totalSalePrice = totalSalePrice.plus(DecimalValue.of(l.salePrice));
     }
@@ -233,13 +251,20 @@ export class EconomicResultCalculator {
     const grossProfit = totalSalePrice.minus(totalCostWithTaxes);
     const grossMarginPercent = totalSalePrice.isZero()
       ? '0.00'
-      : grossProfit.dividedBy(totalSalePrice).times(DecimalValue.of('100')).toFixed(2);
+      : grossProfit
+          .dividedBy(totalSalePrice)
+          .times(DecimalValue.of('100'))
+          .toFixed(2);
 
     // Projeção de corrosão por IPCA (RF-54)
     const ipcaRateDec = DecimalValue.of(input.ipcaAnnualRate || '4.50');
     const durationMonths = input.projectDurationMonths || 18;
-    const years = DecimalValue.of(durationMonths).dividedBy(DecimalValue.of('12'));
-    const totalInflationFactor = ipcaRateDec.dividedBy(DecimalValue.of('100')).times(years);
+    const years = DecimalValue.of(durationMonths).dividedBy(
+      DecimalValue.of('12'),
+    );
+    const totalInflationFactor = ipcaRateDec
+      .dividedBy(DecimalValue.of('100'))
+      .times(years);
     // Impacto estimado do descasamento de reajuste sobre os custos próprios
     const ipcaDegradationDec = totalOwnCost
       .times(totalInflationFactor)
@@ -277,20 +302,34 @@ export class EconomicResultCalculator {
    */
   static simulateMarginOrPrice(
     baseSummary: EconomicResultSummary,
-    simInput: MarginSimulationInput
+    simInput: MarginSimulationInput,
   ): MarginSimulationOutput {
     const totalOwnCost = DecimalValue.of(baseSummary.totalOwnCost);
     const totalDirectBilling = DecimalValue.of(baseSummary.totalDirectBilling);
     const originalPrice = DecimalValue.of(baseSummary.totalSalePrice);
 
-    const guarantees = DecimalValue.of(baseSummary.coefficients.guaranteesRate || '0');
-    const insurances = DecimalValue.of(baseSummary.coefficients.insurancesRate || '0');
+    const guarantees = DecimalValue.of(
+      baseSummary.coefficients.guaranteesRate || '0',
+    );
+    const insurances = DecimalValue.of(
+      baseSummary.coefficients.insurancesRate || '0',
+    );
     const idde = DecimalValue.of(baseSummary.coefficients.iddeRate || '0');
-    const countryRisk = DecimalValue.of(baseSummary.coefficients.countryRiskRate || '0');
-    const financialCost = DecimalValue.of(baseSummary.coefficients.financialCostRate || '0');
-    const contingency = DecimalValue.of(baseSummary.coefficients.contingencyRate || '0');
-    const centralStructure = DecimalValue.of(baseSummary.coefficients.centralStructureRate || '0');
-    const productionTax = DecimalValue.of(baseSummary.coefficients.productionTaxRate || '0');
+    const countryRisk = DecimalValue.of(
+      baseSummary.coefficients.countryRiskRate || '0',
+    );
+    const financialCost = DecimalValue.of(
+      baseSummary.coefficients.financialCostRate || '0',
+    );
+    const contingency = DecimalValue.of(
+      baseSummary.coefficients.contingencyRate || '0',
+    );
+    const centralStructure = DecimalValue.of(
+      baseSummary.coefficients.centralStructureRate || '0',
+    );
+    const productionTax = DecimalValue.of(
+      baseSummary.coefficients.productionTaxRate || '0',
+    );
 
     const totalIndirectRate = guarantees
       .plus(insurances)
@@ -300,20 +339,30 @@ export class EconomicResultCalculator {
       .plus(contingency)
       .plus(centralStructure);
 
-    const numerator = DecimalValue.of('1').plus(totalIndirectRate.dividedBy(DecimalValue.of('100')));
+    const numerator = DecimalValue.of('1').plus(
+      totalIndirectRate.dividedBy(DecimalValue.of('100')),
+    );
 
     // Caso 1: Forçar Preço de Venda -> Obter Margem Resultante
     if (simInput.forcedSalePrice) {
       const forcedPrice = DecimalValue.of(simInput.forcedSalePrice);
       const forcedOwnSale = forcedPrice.minus(totalDirectBilling);
 
-      if (forcedOwnSale.isZero() || forcedOwnSale.isNegative() || totalOwnCost.isZero()) {
+      if (
+        forcedOwnSale.isZero() ||
+        forcedOwnSale.isNegative() ||
+        totalOwnCost.isZero()
+      ) {
         return {
           simulatedSalePrice: forcedPrice.toFixed(2),
           resultingNetMarginRate: '0.00',
-          resultingGrossProfit: forcedPrice.minus(DecimalValue.of(baseSummary.totalCostWithTaxes)).toFixed(2),
+          resultingGrossProfit: forcedPrice
+            .minus(DecimalValue.of(baseSummary.totalCostWithTaxes))
+            .toFixed(2),
           effectiveBdiRate: '0.00',
-          differenceFromOriginalPrice: forcedPrice.minus(originalPrice).toFixed(2),
+          differenceFromOriginalPrice: forcedPrice
+            .minus(originalPrice)
+            .toFixed(2),
         };
       }
 
@@ -327,28 +376,52 @@ export class EconomicResultCalculator {
         .round(2, 'half-up');
 
       const bdiMult = forcedOwnSale.dividedBy(totalOwnCost);
-      const effectiveBdi = bdiMult.minus(DecimalValue.of('1')).times(DecimalValue.of('100')).round(2, 'half-up');
-      const grossProfit = forcedPrice.minus(DecimalValue.of(baseSummary.totalCostWithTaxes));
+      const effectiveBdi = bdiMult
+        .minus(DecimalValue.of('1'))
+        .times(DecimalValue.of('100'))
+        .round(2, 'half-up');
+      const grossProfit = forcedPrice.minus(
+        DecimalValue.of(baseSummary.totalCostWithTaxes),
+      );
 
       return {
         simulatedSalePrice: forcedPrice.toFixed(2),
         resultingNetMarginRate: netMarginDec.toFixed(2),
         resultingGrossProfit: grossProfit.toFixed(2),
         effectiveBdiRate: effectiveBdi.toFixed(2),
-        differenceFromOriginalPrice: forcedPrice.minus(originalPrice).toFixed(2),
+        differenceFromOriginalPrice: forcedPrice
+          .minus(originalPrice)
+          .toFixed(2),
       };
     }
 
     // Caso 2: Forçar Margem Alvo -> Obter Preço Resultante
-    const newMargin = DecimalValue.of(simInput.targetMarginRate || baseSummary.coefficients.targetMarginRate || '8.00');
+    const newMargin = DecimalValue.of(
+      simInput.targetMarginRate ||
+        baseSummary.coefficients.targetMarginRate ||
+        '8.00',
+    );
     const deductionsRate = productionTax.plus(newMargin);
-    const denominator = DecimalValue.of('1').minus(deductionsRate.dividedBy(DecimalValue.of('100')));
-    const safeDenominator = denominator.isZero() || denominator.isNegative() ? DecimalValue.of('0.01') : denominator;
+    const denominator = DecimalValue.of('1').minus(
+      deductionsRate.dividedBy(DecimalValue.of('100')),
+    );
+    const safeDenominator =
+      denominator.isZero() || denominator.isNegative()
+        ? DecimalValue.of('0.01')
+        : denominator;
 
     const bdiMult = numerator.dividedBy(safeDenominator);
-    const effectiveBdi = bdiMult.minus(DecimalValue.of('1')).times(DecimalValue.of('100')).round(2, 'half-up');
-    const newSalePrice = totalOwnCost.times(bdiMult).plus(totalDirectBilling).round(2, 'half-up');
-    const grossProfit = newSalePrice.minus(DecimalValue.of(baseSummary.totalCostWithTaxes));
+    const effectiveBdi = bdiMult
+      .minus(DecimalValue.of('1'))
+      .times(DecimalValue.of('100'))
+      .round(2, 'half-up');
+    const newSalePrice = totalOwnCost
+      .times(bdiMult)
+      .plus(totalDirectBilling)
+      .round(2, 'half-up');
+    const grossProfit = newSalePrice.minus(
+      DecimalValue.of(baseSummary.totalCostWithTaxes),
+    );
 
     return {
       simulatedSalePrice: newSalePrice.toFixed(2),
@@ -366,22 +439,34 @@ export class EconomicResultCalculator {
     baseSummary: EconomicResultSummary,
     targetSummary: EconomicResultSummary,
     baseRevNum: number,
-    targetRevNum: number
+    targetRevNum: number,
   ): RevisionComparisonResult {
     const basePrice = DecimalValue.of(baseSummary.totalSalePrice);
     const targetPrice = DecimalValue.of(targetSummary.totalSalePrice);
     const deltaSalePrice = targetPrice.minus(basePrice);
 
     // Delta por grupo de custo
-    const baseMatLine = baseSummary.lines.find((l) => l.category === 'MATERIALS');
-    const targetMatLine = targetSummary.lines.find((l) => l.category === 'MATERIALS');
-    const baseSrvLine = baseSummary.lines.find((l) => l.category === 'SERVICES');
-    const targetSrvLine = targetSummary.lines.find((l) => l.category === 'SERVICES');
+    const baseMatLine = baseSummary.lines.find(
+      (l) => l.category === 'MATERIALS',
+    );
+    const targetMatLine = targetSummary.lines.find(
+      (l) => l.category === 'MATERIALS',
+    );
+    const baseSrvLine = baseSummary.lines.find(
+      (l) => l.category === 'SERVICES',
+    );
+    const targetSrvLine = targetSummary.lines.find(
+      (l) => l.category === 'SERVICES',
+    );
 
     const baseMatNet = DecimalValue.of(baseMatLine?.netCost || '0');
     const targetMatNet = DecimalValue.of(targetMatLine?.netCost || '0');
-    const baseMatTax = DecimalValue.of(baseMatLine?.costWithTaxes || '0').minus(baseMatNet);
-    const targetMatTax = DecimalValue.of(targetMatLine?.costWithTaxes || '0').minus(targetMatNet);
+    const baseMatTax = DecimalValue.of(baseMatLine?.costWithTaxes || '0').minus(
+      baseMatNet,
+    );
+    const targetMatTax = DecimalValue.of(
+      targetMatLine?.costWithTaxes || '0',
+    ).minus(targetMatNet);
 
     const baseSrvTotal = DecimalValue.of(baseSrvLine?.costWithTaxes || '0');
     const targetSrvTotal = DecimalValue.of(targetSrvLine?.costWithTaxes || '0');
@@ -401,8 +486,12 @@ export class EconomicResultCalculator {
       targetSalePrice: targetPrice.toFixed(2),
       deltaSalePrice: deltaSalePrice.toFixed(2),
       breakdownByCause: {
-        materialsQuantityDelta: matNetDelta.times(DecimalValue.of('0.4')).toFixed(2), // Estimativa de peso de quantidade
-        materialsPriceDelta: matNetDelta.times(DecimalValue.of('0.6')).toFixed(2), // Estimativa de peso de preço
+        materialsQuantityDelta: matNetDelta
+          .times(DecimalValue.of('0.4'))
+          .toFixed(2), // Estimativa de peso de quantidade
+        materialsPriceDelta: matNetDelta
+          .times(DecimalValue.of('0.6'))
+          .toFixed(2), // Estimativa de peso de preço
         taxRateDelta: taxDelta.toFixed(2),
         servicesDelta: srvDelta.toFixed(2),
         marginCoefficientsDelta: marginCoeffDelta.toFixed(2),

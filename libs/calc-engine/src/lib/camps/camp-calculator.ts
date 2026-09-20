@@ -1,28 +1,41 @@
 import { DecimalValue } from '../decimal-value';
-import { CampDefinition, CampCostSummary, CampPersonnelItem } from '@lt-offers/domain';
+import {
+  CampDefinition,
+  CampCostSummary,
+  CampPersonnelItem,
+} from '@lt-offers/domain';
 
 export class CampCalculator {
   /**
    * Calcula o custo de um canteiro individual detalhando pessoal, operação e implantação (RF-41).
    */
-  static calculateSingleCamp(camp: Omit<CampDefinition, 'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'>): CampDefinition {
+  static calculateSingleCamp(
+    camp: Omit<
+      CampDefinition,
+      'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'
+    >,
+  ): CampDefinition {
     let personnelMonthlyCostDec = DecimalValue.zero();
 
-    const calculatedPersonnel: CampPersonnelItem[] = (camp.personnel || []).map((p) => {
-      const qty = DecimalValue.of(p.quantity);
-      const unitCost = DecimalValue.of(p.monthlyUnitCost || '0');
-      const total = qty.times(unitCost).round(2, 'half-up');
-      personnelMonthlyCostDec = personnelMonthlyCostDec.plus(total);
+    const calculatedPersonnel: CampPersonnelItem[] = (camp.personnel || []).map(
+      (p) => {
+        const qty = DecimalValue.of(p.quantity);
+        const unitCost = DecimalValue.of(p.monthlyUnitCost || '0');
+        const total = qty.times(unitCost).round(2, 'half-up');
+        personnelMonthlyCostDec = personnelMonthlyCostDec.plus(total);
 
-      return {
-        ...p,
-        monthlyUnitCost: unitCost.toFixed(2),
-        totalMonthlyCost: total.toFixed(2),
-      };
-    });
+        return {
+          ...p,
+          monthlyUnitCost: unitCost.toFixed(2),
+          totalMonthlyCost: total.toFixed(2),
+        };
+      },
+    );
 
     const fixedMonthlyCostDec = DecimalValue.of(camp.fixedMonthlyCost || '0');
-    const totalMonthlyCostDec = fixedMonthlyCostDec.plus(personnelMonthlyCostDec);
+    const totalMonthlyCostDec = fixedMonthlyCostDec.plus(
+      personnelMonthlyCostDec,
+    );
 
     const implCostDec = DecimalValue.of(camp.implementationCost || '0');
     const demobCostDec = DecimalValue.of(camp.demobilizationCost || '0');
@@ -49,7 +62,13 @@ export class CampCalculator {
   /**
    * Consolida todos os canteiros da linha e projeta a curva de desembolso mensal.
    */
-  static calculateSummary(lineId: number, rawCamps: Omit<CampDefinition, 'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'>[]): CampCostSummary {
+  static calculateSummary(
+    lineId: number,
+    rawCamps: Omit<
+      CampDefinition,
+      'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'
+    >[],
+  ): CampCostSummary {
     const calculatedCamps = rawCamps.map((c) => this.calculateSingleCamp(c));
 
     let totalImpl = DecimalValue.zero();

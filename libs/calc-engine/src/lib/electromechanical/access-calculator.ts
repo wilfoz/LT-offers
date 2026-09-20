@@ -1,5 +1,9 @@
 import { DecimalValue } from '../decimal-value';
-import { AccessQuantityItem, VegetationClearingItem, CrossingItem } from '@lt-offers/domain';
+import {
+  AccessQuantityItem,
+  VegetationClearingItem,
+  CrossingItem,
+} from '@lt-offers/domain';
 
 export interface AccessInputData {
   accessType: 'OPENING_NEW' | 'RECOVERY_EXISTING' | 'SPECIAL_TRACK';
@@ -30,7 +34,9 @@ export class AccessQuantityCalculator {
     }));
   }
 
-  static calculateVegetationClearing(clearing: VegetationClearingInputData[]): VegetationClearingItem[] {
+  static calculateVegetationClearing(
+    clearing: VegetationClearingInputData[],
+  ): VegetationClearingItem[] {
     return clearing.map((c) => {
       // Área em hectares: (comprimento em km * 1000 m * largura em m) / 10.000 m²/ha
       // = (comprimento km * largura m) / 10

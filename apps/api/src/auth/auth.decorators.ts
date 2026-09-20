@@ -1,5 +1,17 @@
-import { SetMetadata, createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserRole, PermissionScope, AuditResource, AuditAction, UserProfile, CANONICAL_USERS, ROLE_PERMISSIONS_MAP } from '@lt-offers/domain';
+import {
+  SetMetadata,
+  createParamDecorator,
+  ExecutionContext,
+} from '@nestjs/common';
+import {
+  UserRole,
+  PermissionScope,
+  AuditResource,
+  AuditAction,
+  UserProfile,
+  CANONICAL_USERS,
+  ROLE_PERMISSIONS_MAP,
+} from '@lt-offers/domain';
 
 export const ROLES_KEY = 'roles';
 export const SCOPES_KEY = 'scopes';
@@ -13,7 +25,8 @@ export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
 /**
  * Decorador para restringir acesso a rotas por escopos específicos (RF-64, RNF-17).
  */
-export const RequireScopes = (...scopes: PermissionScope[]) => SetMetadata(SCOPES_KEY, scopes);
+export const RequireScopes = (...scopes: PermissionScope[]) =>
+  SetMetadata(SCOPES_KEY, scopes);
 
 /**
  * Decorador para marcar endpoints mutantes para auditoria imutável automática (RF-65, RNF-12).
@@ -24,7 +37,8 @@ export interface AuditedOptions {
   description?: string;
 }
 
-export const Audited = (options: AuditedOptions) => SetMetadata(AUDITED_KEY, options);
+export const Audited = (options: AuditedOptions) =>
+  SetMetadata(AUDITED_KEY, options);
 
 /**
  * Decorador de parâmetro para injetar o usuário atual da requisição.
@@ -61,8 +75,9 @@ export const CurrentUser = createParamDecorator(
     }
 
     // Padrão: Usuário ADMIN para compatibilidade sem cabeçalho explícito
-    const defaultUser = CANONICAL_USERS.find((u) => u.role === 'ADMIN') || CANONICAL_USERS[4];
+    const defaultUser =
+      CANONICAL_USERS.find((u) => u.role === 'ADMIN') || CANONICAL_USERS[4];
     request.user = defaultUser;
     return defaultUser;
-  }
+  },
 );

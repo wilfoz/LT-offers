@@ -1,7 +1,8 @@
 /**
  * Tipos de itens que compõem a distribuição de desembolso (RF-57).
  */
-export type DisbursementItemType = 'MATERIALS' | 'SERVICES' | 'INDIRECTS' | 'CAMPS';
+export type DisbursementItemType =
+  'MATERIALS' | 'SERVICES' | 'INDIRECTS' | 'CAMPS';
 
 /**
  * Curva temporal de desembolso mensal por item (RF-57).

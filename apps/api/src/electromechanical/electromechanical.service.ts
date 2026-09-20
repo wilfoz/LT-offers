@@ -19,7 +19,9 @@ import { PrismaService } from '../app/prisma.service';
 export class ElectromechanicalService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async calculateLineElectromechanical(lineId: number): Promise<ElectromechanicalSummary> {
+  async calculateLineElectromechanical(
+    lineId: number,
+  ): Promise<ElectromechanicalSummary> {
     const line = await this.prisma.transmissionLine.findUnique({
       where: { id: lineId },
       include: {
@@ -32,7 +34,9 @@ export class ElectromechanicalService {
     });
 
     if (!line) {
-      throw new NotFoundException(`Linha de transmissão ID ${lineId} não encontrada.`);
+      throw new NotFoundException(
+        `Linha de transmissão ID ${lineId} não encontrada.`,
+      );
     }
 
     const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
@@ -78,7 +82,9 @@ export class ElectromechanicalService {
       });
     }
 
-    const towerResult = TowerQuantityCalculator.calculate(fullTowersList, { extraPercent: 0.5 });
+    const towerResult = TowerQuantityCalculator.calculate(fullTowersList, {
+      extraPercent: 0.5,
+    });
 
     // 2. Cabos Condutores
     const conductorsInput: ConductorInputData[] = [
@@ -95,7 +101,8 @@ export class ElectromechanicalService {
         sparePercent: 1.0,
       },
     ];
-    const conductors = CableQuantityCalculator.calculateConductors(conductorsInput);
+    const conductors =
+      CableQuantityCalculator.calculateConductors(conductorsInput);
 
     // 3. Cabos de Guarda (Aço e OPGW)
     const groundWiresInput: GroundWireInputData[] = [
@@ -123,7 +130,8 @@ export class ElectromechanicalService {
         sparePercent: 1.0,
       },
     ];
-    const groundWires = CableQuantityCalculator.calculateGroundWires(groundWiresInput);
+    const groundWires =
+      CableQuantityCalculator.calculateGroundWires(groundWiresInput);
 
     // 4. Ferragens e Isoladores
     const insulators = HardwareQuantityCalculator.calculateInsulators([
@@ -219,32 +227,49 @@ export class ElectromechanicalService {
       },
     ]);
 
-    const vegetationClearing = AccessQuantityCalculator.calculateVegetationClearing([
-      {
-        density: 'DENSE',
-        description: 'Supressão Vegetal Densa / Floresta Estacional',
-        rightOfWayWidthM: 50,
-        lengthKm: Number((lengthKm * 0.25).toFixed(2)),
-      },
-      {
-        density: 'MEDIUM',
-        description: 'Limpeza de Vegetação Média / Cerrado',
-        rightOfWayWidthM: 50,
-        lengthKm: Number((lengthKm * 0.45).toFixed(2)),
-      },
-      {
-        density: 'LIGHT',
-        description: 'Roçado e Limpeza Raso / Pastagem',
-        rightOfWayWidthM: 50,
-        lengthKm: Number((lengthKm * 0.30).toFixed(2)),
-      },
-    ]);
+    const vegetationClearing =
+      AccessQuantityCalculator.calculateVegetationClearing([
+        {
+          density: 'DENSE',
+          description: 'Supressão Vegetal Densa / Floresta Estacional',
+          rightOfWayWidthM: 50,
+          lengthKm: Number((lengthKm * 0.25).toFixed(2)),
+        },
+        {
+          density: 'MEDIUM',
+          description: 'Limpeza de Vegetação Média / Cerrado',
+          rightOfWayWidthM: 50,
+          lengthKm: Number((lengthKm * 0.45).toFixed(2)),
+        },
+        {
+          density: 'LIGHT',
+          description: 'Roçado e Limpeza Raso / Pastagem',
+          rightOfWayWidthM: 50,
+          lengthKm: Number((lengthKm * 0.3).toFixed(2)),
+        },
+      ]);
 
     const crossings = AccessQuantityCalculator.calculateCrossings([
-      { type: 'HIGHWAY', description: 'Travessia de Rodovia Federal / Estadual', count: Math.max(2, Math.round(lengthKm / 30)) },
-      { type: 'RAILWAY', description: 'Travessia de Ferrovia', count: Math.max(1, Math.round(lengthKm / 60)) },
-      { type: 'RIVER', description: 'Travessia de Rio Navegável (> 100m)', count: Math.max(1, Math.round(lengthKm / 50)) },
-      { type: 'EXISTING_LINE', description: 'Cruzamento com Linha de Transmissão Existente', count: Math.max(2, Math.round(lengthKm / 25)) },
+      {
+        type: 'HIGHWAY',
+        description: 'Travessia de Rodovia Federal / Estadual',
+        count: Math.max(2, Math.round(lengthKm / 30)),
+      },
+      {
+        type: 'RAILWAY',
+        description: 'Travessia de Ferrovia',
+        count: Math.max(1, Math.round(lengthKm / 60)),
+      },
+      {
+        type: 'RIVER',
+        description: 'Travessia de Rio Navegável (> 100m)',
+        count: Math.max(1, Math.round(lengthKm / 50)),
+      },
+      {
+        type: 'EXISTING_LINE',
+        description: 'Cruzamento com Linha de Transmissão Existente',
+        count: Math.max(2, Math.round(lengthKm / 25)),
+      },
     ]);
 
     // 6. Resumo Consolidado
@@ -267,7 +292,9 @@ export class ElectromechanicalService {
     });
   }
 
-  async getLineElectromechanicalTraceability(lineId: number): Promise<TowerTraceabilityDetail[]> {
+  async getLineElectromechanicalTraceability(
+    lineId: number,
+  ): Promise<TowerTraceabilityDetail[]> {
     const summary = await this.calculateLineElectromechanical(lineId);
     // Gerar rastreabilidade torre a torre
     const towersCount = summary.totalTowers;

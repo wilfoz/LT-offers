@@ -1,4 +1,7 @@
-import { ConsistencyEngine, ConsistencyEngineInput } from './consistency-engine';
+import {
+  ConsistencyEngine,
+  ConsistencyEngineInput,
+} from './consistency-engine';
 
 describe('ConsistencyEngine', () => {
   it('deve aprovar (HEALTHY) uma oferta com dados 100% consistentes e sem pendências', () => {

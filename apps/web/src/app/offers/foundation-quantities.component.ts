@@ -83,7 +83,11 @@ import { FoundationsApi } from './foundations-api.service';
                 <div class="missing-pills">
                   @for (
                     miss of summary()!.missingCombinations;
-                    track miss.towerTypeId + ':' + miss.soilTypeId + ':' + miss.foundationTypeId
+                    track miss.towerTypeId +
+                      ':' +
+                      miss.soilTypeId +
+                      ':' +
+                      miss.foundationTypeId
                   ) {
                     <span class="missing-pill">
                       Torre: {{ miss.towerCode || 'N/A' }} | Solo:
@@ -140,7 +144,9 @@ import { FoundationsApi } from './foundations-api.service';
               <div class="kpi-data">
                 <span class="kpi-label">Armadura de Aço Total</span>
                 <div class="kpi-value-row">
-                  <span class="kpi-val">{{ summary()!.kpis.totalSteelKg }}</span>
+                  <span class="kpi-val">{{
+                    summary()!.kpis.totalSteelKg
+                  }}</span>
                   <span class="kpi-unit">kg</span>
                 </div>
                 <span class="kpi-sub">Reforço (10%) e Tubulão (3%)</span>
@@ -168,7 +174,9 @@ import { FoundationsApi } from './foundations-api.service';
           <div class="table-container-card">
             <div class="card-header-row">
               <div>
-                <h2 class="section-title">Memória de Quantitativos de Obras Civis</h2>
+                <h2 class="section-title">
+                  Memória de Quantitativos de Obras Civis
+                </h2>
                 <p class="section-subtitle">
                   Modo de cálculo:
                   <strong>{{
@@ -210,8 +218,14 @@ import { FoundationsApi } from './foundations-api.service';
 
                       <!-- Descrição -->
                       <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef>Material / Serviço</th>
-                        <td mat-cell *matCellDef="let item" class="material-name">
+                        <th mat-header-cell *matHeaderCellDef>
+                          Material / Serviço
+                        </th>
+                        <td
+                          mat-cell
+                          *matCellDef="let item"
+                          class="material-name"
+                        >
                           <strong>{{ item.name }}</strong>
                         </td>
                       </ng-container>
@@ -249,11 +263,7 @@ import { FoundationsApi } from './foundations-api.service';
                         >
                           Perda / Sobre (%)
                         </th>
-                        <td
-                          mat-cell
-                          *matCellDef="let item"
-                          class="text-right"
-                        >
+                        <td mat-cell *matCellDef="let item" class="text-right">
                           <span
                             [class.waste-badge]="+item.wasteFactorPercent > 0"
                           >
@@ -307,11 +317,7 @@ import { FoundationsApi } from './foundations-api.service';
                         >
                           Memória
                         </th>
-                        <td
-                          mat-cell
-                          *matCellDef="let item"
-                          class="text-center"
-                        >
+                        <td mat-cell *matCellDef="let item" class="text-center">
                           <button
                             mat-icon-button
                             color="primary"
@@ -371,10 +377,7 @@ import { FoundationsApi } from './foundations-api.service';
                   </p>
                 </div>
               </div>
-              <button
-                mat-icon-button
-                (click)="activeTraceability.set(null)"
-              >
+              <button mat-icon-button (click)="activeTraceability.set(null)">
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -417,7 +420,9 @@ import { FoundationsApi } from './foundations-api.service';
                       <td class="text-right font-mono">
                         {{ t.theoreticalUnit }}
                       </td>
-                      <td class="text-right font-mono">+{{ t.wastePercent }}%</td>
+                      <td class="text-right font-mono">
+                        +{{ t.wastePercent }}%
+                      </td>
                       <td class="text-right font-mono font-bold">
                         {{ t.totalUnit }} {{ activeTraceability()!.unit }}
                       </td>
@@ -519,7 +524,9 @@ import { FoundationsApi } from './foundations-api.service';
         align-items: center;
         gap: 1rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
       }
 
       .kpi-card:hover {
@@ -788,7 +795,9 @@ export class FoundationQuantitiesComponent implements OnInit, OnChanges {
   readonly summary = signal<LineFoundationSummary | null>(null);
   readonly activeTraceability = signal<FoundationTraceabilityItem | null>(null);
 
-  readonly families: FoundationMaterialFamily[] = [...FOUNDATION_MATERIAL_FAMILIES];
+  readonly families: FoundationMaterialFamily[] = [
+    ...FOUNDATION_MATERIAL_FAMILIES,
+  ];
   readonly familyLabels = FOUNDATION_MATERIAL_FAMILY_LABELS;
 
   selectedFamilyIndex = 0;

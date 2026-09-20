@@ -55,13 +55,21 @@ export interface WarningMarkerInputData {
 }
 
 export class HardwareQuantityCalculator {
-  static calculateInsulators(insulators: InsulatorInputData[]): InsulatorQuantityItem[] {
+  static calculateInsulators(
+    insulators: InsulatorInputData[],
+  ): InsulatorQuantityItem[] {
     return insulators.map((ins) => {
       const breakagePct = ins.breakageExtraPercent ?? 2.0; // RN-10
       const sparePct = ins.sparePercent ?? 0.0;
-      const theoretical = DecimalValue.of(ins.stringsCount).times(DecimalValue.of(ins.unitsPerString));
-      const extra = theoretical.times(DecimalValue.of(breakagePct).dividedBy(DecimalValue.of(100)));
-      const spare = theoretical.times(DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)));
+      const theoretical = DecimalValue.of(ins.stringsCount).times(
+        DecimalValue.of(ins.unitsPerString),
+      );
+      const extra = theoretical.times(
+        DecimalValue.of(breakagePct).dividedBy(DecimalValue.of(100)),
+      );
+      const spare = theoretical.times(
+        DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)),
+      );
       const total = theoretical.plus(extra).plus(spare);
 
       return {
@@ -81,7 +89,9 @@ export class HardwareQuantityCalculator {
     });
   }
 
-  static calculateGuyWires(guyWires: GuyWireInputData[]): GuyWireQuantityItem[] {
+  static calculateGuyWires(
+    guyWires: GuyWireInputData[],
+  ): GuyWireQuantityItem[] {
     return guyWires.map((gw) => {
       const guysCount = gw.guysPerTower ?? 4;
       const extraPct = gw.extraPercent ?? 3.0;
@@ -90,9 +100,13 @@ export class HardwareQuantityCalculator {
       const theoreticalM = DecimalValue.of(gw.guyedTowersCount)
         .times(DecimalValue.of(guysCount))
         .times(DecimalValue.of(gw.averageGuyLengthM));
-      
-      const extraM = theoreticalM.times(DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)));
-      const spareM = theoreticalM.times(DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)));
+
+      const extraM = theoreticalM.times(
+        DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)),
+      );
+      const spareM = theoreticalM.times(
+        DecimalValue.of(sparePct).dividedBy(DecimalValue.of(100)),
+      );
       const totalM = theoreticalM.plus(extraM).plus(spareM);
       const totalKg = totalM.times(DecimalValue.of(gw.weightKgPerM));
 
@@ -119,8 +133,12 @@ export class HardwareQuantityCalculator {
       const perSpan = d.dampersPerSpan ?? 2;
       const extraPct = d.extraPercent ?? 2.0;
 
-      const theoretical = DecimalValue.of(d.totalSpans).times(DecimalValue.of(perSpan));
-      const extra = theoretical.times(DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)));
+      const theoretical = DecimalValue.of(d.totalSpans).times(
+        DecimalValue.of(perSpan),
+      );
+      const extra = theoretical.times(
+        DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)),
+      );
       const total = theoretical.plus(extra);
 
       return {
@@ -136,11 +154,17 @@ export class HardwareQuantityCalculator {
     });
   }
 
-  static calculateGrounding(grounding: GroundingInputData[]): GroundingQuantityItem[] {
+  static calculateGrounding(
+    grounding: GroundingInputData[],
+  ): GroundingQuantityItem[] {
     return grounding.map((g) => {
       const extraPct = g.extraPercent ?? 5.0;
-      const theoretical = DecimalValue.of(g.towersCount).times(DecimalValue.of(g.quantityPerTower));
-      const extra = theoretical.times(DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)));
+      const theoretical = DecimalValue.of(g.towersCount).times(
+        DecimalValue.of(g.quantityPerTower),
+      );
+      const extra = theoretical.times(
+        DecimalValue.of(extraPct).dividedBy(DecimalValue.of(100)),
+      );
       const total = theoretical.plus(extra);
 
       return {
@@ -156,11 +180,15 @@ export class HardwareQuantityCalculator {
     });
   }
 
-  static calculateWarningMarkers(markers: WarningMarkerInputData[]): WarningMarkerQuantityItem[] {
+  static calculateWarningMarkers(
+    markers: WarningMarkerInputData[],
+  ): WarningMarkerQuantityItem[] {
     return markers.map((m) => {
       const perSpan = m.markersPerSpan ?? 6;
       const spare = m.spareUnits ?? 0;
-      const theoretical = DecimalValue.of(m.spansWithMarkers).times(DecimalValue.of(perSpan));
+      const theoretical = DecimalValue.of(m.spansWithMarkers).times(
+        DecimalValue.of(perSpan),
+      );
       const total = theoretical.plus(DecimalValue.of(spare));
 
       return {

@@ -8,14 +8,14 @@ export class HistogramController {
 
   @Get('lines/:lineId/histograms/resources')
   async getLineHistogram(
-    @Param('lineId', ParseIntPipe) lineId: number
+    @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<ResourceHistogramSummary> {
     return this.histogramService.getLineHistogram(lineId);
   }
 
   @Get('offers/:offerId/histograms/consolidated')
   async getOfferConsolidatedHistogram(
-    @Param('offerId', ParseIntPipe) offerId: number
+    @Param('offerId', ParseIntPipe) offerId: number,
   ): Promise<ResourceHistogramSummary> {
     return this.histogramService.getOfferConsolidatedHistogram(offerId);
   }

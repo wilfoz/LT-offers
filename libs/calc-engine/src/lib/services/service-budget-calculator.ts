@@ -34,10 +34,14 @@ export class ServiceBudgetCalculator {
   /**
    * Consolida o orçamento de serviços, códigos CIP, BDI e ratios paramétricos (RF-46..RF-50).
    */
-  static calculateServiceBudget(input: ServiceBudgetCalculationInput): ServiceBudgetSummary {
+  static calculateServiceBudget(
+    input: ServiceBudgetCalculationInput,
+  ): ServiceBudgetSummary {
     const lineLengthDec = DecimalValue.of(input.lineLengthKm || '1');
     const totalTowersDec = DecimalValue.of(Math.max(1, input.totalTowers));
-    const defaultBdiDec = DecimalValue.of(input.defaultBdiPercentage || '24.50');
+    const defaultBdiDec = DecimalValue.of(
+      input.defaultBdiPercentage || '24.50',
+    );
 
     let totalDirectCostDec = DecimalValue.zero();
     let totalSalePriceDec = DecimalValue.zero();
@@ -55,12 +59,30 @@ export class ServiceBudgetCalculator {
       ServiceGroup,
       { directCost: DecimalValue; salePrice: DecimalValue }
     > = {
-      PRELIMINARY_WORKS: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
-      CIVIL_WORKS: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
-      ASSEMBLY_WORKS: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
-      STRINGING_WORKS: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
-      COMMISSIONING: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
-      INDIRECTS_SUPPORT: { directCost: DecimalValue.zero(), salePrice: DecimalValue.zero() },
+      PRELIMINARY_WORKS: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
+      CIVIL_WORKS: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
+      ASSEMBLY_WORKS: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
+      STRINGING_WORKS: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
+      COMMISSIONING: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
+      INDIRECTS_SUPPORT: {
+        directCost: DecimalValue.zero(),
+        salePrice: DecimalValue.zero(),
+      },
     };
 
     const calculatedItems: ServiceBudgetItem[] = input.items.map((it) => {
@@ -68,18 +90,27 @@ export class ServiceBudgetCalculator {
       const unitCostDec = DecimalValue.of(it.unitDirectCost || '0');
       const totalCostDec = qtyDec.times(unitCostDec).round(2, 'half-up');
 
-      const bdiDec = it.bdiPercentage !== undefined ? DecimalValue.of(it.bdiPercentage) : defaultBdiDec;
-      const bdiMultiplier = DecimalValue.of('1').plus(bdiDec.dividedBy(DecimalValue.of('100')));
+      const bdiDec =
+        it.bdiPercentage !== undefined
+          ? DecimalValue.of(it.bdiPercentage)
+          : defaultBdiDec;
+      const bdiMultiplier = DecimalValue.of('1').plus(
+        bdiDec.dividedBy(DecimalValue.of('100')),
+      );
 
       const unitSaleDec = unitCostDec.times(bdiMultiplier).round(2, 'half-up');
-      const totalSaleDec = totalCostDec.times(bdiMultiplier).round(2, 'half-up');
+      const totalSaleDec = totalCostDec
+        .times(bdiMultiplier)
+        .round(2, 'half-up');
 
       totalDirectCostDec = totalDirectCostDec.plus(totalCostDec);
       totalSalePriceDec = totalSalePriceDec.plus(totalSaleDec);
 
       if (groupTotals[it.group]) {
-        groupTotals[it.group].directCost = groupTotals[it.group].directCost.plus(totalCostDec);
-        groupTotals[it.group].salePrice = groupTotals[it.group].salePrice.plus(totalSaleDec);
+        groupTotals[it.group].directCost =
+          groupTotals[it.group].directCost.plus(totalCostDec);
+        groupTotals[it.group].salePrice =
+          groupTotals[it.group].salePrice.plus(totalSaleDec);
       }
 
       return {
@@ -102,10 +133,18 @@ export class ServiceBudgetCalculator {
     });
 
     const ratios: ServiceRatios = {
-      costPerKm: lineLengthDec.isZero() ? '0.00' : totalDirectCostDec.dividedBy(lineLengthDec).toFixed(2),
-      costPerTower: totalTowersDec.isZero() ? '0.00' : totalDirectCostDec.dividedBy(totalTowersDec).toFixed(2),
-      salePricePerKm: lineLengthDec.isZero() ? '0.00' : totalSalePriceDec.dividedBy(lineLengthDec).toFixed(2),
-      salePricePerTower: totalTowersDec.isZero() ? '0.00' : totalSalePriceDec.dividedBy(totalTowersDec).toFixed(2),
+      costPerKm: lineLengthDec.isZero()
+        ? '0.00'
+        : totalDirectCostDec.dividedBy(lineLengthDec).toFixed(2),
+      costPerTower: totalTowersDec.isZero()
+        ? '0.00'
+        : totalDirectCostDec.dividedBy(totalTowersDec).toFixed(2),
+      salePricePerKm: lineLengthDec.isZero()
+        ? '0.00'
+        : totalSalePriceDec.dividedBy(lineLengthDec).toFixed(2),
+      salePricePerTower: totalTowersDec.isZero()
+        ? '0.00'
+        : totalSalePriceDec.dividedBy(totalTowersDec).toFixed(2),
     };
 
     const byGroup: Record<
@@ -124,8 +163,12 @@ export class ServiceBudgetCalculator {
       byGroup[g] = {
         totalDirectCost: gDirect.toFixed(2),
         totalSalePrice: gSale.toFixed(2),
-        costPerKm: lineLengthDec.isZero() ? '0.00' : gDirect.dividedBy(lineLengthDec).toFixed(2),
-        costPerTower: totalTowersDec.isZero() ? '0.00' : gDirect.dividedBy(totalTowersDec).toFixed(2),
+        costPerKm: lineLengthDec.isZero()
+          ? '0.00'
+          : gDirect.dividedBy(lineLengthDec).toFixed(2),
+        costPerTower: totalTowersDec.isZero()
+          ? '0.00'
+          : gDirect.dividedBy(totalTowersDec).toFixed(2),
       };
     }
 

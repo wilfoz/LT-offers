@@ -23,27 +23,25 @@ export class AuthService {
   readonly activeUserEmail = computed(() => this.currentUser().email);
 
   readonly canViewCommercial = computed(() =>
-    canViewSensitiveCommercialData(this.currentUser())
+    canViewSensitiveCommercialData(this.currentUser()),
   );
 
   readonly canEditEngineering = computed(() =>
-    this.hasPermission('ENGINEERING_WRITE')
+    this.hasPermission('ENGINEERING_WRITE'),
   );
 
-  readonly canEditPricing = computed(() =>
-    this.hasPermission('PRICING_WRITE')
-  );
+  readonly canEditPricing = computed(() => this.hasPermission('PRICING_WRITE'));
 
   readonly canEditSchedule = computed(() =>
-    this.hasPermission('SCHEDULE_WRITE')
+    this.hasPermission('SCHEDULE_WRITE'),
   );
 
   readonly canEditCommercial = computed(() =>
-    this.hasPermission('COMMERCIAL_WRITE')
+    this.hasPermission('COMMERCIAL_WRITE'),
   );
 
   readonly isAdmin = computed(
-    () => this.currentUser().role === 'ADMIN' || this.hasPermission('ADMIN')
+    () => this.currentUser().role === 'ADMIN' || this.hasPermission('ADMIN'),
   );
 
   switchUser(user: UserProfile): void {

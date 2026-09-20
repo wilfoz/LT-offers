@@ -139,9 +139,13 @@ export class UploadComponent {
         icon: f.name.endsWith('.xlsx') ? 'grid_on' : 'description',
       }));
       this.attachedFiles.update((curr) => [...curr, ...newItems]);
-      this.snackBar.open(`${files.length} arquivo(s) adicionado(s) à fila.`, 'OK', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        `${files.length} arquivo(s) adicionado(s) à fila.`,
+        'OK',
+        {
+          duration: 3000,
+        },
+      );
     }
   }
 

@@ -4,7 +4,11 @@ import { of } from 'rxjs';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { WorkTrackingComponent } from './work-tracking.component';
 import { BaselineApiService } from './baseline-api.service';
-import { WorkBaseline, CurveSData, CurrentWorkingEstimate } from '@lt-offers/domain';
+import {
+  WorkBaseline,
+  CurveSData,
+  CurrentWorkingEstimate,
+} from '@lt-offers/domain';
 
 describe('WorkTrackingComponent (Fase F7)', () => {
   let component: WorkTrackingComponent;

@@ -70,10 +70,7 @@ export class ExportController {
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${filename}"`,
-    );
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(buffer);
   }
 
@@ -109,10 +106,7 @@ export class ExportController {
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${filename}"`,
-    );
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(buffer);
   }
 
@@ -148,10 +142,7 @@ export class ExportController {
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${filename}"`,
-    );
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(buffer);
   }
 
@@ -163,7 +154,8 @@ export class ExportController {
   @Audited({
     resource: 'EXPORT',
     action: 'EXPORT',
-    description: 'Exportação do Pacote Aberto da Oferta em JSON sem vendor lock-in',
+    description:
+      'Exportação do Pacote Aberto da Oferta em JSON sem vendor lock-in',
   })
   async getFullOfferPackage(
     @Param('offerId', ParseIntPipe) offerId: number,

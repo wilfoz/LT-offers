@@ -12,7 +12,11 @@ export class CashflowApiService {
 
   getLineCashflow(
     lineId: number,
-    options?: { advanceRate?: number; retentionRate?: number; billingLag?: number }
+    options?: {
+      advanceRate?: number;
+      retentionRate?: number;
+      billingLag?: number;
+    },
   ): Observable<CashflowSummary> {
     let params = new HttpParams();
     if (options?.advanceRate !== undefined) {
@@ -27,13 +31,17 @@ export class CashflowApiService {
 
     return this.http.get<CashflowSummary>(
       `${this.baseUrl}/lines/${lineId}/cashflow`,
-      { params }
+      { params },
     );
   }
 
   getConsolidatedCashflow(
     offerId: number,
-    options?: { advanceRate?: number; retentionRate?: number; billingLag?: number }
+    options?: {
+      advanceRate?: number;
+      retentionRate?: number;
+      billingLag?: number;
+    },
   ): Observable<CashflowSummary> {
     let params = new HttpParams();
     if (options?.advanceRate !== undefined) {
@@ -48,7 +56,7 @@ export class CashflowApiService {
 
     return this.http.get<CashflowSummary>(
       `${this.baseUrl}/offers/${offerId}/cashflow/consolidated`,
-      { params }
+      { params },
     );
   }
 }

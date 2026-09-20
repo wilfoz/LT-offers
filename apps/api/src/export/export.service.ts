@@ -30,7 +30,9 @@ export class ExportService {
   /**
    * Obtém os indicadores sintéticos de desempenho e custo (RF-49).
    */
-  async getPerformanceIndicators(offerId: number): Promise<PerformanceIndicatorsSummary> {
+  async getPerformanceIndicators(
+    offerId: number,
+  ): Promise<PerformanceIndicatorsSummary> {
     const offer = await this.prisma.offer.findUnique({
       where: { id: offerId },
       include: {
@@ -50,29 +52,38 @@ export class ExportService {
       offer.revisions && offer.revisions.length > 0
         ? offer.revisions[offer.revisions.length - 1]
         : null;
-    const lines = (latestRevision && (latestRevision as any).transmissionLines) || [];
+    const lines =
+      (latestRevision && (latestRevision as any).transmissionLines) || [];
 
     const lineInputs: LinePerformanceData[] = [];
 
     if (lines.length === 0) {
       // Linha default se não houver cadastro específico
-      const econResult = await this.economicResultService.getLineEconomicResult(1);
+      const econResult =
+        await this.economicResultService.getLineEconomicResult(1);
       lineInputs.push({
         lineId: '1',
         lineName: 'LT Padrão 500kV',
         lengthKm: 100,
         towerCount: 250,
         totalSalePrice: econResult.totalSalePrice,
-        suppliesSalePrice: (Number(econResult.totalSalePrice) * 0.62).toFixed(2),
-        servicesSalePrice: (Number(econResult.totalSalePrice) * 0.38).toFixed(2),
+        suppliesSalePrice: (Number(econResult.totalSalePrice) * 0.62).toFixed(
+          2,
+        ),
+        servicesSalePrice: (Number(econResult.totalSalePrice) * 0.38).toFixed(
+          2,
+        ),
         totalConcreteVolumeM3: 12000,
         totalSteelWeightTons: 4500,
       });
     } else {
       for (const line of lines) {
-        const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
+        const lengthKm = Number(
+          line.refinedLengthKm || line.reportLengthKm || 100,
+        );
         const towerCount = Math.max(1, Math.round(lengthKm * 2.5));
-        const econResult = await this.economicResultService.getLineEconomicResult(line.id);
+        const econResult =
+          await this.economicResultService.getLineEconomicResult(line.id);
 
         lineInputs.push({
           lineId: String(line.id),
@@ -80,8 +91,12 @@ export class ExportService {
           lengthKm,
           towerCount,
           totalSalePrice: econResult.totalSalePrice,
-          suppliesSalePrice: (Number(econResult.totalSalePrice) * 0.62).toFixed(2),
-          servicesSalePrice: (Number(econResult.totalSalePrice) * 0.38).toFixed(2),
+          suppliesSalePrice: (Number(econResult.totalSalePrice) * 0.62).toFixed(
+            2,
+          ),
+          servicesSalePrice: (Number(econResult.totalSalePrice) * 0.38).toFixed(
+            2,
+          ),
           totalConcreteVolumeM3: Math.round(towerCount * 48),
           totalSteelWeightTons: Math.round(towerCount * 18),
         });
@@ -116,14 +131,20 @@ export class ExportService {
       throw new NotFoundException(`Oferta ID ${offerId} não encontrada.`);
     }
 
-    const econSummary = await this.economicResultService.getConsolidatedEconomicResult(offerId);
+    const econSummary =
+      await this.economicResultService.getConsolidatedEconomicResult(offerId);
     const bdiRate = econSummary.bdi.effectiveBdiRate;
     const bdiMultiplier = 1 + Number(bdiRate) / 100;
 
     const totalDirect = Number(econSummary.totalNetCost);
     const totalSale = Number(econSummary.totalSalePrice);
 
-    const prefix = layout === 'CELEO_STANDARD' ? 'CEL' : layout === 'ANEEL_STANDARD' ? 'CIP' : 'EPC';
+    const prefix =
+      layout === 'CELEO_STANDARD'
+        ? 'CEL'
+        : layout === 'ANEEL_STANDARD'
+          ? 'CIP'
+          : 'EPC';
 
     const rows: TenderSheetRow[] = [
       // Grupo 1: Estudos e Projetos
@@ -142,7 +163,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-01.01`,
-        description: 'Levantamento Topográfico Cadastral, Geologia e Estaquemento',
+        description:
+          'Levantamento Topográfico Cadastral, Geologia e Estaquemento',
         unit: 'km',
         quantity: '150.00',
         directUnitCost: ((totalDirect * 0.015) / 150).toFixed(2),
@@ -155,7 +177,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-01.02`,
-        description: 'Projetos Executivos Civil, Eletromecânico e Ensaios de Tipo',
+        description:
+          'Projetos Executivos Civil, Eletromecânico e Ensaios de Tipo',
         unit: 'un',
         quantity: '1.00',
         directUnitCost: (totalDirect * 0.025).toFixed(2),
@@ -183,7 +206,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-02.01`,
-        description: 'Estruturas Metálicas de Torres Galvanizadas com Parafusos',
+        description:
+          'Estruturas Metálicas de Torres Galvanizadas com Parafusos',
         unit: 't',
         quantity: '6750.00',
         directUnitCost: ((totalDirect * 0.28) / 6750).toFixed(2),
@@ -196,7 +220,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-02.02`,
-        description: 'Cabos Condutores de Alumínio (ACSR/CAL) e Cabos Pára-raios (OPGW/EHS)',
+        description:
+          'Cabos Condutores de Alumínio (ACSR/CAL) e Cabos Pára-raios (OPGW/EHS)',
         unit: 'km',
         quantity: '950.00',
         directUnitCost: ((totalDirect * 0.22) / 950).toFixed(2),
@@ -209,7 +234,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-02.03`,
-        description: 'Cadeias de Isoladores de Vidro/Porcelana e Ferragens de Suspensão/Ancoragem',
+        description:
+          'Cadeias de Isoladores de Vidro/Porcelana e Ferragens de Suspensão/Ancoragem',
         unit: 'cj',
         quantity: '2250.00',
         directUnitCost: ((totalDirect * 0.08) / 2250).toFixed(2),
@@ -237,7 +263,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-03.01`,
-        description: 'Supressão Vegetal, Abertura de Faixa e Construção de Acessos',
+        description:
+          'Supressão Vegetal, Abertura de Faixa e Construção de Acessos',
         unit: 'km',
         quantity: '150.00',
         directUnitCost: ((totalDirect * 0.05) / 150).toFixed(2),
@@ -250,7 +277,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-03.02`,
-        description: 'Escavações, Armações, Fôrmas e Concretagem de Fundações de Torres',
+        description:
+          'Escavações, Armações, Fôrmas e Concretagem de Fundações de Torres',
         unit: 'm³',
         quantity: '18000.00',
         directUnitCost: ((totalDirect * 0.13) / 18000).toFixed(2),
@@ -278,7 +306,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-04.01`,
-        description: 'Montagem de Torres Metálicas com Guindaste e Trator Guincho',
+        description:
+          'Montagem de Torres Metálicas com Guindaste e Trator Guincho',
         unit: 't',
         quantity: '6750.00',
         directUnitCost: ((totalDirect * 0.08) / 6750).toFixed(2),
@@ -291,7 +320,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-04.02`,
-        description: 'Lançamento, Tensionamento, Nivelamento e Grampeamento de Cabos',
+        description:
+          'Lançamento, Tensionamento, Nivelamento e Grampeamento de Cabos',
         unit: 'km',
         quantity: '950.00',
         directUnitCost: ((totalDirect * 0.06) / 950).toFixed(2),
@@ -319,7 +349,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-05.01`,
-        description: 'Instalação e Manutenção de Canteiros de Obras e Alojamentos',
+        description:
+          'Instalação e Manutenção de Canteiros de Obras e Alojamentos',
         unit: 'un',
         quantity: '2.00',
         directUnitCost: ((totalDirect * 0.035) / 2).toFixed(2),
@@ -332,7 +363,8 @@ export class ExportService {
       },
       {
         cipCode: `${prefix}-05.02`,
-        description: 'Supervisão de Campo, Ensaios Finais e Comissionamento Energizado',
+        description:
+          'Supervisão de Campo, Ensaios Finais e Comissionamento Energizado',
         unit: 'un',
         quantity: '1.00',
         directUnitCost: (totalDirect * 0.025).toFixed(2),
@@ -362,7 +394,10 @@ export class ExportService {
     return {
       offerId: String(offerId),
       offerName: offer.name || `Proposta #${offerId}`,
-      revisionNumber: offer.revisions && offer.revisions.length > 0 ? offer.revisions[offer.revisions.length - 1].revisionNumber : 0,
+      revisionNumber:
+        offer.revisions && offer.revisions.length > 0
+          ? offer.revisions[offer.revisions.length - 1].revisionNumber
+          : 0,
       layout,
       generatedAt: new Date().toISOString(),
       rows,
@@ -375,7 +410,9 @@ export class ExportService {
   /**
    * Constrói os dados da Folha de Medição Contratual e Preços Unitários (RF-48).
    */
-  async getMeasurementSheetData(offerId: number): Promise<MeasurementSheetExportData> {
+  async getMeasurementSheetData(
+    offerId: number,
+  ): Promise<MeasurementSheetExportData> {
     const offer = await this.prisma.offer.findUnique({
       where: { id: offerId },
       include: {
@@ -387,109 +424,130 @@ export class ExportService {
       throw new NotFoundException(`Oferta ID ${offerId} não encontrada.`);
     }
 
-    const econSummary = await this.economicResultService.getConsolidatedEconomicResult(offerId);
+    const econSummary =
+      await this.economicResultService.getConsolidatedEconomicResult(offerId);
     const totalSale = Number(econSummary.totalSalePrice);
 
     const items: MeasurementSheetRow[] = [
       {
         itemCode: 'M1 / PU1',
         discipline: 'TOPOGRAFIA',
-        description: 'Levantamento topográfico, cadastramento de proprietários e estaqueamento de torres',
+        description:
+          'Levantamento topográfico, cadastramento de proprietários e estaqueamento de torres',
         unit: 'km',
         contractQuantity: '150.00',
-        measurementCriteria: 'Extensão de diretriz estaqueada e aprovada pela fiscalização em campo',
+        measurementCriteria:
+          'Extensão de diretriz estaqueada e aprovada pela fiscalização em campo',
         unitPriceWithTax: ((totalSale * 0.02) / 150).toFixed(2),
         totalContractPrice: (totalSale * 0.02).toFixed(2),
       },
       {
         itemCode: 'M2 / PU2',
         discipline: 'MEIO AMBIENTE',
-        description: 'Supressão vegetal, limpeza de praça de torre e abertura de acessos',
+        description:
+          'Supressão vegetal, limpeza de praça de torre e abertura de acessos',
         unit: 'ha',
         contractQuantity: '450.00',
-        measurementCriteria: 'Área efetivamente suprimida com bota-fora e cercamento executados',
+        measurementCriteria:
+          'Área efetivamente suprimida com bota-fora e cercamento executados',
         unitPriceWithTax: ((totalSale * 0.04) / 450).toFixed(2),
         totalContractPrice: (totalSale * 0.04).toFixed(2),
       },
       {
         itemCode: 'M3 / PU3',
         discipline: 'CIVIL / FUNDAÇÕES',
-        description: 'Escavação manual e mecanizada para blocos e estacas de fundações',
+        description:
+          'Escavação manual e mecanizada para blocos e estacas de fundações',
         unit: 'm³',
         contractQuantity: '24500.00',
-        measurementCriteria: 'Volume geométrico teórico escavado conforme projeto executivo',
+        measurementCriteria:
+          'Volume geométrico teórico escavado conforme projeto executivo',
         unitPriceWithTax: ((totalSale * 0.03) / 24500).toFixed(2),
         totalContractPrice: (totalSale * 0.03).toFixed(2),
       },
       {
         itemCode: 'M4 / PU4',
         discipline: 'CIVIL / FUNDAÇÕES',
-        description: 'Concreto usinado fck >= 30 MPa lançado com cura úmida e fôrmas',
+        description:
+          'Concreto usinado fck >= 30 MPa lançado com cura úmida e fôrmas',
         unit: 'm³',
         contractQuantity: '18000.00',
-        measurementCriteria: 'Volume geométrico de concreto dosado lançado e com corpos de prova rompidos',
+        measurementCriteria:
+          'Volume geométrico de concreto dosado lançado e com corpos de prova rompidos',
         unitPriceWithTax: ((totalSale * 0.12) / 18000).toFixed(2),
         totalContractPrice: (totalSale * 0.12).toFixed(2),
       },
       {
         itemCode: 'M5 / PU5',
         discipline: 'CIVIL / FUNDAÇÕES',
-        description: 'Armadura em aço CA-50 / CA-60 cortada, dobrada e posicionada em fundações',
+        description:
+          'Armadura em aço CA-50 / CA-60 cortada, dobrada e posicionada em fundações',
         unit: 'kg',
         contractQuantity: '1450000.00',
-        measurementCriteria: 'Peso nominal de aço verificado nas fôrmas antes da concretagem',
+        measurementCriteria:
+          'Peso nominal de aço verificado nas fôrmas antes da concretagem',
         unitPriceWithTax: ((totalSale * 0.06) / 1450000).toFixed(2),
         totalContractPrice: (totalSale * 0.06).toFixed(2),
       },
       {
         itemCode: 'M6 / PU6',
         discipline: 'ELETROMECÂNICA',
-        description: 'Montagem e aperto de estruturas metálicas de torres autoportantes e estaiadas',
+        description:
+          'Montagem e aperto de estruturas metálicas de torres autoportantes e estaiadas',
         unit: 't',
         contractQuantity: '6750.00',
-        measurementCriteria: 'Toneladas de torre completamente erguidas, aprumadas e com torque conferido',
-        unitPriceWithTax: ((totalSale * 0.10) / 6750).toFixed(2),
-        totalContractPrice: (totalSale * 0.10).toFixed(2),
+        measurementCriteria:
+          'Toneladas de torre completamente erguidas, aprumadas e com torque conferido',
+        unitPriceWithTax: ((totalSale * 0.1) / 6750).toFixed(2),
+        totalContractPrice: (totalSale * 0.1).toFixed(2),
       },
       {
         itemCode: 'M7 / PU7',
         discipline: 'ELETROMECÂNICA',
-        description: 'Lançamento, tensionamento e regulagem de flecha de cabos condutores de fase',
+        description:
+          'Lançamento, tensionamento e regulagem de flecha de cabos condutores de fase',
         unit: 'km-fase',
         contractQuantity: '950.00',
-        measurementCriteria: 'Extensão de fase puxada sob tração mecânica com grampeamento concluído',
+        measurementCriteria:
+          'Extensão de fase puxada sob tração mecânica com grampeamento concluído',
         unitPriceWithTax: ((totalSale * 0.08) / 950).toFixed(2),
         totalContractPrice: (totalSale * 0.08).toFixed(2),
       },
       {
         itemCode: 'M8 / PU8',
         discipline: 'ELETROMECÂNICA',
-        description: 'Lançamento de cabo pára-raios OPGW com fusão óptica de fibras',
+        description:
+          'Lançamento de cabo pára-raios OPGW com fusão óptica de fibras',
         unit: 'km',
         contractQuantity: '150.00',
-        measurementCriteria: 'Extensão lançada com relatório de reflectometria OTDR aprovado',
+        measurementCriteria:
+          'Extensão lançada com relatório de reflectometria OTDR aprovado',
         unitPriceWithTax: ((totalSale * 0.03) / 150).toFixed(2),
         totalContractPrice: (totalSale * 0.03).toFixed(2),
       },
       {
         itemCode: 'M9 / PU9',
         discipline: 'ATERRAMENTO',
-        description: 'Instalação de malha e contra-pesos de aterramento de pé de torre',
+        description:
+          'Instalação de malha e contra-pesos de aterramento de pé de torre',
         unit: 'un',
         contractQuantity: '375.00',
-        measurementCriteria: 'Pé de torre aterrado com resistência de aterramento homologada em laudo',
+        measurementCriteria:
+          'Pé de torre aterrado com resistência de aterramento homologada em laudo',
         unitPriceWithTax: ((totalSale * 0.02) / 375).toFixed(2),
         totalContractPrice: (totalSale * 0.02).toFixed(2),
       },
       {
         itemCode: 'M10 / PU10',
         discipline: 'COMISSIONAMENTO',
-        description: 'Ensaios elétricos finais, inspeção aérea e energização assistida',
+        description:
+          'Ensaios elétricos finais, inspeção aérea e energização assistida',
         unit: 'un',
         contractQuantity: '1.00',
-        measurementCriteria: 'Emissão do Termo de Recebimento Provisório (TRP) e energização comercial',
-        unitPriceWithTax: (totalSale * 0.50).toFixed(2), // Suprimentos agregados + entrega final
-        totalContractPrice: (totalSale * 0.50).toFixed(2),
+        measurementCriteria:
+          'Emissão do Termo de Recebimento Provisório (TRP) e energização comercial',
+        unitPriceWithTax: (totalSale * 0.5).toFixed(2), // Suprimentos agregados + entrega final
+        totalContractPrice: (totalSale * 0.5).toFixed(2),
       },
     ];
 
@@ -500,7 +558,10 @@ export class ExportService {
     return {
       offerId: String(offerId),
       offerName: offer.name || `Proposta #${offerId}`,
-      revisionNumber: offer.revisions && offer.revisions.length > 0 ? offer.revisions[offer.revisions.length - 1].revisionNumber : 0,
+      revisionNumber:
+        offer.revisions && offer.revisions.length > 0
+          ? offer.revisions[offer.revisions.length - 1].revisionNumber
+          : 0,
       generatedAt: new Date().toISOString(),
       items,
       totalContractAmount,
@@ -520,10 +581,12 @@ export class ExportService {
       throw new NotFoundException(`Oferta ID ${offerId} não encontrada.`);
     }
 
-    const cashflowSummary = await this.cashflowService.getConsolidatedCashflow(offerId);
+    const cashflowSummary =
+      await this.cashflowService.getConsolidatedCashflow(offerId);
 
     const peakMonth = cashflowSummary.financialExposure?.peakMonth || 1;
-    const peakAmount = cashflowSummary.financialExposure?.maxNegativeExposure || '0.00';
+    const peakAmount =
+      cashflowSummary.financialExposure?.maxNegativeExposure || '0.00';
 
     const months = cashflowSummary.monthlyPoints.map((pt) => ({
       monthIndex: pt.month,
@@ -542,7 +605,10 @@ export class ExportService {
     return {
       offerId: String(offerId),
       offerName: offer.name || `Proposta #${offerId}`,
-      revisionNumber: offer.revisions && offer.revisions.length > 0 ? offer.revisions[offer.revisions.length - 1].revisionNumber : 0,
+      revisionNumber:
+        offer.revisions && offer.revisions.length > 0
+          ? offer.revisions[offer.revisions.length - 1].revisionNumber
+          : 0,
       generatedAt: new Date().toISOString(),
       months,
       peakExposureMonth: peakMonth,
@@ -575,11 +641,14 @@ export class ExportService {
       offer.revisions && offer.revisions.length > 0
         ? offer.revisions[offer.revisions.length - 1]
         : null;
-    const lines = (latestRevision && (latestRevision as any).transmissionLines) || [];
+    const lines =
+      (latestRevision && (latestRevision as any).transmissionLines) || [];
 
     const performanceIndicators = await this.getPerformanceIndicators(offerId);
-    const econSummary = await this.economicResultService.getConsolidatedEconomicResult(offerId);
-    const cashflowSummary = await this.cashflowService.getConsolidatedCashflow(offerId);
+    const econSummary =
+      await this.economicResultService.getConsolidatedEconomicResult(offerId);
+    const cashflowSummary =
+      await this.cashflowService.getConsolidatedCashflow(offerId);
 
     return {
       metadata: {
@@ -603,7 +672,10 @@ export class ExportService {
       })),
       staking: [],
       pricingSummary: econSummary as unknown as Record<string, unknown>,
-      bdiParameters: (econSummary.coefficients || {}) as unknown as Record<string, unknown>,
+      bdiParameters: (econSummary.coefficients || {}) as unknown as Record<
+        string,
+        unknown
+      >,
       cashflow: cashflowSummary as unknown as Record<string, unknown>,
       risks: [],
       governance: {
@@ -616,7 +688,10 @@ export class ExportService {
   /**
    * Exporta a Planilha de Preços do Edital em Buffer binário XLSX.
    */
-  async exportTenderSheet(offerId: number, layout: TenderSheetLayout = 'ANEEL_STANDARD'): Promise<Buffer> {
+  async exportTenderSheet(
+    offerId: number,
+    layout: TenderSheetLayout = 'ANEEL_STANDARD',
+  ): Promise<Buffer> {
     const data = await this.getTenderSheetData(offerId, layout);
     return this.excelGenerator.generateTenderSheet(data);
   }

@@ -21,9 +21,12 @@ export class RisksService {
           offerId,
           lineId: lineId || '1',
           category: 'LAND_EASEMENT',
-          description: 'Negociação de servidão em trechos com ocupação periurbana',
-          situation: 'Levantamento cartorial preliminar apontou 12 imóveis sem regularização',
-          mitigationAction: 'Mobilização precoce de equipe fundiária e contato com lideranças locais',
+          description:
+            'Negociação de servidão em trechos com ocupação periurbana',
+          situation:
+            'Levantamento cartorial preliminar apontou 12 imóveis sem regularização',
+          mitigationAction:
+            'Mobilização precoce de equipe fundiária e contato com lideranças locais',
           estimatedImpact: '650000.00',
           probabilityPercent: '30.00',
           weightedSeverity: '195000.00',
@@ -34,9 +37,12 @@ export class RisksService {
           offerId,
           lineId: lineId || '1',
           category: 'GEOTECHNICAL_SOIL',
-          description: 'Aumento na proporção de solo rochoso em fundações com perfuração',
-          situation: 'Perfil geológico regional indica afloramento rochoso em 15% do traçado',
-          mitigationAction: 'Contratação de perfuratrizes rotativas adicionais sob demanda',
+          description:
+            'Aumento na proporção de solo rochoso em fundações com perfuração',
+          situation:
+            'Perfil geológico regional indica afloramento rochoso em 15% do traçado',
+          mitigationAction:
+            'Contratação de perfuratrizes rotativas adicionais sob demanda',
           estimatedImpact: '450000.00',
           probabilityPercent: '40.00',
           weightedSeverity: '180000.00',
@@ -47,8 +53,10 @@ export class RisksService {
           offerId,
           category: 'THIRD_PARTY_MARKET',
           description: 'Flutuação de custos logísticos e de frete rodoviário',
-          situation: 'Variação potencial do preço do óleo diesel e tarifas de pedágio',
-          mitigationAction: 'Contrato de transporte de cargas com cláusula de teto máximo',
+          situation:
+            'Variação potencial do preço do óleo diesel e tarifas de pedágio',
+          mitigationAction:
+            'Contrato de transporte de cargas com cláusula de teto máximo',
           estimatedImpact: '200000.00',
           probabilityPercent: '25.00',
           weightedSeverity: '50000.00',
@@ -62,17 +70,21 @@ export class RisksService {
 
   getOfferRisks(offerId: string, lineId?: string): RiskAssessmentSummary {
     const allItems = this.getOrCreateOfferRisks(offerId, lineId);
-    const filtered = lineId ? allItems.filter((i) => !i.lineId || i.lineId === lineId) : allItems;
+    const filtered = lineId
+      ? allItems.filter((i) => !i.lineId || i.lineId === lineId)
+      : allItems;
     return RiskCalculator.assessRisks(offerId, filtered, lineId);
   }
 
   saveRisk(offerId: string, item: Partial<RiskItem>): RiskAssessmentSummary {
     const items = this.getOrCreateOfferRisks(offerId, item.lineId);
-    const id = item.id || `risk-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const id =
+      item.id ||
+      `risk-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
 
     const severity = RiskCalculator.calculateItemSeverity(
       item.estimatedImpact || '0',
-      item.probabilityPercent || '0'
+      item.probabilityPercent || '0',
     );
 
     const fullItem: RiskItem = {
@@ -100,7 +112,11 @@ export class RisksService {
     return this.getOfferRisks(offerId, item.lineId);
   }
 
-  deleteRisk(offerId: string, riskId: string, lineId?: string): RiskAssessmentSummary {
+  deleteRisk(
+    offerId: string,
+    riskId: string,
+    lineId?: string,
+  ): RiskAssessmentSummary {
     const items = this.getOrCreateOfferRisks(offerId, lineId);
     const updated = items.filter((i) => i.id !== riskId);
     this.risksStore.set(offerId, updated);

@@ -40,10 +40,7 @@ export interface BdiBreakdown {
  * Categorias padrão do quadro de resultado econômico (Quadro R).
  */
 export type EconomicResultCategory =
-  | 'MATERIALS'
-  | 'SERVICES'
-  | 'INDIRECTS_CAMPS'
-  | 'SPARE_PARTS';
+  'MATERIALS' | 'SERVICES' | 'INDIRECTS_CAMPS' | 'SPARE_PARTS';
 
 /**
  * Linha detalhada do Quadro R com decomposição de custos e tributos (RF-51).

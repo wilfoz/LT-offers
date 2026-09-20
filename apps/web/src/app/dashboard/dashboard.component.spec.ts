@@ -25,7 +25,9 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
 
-    expect(el.querySelector('.page-title')?.textContent).toContain('Painel de Controle');
+    expect(el.querySelector('.page-title')?.textContent).toContain(
+      'Painel de Controle',
+    );
     const kpiCards = el.querySelectorAll('.kpi-card');
     expect(kpiCards.length).toBe(4);
     expect(el.textContent).toContain('Torres Totais');

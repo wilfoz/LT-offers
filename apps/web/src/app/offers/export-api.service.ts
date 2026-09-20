@@ -20,7 +20,9 @@ export class ExportApiService {
   /**
    * Obtém os indicadores sintéticos consolidados da proposta (RF-49).
    */
-  getPerformanceIndicators(offerId: number): Observable<PerformanceIndicatorsSummary> {
+  getPerformanceIndicators(
+    offerId: number,
+  ): Observable<PerformanceIndicatorsSummary> {
     return this.http.get<PerformanceIndicatorsSummary>(
       `${this.baseUrl}/${offerId}/export/performance-indicators`,
     );
@@ -57,7 +59,9 @@ export class ExportApiService {
   /**
    * Obtém os dados estruturados da Folha de Medição e PUs em JSON.
    */
-  getMeasurementSheetData(offerId: number): Observable<MeasurementSheetExportData> {
+  getMeasurementSheetData(
+    offerId: number,
+  ): Observable<MeasurementSheetExportData> {
     return this.http.get<MeasurementSheetExportData>(
       `${this.baseUrl}/${offerId}/export/measurement-sheet/data`,
     );
@@ -67,9 +71,12 @@ export class ExportApiService {
    * Faz o download do arquivo binário XLSX da Folha de Medição Contratual e PUs (RF-48, RNF-11).
    */
   downloadMeasurementSheet(offerId: number): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/${offerId}/export/measurement-sheet`, {
-      responseType: 'blob',
-    });
+    return this.http.get(
+      `${this.baseUrl}/${offerId}/export/measurement-sheet`,
+      {
+        responseType: 'blob',
+      },
+    );
   }
 
   /**
@@ -85,9 +92,12 @@ export class ExportApiService {
    * Faz o download do arquivo binário XLSX do Cronograma de Faturamento e Desembolso (RF-60, RNF-11).
    */
   downloadCashflowSheet(offerId: number): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/${offerId}/export/cashflow-schedule`, {
-      responseType: 'blob',
-    });
+    return this.http.get(
+      `${this.baseUrl}/${offerId}/export/cashflow-schedule`,
+      {
+        responseType: 'blob',
+      },
+    );
   }
 
   /**

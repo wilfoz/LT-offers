@@ -2,7 +2,7 @@ import {
   ScheduleActivity,
   MilestoneContract,
   CampDefinition,
-  PrecipitationFactor
+  PrecipitationFactor,
 } from '../../index';
 
 describe('Schedule, Camps & Histogram Domain Contracts', () => {
@@ -29,7 +29,7 @@ describe('Schedule, Camps & Histogram Domain Contracts', () => {
       monthlyRecurringCost: '120000.00',
       demobilizationCost: '30000.00',
       totalCost: '800000.00',
-      status: 'PLANNED'
+      status: 'PLANNED',
     };
 
     expect(activity.group).toBe('CIVIL_WORKS');
@@ -46,7 +46,7 @@ describe('Schedule, Camps & Histogram Domain Contracts', () => {
       targetMonth: 2,
       targetDate: '2026-10-01',
       isMandatory: true,
-      description: 'Condição obrigatória para início de obras civis'
+      description: 'Condição obrigatória para início de obras civis',
     };
 
     expect(milestone.code).toBe('LI');
@@ -75,7 +75,7 @@ describe('Schedule, Camps & Histogram Domain Contracts', () => {
           laborRoleName: 'Engenheiro Residente',
           quantity: 1,
           monthlyUnitCost: '25000.00',
-          totalMonthlyCost: '25000.00'
+          totalMonthlyCost: '25000.00',
         },
         {
           laborRoleId: 2,
@@ -83,12 +83,12 @@ describe('Schedule, Camps & Histogram Domain Contracts', () => {
           laborRoleName: 'Técnico de Segurança do Trabalho',
           quantity: 2,
           monthlyUnitCost: '9500.00',
-          totalMonthlyCost: '19000.00'
-        }
+          totalMonthlyCost: '19000.00',
+        },
       ],
       totalPersonnelMonthlyCost: '44000.00',
       totalMonthlyCost: '129000.00',
-      totalCampCost: '2792000.00'
+      totalCampCost: '2792000.00',
     };
 
     expect(camp.type).toBe('CENTRAL');
@@ -102,7 +102,7 @@ describe('Schedule, Camps & Histogram Domain Contracts', () => {
       month: 1, // Janeiro
       precipitationMm: '280.50',
       level: 4,
-      productivityFactor: '0.75'
+      productivityFactor: '0.75',
     };
 
     expect(precip.level).toBe(4);

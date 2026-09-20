@@ -17,7 +17,7 @@ export class AuditController {
     @Query('userId') userId?: string,
     @Query('action') action?: any,
     @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string
+    @Query('endDate') endDate?: string,
   ): AuditEvent[] {
     const filter: AuditFilter = {
       offerId,
@@ -33,7 +33,7 @@ export class AuditController {
   @Post('log')
   @RequireScopes('OFFER_WRITE')
   logManualEvent(
-    @Body() eventInput: Omit<AuditEvent, 'id' | 'timestamp'>
+    @Body() eventInput: Omit<AuditEvent, 'id' | 'timestamp'>,
   ): AuditEvent {
     return this.auditService.logEvent(eventInput);
   }

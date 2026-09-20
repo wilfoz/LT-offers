@@ -8,14 +8,14 @@ export class ScheduleController {
 
   @Get('summary')
   async getSummary(
-    @Param('lineId', ParseIntPipe) lineId: number
+    @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<ScheduleSummary> {
     return this.scheduleService.getLineSchedule(lineId);
   }
 
   @Get('camps')
   async getCamps(
-    @Param('lineId', ParseIntPipe) lineId: number
+    @Param('lineId', ParseIntPipe) lineId: number,
   ): Promise<CampCostSummary> {
     return this.scheduleService.getLineCamps(lineId);
   }

@@ -9,6 +9,8 @@ export class ChecksApiService {
   private baseUrl = '/api/offers';
 
   getHealthChecks(offerId: string | number): Observable<OfferHealthSummary> {
-    return this.http.get<OfferHealthSummary>(`${this.baseUrl}/${offerId}/checks`);
+    return this.http.get<OfferHealthSummary>(
+      `${this.baseUrl}/${offerId}/checks`,
+    );
   }
 }

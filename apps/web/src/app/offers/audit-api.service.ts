@@ -31,7 +31,9 @@ export class AuditApiService {
   /**
    * Registra manualmente um evento de auditoria.
    */
-  logEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): Observable<AuditEvent> {
+  logEvent(
+    event: Omit<AuditEvent, 'id' | 'timestamp'>,
+  ): Observable<AuditEvent> {
     return this.http.post<AuditEvent>(`${this.baseUrl}/log`, event);
   }
 }
