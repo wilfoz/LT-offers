@@ -10,7 +10,6 @@ import {
 } from '@lt-offers/calc-engine';
 import { BaselineService } from './baseline.service';
 import { AuditService } from '../audit/audit.service';
-import { CashflowService } from '../cashflow/cashflow.service';
 
 @Injectable()
 export class ProgressTrackingService {
@@ -19,7 +18,6 @@ export class ProgressTrackingService {
   constructor(
     private readonly baselineService: BaselineService,
     private readonly auditService: AuditService,
-    private readonly cashflowService: CashflowService,
   ) {
     this.seedDefaultProgressRecords();
   }

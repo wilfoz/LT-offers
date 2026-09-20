@@ -6,11 +6,10 @@ import { ErpIntegrationService } from './erp-integration.service';
 import { BaselineController } from './baseline.controller';
 import { PrismaModule } from '../app/prisma.module';
 import { AuditModule } from '../audit/audit.module';
-import { EconomicResultModule } from '../economic-result/economic-result.module';
-import { CashflowModule } from '../cashflow/cashflow.module';
+import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
 
 @Module({
-  imports: [PrismaModule, AuditModule, EconomicResultModule, CashflowModule],
+  imports: [PrismaModule, AuditModule, EconomicsModule],
   controllers: [BaselineController],
   providers: [
     BaselineService,

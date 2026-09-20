@@ -9,9 +9,7 @@ import { PricingModule } from '../contexts/pricing/infrastructure/pricing.module
 import { ElectromechanicalModule } from '../electromechanical/electromechanical.module';
 import { ScheduleModule } from '../schedule/schedule.module';
 import { HistogramModule } from '../histogram/histogram.module';
-import { ServiceBudgetModule } from '../service-budget/service-budget.module';
-import { EconomicResultModule } from '../economic-result/economic-result.module';
-import { CashflowModule } from '../cashflow/cashflow.module';
+import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
 import { RisksModule } from '../risks/risks.module';
 import { ChecksModule } from '../checks/checks.module';
 import { ExportModule } from '../export/export.module';
@@ -39,9 +37,7 @@ import { PrismaModule } from './prisma.module';
     ElectromechanicalModule,
     ScheduleModule,
     HistogramModule,
-    ServiceBudgetModule,
-    EconomicResultModule,
-    CashflowModule,
+    EconomicsModule,
     RisksModule,
     ChecksModule,
     ExportModule,

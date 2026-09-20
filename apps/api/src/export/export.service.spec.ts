@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExportService } from './export.service';
 import { ExcelGeneratorService } from './excel-generator.service';
 import { PrismaService } from '../app/prisma.service';
-import { EconomicResultService } from '../economic-result/economic-result.service';
-import { CashflowService } from '../cashflow/cashflow.service';
+import { EconomicsFacadeService } from '../contexts/economics';
 
 describe('ExportService (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-18)', () => {
   let service: ExportService;
@@ -88,8 +87,10 @@ describe('ExportService (RF-47, RF-48, RF-49, RF-50, RF-60, RNF-18)', () => {
         ExportService,
         ExcelGeneratorService,
         { provide: PrismaService, useValue: mockPrismaService },
-        { provide: EconomicResultService, useValue: mockEconomicResultService },
-        { provide: CashflowService, useValue: mockCashflowService },
+        {
+          provide: EconomicsFacadeService,
+          useValue: { ...mockEconomicResultService, ...mockCashflowService },
+        },
       ],
     }).compile();
 

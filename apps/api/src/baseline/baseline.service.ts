@@ -11,7 +11,7 @@ import {
 import { WbsGenerator } from '@lt-offers/calc-engine';
 import { PrismaService } from '../app/prisma.service';
 import { AuditService } from '../audit/audit.service';
-import { EconomicResultService } from '../economic-result/economic-result.service';
+import { EconomicsFacadeService } from '../contexts/economics';
 
 @Injectable()
 export class BaselineService {
@@ -21,7 +21,7 @@ export class BaselineService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
-    private readonly economicResultService: EconomicResultService,
+    private readonly economicsFacade: EconomicsFacadeService,
   ) {
     this.seedDefaultBaselines();
   }
@@ -89,10 +89,9 @@ export class BaselineService {
     let marginPercent = '8.00';
 
     try {
-      const econ =
-        await this.economicResultService.getConsolidatedEconomicResult(
-          payload.offerId,
-        );
+      const econ = await this.economicsFacade.getConsolidatedEconomicResult(
+        payload.offerId,
+      );
       if (econ) {
         contractValue = econ.totalSalePrice || contractValue;
         budgetCost = econ.totalNetCost || budgetCost;

@@ -5,8 +5,7 @@ import { ChangeOrderService } from './change-order.service';
 import { ErpIntegrationService } from './erp-integration.service';
 import { PrismaService } from '../app/prisma.service';
 import { AuditService } from '../audit/audit.service';
-import { EconomicResultService } from '../economic-result/economic-result.service';
-import { CashflowService } from '../cashflow/cashflow.service';
+import { EconomicsFacadeService } from '../contexts/economics';
 
 describe('Baseline & Execution Services (Fase F7)', () => {
   let baselineService: BaselineService;
@@ -33,10 +32,6 @@ describe('Baseline & Execution Services (Fase F7)', () => {
     }),
   };
 
-  const mockCashflowService = {
-    getCashflowSummary: jest.fn().mockResolvedValue(null),
-  };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -46,8 +41,10 @@ describe('Baseline & Execution Services (Fase F7)', () => {
         ErpIntegrationService,
         AuditService,
         { provide: PrismaService, useValue: mockPrismaService },
-        { provide: EconomicResultService, useValue: mockEconomicResultService },
-        { provide: CashflowService, useValue: mockCashflowService },
+        {
+          provide: EconomicsFacadeService,
+          useValue: mockEconomicResultService,
+        },
       ],
     }).compile();
 

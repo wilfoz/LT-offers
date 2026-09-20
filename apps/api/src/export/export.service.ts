@@ -14,16 +14,14 @@ import {
   LinePerformanceData,
 } from '@lt-offers/calc-engine';
 import { PrismaService } from '../app/prisma.service';
-import { EconomicResultService } from '../economic-result/economic-result.service';
-import { CashflowService } from '../cashflow/cashflow.service';
+import { EconomicsFacadeService } from '../contexts/economics';
 import { ExcelGeneratorService } from './excel-generator.service';
 
 @Injectable()
 export class ExportService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly economicResultService: EconomicResultService,
-    private readonly cashflowService: CashflowService,
+    private readonly economicsFacade: EconomicsFacadeService,
     private readonly excelGenerator: ExcelGeneratorService,
   ) {}
 
@@ -59,8 +57,7 @@ export class ExportService {
 
     if (lines.length === 0) {
       // Linha default se não houver cadastro específico
-      const econResult =
-        await this.economicResultService.getLineEconomicResult(1);
+      const econResult = await this.economicsFacade.getLineEconomicResult(1);
       lineInputs.push({
         lineId: '1',
         lineName: 'LT Padrão 500kV',
@@ -82,8 +79,9 @@ export class ExportService {
           line.refinedLengthKm || line.reportLengthKm || 100,
         );
         const towerCount = Math.max(1, Math.round(lengthKm * 2.5));
-        const econResult =
-          await this.economicResultService.getLineEconomicResult(line.id);
+        const econResult = await this.economicsFacade.getLineEconomicResult(
+          line.id,
+        );
 
         lineInputs.push({
           lineId: String(line.id),
@@ -132,7 +130,7 @@ export class ExportService {
     }
 
     const econSummary =
-      await this.economicResultService.getConsolidatedEconomicResult(offerId);
+      await this.economicsFacade.getConsolidatedEconomicResult(offerId);
     const bdiRate = econSummary.bdi.effectiveBdiRate;
     const bdiMultiplier = 1 + Number(bdiRate) / 100;
 
@@ -425,7 +423,7 @@ export class ExportService {
     }
 
     const econSummary =
-      await this.economicResultService.getConsolidatedEconomicResult(offerId);
+      await this.economicsFacade.getConsolidatedEconomicResult(offerId);
     const totalSale = Number(econSummary.totalSalePrice);
 
     const items: MeasurementSheetRow[] = [
@@ -582,7 +580,7 @@ export class ExportService {
     }
 
     const cashflowSummary =
-      await this.cashflowService.getConsolidatedCashflow(offerId);
+      await this.economicsFacade.getConsolidatedCashflow(offerId);
 
     const peakMonth = cashflowSummary.financialExposure?.peakMonth || 1;
     const peakAmount =
@@ -646,9 +644,9 @@ export class ExportService {
 
     const performanceIndicators = await this.getPerformanceIndicators(offerId);
     const econSummary =
-      await this.economicResultService.getConsolidatedEconomicResult(offerId);
+      await this.economicsFacade.getConsolidatedEconomicResult(offerId);
     const cashflowSummary =
-      await this.cashflowService.getConsolidatedCashflow(offerId);
+      await this.economicsFacade.getConsolidatedCashflow(offerId);
 
     return {
       metadata: {
