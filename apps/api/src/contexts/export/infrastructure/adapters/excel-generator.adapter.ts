@@ -5,6 +5,7 @@ import {
   MeasurementSheetExportData,
   CashflowExportData,
 } from '@lt-offers/domain';
+import { SpreadsheetGeneratorPort } from '../../domain';
 
 const HEADER_FILL: ExcelJS.Fill = {
   type: 'pattern',
@@ -49,7 +50,7 @@ const PERCENT_FORMAT = '0.00%';
 const NUMBER_FORMAT = '#,##0.00';
 
 @Injectable()
-export class ExcelGeneratorService {
+export class ExcelGeneratorAdapter implements SpreadsheetGeneratorPort {
   /**
    * Gera a Planilha de Preços do Edital em formato XLSX (RF-47, RF-50, RNF-11).
    */

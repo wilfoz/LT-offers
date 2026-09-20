@@ -12,7 +12,7 @@ import { HistogramModule } from '../contexts/histogram/infrastructure/histogram.
 import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
 import { RisksModule } from '../contexts/risks/infrastructure/risks.module';
 import { ChecksModule } from '../contexts/checks/infrastructure/checks.module';
-import { ExportModule } from '../export/export.module';
+import { ExportModule } from '../contexts/export/infrastructure/export.module';
 import { BaselineModule } from '../contexts/baseline/infrastructure/baseline.module';
 import { ParityModule } from '../parity/parity.module';
 import { FieldFactorsModule } from '../field-factors/field-factors.module';

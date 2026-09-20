@@ -1,15 +1,15 @@
-import { ExcelGeneratorService } from './excel-generator.service';
+import { ExcelGeneratorAdapter } from './excel-generator.adapter';
 import {
   TenderSheetExportData,
   MeasurementSheetExportData,
   CashflowExportData,
 } from '@lt-offers/domain';
 
-describe('ExcelGeneratorService (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
-  let service: ExcelGeneratorService;
+describe('ExcelGeneratorAdapter (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
+  let adapter: ExcelGeneratorAdapter;
 
   beforeEach(() => {
-    service = new ExcelGeneratorService();
+    adapter = new ExcelGeneratorAdapter();
   });
 
   it('should generate a valid binary XLSX buffer for Tender Sheet in ANEEL layout', async () => {
@@ -64,7 +64,7 @@ describe('ExcelGeneratorService (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
       effectiveBdi: '28.50',
     };
 
-    const buffer = await service.generateTenderSheet(data);
+    const buffer = await adapter.generateTenderSheet(data);
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000); // Valida que gerou arquivo binário XLSX real
   });
@@ -95,7 +95,7 @@ describe('ExcelGeneratorService (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
       effectiveBdi: '30.00',
     };
 
-    const buffer = await service.generateTenderSheet(data);
+    const buffer = await adapter.generateTenderSheet(data);
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000);
   });
@@ -121,7 +121,7 @@ describe('ExcelGeneratorService (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
       totalContractAmount: '450000.00',
     };
 
-    const buffer = await service.generateMeasurementSheet(data);
+    const buffer = await adapter.generateMeasurementSheet(data);
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000);
   });
@@ -153,7 +153,7 @@ describe('ExcelGeneratorService (RNF-11, RF-47, RF-48, RF-50, RF-60)', () => {
       totalBilling: '0.00',
     };
 
-    const buffer = await service.generateCashflowSheet(data);
+    const buffer = await adapter.generateCashflowSheet(data);
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000);
   });
