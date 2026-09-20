@@ -57,7 +57,9 @@ import { ExportApiService } from './export-api.service';
           <div>
             <h2>Central de Emissão e Exportações Contratuais</h2>
             <p class="subtitle">
-              Emissão de Planilhas de Preços do Edital, Folhas de Medição, Fluxo de Caixa e Pacote Aberto JSON (M12, RF-47, RF-48, RF-49, RF-50, RF-60, RNF-11, RNF-18)
+              Emissão de Planilhas de Preços do Edital, Folhas de Medição, Fluxo
+              de Caixa e Pacote Aberto JSON (M12, RF-47, RF-48, RF-49, RF-50,
+              RF-60, RNF-11, RNF-18)
             </p>
           </div>
         </div>
@@ -78,7 +80,9 @@ import { ExportApiService } from './export-api.service';
       @if (isLoading()) {
         <div class="loading-state">
           <mat-spinner diameter="48"></mat-spinner>
-          <p>Consolidando entregáveis contratuais e calculando indicadores...</p>
+          <p>
+            Consolidando entregáveis contratuais e calculando indicadores...
+          </p>
         </div>
       } @else {
         <!-- Painel de Benchmarking & Indicadores Sintéticos (RF-49) -->
@@ -86,10 +90,14 @@ import { ExportApiService } from './export-api.service';
           <div class="benchmarking-card">
             <div class="section-title">
               <mat-icon class="accent-icon">analytics</mat-icon>
-              <h3>Indicadores Sintéticos de Performance & Custos Unitários (RF-49, M09)</h3>
+              <h3>
+                Indicadores Sintéticos de Performance & Custos Unitários (RF-49,
+                M09)
+              </h3>
               <mat-chip-set>
                 <mat-chip class="total-chip">
-                  Extensão: {{ ind.consolidated.lengthKm }} km | {{ ind.consolidated.towerCount }} Torres
+                  Extensão: {{ ind.consolidated.lengthKm }} km |
+                  {{ ind.consolidated.towerCount }} Torres
                 </mat-chip>
               </mat-chip-set>
             </div>
@@ -97,44 +105,68 @@ import { ExportApiService } from './export-api.service';
             <div class="kpi-grid">
               <div class="kpi-card highlight-blue">
                 <span class="kpi-label">Custo Total / km</span>
-                <span class="kpi-value">R$ {{ formatCurrency(ind.consolidated.costPerKm) }}</span>
+                <span class="kpi-value"
+                  >R$ {{ formatCurrency(ind.consolidated.costPerKm) }}</span
+                >
                 <span class="kpi-sub">Preço de venda por quilômetro de LT</span>
               </div>
 
               <div class="kpi-card highlight-green">
                 <span class="kpi-label">Custo Total / Torre</span>
-                <span class="kpi-value">R$ {{ formatCurrency(ind.consolidated.costPerTower) }}</span>
-                <span class="kpi-sub">Preço de venda por estrutura erguida</span>
+                <span class="kpi-value"
+                  >R$ {{ formatCurrency(ind.consolidated.costPerTower) }}</span
+                >
+                <span class="kpi-sub"
+                  >Preço de venda por estrutura erguida</span
+                >
               </div>
 
               <div class="kpi-card">
                 <span class="kpi-label">Materiais / km</span>
-                <span class="kpi-value">R$ {{ formatCurrency(ind.consolidated.suppliesCostPerKm) }}</span>
+                <span class="kpi-value"
+                  >R$
+                  {{ formatCurrency(ind.consolidated.suppliesCostPerKm) }}</span
+                >
                 <span class="kpi-sub">Cabos, torres e isoladores</span>
               </div>
 
               <div class="kpi-card">
                 <span class="kpi-label">Serviços / km</span>
-                <span class="kpi-value">R$ {{ formatCurrency(ind.consolidated.servicesCostPerKm) }}</span>
+                <span class="kpi-value"
+                  >R$
+                  {{ formatCurrency(ind.consolidated.servicesCostPerKm) }}</span
+                >
                 <span class="kpi-sub">Construção civil e montagem</span>
               </div>
 
               <div class="kpi-card">
                 <span class="kpi-label">Aço Galvanizado</span>
-                <span class="kpi-value">{{ ind.consolidated.steelPerKm }} t/km</span>
-                <span class="kpi-sub">{{ ind.consolidated.steelPerTower }} t/torre</span>
+                <span class="kpi-value"
+                  >{{ ind.consolidated.steelPerKm }} t/km</span
+                >
+                <span class="kpi-sub"
+                  >{{ ind.consolidated.steelPerTower }} t/torre</span
+                >
               </div>
 
               <div class="kpi-card">
                 <span class="kpi-label">Concreto Estrutural</span>
-                <span class="kpi-value">{{ ind.consolidated.concretePerKm }} m³/km</span>
-                <span class="kpi-sub">{{ ind.consolidated.concretePerTower }} m³/torre</span>
+                <span class="kpi-value"
+                  >{{ ind.consolidated.concretePerKm }} m³/km</span
+                >
+                <span class="kpi-sub"
+                  >{{ ind.consolidated.concretePerTower }} m³/torre</span
+                >
               </div>
 
               <div class="kpi-card">
                 <span class="kpi-label">Densidade de Estruturas</span>
-                <span class="kpi-value">{{ ind.consolidated.structuresDensityPerKm }} torres/km</span>
-                <span class="kpi-sub">Vão Médio: {{ ind.consolidated.averageSpanMeters }} m</span>
+                <span class="kpi-value"
+                  >{{ ind.consolidated.structuresDensityPerKm }} torres/km</span
+                >
+                <span class="kpi-sub"
+                  >Vão Médio: {{ ind.consolidated.averageSpanMeters }} m</span
+                >
               </div>
             </div>
           </div>
@@ -148,23 +180,37 @@ import { ExportApiService } from './export-api.service';
               <div mat-card-avatar class="card-icon blue-bg">
                 <mat-icon>table_chart</mat-icon>
               </div>
-              <mat-card-title>Planilha de Preços do Edital (XLSX)</mat-card-title>
-              <mat-card-subtitle>RF-47, RF-50, RNF-11 • Código CIP e BDI</mat-card-subtitle>
+              <mat-card-title
+                >Planilha de Preços do Edital (XLSX)</mat-card-title
+              >
+              <mat-card-subtitle
+                >RF-47, RF-50, RNF-11 • Código CIP e BDI</mat-card-subtitle
+              >
             </mat-card-header>
             <mat-card-content>
               <p class="card-desc">
-                Planilha oficial estruturada por árvore CIP com discriminação de custos diretos, BDI por grupo e preços de venda.
+                Planilha oficial estruturada por árvore CIP com discriminação de
+                custos diretos, BDI por grupo e preços de venda.
               </p>
 
-              <mat-form-field appearance="outline" class="full-width density-compact">
+              <mat-form-field
+                appearance="outline"
+                class="full-width density-compact"
+              >
                 <mat-label>Layout de Edital do Cliente</mat-label>
                 <mat-select
                   [value]="selectedLayout()"
                   (selectionChange)="onLayoutChange($event.value)"
                 >
-                  <mat-option value="ANEEL_STANDARD">Padrão ANEEL (Oficial Leilão)</mat-option>
-                  <mat-option value="CELEO_STANDARD">Padrão Celeo Redes</mat-option>
-                  <mat-option value="GENERIC_EPC">Padrão Geral Construtora EPC</mat-option>
+                  <mat-option value="ANEEL_STANDARD"
+                    >Padrão ANEEL (Oficial Leilão)</mat-option
+                  >
+                  <mat-option value="CELEO_STANDARD"
+                    >Padrão Celeo Redes</mat-option
+                  >
+                  <mat-option value="GENERIC_EPC"
+                    >Padrão Geral Construtora EPC</mat-option
+                  >
                 </mat-select>
               </mat-form-field>
             </mat-card-content>
@@ -178,7 +224,10 @@ import { ExportApiService } from './export-api.service';
               >
                 <span class="btn-inner">
                   @if (isDownloading() === 'tender') {
-                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <mat-spinner
+                      diameter="18"
+                      class="inline-spinner"
+                    ></mat-spinner>
                     <span>Gerando XLSX...</span>
                   } @else {
                     <mat-icon>download</mat-icon>
@@ -196,11 +245,14 @@ import { ExportApiService } from './export-api.service';
                 <mat-icon>fact_check</mat-icon>
               </div>
               <mat-card-title>Folha de Medição & PUs (XLSX)</mat-card-title>
-              <mat-card-subtitle>RF-48, RNF-11 • Folhas M1..M10 e PU1..PU10</mat-card-subtitle>
+              <mat-card-subtitle
+                >RF-48, RNF-11 • Folhas M1..M10 e PU1..PU10</mat-card-subtitle
+              >
             </mat-card-header>
             <mat-card-content>
               <p class="card-desc">
-                Folha de medição de obras civis, fundações, montagem e cabos com critérios de medição em campo e preços unitários contratuais.
+                Folha de medição de obras civis, fundações, montagem e cabos com
+                critérios de medição em campo e preços unitários contratuais.
               </p>
               <div class="card-tags">
                 <span class="tag-badge">Topografia</span>
@@ -219,7 +271,10 @@ import { ExportApiService } from './export-api.service';
               >
                 <span class="btn-inner">
                   @if (isDownloading() === 'measurement') {
-                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <mat-spinner
+                      diameter="18"
+                      class="inline-spinner"
+                    ></mat-spinner>
                     <span>Gerando XLSX...</span>
                   } @else {
                     <mat-icon>download</mat-icon>
@@ -237,16 +292,22 @@ import { ExportApiService } from './export-api.service';
                 <mat-icon>trending_up</mat-icon>
               </div>
               <mat-card-title>Cronograma Financeiro (XLSX)</mat-card-title>
-              <mat-card-subtitle>RF-60, RNF-11 • Desembolso & Curva S</mat-card-subtitle>
+              <mat-card-subtitle
+                >RF-60, RNF-11 • Desembolso & Curva S</mat-card-subtitle
+              >
             </mat-card-header>
             <mat-card-content>
               <p class="card-desc">
-                Desembolso mês a mês por grupo de suprimentos e serviços, faturamento por medição, adiantamentos e pico de caixa.
+                Desembolso mês a mês por grupo de suprimentos e serviços,
+                faturamento por medição, adiantamentos e pico de caixa.
               </p>
               @if (cashflowData(); as cf) {
                 <div class="exposure-highlight">
                   <mat-icon>warning</mat-icon>
-                  <span>Pico de Exposição: Mês {{ cf.peakExposureMonth }} (R$ {{ formatCurrency(cf.peakExposureAmount) }})</span>
+                  <span
+                    >Pico de Exposição: Mês {{ cf.peakExposureMonth }} (R$
+                    {{ formatCurrency(cf.peakExposureAmount) }})</span
+                  >
                 </div>
               }
             </mat-card-content>
@@ -259,7 +320,10 @@ import { ExportApiService } from './export-api.service';
               >
                 <span class="btn-inner">
                   @if (isDownloading() === 'cashflow') {
-                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <mat-spinner
+                      diameter="18"
+                      class="inline-spinner"
+                    ></mat-spinner>
                     <span>Gerando XLSX...</span>
                   } @else {
                     <mat-icon>download</mat-icon>
@@ -277,11 +341,16 @@ import { ExportApiService } from './export-api.service';
                 <mat-icon>code</mat-icon>
               </div>
               <mat-card-title>Pacote Aberto da Oferta (JSON)</mat-card-title>
-              <mat-card-subtitle>RNF-18 • Interoperabilidade sem Vendor Lock-in</mat-card-subtitle>
+              <mat-card-subtitle
+                >RNF-18 • Interoperabilidade sem Vendor
+                Lock-in</mat-card-subtitle
+              >
             </mat-card-header>
             <mat-card-content>
               <p class="card-desc">
-                Exportação integral de todas as entidades da proposta (engenharia, suprimentos, BDI, riscos e resultados) em esquema JSON aberto.
+                Exportação integral de todas as entidades da proposta
+                (engenharia, suprimentos, BDI, riscos e resultados) em esquema
+                JSON aberto.
               </p>
               <div class="card-tags">
                 <span class="tag-badge">Schema v1</span>
@@ -298,7 +367,10 @@ import { ExportApiService } from './export-api.service';
               >
                 <span class="btn-inner">
                   @if (isDownloading() === 'json') {
-                    <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+                    <mat-spinner
+                      diameter="18"
+                      class="inline-spinner"
+                    ></mat-spinner>
                     <span>Gerando JSON...</span>
                   } @else {
                     <mat-icon>code</mat-icon>
@@ -319,7 +391,10 @@ import { ExportApiService } from './export-api.service';
                 <h3>Prévia dos Dados Estruturados</h3>
               </div>
               <div class="preview-controls">
-                <mat-form-field appearance="outline" class="density-compact search-field">
+                <mat-form-field
+                  appearance="outline"
+                  class="density-compact search-field"
+                >
                   <mat-icon matPrefix>search</mat-icon>
                   <mat-label>Filtrar linhas...</mat-label>
                   <input
@@ -357,18 +432,34 @@ import { ExportApiService } from './export-api.service';
                   <tbody>
                     @for (row of filteredTenderRows(); track $index) {
                       <tr
-                        [class.group-header-row]="row.level === 1 || !row.cipCode"
+                        [class.group-header-row]="
+                          row.level === 1 || !row.cipCode
+                        "
                         [class.total-summary-row]="row.isTotal"
                       >
                         <td class="font-mono text-center">{{ row.cipCode }}</td>
-                        <td [style.padding-left.px]="(row.level || 1) * 12">{{ row.description }}</td>
+                        <td [style.padding-left.px]="(row.level || 1) * 12">
+                          {{ row.description }}
+                        </td>
                         <td class="text-center">{{ row.unit }}</td>
-                        <td class="text-right">{{ formatNumber(row.quantity) }}</td>
-                        <td class="text-right">{{ formatCurrency(row.directUnitCost) }}</td>
-                        <td class="text-right">{{ formatCurrency(row.directTotalCost) }}</td>
-                        <td class="text-right font-semibold">{{ row.bdiRate ? row.bdiRate + '%' : '' }}</td>
-                        <td class="text-right">{{ formatCurrency(row.unitPrice) }}</td>
-                        <td class="text-right font-bold">{{ formatCurrency(row.totalPrice) }}</td>
+                        <td class="text-right">
+                          {{ formatNumber(row.quantity) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(row.directUnitCost) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(row.directTotalCost) }}
+                        </td>
+                        <td class="text-right font-semibold">
+                          {{ row.bdiRate ? row.bdiRate + '%' : '' }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(row.unitPrice) }}
+                        </td>
+                        <td class="text-right font-bold">
+                          {{ formatCurrency(row.totalPrice) }}
+                        </td>
                       </tr>
                     }
                   </tbody>
@@ -393,16 +484,33 @@ import { ExportApiService } from './export-api.service';
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of filteredMeasurementRows(); track item.itemCode) {
+                    @for (
+                      item of filteredMeasurementRows();
+                      track item.itemCode
+                    ) {
                       <tr>
-                        <td class="font-mono text-center font-bold">{{ item.itemCode }}</td>
-                        <td><span class="discipline-tag">{{ item.discipline }}</span></td>
+                        <td class="font-mono text-center font-bold">
+                          {{ item.itemCode }}
+                        </td>
+                        <td>
+                          <span class="discipline-tag">{{
+                            item.discipline
+                          }}</span>
+                        </td>
                         <td>{{ item.description }}</td>
                         <td class="text-center">{{ item.unit }}</td>
-                        <td class="text-right">{{ formatNumber(item.contractQuantity) }}</td>
-                        <td class="criteria-cell">{{ item.measurementCriteria }}</td>
-                        <td class="text-right">{{ formatCurrency(item.unitPriceWithTax) }}</td>
-                        <td class="text-right font-bold">{{ formatCurrency(item.totalContractPrice) }}</td>
+                        <td class="text-right">
+                          {{ formatNumber(item.contractQuantity) }}
+                        </td>
+                        <td class="criteria-cell">
+                          {{ item.measurementCriteria }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(item.unitPriceWithTax) }}
+                        </td>
+                        <td class="text-right font-bold">
+                          {{ formatCurrency(item.totalContractPrice) }}
+                        </td>
                       </tr>
                     }
                   </tbody>
@@ -431,20 +539,36 @@ import { ExportApiService } from './export-api.service';
                   <tbody>
                     @for (m of filteredCashflowRows(); track m.monthIndex) {
                       <tr [class.peak-exposure-row]="m.isPeakExposure">
-                        <td class="text-center font-bold">{{ m.monthIndex }}</td>
+                        <td class="text-center font-bold">
+                          {{ m.monthIndex }}
+                        </td>
                         <td>
                           {{ m.monthLabel }}
                           @if (m.isPeakExposure) {
                             <span class="peak-badge">PICO DE CAIXA</span>
                           }
                         </td>
-                        <td class="text-right">{{ formatCurrency(m.suppliesDisbursement) }}</td>
-                        <td class="text-right">{{ formatCurrency(m.servicesDisbursement) }}</td>
-                        <td class="text-right">{{ formatCurrency(m.indirectDisbursement) }}</td>
-                        <td class="text-right font-semibold">{{ formatCurrency(m.monthlyTotalDisbursement) }}</td>
-                        <td class="text-right">{{ formatCurrency(m.accumulatedDisbursement) }}</td>
-                        <td class="text-right font-semibold text-green">{{ formatCurrency(m.monthlyBilling) }}</td>
-                        <td class="text-right">{{ formatCurrency(m.accumulatedBilling) }}</td>
+                        <td class="text-right">
+                          {{ formatCurrency(m.suppliesDisbursement) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(m.servicesDisbursement) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(m.indirectDisbursement) }}
+                        </td>
+                        <td class="text-right font-semibold">
+                          {{ formatCurrency(m.monthlyTotalDisbursement) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(m.accumulatedDisbursement) }}
+                        </td>
+                        <td class="text-right font-semibold text-green">
+                          {{ formatCurrency(m.monthlyBilling) }}
+                        </td>
+                        <td class="text-right">
+                          {{ formatCurrency(m.accumulatedBilling) }}
+                        </td>
                         <td
                           class="text-right font-bold"
                           [class.text-negative]="isNegative(m.netCashflow)"
@@ -915,17 +1039,17 @@ export class OfferExportComponent implements OnInit {
 
     this.exportApi.getPerformanceIndicators(id).subscribe({
       next: (res) => this.indicators.set(res),
-      error: () => {},
+      error: () => this.indicators.set(null),
     });
 
     this.exportApi.getTenderSheetData(id, this.selectedLayout()).subscribe({
       next: (res) => this.tenderData.set(res),
-      error: () => {},
+      error: () => this.tenderData.set(null),
     });
 
     this.exportApi.getMeasurementSheetData(id).subscribe({
       next: (res) => this.measurementData.set(res),
-      error: () => {},
+      error: () => this.measurementData.set(null),
     });
 
     this.exportApi.getCashflowExportData(id).subscribe({
@@ -1005,13 +1129,19 @@ export class OfferExportComponent implements OnInit {
 
   formatCurrency(value?: string | number): string {
     const num = Number(value) || 0;
-    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return num.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   formatNumber(value?: string | number): string {
     const num = Number(value) || 0;
     if (num === 0) return '-';
-    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return num.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   isNegative(value?: string): boolean {

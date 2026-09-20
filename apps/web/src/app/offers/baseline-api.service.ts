@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
@@ -21,7 +21,7 @@ import {
 export class BaselineApiService {
   private readonly baseUrl = '/api/offers';
 
-  constructor(private readonly http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getBaseline(offerId: number): Observable<WorkBaseline> {
     return this.http.get<WorkBaseline>(`${this.baseUrl}/${offerId}/baseline`);

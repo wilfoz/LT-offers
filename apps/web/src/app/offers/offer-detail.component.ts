@@ -2520,7 +2520,7 @@ export class OfferDetailComponent {
   loadOfferHealth(id: number): void {
     this.checksApi.getHealthChecks(id).subscribe({
       next: (summary) => this.offerHealth.set(summary),
-      error: () => {},
+      error: () => this.offerHealth.set(null),
     });
   }
 
