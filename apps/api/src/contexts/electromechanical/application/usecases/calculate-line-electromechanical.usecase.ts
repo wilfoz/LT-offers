@@ -1,8 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  ElectromechanicalSummary,
-  TowerTraceabilityDetail,
-} from '@lt-offers/domain';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   TowerQuantityCalculator,
   TowerInputData,
@@ -13,31 +9,36 @@ import {
   AccessQuantityCalculator,
   ElectromechanicalSummaryCalculator,
 } from '@lt-offers/calc-engine';
-import { PrismaService } from '../app/prisma.service';
+import {
+  LineElectromechanicalCalculation,
+  LineElectromechanicalNotFoundException,
+  LineElectromechanicalQueryPort,
+  ElectromechanicalCatalogsQueryPort,
+  LINE_ELECTROMECHANICAL_QUERY_PORT_TOKEN,
+  ELECTROMECHANICAL_CATALOGS_QUERY_PORT_TOKEN,
+} from '../../domain';
 
 @Injectable()
-export class ElectromechanicalService {
-  constructor(private readonly prisma: PrismaService) {}
+export class CalculateLineElectromechanicalUseCase {
+  constructor(
+    @Inject(LINE_ELECTROMECHANICAL_QUERY_PORT_TOKEN)
+    private readonly lineQueryPort: LineElectromechanicalQueryPort,
+    @Inject(ELECTROMECHANICAL_CATALOGS_QUERY_PORT_TOKEN)
+    private readonly catalogsQueryPort: ElectromechanicalCatalogsQueryPort,
+  ) {}
 
-  async calculateLineElectromechanical(
+  async execute(
     lineId: number,
-  ): Promise<ElectromechanicalSummary> {
-    const line = await this.prisma.transmissionLine.findUnique({
-      where: { id: lineId },
-      include: {
-        offerRevision: {
-          include: {
-            offer: true,
-          },
-        },
-      },
-    });
+    referenceDate?: string,
+  ): Promise<LineElectromechanicalCalculation> {
+    const line = await this.lineQueryPort.findLineElectromechanicalData(lineId);
 
     if (!line) {
-      throw new NotFoundException(
-        `Linha de transmissão ID ${lineId} não encontrada.`,
-      );
+      throw new LineElectromechanicalNotFoundException(lineId);
     }
+
+    // Carregar catálogos vigentes na data de referência (RNF-04, RNF-05)
+    await this.catalogsQueryPort.loadEffectiveCatalogs(referenceDate);
 
     const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
     const circuits = 1; // Padrão circuito simples se não especificado
@@ -273,7 +274,7 @@ export class ElectromechanicalService {
     ]);
 
     // 6. Resumo Consolidado
-    return ElectromechanicalSummaryCalculator.calculateSummary({
+    const summary = ElectromechanicalSummaryCalculator.calculateSummary({
       lineId: String(line.id),
       lineName: line.name,
       lineLengthKm: lengthKm,
@@ -290,35 +291,7 @@ export class ElectromechanicalService {
       vegetationClearing,
       crossings,
     });
-  }
 
-  async getLineElectromechanicalTraceability(
-    lineId: number,
-  ): Promise<TowerTraceabilityDetail[]> {
-    const summary = await this.calculateLineElectromechanical(lineId);
-    // Gerar rastreabilidade torre a torre
-    const towersCount = summary.totalTowers;
-    const traceability: TowerTraceabilityDetail[] = [];
-
-    for (let i = 1; i <= towersCount; i++) {
-      const isTension = i % 7 === 0;
-      const height = isTension ? 38 : 35;
-      const baseWeight = isTension ? 28500 : 14500;
-      const legExt = (i % 4) * 0.5;
-      const legWeight = legExt * (isTension ? 200 : 150);
-
-      traceability.push({
-        towerNumber: `T${String(i).padStart(3, '0')}`,
-        stationMeters: String((i - 1) * 400),
-        towerTypeCode: isTension ? 'ANC-PESADA' : 'SUSP-LEVE',
-        heightM: height,
-        legExtensionM: legExt,
-        nominalWeightKg: baseWeight,
-        legExtensionWeightKg: legWeight,
-        totalStructureWeightKg: baseWeight + legWeight,
-      });
-    }
-
-    return traceability;
+    return new LineElectromechanicalCalculation(lineId, summary);
   }
 }

@@ -6,7 +6,7 @@ import { OffersModule } from '../contexts/offers/infrastructure/offers.module';
 import { StakingModule } from '../contexts/staking/infrastructure/staking.module';
 import { TaxationModule } from '../contexts/taxation/infrastructure/taxation.module';
 import { PricingModule } from '../contexts/pricing/infrastructure/pricing.module';
-import { ElectromechanicalModule } from '../electromechanical/electromechanical.module';
+import { ElectromechanicalModule } from '../contexts/electromechanical/infrastructure/electromechanical.module';
 import { ScheduleModule } from '../contexts/schedule/infrastructure/schedule.module';
 import { HistogramModule } from '../contexts/histogram/infrastructure/histogram.module';
 import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
