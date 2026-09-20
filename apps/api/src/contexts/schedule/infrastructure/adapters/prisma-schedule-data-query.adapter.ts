@@ -1,19 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../../../../app/prisma.service';
 import {
-  ScheduleSummary,
-  CampCostSummary,
-  MilestoneContract,
-  CampDefinition,
-} from '@lt-offers/domain';
-import { ScheduleCalculator, CampCalculator } from '@lt-offers/calc-engine';
-import { PrismaService } from '../app/prisma.service';
+  ScheduleDataQueryPort,
+  ScheduleLineData,
+  ScheduleLineCampsData,
+  RawCampInput,
+} from '../../domain';
+import { MilestoneContract } from '@lt-offers/domain';
+import { ScheduleCalculationInput } from '@lt-offers/calc-engine';
 
 @Injectable()
-export class ScheduleService {
-  constructor(private readonly prisma: PrismaService) {}
+export class PrismaScheduleDataQueryAdapter implements ScheduleDataQueryPort {
+  constructor(
+    private readonly prisma: PrismaService | Prisma.TransactionClient,
+  ) {}
 
-  async getLineSchedule(lineId: number): Promise<ScheduleSummary> {
-    const line = await this.prisma.transmissionLine.findUnique({
+  async findLineScheduleData(lineId: number): Promise<ScheduleLineData | null> {
+    const line = await (this.prisma as any).transmissionLine.findUnique({
       where: { id: lineId },
       include: {
         offerRevision: {
@@ -25,12 +29,16 @@ export class ScheduleService {
     });
 
     if (!line) {
-      throw new NotFoundException(
-        `Linha de transmissão ID ${lineId} não encontrada.`,
-      );
+      return null;
     }
 
-    const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm || 100);
+    const lengthKm = Number(
+      line.refinedLengthKm !== null && line.refinedLengthKm !== undefined
+        ? line.refinedLengthKm.toString()
+        : line.reportLengthKm !== null && line.reportLengthKm !== undefined
+          ? line.reportLengthKm.toString()
+          : 100,
+    );
     const totalTowers = Math.max(1, Math.round(lengthKm * 2.5));
     const uf = 'MG'; // UF padrão de referência da proposta
 
@@ -53,13 +61,13 @@ export class ScheduleService {
       },
     ];
 
-    const activitiesInput = [
+    const activitiesInput: ScheduleCalculationInput['activities'] = [
       {
         id: `act-ind-${lineId}`,
         code: 'ACT-01-IND',
         name: 'Gestão, Engenharia e Apoio Indireto',
-        group: 'INDIRECTS' as const,
-        quantitySource: 'MANUAL' as const,
+        group: 'INDIRECTS',
+        quantitySource: 'MANUAL',
         totalQuantity: '18.00',
         quantityUnit: 'meses',
         crewCount: 1,
@@ -74,8 +82,8 @@ export class ScheduleService {
         id: `act-prelim-${lineId}`,
         code: 'ACT-02-PRELIM',
         name: 'Abertura de Acessos e Limpeza de Faixa',
-        group: 'PRELIMINARIES' as const,
-        quantitySource: 'ROW_CLEARING_HA' as const,
+        group: 'PRELIMINARIES',
+        quantitySource: 'ROW_CLEARING_HA',
         totalQuantity: (lengthKm * 5).toFixed(2), // 5 ha/km
         quantityUnit: 'ha',
         assignedCrewId: 1,
@@ -92,8 +100,8 @@ export class ScheduleService {
         id: `act-civil-${lineId}`,
         code: 'ACT-03-CIVIL',
         name: 'Escavação, Armação e Concretagem de Fundações',
-        group: 'CIVIL_WORKS' as const,
-        quantitySource: 'TOTAL_FOUNDATIONS' as const,
+        group: 'CIVIL_WORKS',
+        quantitySource: 'TOTAL_FOUNDATIONS',
         totalQuantity: totalTowers.toFixed(2),
         quantityUnit: 'torres',
         assignedCrewId: 2,
@@ -110,8 +118,8 @@ export class ScheduleService {
         id: `act-erect-${lineId}`,
         code: 'ACT-04-ERECT',
         name: 'Montagem Eletromecânica de Torres e Acessórios',
-        group: 'TOWER_ERECTION' as const,
-        quantitySource: 'TOTAL_TOWERS' as const,
+        group: 'TOWER_ERECTION',
+        quantitySource: 'TOTAL_TOWERS',
         totalQuantity: totalTowers.toFixed(2),
         quantityUnit: 'torres',
         assignedCrewId: 3,
@@ -128,8 +136,8 @@ export class ScheduleService {
         id: `act-string-${lineId}`,
         code: 'ACT-05-STRING',
         name: 'Lançamento de Cabos Condutores e OPGW',
-        group: 'STRINGING' as const,
-        quantitySource: 'CONDUCTOR_KM' as const,
+        group: 'STRINGING',
+        quantitySource: 'CONDUCTOR_KM',
         totalQuantity: lengthKm.toFixed(2),
         quantityUnit: 'km',
         assignedCrewId: 4,
@@ -146,8 +154,8 @@ export class ScheduleService {
         id: `act-comm-${lineId}`,
         code: 'ACT-06-COMM',
         name: 'Ensaios Elétricos, Comissionamento e Energização',
-        group: 'COMMISSIONING' as const,
-        quantitySource: 'MANUAL' as const,
+        group: 'COMMISSIONING',
+        quantitySource: 'MANUAL',
         totalQuantity: '1.00',
         quantityUnit: 'seção',
         assignedCrewId: 5,
@@ -162,31 +170,30 @@ export class ScheduleService {
       },
     ];
 
-    return ScheduleCalculator.calculateSchedule({
+    return {
       lineId,
       lineName: line.name || `Linha ID ${lineId}`,
+      lengthKm,
+      totalTowers,
       uf,
       startMonth: 1,
-      activities: activitiesInput,
       milestones,
-    });
+      activitiesInput,
+    };
   }
 
-  async getLineCamps(lineId: number): Promise<CampCostSummary> {
-    const line = await this.prisma.transmissionLine.findUnique({
+  async findLineCampsData(
+    lineId: number,
+  ): Promise<ScheduleLineCampsData | null> {
+    const line = await (this.prisma as any).transmissionLine.findUnique({
       where: { id: lineId },
     });
 
     if (!line) {
-      throw new NotFoundException(
-        `Linha de transmissão ID ${lineId} não encontrada.`,
-      );
+      return null;
     }
 
-    const rawCamps: Omit<
-      CampDefinition,
-      'totalPersonnelMonthlyCost' | 'totalMonthlyCost' | 'totalCampCost'
-    >[] = [
+    const rawCamps: RawCampInput[] = [
       {
         id: `camp-central-${lineId}`,
         lineId,
@@ -261,6 +268,9 @@ export class ScheduleService {
       },
     ];
 
-    return CampCalculator.calculateSummary(lineId, rawCamps);
+    return {
+      lineId,
+      rawCamps,
+    };
   }
 }

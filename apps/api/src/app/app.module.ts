@@ -7,8 +7,8 @@ import { StakingModule } from '../contexts/staking/infrastructure/staking.module
 import { TaxationModule } from '../contexts/taxation/infrastructure/taxation.module';
 import { PricingModule } from '../contexts/pricing/infrastructure/pricing.module';
 import { ElectromechanicalModule } from '../electromechanical/electromechanical.module';
-import { ScheduleModule } from '../schedule/schedule.module';
-import { HistogramModule } from '../histogram/histogram.module';
+import { ScheduleModule } from '../contexts/schedule/infrastructure/schedule.module';
+import { HistogramModule } from '../contexts/histogram/infrastructure/histogram.module';
 import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
 import { RisksModule } from '../risks/risks.module';
 import { ChecksModule } from '../checks/checks.module';
