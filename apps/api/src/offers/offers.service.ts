@@ -19,8 +19,20 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../app/prisma.service';
-import { toCivilDate } from '../catalogs/civil-date';
-import { isUniqueViolation } from '../catalogs/prisma-errors';
+import { CivilDate } from '../contexts/catalogs/domain';
+
+function toCivilDate(text: string): Date {
+  return CivilDate.fromString(text).toDate();
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code: string }).code === 'P2002'
+  );
+}
 
 const Decimal = Prisma.Decimal;
 
