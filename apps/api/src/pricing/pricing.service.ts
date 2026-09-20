@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   LineMaterialPricingSummary,
   MaterialQuote,
@@ -16,7 +13,7 @@ import {
   MaterialPricingInputItem,
 } from '@lt-offers/calc-engine';
 import { PrismaService } from '../app/prisma.service';
-import { FoundationsService } from '../foundations/foundations.service';
+import { FoundationsFacadeService } from '../contexts/foundations';
 import { TaxTablesService } from '../taxation/tax-tables.service';
 
 export interface PricingSimulationOptions {
@@ -141,7 +138,7 @@ export class PricingService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly foundationsService: FoundationsService,
+    private readonly foundationsService: FoundationsFacadeService,
     private readonly taxTablesService: TaxTablesService,
   ) {}
 
@@ -202,9 +199,12 @@ export class PricingService {
     const taxRegime: TaxRegime = options?.taxRegime || 'STANDARD';
 
     // 3. Obter quantitativos de engenharia calculados da linha
-    const lengthKm =
-      Number(line.refinedLengthKm || line.reportLengthKm) || 100;
-    const items = await this.buildMaterialPricingItems(line.id, lengthKm, options);
+    const lengthKm = Number(line.refinedLengthKm || line.reportLengthKm) || 100;
+    const items = await this.buildMaterialPricingItems(
+      line.id,
+      lengthKm,
+      options,
+    );
 
     // 4. Montar mapa de cotações
     const quotesMap: Record<string, MaterialQuote> = { ...this.defaultQuotes };

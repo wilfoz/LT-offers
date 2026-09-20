@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { CatalogsModule } from '../catalogs/catalogs.module';
-import { FoundationsModule } from '../foundations/foundations.module';
-import { OffersModule } from '../offers/offers.module';
-import { StakingModule } from '../staking/staking.module';
+import { CatalogsModule } from '../contexts/catalogs/infrastructure/catalogs.module';
+import { FoundationsModule } from '../contexts/foundations/infrastructure/foundations.module';
+import { OffersModule } from '../contexts/offers/infrastructure/offers.module';
+import { StakingModule } from '../contexts/staking/infrastructure/staking.module';
 import { TaxationModule } from '../taxation/taxation.module';
 import { PricingModule } from '../pricing/pricing.module';
 import { ElectromechanicalModule } from '../electromechanical/electromechanical.module';

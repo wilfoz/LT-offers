@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PricingService } from './pricing.service';
 import { PricingController } from './pricing.controller';
 import { PrismaModule } from '../app/prisma.module';
-import { FoundationsModule } from '../foundations/foundations.module';
+import { FoundationsModule } from '../contexts/foundations/infrastructure/foundations.module';
 import { TaxationModule } from '../taxation/taxation.module';
 
 @Module({

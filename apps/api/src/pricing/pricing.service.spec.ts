@@ -1,6 +1,6 @@
 import { PricingService } from './pricing.service';
 import { PrismaService } from '../app/prisma.service';
-import { FoundationsService } from '../foundations/foundations.service';
+import { FoundationsFacadeService } from '../contexts/foundations';
 import { TaxTablesService } from '../taxation/tax-tables.service';
 
 describe('PricingService (RF-28..RF-34)', () => {
@@ -55,13 +55,15 @@ describe('PricingService (RF-28..RF-34)', () => {
 
     pricingService = new PricingService(
       prismaMock as unknown as PrismaService,
-      foundationsServiceMock as unknown as FoundationsService,
+      foundationsServiceMock as unknown as FoundationsFacadeService,
       taxTablesService,
     );
   });
 
   it('deve calcular o resumo financeiro e tributário da linha com sucesso', async () => {
-    const summary = await pricingService.calculateLinePricing(1, { taxRegime: 'REIDI' });
+    const summary = await pricingService.calculateLinePricing(1, {
+      taxRegime: 'REIDI',
+    });
 
     expect(summary.lineId).toBe('1');
     expect(summary.taxRegime).toBe('REIDI');
