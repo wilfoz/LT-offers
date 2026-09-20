@@ -1,5 +1,50 @@
 import { DecimalValue } from '../decimal-value';
-import { PrecipitationFactor, PrecipitationLevel } from '@lt-offers/domain';
+import {
+  PrecipitationFactor,
+  PrecipitationLevel,
+  PrecipitationUfData,
+  BrazilianRegion,
+} from '@lt-offers/domain';
+
+export interface UfMetadata {
+  name: string;
+  region: BrazilianRegion;
+}
+
+export const UF_METADATA_MAP: Record<string, UfMetadata> = {
+  // Norte
+  AC: { name: 'Acre', region: 'NORTE' },
+  AP: { name: 'Amapá', region: 'NORTE' },
+  AM: { name: 'Amazonas', region: 'NORTE' },
+  PA: { name: 'Pará', region: 'NORTE' },
+  RO: { name: 'Rondônia', region: 'NORTE' },
+  RR: { name: 'Roraima', region: 'NORTE' },
+  TO: { name: 'Tocantins', region: 'NORTE' },
+  // Nordeste
+  AL: { name: 'Alagoas', region: 'NORDESTE' },
+  BA: { name: 'Bahia', region: 'NORDESTE' },
+  CE: { name: 'Ceará', region: 'NORDESTE' },
+  MA: { name: 'Maranhão', region: 'NORDESTE' },
+  PB: { name: 'Paraíba', region: 'NORDESTE' },
+  PE: { name: 'Pernambuco', region: 'NORDESTE' },
+  PI: { name: 'Piauí', region: 'NORDESTE' },
+  RN: { name: 'Rio Grande do Norte', region: 'NORDESTE' },
+  SE: { name: 'Sergipe', region: 'NORDESTE' },
+  // Centro-Oeste
+  DF: { name: 'Distrito Federal', region: 'CENTRO_OESTE' },
+  GO: { name: 'Goiás', region: 'CENTRO_OESTE' },
+  MT: { name: 'Mato Grosso', region: 'CENTRO_OESTE' },
+  MS: { name: 'Mato Grosso do Sul', region: 'CENTRO_OESTE' },
+  // Sudeste
+  ES: { name: 'Espírito Santo', region: 'SUDESTE' },
+  MG: { name: 'Minas Gerais', region: 'SUDESTE' },
+  RJ: { name: 'Rio de Janeiro', region: 'SUDESTE' },
+  SP: { name: 'São Paulo', region: 'SUDESTE' },
+  // Sul
+  PR: { name: 'Paraná', region: 'SUL' },
+  RS: { name: 'Rio Grande do Sul', region: 'SUL' },
+  SC: { name: 'Santa Catarina', region: 'SUL' },
+};
 
 /**
  * Matriz padrão de precipitação pluviométrica histórica média (mm) por UF e mês (1=Jan a 12=Dez).
@@ -50,10 +95,59 @@ const PRODUCTIVITY_FACTORS_BY_LEVEL: Record<PrecipitationLevel, string> = {
 
 export class PrecipitationCalculator {
   /**
+   * Verifica se a UF é válida e coberta pelo catálogo.
+   */
+  static isKnownUf(uf: string): boolean {
+    return !!DEFAULT_PRECIPITATION_BY_UF[uf.toUpperCase()];
+  }
+
+  /**
+   * Lista todas as 27 UFs com dados completos de precipitação e região.
+   */
+  static getAllUfData(): PrecipitationUfData[] {
+    return Object.keys(DEFAULT_PRECIPITATION_BY_UF).map((uf) =>
+      this.getUfPrecipitationSeries(uf),
+    );
+  }
+
+  /**
+   * Retorna a série completa dos 12 meses para uma UF específica.
+   */
+  static getUfPrecipitationSeries(uf: string): PrecipitationUfData {
+    const upperUf = uf.toUpperCase();
+    const monthsData =
+      DEFAULT_PRECIPITATION_BY_UF[upperUf] || DEFAULT_PRECIPITATION_BY_UF['MG'];
+    const meta = UF_METADATA_MAP[upperUf] || {
+      name: upperUf,
+      region: 'SUDESTE' as const,
+    };
+
+    const monthlyData = monthsData.map((mm, index) => {
+      const level = this.classifyLevel(mm);
+      return {
+        month: index + 1,
+        averageMm: mm,
+        severityLevel: level,
+        productivityFactor: parseFloat(PRODUCTIVITY_FACTORS_BY_LEVEL[level]),
+      };
+    });
+
+    return {
+      uf: upperUf,
+      name: meta.name,
+      region: meta.region,
+      monthlyData,
+    };
+  }
+
+  /**
    * Classifica a severidade de precipitação em 5 níveis conforme RN-16.
    */
   static classifyLevel(precipitationMm: number | string): PrecipitationLevel {
-    const val = typeof precipitationMm === 'number' ? precipitationMm : parseFloat(precipitationMm);
+    const val =
+      typeof precipitationMm === 'number'
+        ? precipitationMm
+        : parseFloat(precipitationMm);
     if (val < 50) return 1;
     if (val <= 100) return 2;
     if (val <= 200) return 3;
@@ -71,10 +165,14 @@ export class PrecipitationCalculator {
   /**
    * Recupera o índice de precipitação e fator de produtividade para uma UF e mês (1 a 12).
    */
-  static getPrecipitationForUfAndMonth(uf: string, month: number): PrecipitationFactor {
+  static getPrecipitationForUfAndMonth(
+    uf: string,
+    month: number,
+  ): PrecipitationFactor {
     const upperUf = uf.toUpperCase();
-    const monthsData = DEFAULT_PRECIPITATION_BY_UF[upperUf] || DEFAULT_PRECIPITATION_BY_UF['MG'];
-    const normalizedMonth = ((month - 1) % 12 + 12) % 12; // 0-indexed seguro
+    const monthsData =
+      DEFAULT_PRECIPITATION_BY_UF[upperUf] || DEFAULT_PRECIPITATION_BY_UF['MG'];
+    const normalizedMonth = (((month - 1) % 12) + 12) % 12; // 0-indexed seguro
     const mm = monthsData[normalizedMonth];
     const level = this.classifyLevel(mm);
     const factor = PRODUCTIVITY_FACTORS_BY_LEVEL[level];
@@ -94,7 +192,7 @@ export class PrecipitationCalculator {
   static calculateEffectiveProduction(
     nominalProduction: string | number,
     uf: string,
-    month: number
+    month: number,
   ): DecimalValue {
     const nominal = DecimalValue.of(nominalProduction);
     const precip = this.getPrecipitationForUfAndMonth(uf, month);
@@ -108,7 +206,7 @@ export class PrecipitationCalculator {
   static getAverageProductivityFactor(
     uf: string,
     startMonth: number,
-    durationMonths: number
+    durationMonths: number,
   ): DecimalValue {
     if (durationMonths <= 0) return DecimalValue.of(1);
 

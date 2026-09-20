@@ -25,7 +25,8 @@ export type QuantitySourceRef =
   | 'ACCESS_KM'
   | 'MANUAL';
 
-export type MilestoneType = 'LI' | 'LO' | 'START_WORK' | 'ENERGIZATION' | 'SUBSTATION_BAY';
+export type MilestoneType =
+  'LI' | 'LO' | 'START_WORK' | 'ENERGIZATION' | 'SUBSTATION_BAY';
 
 export interface MilestoneContract {
   id: string;
@@ -69,6 +70,7 @@ export interface ScheduleActivity {
   endMonth: number;
   monthlyProduction: string;
   maxMonthlyProduction?: string;
+  accessDifficultyFactor?: string;
   predecessors: ActivityPredecessor[];
   mobilizationCost: string;
   monthlyRecurringCost: string;

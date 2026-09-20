@@ -36,3 +36,4 @@ export * from './lib/audit/audit-event';
 export * from './lib/export';
 export * from './lib/execution';
 export * from './lib/parity/parity.types';
+export * from './lib/field-factors/field-factors.types';

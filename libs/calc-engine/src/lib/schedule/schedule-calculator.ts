@@ -13,6 +13,7 @@ export interface ScheduleCalculationInput {
   lineName?: string;
   uf: string;
   startMonth: number;
+  accessDifficultyFactor?: number | string;
   activities: {
     id: string;
     code: string;
@@ -26,6 +27,7 @@ export interface ScheduleCalculationInput {
     crewCount: number;
     nominalMonthlyProductionPerCrew: string;
     maxMonthlyProductionPerCrew?: string;
+    accessDifficultyFactor?: number | string;
     startMonth: number;
     durationMonths?: number; // Se não fornecido, calculado pela produção
     monthlyCostPerCrew: string; // Salários, encargos, alimentação, etc. (RN-14)
@@ -55,7 +57,17 @@ export class ScheduleCalculator {
     for (const actInput of input.activities) {
       const crewCountDec = DecimalValue.of(Math.max(1, actInput.crewCount));
       const totalQtyDec = DecimalValue.of(actInput.totalQuantity || '0');
-      const nominalProdDec = DecimalValue.of(actInput.nominalMonthlyProductionPerCrew || '1');
+      const nominalProdDec = DecimalValue.of(
+        actInput.nominalMonthlyProductionPerCrew || '1',
+      );
+
+      // Fator de severidade de acesso (RN-15, RF-36)
+      const accessFactorRaw =
+        actInput.accessDifficultyFactor ?? input.accessDifficultyFactor ?? 1;
+      const accessFactorDec = DecimalValue.of(accessFactorRaw);
+      const safeAccessFactor = accessFactorDec.isZero()
+        ? DecimalValue.of(1)
+        : accessFactorDec;
 
       // Estimação inicial de duração baseada na produção nominal
       let estimatedDuration = actInput.durationMonths;
@@ -63,18 +75,25 @@ export class ScheduleCalculator {
         if (totalQtyDec.isZero() || nominalProdDec.isZero()) {
           estimatedDuration = 1;
         } else {
-          // Ajusta pelo fator de chuva estimado
-          const initialAvgRainFactor = PrecipitationCalculator.getAverageProductivityFactor(
-            input.uf,
-            actInput.startMonth,
-            6
-          );
-          const effectiveMonthlyProd = nominalProdDec.times(crewCountDec).times(initialAvgRainFactor);
-          const rawDuration = totalQtyDec.dividedBy(effectiveMonthlyProd).toNumber();
+          // Ajusta pelo fator de chuva estimado e severidade de acesso
+          const initialAvgRainFactor =
+            PrecipitationCalculator.getAverageProductivityFactor(
+              input.uf,
+              actInput.startMonth,
+              6,
+            );
+          // Produção efetiva mensal = (nominal * equipes * chuva) / acesso
+          const effectiveMonthlyProd = nominalProdDec
+            .times(crewCountDec)
+            .times(initialAvgRainFactor)
+            .dividedBy(safeAccessFactor);
+
+          const rawDuration = totalQtyDec
+            .dividedBy(effectiveMonthlyProd)
+            .toNumber();
           estimatedDuration = Math.max(1, Math.ceil(rawDuration));
         }
       }
-
 
       const durationMonths = estimatedDuration;
       const endMonth = actInput.startMonth + durationMonths - 1;
@@ -88,14 +107,22 @@ export class ScheduleCalculator {
         .round(2, 'half-up');
 
       // Custos
-      const mobCostPerCrew = DecimalValue.of(actInput.mobilizationCostPerCrew || '0');
-      const demobCostPerCrew = DecimalValue.of(actInput.demobilizationCostPerCrew || '0');
-      const monthlyCostPerCrew = DecimalValue.of(actInput.monthlyCostPerCrew || '0');
+      const mobCostPerCrew = DecimalValue.of(
+        actInput.mobilizationCostPerCrew || '0',
+      );
+      const demobCostPerCrew = DecimalValue.of(
+        actInput.demobilizationCostPerCrew || '0',
+      );
+      const monthlyCostPerCrew = DecimalValue.of(
+        actInput.monthlyCostPerCrew || '0',
+      );
 
       const mobCost = mobCostPerCrew.times(crewCountDec);
       const demobCost = demobCostPerCrew.times(crewCountDec);
       const monthlyRecurring = monthlyCostPerCrew.times(crewCountDec);
-      const totalRecurring = monthlyRecurring.times(DecimalValue.of(durationMonths));
+      const totalRecurring = monthlyRecurring.times(
+        DecimalValue.of(durationMonths),
+      );
       const totalCost = mobCost.plus(totalRecurring).plus(demobCost);
 
       if (actInput.group === 'INDIRECTS' || actInput.group === 'CAMPS') {
@@ -110,7 +137,9 @@ export class ScheduleCalculator {
 
       // 1. Validação de Sobreprodução (RN-15, RF-38)
       if (actInput.maxMonthlyProductionPerCrew) {
-        const maxProdPerCrew = DecimalValue.of(actInput.maxMonthlyProductionPerCrew);
+        const maxProdPerCrew = DecimalValue.of(
+          actInput.maxMonthlyProductionPerCrew,
+        );
         const totalMaxAllowed = maxProdPerCrew.times(crewCountDec);
         if (requiredMonthlyProd.greaterThan(totalMaxAllowed)) {
           status = 'WARNING_OVERPRODUCTION';
@@ -127,7 +156,10 @@ export class ScheduleCalculator {
         actInput.group !== 'CAMPS' &&
         actInput.startMonth < liMilestone.targetMonth
       ) {
-        status = status === 'WARNING_OVERPRODUCTION' ? 'CRITICAL' : 'WARNING_PRECEDENCE';
+        status =
+          status === 'WARNING_OVERPRODUCTION'
+            ? 'CRITICAL'
+            : 'WARNING_PRECEDENCE';
         const msg = `Atividade '${actInput.name}' agendada para início no Mês ${actInput.startMonth}, antes da obtenção da Licença de Instalação (Mês ${liMilestone.targetMonth}).`;
         statusNotes.push(msg);
         globalWarnings.push(msg);
@@ -158,8 +190,11 @@ export class ScheduleCalculator {
         endMonth,
         monthlyProduction: requiredMonthlyProd.toFixed(2),
         maxMonthlyProduction: actInput.maxMonthlyProductionPerCrew
-          ? DecimalValue.of(actInput.maxMonthlyProductionPerCrew).times(crewCountDec).toFixed(2)
+          ? DecimalValue.of(actInput.maxMonthlyProductionPerCrew)
+              .times(crewCountDec)
+              .toFixed(2)
           : undefined,
+        accessDifficultyFactor: safeAccessFactor.toFixed(2),
         predecessors: actInput.predecessors || [],
         mobilizationCost: mobCost.toFixed(2),
         monthlyRecurringCost: monthlyRecurring.toFixed(2),
@@ -170,7 +205,9 @@ export class ScheduleCalculator {
       });
     }
 
-    const totalScheduleCost = totalDirectLaborCost.plus(totalEquipmentCost).plus(totalIndirectCost);
+    const totalScheduleCost = totalDirectLaborCost
+      .plus(totalEquipmentCost)
+      .plus(totalIndirectCost);
     const totalDurationMonths = maxProjectEndMonth - input.startMonth + 1;
 
     return {

@@ -87,12 +87,17 @@ export function calculateLineFoundations(
     details: FoundationTraceabilityTowerDetail[];
   };
 
-  const accumulators = new Map<FoundationVolumeQuantityField, FieldAccumulator>();
+  const accumulators = new Map<
+    FoundationVolumeQuantityField,
+    FieldAccumulator
+  >();
   for (const field of FOUNDATION_VOLUME_QUANTITY_FIELDS) {
     const meta = FOUNDATION_QUANTITY_METADATA_MAP[field];
     const customWaste = input.customWasteFactors?.[field];
     const wastePercent =
-      customWaste !== undefined ? Number(customWaste) : meta.defaultWastePercent;
+      customWaste !== undefined
+        ? Number(customWaste)
+        : meta.defaultWastePercent;
 
     accumulators.set(field, {
       theoretical: DecimalValue.zero(),
@@ -205,7 +210,10 @@ export function calculateLineFoundations(
         const acc = accumulators.get(field);
         if (!acc) continue;
         const meta = FOUNDATION_QUANTITY_METADATA_MAP[field];
-        const { waste, total } = calculateWaste(theoreticalVal, acc.wastePercent);
+        const { waste, total } = calculateWaste(
+          theoreticalVal,
+          acc.wastePercent,
+        );
 
         // Acumular no total da linha
         acc.theoretical = acc.theoretical.plus(theoreticalVal);
@@ -252,15 +260,23 @@ export function calculateLineFoundations(
     }
   } else if (input.preliminaryDistribution) {
     // 4. Processar cálculo preliminar por distribuição percentual (RF-21)
-    const { totalTowers: nTowers, soilPercentages, foundationPercentages, defaultTowerTypeId } =
-      input.preliminaryDistribution;
+    const {
+      totalTowers: nTowers,
+      soilPercentages,
+      foundationPercentages,
+      defaultTowerTypeId,
+    } = input.preliminaryDistribution;
     totalTowers = nTowers;
     const defaultTowerId = defaultTowerTypeId || 1;
 
     for (const s of soilPercentages) {
-      const sPerc = DecimalValue.of(s.percentage).dividedBy(DecimalValue.of(100));
+      const sPerc = DecimalValue.of(s.percentage).dividedBy(
+        DecimalValue.of(100),
+      );
       for (const f of foundationPercentages) {
-        const fPerc = DecimalValue.of(f.percentage).dividedBy(DecimalValue.of(100));
+        const fPerc = DecimalValue.of(f.percentage).dividedBy(
+          DecimalValue.of(100),
+        );
         const proportion = sPerc.times(fPerc);
         const structureCount = DecimalValue.of(nTowers).times(proportion);
 
@@ -278,7 +294,9 @@ export function calculateLineFoundations(
               soilCode: `S-${s.id}`,
               foundationTypeId: f.id,
               foundationCode: `F-${f.id}`,
-              affectedTowersCount: structureCount.round(0, 'half-up').toNumber(),
+              affectedTowersCount: structureCount
+                .round(0, 'half-up')
+                .toNumber(),
               affectedTowerNumbers: ['Distribuição Preliminar'],
             });
           }
@@ -297,7 +315,10 @@ export function calculateLineFoundations(
           const theoreticalVal = unitVal.times(structureCount);
           const acc = accumulators.get(field);
           if (!acc) continue;
-          const { waste, total } = calculateWaste(theoreticalVal, acc.wastePercent);
+          const { waste, total } = calculateWaste(
+            theoreticalVal,
+            acc.wastePercent,
+          );
 
           acc.theoretical = acc.theoretical.plus(theoreticalVal);
           acc.waste = acc.waste.plus(waste);
@@ -380,12 +401,40 @@ export function calculateLineFoundations(
     };
   }
 
+  const expansionPercent =
+    input.soilExpansionPercent !== undefined
+      ? Number(input.soilExpansionPercent)
+      : 25;
+  const compactionPercent =
+    input.compactionFactorPercent !== undefined
+      ? Number(input.compactionFactorPercent)
+      : 15;
+
+  const excessExcavation = totalExcavationM3.greaterThan(totalBackfillM3)
+    ? totalExcavationM3.minus(totalBackfillM3)
+    : DecimalValue.zero();
+
+  const expansionMultiplier = DecimalValue.of(1).plus(
+    DecimalValue.of(expansionPercent).dividedBy(DecimalValue.of(100)),
+  );
+  const compactionMultiplier = DecimalValue.of(1).plus(
+    DecimalValue.of(compactionPercent).dividedBy(DecimalValue.of(100)),
+  );
+
+  const totalLooseDisposalM3 = excessExcavation.times(expansionMultiplier);
+  const totalCompactedBackfillM3 = totalBackfillM3.times(compactionMultiplier);
+
   const kpis: LineFoundationKpis = {
     totalExcavationM3: formatQuantityByUnit(totalExcavationM3, 'm³'),
     totalConcreteM3: formatQuantityByUnit(totalConcreteM3, 'm³'),
     totalSteelKg: formatQuantityByUnit(totalSteelKg, 'kg'),
     totalBackfillM3: formatQuantityByUnit(totalBackfillM3, 'm³'),
     totalSpecialPilesM: formatQuantityByUnit(totalSpecialPilesM, 'm'),
+    totalLooseDisposalM3: formatQuantityByUnit(totalLooseDisposalM3, 'm³'),
+    totalCompactedBackfillM3: formatQuantityByUnit(
+      totalCompactedBackfillM3,
+      'm³',
+    ),
   };
 
   const summary: LineFoundationSummary = {

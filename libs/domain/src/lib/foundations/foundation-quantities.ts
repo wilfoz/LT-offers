@@ -400,6 +400,8 @@ export interface LineFoundationKpis {
   totalSteelKg: string;
   totalBackfillM3: string;
   totalSpecialPilesM: string;
+  totalLooseDisposalM3?: string;
+  totalCompactedBackfillM3?: string;
 }
 
 /**
@@ -465,11 +467,18 @@ export interface FoundationCalculationInput {
   towers?: TowerCalculationData[];
   preliminaryDistribution?: PreliminaryDistributionInput;
   volumeMatrices: FoundationMatrixLookupItem[];
-  customWasteFactors?: Partial<Record<FoundationVolumeQuantityField, number | string>>;
+  customWasteFactors?: Partial<
+    Record<FoundationVolumeQuantityField, number | string>
+  >;
+  soilExpansionPercent?: number | string;
+  compactionFactorPercent?: number | string;
 }
 
 export interface FoundationCalculationResult {
   summary: LineFoundationSummary;
   towerCalculations: TowerFoundationCalculationItem[];
-  traceability: Record<FoundationVolumeQuantityField, FoundationTraceabilityItem>;
+  traceability: Record<
+    FoundationVolumeQuantityField,
+    FoundationTraceabilityItem
+  >;
 }

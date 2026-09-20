@@ -17,6 +17,7 @@ import { ChecksModule } from '../checks/checks.module';
 import { ExportModule } from '../export/export.module';
 import { BaselineModule } from '../baseline/baseline.module';
 import { ParityModule } from '../parity/parity.module';
+import { FieldFactorsModule } from '../field-factors/field-factors.module';
 import { AuthModule } from '../auth/auth.module';
 import { AuditModule } from '../audit/audit.module';
 import { AuditInterceptor } from '../audit/audit.interceptor';
@@ -46,6 +47,7 @@ import { PrismaModule } from './prisma.module';
     ExportModule,
     BaselineModule,
     ParityModule,
+    FieldFactorsModule,
   ],
   controllers: [AppController],
   providers: [

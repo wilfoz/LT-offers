@@ -146,8 +146,12 @@ describe('Foundation Calculator Engine (M05, RN-12, RN-13, RF-20..RF-27)', () =>
     // Rastreabilidade (RF-27)
     expect(result.traceability.concreteFootingsM3.towersCount).toBe(2);
     expect(result.traceability.concreteFootingsM3.towerDetails).toHaveLength(2);
-    expect(result.traceability.concreteFootingsM3.towerDetails[0].towerNumber).toBe('T01');
-    expect(result.traceability.concreteFootingsM3.towerDetails[1].towerNumber).toBe('T02');
+    expect(
+      result.traceability.concreteFootingsM3.towerDetails[0].towerNumber,
+    ).toBe('T01');
+    expect(
+      result.traceability.concreteFootingsM3.towerDetails[1].towerNumber,
+    ).toBe('T02');
   });
 
   it('deve registrar pendências explicitamente para torres sem combinação no catálogo (RNF-09, RF-20)', () => {
@@ -194,7 +198,9 @@ describe('Foundation Calculator Engine (M05, RN-12, RN-13, RF-20..RF-27)', () =>
     expect(result.summary.pendingTowers).toBe(1);
 
     expect(result.summary.missingCombinations).toHaveLength(1);
-    expect(result.summary.missingCombinations[0].affectedTowerNumbers).toEqual(['T02']);
+    expect(result.summary.missingCombinations[0].affectedTowerNumbers).toEqual([
+      'T02',
+    ]);
     expect(result.towerCalculations[1].status).toBe('MISSING_COMBINATION');
   });
 
@@ -242,10 +248,57 @@ describe('Foundation Calculator Engine (M05, RN-12, RN-13, RF-20..RF-27)', () =>
     // Solo 2: 60 torres * 20 m³ = 1200 m³
     // Solo 3: 40 torres * 30 m³ = 1200 m³
     // Total teórico: 2400 m³ + 5% (120 m³) = 2520.000 m³
-    const conc = result.summary.materials.find((m) => m.field === 'concreteFootingsM3');
+    const conc = result.summary.materials.find(
+      (m) => m.field === 'concreteFootingsM3',
+    );
     expect(conc?.theoreticalQuantity).toBe('2400.000');
     expect(conc?.wasteQuantity).toBe('120.000');
     expect(conc?.totalQuantity).toBe('2520.000');
+  });
+
+  it('deve calcular volume solto de bota-fora com empolamento e reaterro compactado', () => {
+    const input: FoundationCalculationInput = {
+      transmissionLineId: 1,
+      soilExpansionPercent: 25, // 25% empolamento
+      compactionFactorPercent: 15, // 15% compactação
+      towers: [
+        {
+          id: 1,
+          towerNumber: 'T01',
+          stationMeters: '0.00',
+          towerTypeId: 1,
+          soilTypeId: 2,
+          foundationTypeId: 3,
+        },
+      ],
+      volumeMatrices: [
+        {
+          towerTypeId: 1,
+          soilTypeId: 2,
+          foundationTypeId: 3,
+          quantities: {
+            ...sampleMatrixQuantities,
+            excavationNormalFootingM3: '100.000', // com 5% = 105.000
+            backfillSoilM3: '40.000', // com 0% = 40.000
+          },
+        },
+      ],
+    };
+
+    const result = calculateLineFoundations(input);
+    const kpis = result.summary.kpis;
+
+    // Total escavação = 10*1.10 (11) + 100*1.05 (105) + 5*1.20 (6) + 30*1.05 (31.5) = 153.500 m³
+    expect(kpis.totalExcavationM3).toBe('153.500');
+    // Total reaterro = 40.000 m³
+    expect(kpis.totalBackfillM3).toBe('40.000');
+
+    // Excedente para bota-fora: 153.500 - 40.000 = 113.500 m³
+    // Com 25% de empolamento: 113.500 * 1.25 = 141.875 m³
+    expect(kpis.totalLooseDisposalM3).toBe('141.875');
+
+    // Reaterro compactado: 40.000 * 1.15 = 46.000 m³
+    expect(kpis.totalCompactedBackfillM3).toBe('46.000');
   });
 
   it('garante determinismo estrito em execuções repetidas (RNF-04)', () => {

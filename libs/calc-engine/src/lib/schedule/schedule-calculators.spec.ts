@@ -16,23 +16,38 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
     });
 
     it('deve retornar os fatores de produtividade normativos para cada nível', () => {
-      expect(PrecipitationCalculator.getProductivityFactor(1).toText()).toBe('1');
-      expect(PrecipitationCalculator.getProductivityFactor(2).toText()).toBe('0.95');
-      expect(PrecipitationCalculator.getProductivityFactor(3).toText()).toBe('0.85');
-      expect(PrecipitationCalculator.getProductivityFactor(4).toText()).toBe('0.75');
-      expect(PrecipitationCalculator.getProductivityFactor(5).toText()).toBe('0.65');
+      expect(PrecipitationCalculator.getProductivityFactor(1).toText()).toBe(
+        '1',
+      );
+      expect(PrecipitationCalculator.getProductivityFactor(2).toText()).toBe(
+        '0.95',
+      );
+      expect(PrecipitationCalculator.getProductivityFactor(3).toText()).toBe(
+        '0.85',
+      );
+      expect(PrecipitationCalculator.getProductivityFactor(4).toText()).toBe(
+        '0.75',
+      );
+      expect(PrecipitationCalculator.getProductivityFactor(5).toText()).toBe(
+        '0.65',
+      );
     });
 
     it('deve calcular a produção efetiva reduzida no período chuvoso', () => {
       // MG em Janeiro possui ~280 mm (Nível 4 -> Fator 0.75)
       // Produção nominal = 20 fundações/mês -> Produção efetiva = 20 * 0.75 = 15 fundações/mês
-      const effectiveProd = PrecipitationCalculator.calculateEffectiveProduction('20.00', 'MG', 1);
+      const effectiveProd =
+        PrecipitationCalculator.calculateEffectiveProduction('20.00', 'MG', 1);
       expect(effectiveProd.toFixed(2)).toBe('15.00');
     });
 
     it('deve calcular o fator médio de produtividade para um intervalo de meses', () => {
       // MG meses 6, 7, 8 (Jun, Jul, Ago) são secos (< 50 mm, Nível 1 -> Fator 1.00)
-      const avgFactor = PrecipitationCalculator.getAverageProductivityFactor('MG', 6, 3);
+      const avgFactor = PrecipitationCalculator.getAverageProductivityFactor(
+        'MG',
+        6,
+        3,
+      );
       expect(avgFactor.toFixed(2)).toBe('1.00');
     });
   });
@@ -141,7 +156,93 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       expect(summary.warnings[0]).toContain('excede o limite máximo');
     });
 
-    it('deve emitir alerta quando atividade civil inicia antes da Licença de Instalação (RF-39)', () => {
+    it('deve ajustar a duração estimada quando informado fator de severidade de acesso', () => {
+      // Sem fator de acesso difícil (1.00)
+      const normalSchedule = ScheduleCalculator.calculateSchedule({
+        lineId: 1,
+        uf: 'MG',
+        startMonth: 5,
+        accessDifficultyFactor: 1.0,
+        activities: [
+          {
+            id: 'act-esc',
+            code: 'CIV-ESC',
+            name: 'Escavação de Fundações',
+            group: 'CIVIL_WORKS',
+            quantitySource: 'TOTAL_FOUNDATIONS',
+            totalQuantity: '100.00',
+            quantityUnit: 'fundações',
+            crewCount: 2,
+            nominalMonthlyProductionPerCrew: '10.00',
+            startMonth: 5,
+            monthlyCostPerCrew: '50000.00',
+          },
+        ],
+      });
+
+      // Com fator de acesso difícil (1.25)
+      const difficultSchedule = ScheduleCalculator.calculateSchedule({
+        lineId: 1,
+        uf: 'MG',
+        startMonth: 5,
+        accessDifficultyFactor: 1.25,
+        activities: [
+          {
+            id: 'act-esc',
+            code: 'CIV-ESC',
+            name: 'Escavação de Fundações',
+            group: 'CIVIL_WORKS',
+            quantitySource: 'TOTAL_FOUNDATIONS',
+            totalQuantity: '100.00',
+            quantityUnit: 'fundações',
+            crewCount: 2,
+            nominalMonthlyProductionPerCrew: '10.00',
+            startMonth: 5,
+            monthlyCostPerCrew: '50000.00',
+          },
+        ],
+      });
+
+      const normalAct = normalSchedule.activities[0];
+      const diffAct = difficultSchedule.activities[0];
+
+      expect(diffAct.accessDifficultyFactor).toBe('1.25');
+      expect(diffAct.durationMonths).toBeGreaterThanOrEqual(
+        normalAct.durationMonths,
+      );
+    });
+
+    it('deve validar limites de sobreprodução para equipe de lançamento 4x/6x condutores', () => {
+      const summary = ScheduleCalculator.calculateSchedule({
+        lineId: 1,
+        uf: 'MG',
+        startMonth: 1,
+        activities: [
+          {
+            id: 'act-str',
+            code: 'CAB-01',
+            name: 'Lançamento de Cabos Quádruplos (4x Rail)',
+            group: 'STRINGING',
+            quantitySource: 'CONDUCTOR_KM',
+            totalQuantity: '60.00',
+            quantityUnit: 'km-fio',
+            crewCount: 1,
+            nominalMonthlyProductionPerCrew: '15.00',
+            maxMonthlyProductionPerCrew: '25.00',
+            startMonth: 1,
+            durationMonths: 2, // 60 km / 2 meses = 30 km/mês > limite max de 25 km/mês
+            monthlyCostPerCrew: '120000.00',
+          },
+        ],
+      });
+
+      const act = summary.activities[0];
+      expect(act.status).toBe('WARNING_OVERPRODUCTION');
+      expect(summary.warnings.length).toBeGreaterThan(0);
+      expect(summary.warnings[0]).toContain('excede o limite máximo da equipe');
+    });
+
+    it('deve emitir alertas de precedência quando atividade inicia antes da Licença de Instalação (LI)', () => {
       const summary = ScheduleCalculator.calculateSchedule({
         lineId: 1,
         uf: 'MG',
@@ -174,7 +275,9 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       });
 
       expect(summary.activities[0].status).toBe('WARNING_PRECEDENCE');
-      expect(summary.warnings[0]).toContain('antes da obtenção da Licença de Instalação');
+      expect(summary.warnings[0]).toContain(
+        'antes da obtenção da Licença de Instalação',
+      );
     });
   });
 
@@ -285,8 +388,18 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
             code: 'EQ-CIV',
             name: 'Equipe Civil',
             laborRoles: [
-              { laborRoleId: 101, laborRoleCode: 'PEDR', laborRoleName: 'Pedreiro', quantity: 4 },
-              { laborRoleId: 102, laborRoleCode: 'SERV', laborRoleName: 'Servente', quantity: 8 },
+              {
+                laborRoleId: 101,
+                laborRoleCode: 'PEDR',
+                laborRoleName: 'Pedreiro',
+                quantity: 4,
+              },
+              {
+                laborRoleId: 102,
+                laborRoleCode: 'SERV',
+                laborRoleName: 'Servente',
+                quantity: 8,
+              },
             ],
             equipments: [
               {
@@ -303,8 +416,18 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
             code: 'EQ-MON',
             name: 'Equipe Montagem',
             laborRoles: [
-              { laborRoleId: 103, laborRoleCode: 'MONT', laborRoleName: 'Montador', quantity: 6 },
-              { laborRoleId: 102, laborRoleCode: 'SERV', laborRoleName: 'Servente', quantity: 4 },
+              {
+                laborRoleId: 103,
+                laborRoleCode: 'MONT',
+                laborRoleName: 'Montador',
+                quantity: 6,
+              },
+              {
+                laborRoleId: 102,
+                laborRoleCode: 'SERV',
+                laborRoleName: 'Servente',
+                quantity: 4,
+              },
             ],
             equipments: [
               {
@@ -365,7 +488,9 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       // Atividade Civil (crewCount=2): 2 * 2 = 4 Caminhões Betoneira
       // Atividade Montagem (crewCount=1): 1 * 1 = 1 Caminhão Betoneira
       // Total Betoneiras = 5. Frota própria = 2. Déficit a alugar = 3!
-      const betoneira = histogram.equipmentItems.find((e) => e.equipmentId === 201);
+      const betoneira = histogram.equipmentItems.find(
+        (e) => e.equipmentId === 201,
+      );
       expect(betoneira).toBeDefined();
       expect(betoneira!.ownUnitsAvailable).toBe(2);
       expect(betoneira!.peakDemand).toBe(5);
@@ -380,7 +505,9 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       expect(histogram.peakManpower.month).toBeGreaterThanOrEqual(4);
       expect(histogram.peakManpower.direct).toBeGreaterThan(0);
       expect(histogram.peakManpower.indirect).toBe(2); // 2 adm de canteiro
-      expect(histogram.peakManpower.drivingActivities.length).toBeGreaterThan(0);
+      expect(histogram.peakManpower.drivingActivities.length).toBeGreaterThan(
+        0,
+      );
     });
   });
 });
