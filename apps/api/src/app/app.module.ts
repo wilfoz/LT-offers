@@ -4,8 +4,8 @@ import { CatalogsModule } from '../contexts/catalogs/infrastructure/catalogs.mod
 import { FoundationsModule } from '../contexts/foundations/infrastructure/foundations.module';
 import { OffersModule } from '../contexts/offers/infrastructure/offers.module';
 import { StakingModule } from '../contexts/staking/infrastructure/staking.module';
-import { TaxationModule } from '../taxation/taxation.module';
-import { PricingModule } from '../pricing/pricing.module';
+import { TaxationModule } from '../contexts/taxation/infrastructure/taxation.module';
+import { PricingModule } from '../contexts/pricing/infrastructure/pricing.module';
 import { ElectromechanicalModule } from '../electromechanical/electromechanical.module';
 import { ScheduleModule } from '../schedule/schedule.module';
 import { HistogramModule } from '../histogram/histogram.module';
