@@ -20,12 +20,13 @@ O planejamento por mudança fica em [`openspec/`](./openspec/).
 
 ```
 apps/
-  web/           Angular — apresentação
-  api/           NestJS — API REST (GET /api/health)
+  web/           Angular — apresentação (Vitest)
+  api/           NestJS — API REST (Jest)
+  web-e2e/       Playwright — testes ponta a ponta (E2E) em navegadores reais
 libs/
   calc-engine/   Motor determinístico: DecimalValue (decimal.js),
-                 grafo de dependências de cálculo. Sem framework, sem I/O.
-  domain/        Tipos e contratos compartilhados
+                 grafo de dependências de cálculo. Sem framework, sem I/O (Jest).
+  domain/        Tipos e contratos compartilhados (Vitest)
 prisma/          schema.prisma + migrations
 ```
 
@@ -58,18 +59,90 @@ npx nx serve api            # http://localhost:3000/api/health
 npx nx serve web            # http://localhost:4200
 ```
 
-## Verificação
+## Como Executar os Testes
 
-Comando canônico — o mesmo que o CI executa:
+O repositório possui uma pirâmide de testes completa, totalizando **mais de 940 testes automatizados** e garantindo determinismo numérico, integridade de banco de dados e aderência às regras visuais de negócio.
+
+### 1. Suíte Global (Todos os Projetos)
+
+Executa todos os testes unitários e de integração do monorepo:
+
+```bash
+npx nx run-many -t test
+```
+
+Para rodar a verificação completa canônica de CI (Lint + Testes + Build):
 
 ```bash
 npx nx run-many -t lint test build
 ```
 
-Testes de um projeto específico: `npx nx test calc-engine` (ou `api`,
-`web`, `domain`). O CI (GitHub Actions) roda lint, testes e build dos
-projetos afetados em todo push/PR, mais um job que valida as migrations
-contra um Postgres real.
+---
+
+### 2. Testes por Projeto Específico
+
+| Projeto           | Escopo                                                         | Comando                   |
+| ----------------- | -------------------------------------------------------------- | ------------------------- |
+| **`domain`**      | Contratos de tipos, enums, validações e fatores de campo       | `npx nx test domain`      |
+| **`calc-engine`** | Motor de cálculo puro, regras RN-01..RN-26 e paridade numérica | `npx nx test calc-engine` |
+| **`api`**         | Serviços, controllers, DTOs e interceptors NestJS              | `npx nx test api`         |
+| **`web`**         | Componentes Angular, formulários e lógica de apresentação      | `npx nx test web`         |
+
+---
+
+### 3. Validação de Paridade Numérica e Benchmarks (§14)
+
+Para validar a fidelidade do motor contra a planilha histórica e aferir tempos de recálculo:
+
+```bash
+# Executa apenas as suítes de paridade numérica e tolerâncias
+npx nx test calc-engine --testPathPattern="parity-validation"
+
+# Executa o benchmark de performance com 100+ ofertas e grafos de dependência
+npx nx test calc-engine --testPathPattern="performance-benchmark"
+```
+
+---
+
+### 4. Testes Ponta a Ponta (E2E) com Playwright (`apps/web-e2e`)
+
+A suíte E2E executa testes automatizados nos 3 principais motores de renderização (**Chromium**, **Firefox** e **WebKit**), cobrindo as 4 jornadas centrais da aplicação:
+
+1. **Catálogos & Vigências**: Criação, versionamento cronológico e imutabilidade de vigências passadas (RNF-05).
+2. **Pipeline Completo EPC**: Cadastro de oferta, estaqueamento de torres, matriz de escopo e exportação da planilha contratual XLSX do edital (RF-01..RF-65).
+3. **Governança & Congelamento**: Transição para `FROZEN`, bloqueio de edição na UI e trilha de auditoria (RF-64, RF-65).
+4. **Consistência & Riscos**: Detecção de pendências impeditivas em tempo real e contingências da matriz de riscos (RN-13).
+
+#### Comandos de Execução E2E
+
+```bash
+# Executar todos os testes E2E com Playwright (headless)
+npx nx e2e web-e2e
+# ou diretamente via CLI do Playwright:
+npx playwright test --config=apps/web-e2e/playwright.config.ts
+
+# Executar apenas em um navegador específico (ex.: Google Chrome / Chromium)
+npx playwright test --config=apps/web-e2e/playwright.config.ts --project=chromium
+
+# Executar em modo interativo com UI visual do Playwright
+npx playwright test --config=apps/web-e2e/playwright.config.ts --ui
+
+# Executar uma suíte ou jornada específica (ex.: Catálogos)
+npx playwright test --config=apps/web-e2e/playwright.config.ts --grep="Jornada 1"
+
+# Abrir o relatório visual HTML gerado após os testes
+npx playwright show-report dist/.playwright/apps/web-e2e/playwright-report
+```
+
+---
+
+### 5. Validação de Especificações OpenSpec
+
+Para verificar a conformidade e integridade das 35 capacidades normativas documentadas:
+
+```bash
+openspec validate --specs
+```
 
 ## Convenções
 

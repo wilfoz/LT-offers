@@ -150,10 +150,14 @@ const BRAZILIAN_UFS = [
           <div class="header-main">
             <div class="code-row">
               <span class="offer-code mono">{{ offer()!.code }}</span>
-              <span class="badge badge-primary mono">{{ offer()!.baseCurrency }}</span>
+              <span class="badge badge-primary mono">{{
+                offer()!.baseCurrency
+              }}</span>
               @if (offer()!.clonedFromOfferId) {
                 <span class="badge-cloned">
-                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{ offer()!.clonedFromOfferId }}
+                  <mat-icon>content_copy</mat-icon> Clonada da proposta #{{
+                    offer()!.clonedFromOfferId
+                  }}
                 </span>
               }
             </div>
@@ -162,7 +166,9 @@ const BRAZILIAN_UFS = [
               <mat-icon>business</mat-icon>
               <span>{{ offer()!.clientName }}</span>
               <span class="sep-dot">•</span>
-              <span class="lot-info mono">{{ currentRevision()?.lotName ?? 'Lote 1' }}</span>
+              <span class="lot-info mono">{{
+                currentRevision()?.lotName ?? 'Lote 1'
+              }}</span>
             </p>
           </div>
 
@@ -170,7 +176,11 @@ const BRAZILIAN_UFS = [
             <a mat-stroked-button [routerLink]="['edit']">
               <mat-icon>edit</mat-icon> Editar dados gerais
             </a>
-            <button mat-stroked-button type="button" (click)="cloneCurrentOffer()">
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="cloneCurrentOffer()"
+            >
               <mat-icon>copy_all</mat-icon> Clonar proposta
             </button>
             <a mat-button routerLink="/offers">
@@ -188,7 +198,9 @@ const BRAZILIAN_UFS = [
                 <button
                   type="button"
                   class="rev-pill"
-                  [class.active]="rev.revisionNumber === selectedRevisionNumber()"
+                  [class.active]="
+                    rev.revisionNumber === selectedRevisionNumber()
+                  "
                   (click)="selectRevision(rev.revisionNumber)"
                 >
                   <span class="mono">R{{ rev.revisionNumber }}</span>
@@ -216,7 +228,7 @@ const BRAZILIAN_UFS = [
                 [class.healthy]="health.status === 'HEALTHY'"
                 [class.warning]="health.status === 'WARNINGS_ONLY'"
                 [class.critical]="health.status === 'CRITICAL_ERRORS'"
-                (click)="activeTabIndex.set(13)"
+                (click)="activeTabIndex.set(12)"
                 matTooltip="Ver diagnósticos de consistência e integridade (M12)"
               >
                 @if (health.status === 'HEALTHY') {
@@ -252,7 +264,9 @@ const BRAZILIAN_UFS = [
                 color="primary"
                 type="button"
                 (click)="createNewRevision()"
-                matTooltip="Cria uma nova revisão R{{ (currentRevision()?.revisionNumber ?? 0) + 1 }} derivada desta"
+                matTooltip="Cria uma nova revisão R{{
+                  (currentRevision()?.revisionNumber ?? 0) + 1
+                }} derivada desta"
               >
                 <mat-icon>add</mat-icon> Nova revisão
               </button>
@@ -275,7 +289,9 @@ const BRAZILIAN_UFS = [
             <mat-icon>lock</mat-icon>
             <div>
               <strong>Revisão imutável:</strong> Esta revisão está
-              {{ statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase() }}
+              {{
+                statusLabel(currentRevision()?.status ?? 'FROZEN').toLowerCase()
+              }}
               e não aceita alterações diretas (RNF-05). Para efetuar
               modificações de engenharia ou escopo, crie uma nova revisão.
             </div>
@@ -293,19 +309,25 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">power</mat-icon>
-              Linhas de Transmissão ({{ currentRevision()?.transmissionLines?.length ?? 0 }})
+              Linhas de Transmissão ({{
+                currentRevision()?.transmissionLines?.length ?? 0
+              }})
             </ng-template>
 
             <div class="tab-content">
               <div class="lines-summary-cards">
                 <div class="kpi-card">
                   <span class="kpi-label">Total de Linhas</span>
-                  <span class="kpi-value mono">{{ currentRevision()?.transmissionLines?.length ?? 0 }}</span>
+                  <span class="kpi-value mono">{{
+                    currentRevision()?.transmissionLines?.length ?? 0
+                  }}</span>
                   <span class="kpi-subtext">Circuitos independentes</span>
                 </div>
                 <div class="kpi-card">
                   <span class="kpi-label">Extensão Refinada Total</span>
-                  <span class="kpi-value mono text-primary">{{ totalRefinedKm() }} km</span>
+                  <span class="kpi-value mono text-primary"
+                    >{{ totalRefinedKm() }} km</span
+                  >
                   <span class="kpi-subtext">Cálculo de traçado vetorial</span>
                 </div>
                 <div class="kpi-card">
@@ -318,7 +340,10 @@ const BRAZILIAN_UFS = [
               <div class="section-actions">
                 <div>
                   <h3 class="font-display">Linhas de Transmissão do Lote</h3>
-                  <p class="section-subtitle">Relação de trechos físicos, especificações de condutores e rateio territorial por estado.</p>
+                  <p class="section-subtitle">
+                    Relação de trechos físicos, especificações de condutores e
+                    rateio territorial por estado.
+                  </p>
                 </div>
                 @if (isDraft()) {
                   <button
@@ -343,7 +368,9 @@ const BRAZILIAN_UFS = [
                           : 'Editar Linha de Transmissão'
                       }}
                     </h4>
-                    <span class="font-label-caps badge badge-primary">Engenharia Eletromecânica</span>
+                    <span class="font-label-caps badge badge-primary"
+                      >Engenharia Eletromecânica</span
+                    >
                   </div>
                   <form
                     [formGroup]="lineForm"
@@ -460,7 +487,10 @@ const BRAZILIAN_UFS = [
                       <mat-icon class="text-primary">share_location</mat-icon>
                       <div>
                         <strong>Rateio Territorial por Estado (RN-01):</strong>
-                        <span>A soma dos percentuais deve totalizar exatamente 100,00% para correta tributação e faturamento.</span>
+                        <span
+                          >A soma dos percentuais deve totalizar exatamente
+                          100,00% para correta tributação e faturamento.</span
+                        >
                       </div>
                     </div>
 
@@ -564,7 +594,11 @@ const BRAZILIAN_UFS = [
                   <mat-icon>alt_route</mat-icon>
                   <p>Nenhuma linha de transmissão cadastrada nesta revisão.</p>
                   @if (isDraft()) {
-                    <button mat-flat-button color="primary" (click)="openAddLineForm()">
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      (click)="openAddLineForm()"
+                    >
                       Adicionar primeira linha
                     </button>
                   }
@@ -594,7 +628,9 @@ const BRAZILIAN_UFS = [
                         Nome da LT
                       </th>
                       <td mat-cell *matCellDef="let line">
-                        <span class="line-title font-medium">{{ line.name }}</span>
+                        <span class="line-title font-medium">{{
+                          line.name
+                        }}</span>
                       </td>
                     </ng-container>
 
@@ -633,21 +669,32 @@ const BRAZILIAN_UFS = [
                       </th>
                       <td mat-cell *matCellDef="let line">
                         <span class="badge badge-neutral mono">
-                          {{ line.destinationStatePrimary }}: {{ line.destinationPercentagePrimary }}%
+                          {{ line.destinationStatePrimary }}:
+                          {{ line.destinationPercentagePrimary }}%
                         </span>
                         @if (line.destinationStateSecondary) {
                           <span class="badge badge-neutral mono ml-1">
-                            {{ line.destinationStateSecondary }}: {{ line.destinationPercentageSecondary }}%
+                            {{ line.destinationStateSecondary }}:
+                            {{ line.destinationPercentageSecondary }}%
                           </span>
                         }
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef scope="col" class="text-right">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        scope="col"
+                        class="text-right"
+                      >
                         Ações
                       </th>
-                      <td mat-cell *matCellDef="let line; let idx = index" class="text-right">
+                      <td
+                        mat-cell
+                        *matCellDef="let line; let idx = index"
+                        class="text-right"
+                      >
                         @if (line.id) {
                           <button
                             mat-icon-button
@@ -742,15 +789,22 @@ const BRAZILIAN_UFS = [
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">assignment_turned_in</mat-icon>
-              Matriz de Escopo ({{ currentRevision()?.scopeMatrixItems?.length ?? 0 }})
+              Matriz de Escopo ({{
+                currentRevision()?.scopeMatrixItems?.length ?? 0
+              }})
             </ng-template>
 
             <div class="tab-content">
               <div class="scope-header-desc">
                 <div>
-                  <h3 class="font-display">Matriz de Responsabilidade e Risco (4 Eixos)</h3>
+                  <h3 class="font-display">
+                    Matriz de Responsabilidade e Risco (4 Eixos)
+                  </h3>
                   <p class="section-subtitle">
-                    Definição de fornecimento, REIDI (RN-04) e alocação de riscos cambial e de commodity (RN-08). Itens sob responsabilidade do Cliente entram com custo zero na proposta (RN-03).
+                    Definição de fornecimento, REIDI (RN-04) e alocação de
+                    riscos cambial e de commodity (RN-08). Itens sob
+                    responsabilidade do Cliente entram com custo zero na
+                    proposta (RN-03).
                   </p>
                 </div>
                 @if (
@@ -794,11 +848,15 @@ const BRAZILIAN_UFS = [
                         <td>
                           <strong>{{ item.itemName }}</strong>
                           @if (item.responsibleParty === 'CLIENT') {
-                            <span class="badge badge-neutral ml-1">(Cliente)</span>
+                            <span class="badge badge-neutral ml-1"
+                              >(Cliente)</span
+                            >
                           }
                         </td>
                         <td>
-                          <span class="badge badge-analysis">{{ item.category }}</span>
+                          <span class="badge badge-analysis">{{
+                            item.category
+                          }}</span>
                         </td>
                         <td>
                           <select
@@ -831,8 +889,16 @@ const BRAZILIAN_UFS = [
                                 )
                               "
                             />
-                            <span class="badge" [class.badge-valid]="item.acceptsDirectBilling" [class.badge-neutral]="!item.acceptsDirectBilling">
-                              {{ item.acceptsDirectBilling ? 'REIDI Ativo' : 'Não' }}
+                            <span
+                              class="badge"
+                              [class.badge-valid]="item.acceptsDirectBilling"
+                              [class.badge-neutral]="!item.acceptsDirectBilling"
+                            >
+                              {{
+                                item.acceptsDirectBilling
+                                  ? 'REIDI Ativo'
+                                  : 'Não'
+                              }}
                             </span>
                           </label>
                         </td>
@@ -849,7 +915,9 @@ const BRAZILIAN_UFS = [
                               )
                             "
                           >
-                            <option value="CONTRACTOR">Contratada (A termo)</option>
+                            <option value="CONTRACTOR">
+                              Contratada (A termo)
+                            </option>
                             <option value="CLIENT">Cliente (Spot)</option>
                           </select>
                         </td>
@@ -885,7 +953,9 @@ const BRAZILIAN_UFS = [
                     (click)="saveRevisionChanges()"
                     [disabled]="saving()"
                   >
-                    <mat-icon>{{ saving() ? 'hourglass_empty' : 'save' }}</mat-icon>
+                    <mat-icon>{{
+                      saving() ? 'hourglass_empty' : 'save'
+                    }}</mat-icon>
                     {{ saving() ? 'Salvando…' : 'Salvar alterações do escopo' }}
                   </button>
                 </div>
@@ -924,7 +994,9 @@ const BRAZILIAN_UFS = [
                         (click)="selectedStakingLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
@@ -968,14 +1040,18 @@ const BRAZILIAN_UFS = [
                         (click)="selectedFoundationLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
                 </div>
 
                 @if (selectedFoundationLineId()) {
-                  <app-foundation-quantities [lineId]="selectedFoundationLineId()!" />
+                  <app-foundation-quantities
+                    [lineId]="selectedFoundationLineId()!"
+                  />
                 }
               }
             </div>
@@ -992,7 +1068,11 @@ const BRAZILIAN_UFS = [
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
                 <div class="empty-state">
                   <mat-icon>info</mat-icon>
-                  <p>Cadastre ao menos uma linha de transmissão para visualizar os quantitativos eletromecânicos de torres, cabos e acessórios.</p>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão para visualizar
+                    os quantitativos eletromecânicos de torres, cabos e
+                    acessórios.
+                  </p>
                 </div>
               } @else {
                 <div class="staking-line-selector-bar technical-border">
@@ -1009,14 +1089,18 @@ const BRAZILIAN_UFS = [
                         (click)="selectedElectroLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
                 </div>
 
                 @if (selectedElectroLineId()) {
-                  <app-electromechanical-quantities [lineId]="selectedElectroLineId()!" />
+                  <app-electromechanical-quantities
+                    [lineId]="selectedElectroLineId()!"
+                  />
                 }
               }
             </div>
@@ -1033,7 +1117,10 @@ const BRAZILIAN_UFS = [
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
                 <div class="empty-state">
                   <mat-icon>info</mat-icon>
-                  <p>Cadastre ao menos uma linha de transmissão para visualizar e calcular os preços de materiais e tributos.</p>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão para visualizar e
+                    calcular os preços de materiais e tributos.
+                  </p>
                 </div>
               } @else {
                 <div class="staking-line-selector-bar technical-border">
@@ -1050,7 +1137,9 @@ const BRAZILIAN_UFS = [
                         (click)="selectedPricingLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
@@ -1074,7 +1163,10 @@ const BRAZILIAN_UFS = [
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
                 <div class="empty-state">
                   <mat-icon>info</mat-icon>
-                  <p>Cadastre ao menos uma linha de transmissão para visualizar o cronograma físico e canteiros.</p>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão para visualizar o
+                    cronograma físico e canteiros.
+                  </p>
                 </div>
               } @else {
                 <div class="staking-line-selector-bar technical-border">
@@ -1091,7 +1183,9 @@ const BRAZILIAN_UFS = [
                         (click)="selectedScheduleLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
@@ -1116,7 +1210,10 @@ const BRAZILIAN_UFS = [
               @if ((currentRevision()?.transmissionLines?.length ?? 0) === 0) {
                 <div class="empty-state">
                   <mat-icon>info</mat-icon>
-                  <p>Cadastre ao menos uma linha de transmissão para visualizar os histogramas de mão de obra e equipamentos.</p>
+                  <p>
+                    Cadastre ao menos uma linha de transmissão para visualizar
+                    os histogramas de mão de obra e equipamentos.
+                  </p>
                 </div>
               } @else {
                 <div class="staking-line-selector-bar technical-border">
@@ -1133,14 +1230,18 @@ const BRAZILIAN_UFS = [
                         (click)="selectedHistogramLineId.set(line.id!)"
                       >
                         <span class="mono font-bold">{{ line.code }}</span>
-                        <span class="line-name-sub">{{ line.name }} ({{ line.refinedLengthKm }} km)</span>
+                        <span class="line-name-sub"
+                          >{{ line.name }} ({{ line.refinedLengthKm }} km)</span
+                        >
                       </button>
                     }
                   </div>
                 </div>
 
                 @if (selectedHistogramLineId()) {
-                  <app-resource-histograms [lineId]="selectedHistogramLineId()!" />
+                  <app-resource-histograms
+                    [lineId]="selectedHistogramLineId()!"
+                  />
                 }
               }
             </div>
@@ -1240,8 +1341,13 @@ const BRAZILIAN_UFS = [
 
             <div class="tab-content">
               <div class="params-header">
-                <h3 class="font-display">Parâmetros Comerciais e Prazos de Edital</h3>
-                <p class="section-subtitle">Premissas financeiras, CAPEX estimado ANEEL, RAP de referência e marcos temporais.</p>
+                <h3 class="font-display">
+                  Parâmetros Comerciais e Prazos de Edital
+                </h3>
+                <p class="section-subtitle">
+                  Premissas financeiras, CAPEX estimado ANEEL, RAP de referência
+                  e marcos temporais.
+                </p>
               </div>
 
               <form
@@ -1409,7 +1515,9 @@ const BRAZILIAN_UFS = [
                       type="submit"
                       [disabled]="saving() || revParamsForm.invalid"
                     >
-                      <mat-icon>{{ saving() ? 'hourglass_empty' : 'save' }}</mat-icon>
+                      <mat-icon>{{
+                        saving() ? 'hourglass_empty' : 'save'
+                      }}</mat-icon>
                       {{ saving() ? 'Salvando…' : 'Salvar parâmetros' }}
                     </button>
                   </div>
@@ -2426,14 +2534,17 @@ export class OfferDetailComponent {
       pricing: 5,
       tax: 5,
       schedule: 6,
-      camps: 7,
-      histogram: 8,
-      services: 9,
-      result: 10,
-      cashflow: 11,
-      risks: 12,
-      checks: 13,
-      params: 14,
+      camps: 6,
+      histogram: 7,
+      services: 8,
+      result: 9,
+      cashflow: 10,
+      risks: 11,
+      checks: 12,
+      params: 13,
+      audit: 14,
+      export: 15,
+      tracking: 16,
     };
     const idx = tabMap[target.tab];
     if (idx !== undefined) {
