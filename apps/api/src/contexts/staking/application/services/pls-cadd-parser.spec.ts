@@ -1,4 +1,4 @@
-import { PlsCaddParser } from './pls-cadd-parser';
+import { PlsCaddParser } from './pls-cadd-parser.service';
 import * as XLSX from 'xlsx';
 
 describe('PlsCaddParser', () => {

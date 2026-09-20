@@ -132,7 +132,6 @@ function parseNumber(value: unknown): number | null {
     return isNaN(value) ? null : value;
   }
   if (typeof value === 'string') {
-    // Tratar vírgula como separador decimal se necessário
     const cleaned = value.trim().replace(',', '.');
     const num = Number(cleaned);
     return isNaN(num) ? null : num;
@@ -160,7 +159,7 @@ export class PlsCaddParser {
 
     // Mapear cabeçalhos da primeira linha
     const firstRow = rawRows[0];
-    const headerMap: Record<string, string> = {}; // rawKey -> canonicalField
+    const headerMap: Record<string, string> = {};
     for (const rawKey of Object.keys(firstRow)) {
       const canonical = resolveFieldFromHeader(rawKey);
       if (canonical) {
@@ -173,7 +172,7 @@ export class PlsCaddParser {
 
     for (let index = 0; index < rawRows.length; index++) {
       const raw = rawRows[index];
-      const rowNumber = index + 2; // Linha 1 é cabeçalho na planilha
+      const rowNumber = index + 2;
       const errors: string[] = [];
 
       const mapped: Record<string, unknown> = {};
@@ -261,9 +260,6 @@ export class PlsCaddParser {
     return parsedRows;
   }
 
-  /**
-   * Constrói o relatório prévio comparativo (Preview) contra a base existente.
-   */
   static buildPreview(
     fileName: string,
     parsedRows: PlsCaddImportParsedRow[],
@@ -308,7 +304,6 @@ export class PlsCaddParser {
     const preservedAttributesCount =
       existingTowersCount > 0 ? existingAssignmentsCount : 0;
 
-    // Calcular extensão total das estacas (máxima estaca em km)
     let maxStationMeters = 0;
     for (const r of parsedRows) {
       if (r.stationMeters > maxStationMeters) {
