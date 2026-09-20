@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../../../../app/prisma.service';
 import { StakingPaginationQuery } from '@lt-offers/domain';
@@ -29,6 +29,7 @@ function isUniqueViolation(error: unknown): boolean {
 @Injectable()
 export class PrismaStakingTowersRepository implements StakingTowersRepository {
   constructor(
+    @Inject(PrismaService)
     private readonly prisma: PrismaService | Prisma.TransactionClient,
   ) {}
 

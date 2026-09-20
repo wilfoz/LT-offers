@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { OfferRevision } from '../../../domain/entities/offer-revision.entity';
 import { TransmissionLine } from '../../../domain/entities/transmission-line.entity';
@@ -12,6 +12,7 @@ const Decimal = Prisma.Decimal;
 @Injectable()
 export class PrismaOfferRevisionsRepository implements OfferRevisionsRepository {
   constructor(
+    @Inject(PrismaService)
     private readonly prisma: PrismaService | Prisma.TransactionClient,
   ) {}
 

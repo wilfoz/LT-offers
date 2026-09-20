@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../../../../app/prisma.service';
 import {
@@ -23,6 +23,7 @@ function isUniqueViolation(error: unknown): boolean {
 @Injectable()
 export class PrismaGuyWiresRepository implements GuyWiresRepository {
   constructor(
+    @Inject(PrismaService)
     private readonly prisma: PrismaService | Prisma.TransactionClient,
   ) {}
 
