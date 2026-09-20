@@ -44,3 +44,6 @@ test-output
 vitest.config.*.timestamp*
 
 .gemini/
+
+# Templates legados locais
+template/
