@@ -7,6 +7,7 @@ import { StakingModule } from '../contexts/staking/infrastructure/staking.module
 import { TaxationModule } from '../contexts/taxation/infrastructure/taxation.module';
 import { PricingModule } from '../contexts/pricing/infrastructure/pricing.module';
 import { EconomicsModule } from '../contexts/economics/infrastructure/economics.module';
+import { BaselineModule } from '../contexts/baseline/infrastructure/baseline.module';
 
 // Regressão de DI real: testes puros mockam as portas e o build só checa
 // tipos, então um provider irresolvível (ex.: construtor com tipo de união,
@@ -22,6 +23,7 @@ describe('Módulos de contexto compilam com injeção de dependência real', () 
     ['TaxationModule', TaxationModule],
     ['PricingModule', PricingModule],
     ['EconomicsModule', EconomicsModule],
+    ['BaselineModule', BaselineModule],
   ];
 
   it.each(cases)('%s resolve todos os providers', async (_name, module) => {

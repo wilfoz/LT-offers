@@ -1,0 +1,11 @@
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Vary: Origin
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+Content-Disposition: attachment; filename="Carga_ERP_TOTVS_RM_Oferta_1.xlsx"
+Content-Length: 13481
+ETag: W/"34a9-qfzgcDqBRXHrE9KQjJHDNadjvno"
+Date: Sun, 20 Sep 2026 20:06:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

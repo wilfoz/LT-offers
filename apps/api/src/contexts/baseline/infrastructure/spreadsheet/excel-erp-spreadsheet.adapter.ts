@@ -1,13 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
-import {
-  ErpIntegrationPackage,
-  GenerateErpPackagePayload,
-} from '@lt-offers/domain';
-import { WbsGenerator } from '@lt-offers/calc-engine';
-import { BaselineService } from './baseline.service';
-import { PrismaService } from '../app/prisma.service';
-import { AuditService } from '../audit/audit.service';
+import { ErpIntegrationPackage } from '@lt-offers/domain';
+import { ErpSpreadsheetPort } from '../../domain';
 
 const HEADER_FILL: ExcelJS.Fill = {
   type: 'pattern',
@@ -37,67 +31,13 @@ const BORDER_THIN: Partial<ExcelJS.Borders> = {
 
 const CURRENCY_FORMAT = 'R$ #,##0.00;[Red]-R$ #,##0.00;"-"';
 
+/**
+ * Geração da planilha XLSX de carga ERP — código movido do serviço legado
+ * sem reescrita (design, decisão 6).
+ */
 @Injectable()
-export class ErpIntegrationService {
-  constructor(
-    private readonly baselineService: BaselineService,
-    private readonly prisma: PrismaService,
-    private readonly auditService: AuditService,
-  ) {}
-
-  /**
-   * Gera o pacote canônico de dados em formato JSON estruturado (RF-10, Fase F7).
-   */
-  async generateErpJson(
-    payload: GenerateErpPackagePayload,
-    user: string,
-  ): Promise<ErpIntegrationPackage> {
-    const baseline = await this.baselineService.getBaselineById(
-      payload.baselineId,
-    );
-    const offer = await this.prisma.offer.findUnique({
-      where: { id: baseline.offerId },
-    });
-
-    const offerCode = offer ? offer.code : `OFR-${baseline.offerId}`;
-    const offerName = offer ? offer.name : baseline.name;
-
-    const erpPackage = WbsGenerator.generateErpPackage({
-      baseline,
-      offerCode,
-      offerName,
-      revisionNumber: baseline.baselineNumber,
-      targetSystem: payload.targetSystem,
-      companyCode: payload.companyCode,
-      generatedBy:
-        user || payload.generatedBy || 'controladoria@engevix.com.br',
-      generatedAt: new Date(),
-    });
-
-    // Auditoria
-    this.auditService.logEvent({
-      userId: user || 'user-controller',
-      userName: user || 'Controladoria & ERP',
-      userRole: 'COMMERCIAL',
-      resource: 'OFFER',
-      resourceId: String(baseline.offerId),
-      offerId: String(baseline.offerId),
-      action: 'EXPORT',
-      description: `Geração do Pacote de Carga ERP para sistema ${payload.targetSystem} (Oferta: ${offerCode})`,
-    });
-
-    return erpPackage;
-  }
-
-  /**
-   * Gera a planilha XLSX estruturada de carga para o ERP (SAP, TOTVS/RM, Sienge/Mega).
-   */
-  async generateErpXlsx(
-    payload: GenerateErpPackagePayload,
-    user: string,
-  ): Promise<Buffer> {
-    const erpPackage = await this.generateErpJson(payload, user);
-
+export class ExcelErpSpreadsheetAdapter implements ErpSpreadsheetPort {
+  async buildWorkbook(erpPackage: ErpIntegrationPackage): Promise<Buffer> {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'LT-Offers ERP Bridge Engine';
     workbook.created = new Date();
