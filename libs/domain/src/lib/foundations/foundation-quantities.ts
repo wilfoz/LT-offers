@@ -482,3 +482,42 @@ export interface FoundationCalculationResult {
     FoundationTraceabilityItem
   >;
 }
+
+/**
+ * Travessias especiais de rodovias, ferrovias, rios e linhas (Aba Travesias / RF-20).
+ */
+export interface SpecialCrossingItem {
+  id: string;
+  code: string;
+  crossingType: 'HIGHWAY' | 'RAILWAY' | 'RIVER' | 'TRANSMISSION_LINE' | 'OTHER';
+  crossingTypeName: string;
+  description: string;
+  spanMeters: number;
+  safetyRequirement: string;
+  estimatedCostBrl: number;
+}
+
+/**
+ * Abertura e reabilitação de acessos por tipo de terreno (Aba Accesos / RF-20).
+ */
+export interface AccessOpeningItem {
+  id: string;
+  terrainType: 'FLAT' | 'ROLLING' | 'MOUNTAINOUS' | 'SWAMPY';
+  terrainTypeName: string;
+  lengthKm: number;
+  unitCostPerKm: number;
+  totalCostBrl: number;
+}
+
+/**
+ * Supressão vegetal e limpeza da faixa de servidão (Aba Limpieza / RF-20).
+ */
+export interface RightOfWayClearingItem {
+  id: string;
+  clearingType: 'LIGHT' | 'MEDIUM' | 'HEAVY';
+  clearingTypeName: string;
+  areaHectares: number;
+  unitCostPerHa: number;
+  totalCostBrl: number;
+}
+

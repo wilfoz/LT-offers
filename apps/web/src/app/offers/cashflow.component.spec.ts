@@ -100,4 +100,19 @@ describe('CashflowComponent', () => {
     expect(component.formatShortCurrency('2500000')).toBe('+2.5M');
     expect(component.formatShortCurrency('-50000')).toBe('-50k');
   });
+
+  it('deve suportar alternância de visualização entre Matriz DT e Cronologia', () => {
+    expect(component.activeDtView()).toBe('MATRIX_DT');
+    component.activeDtView.set('CHRONOLOGY');
+    expect(component.activeDtView()).toBe('CHRONOLOGY');
+  });
+
+  it('deve calcular corretamente os totais por disciplina para a grade DT', () => {
+    const cf = mockCashflow;
+    expect(component.getTotalMaterialsOutflow(cf)).toBe(200000);
+    expect(component.getTotalServicesOutflow(cf)).toBe(300000);
+    expect(component.getTotalIndirectsOutflow(cf)).toBe(0);
+    expect(component.getTotalAdvanceBilling(cf)).toBe(1250000);
+    expect(component.getTotalMeasurementBilling(cf)).toBe(0);
+  });
 });

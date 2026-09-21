@@ -143,4 +143,38 @@ describe('OfferFormComponent', () => {
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/offers', 5]);
   });
+
+  it('permite alternar tipos de estrutura entre autoportante, estaiada e ambas', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+
+    // Inicialmente ambas habilitadas
+    expect(comp.includeSelfSupporting()).toBe(true);
+    expect(comp.includeGuyed()).toBe(true);
+
+    // Selecionar preset apenas autoportante
+    comp.setStructurePreset('SELF_SUPPORTING');
+    expect(comp.includeSelfSupporting()).toBe(true);
+    expect(comp.includeGuyed()).toBe(false);
+
+    // Selecionar preset apenas estaiada
+    comp.setStructurePreset('GUYED');
+    expect(comp.includeSelfSupporting()).toBe(false);
+    expect(comp.includeGuyed()).toBe(true);
+
+    // Selecionar preset ambas
+    comp.setStructurePreset('BOTH');
+    expect(comp.includeSelfSupporting()).toBe(true);
+    expect(comp.includeGuyed()).toBe(true);
+
+    // Tentar desmarcar tudo bloqueia e exibe snackBar
+    comp.setStructurePreset('SELF_SUPPORTING');
+    comp.toggleSelfSupporting();
+    expect(comp.includeSelfSupporting()).toBe(true); // Permanece true
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      expect.stringContaining('Selecione pelo menos um tipo de estrutura'),
+      'OK',
+      expect.anything(),
+    );
+  });
 });

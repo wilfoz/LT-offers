@@ -132,22 +132,32 @@ import { EconomicResultApiService } from './economic-result-api.service';
           </div>
 
           <div class="table-responsive">
-            <table class="data-table">
+            <table class="data-table multi-tier-table">
               <thead>
-                <tr>
-                  <th>Categoria / Grupo</th>
+                <!-- Nível 1: Agrupamento Estrutural RT -->
+                <tr class="header-level-1">
+                  <th class="group-header group-dark">MACRO-DISCIPLINA / PACOTE</th>
+                  <th class="group-header group-blue text-right">BASE LÍQUIDA</th>
+                  <th colspan="6" class="group-header group-amber text-center">TRIBUTOS DE ENTRADA & DIFAL (RN-04..RN-06)</th>
+                  <th colspan="2" class="group-header group-purple text-center">FATURAMENTO (REIDI)</th>
+                  <th class="group-header group-green text-right">PREÇO VENDA (BDI)</th>
+                </tr>
+                <!-- Nível 2: Colunas Analíticas -->
+                <tr class="header-level-2">
+                  <th>Descrição do Pacote</th>
                   <th class="text-right">Custo Líquido</th>
-                  <th class="text-right">PIS/COFINS</th>
+                  <th class="text-right">PIS/COF</th>
                   <th class="text-right">IPI</th>
                   <th class="text-right">ICMS Orig.</th>
                   <th class="text-right">DIFAL</th>
                   <th class="text-right">FECOEP</th>
-                  <th class="text-right">Custo c/ Impostos</th>
+                  <th class="text-right font-bold">Custo c/ Impostos</th>
                   <th class="text-right">Fat. Direto</th>
                   <th class="text-right">Custo Próprio</th>
-                  <th class="text-right">Preço de Venda</th>
+                  <th class="text-right font-bold">Preço de Venda</th>
                 </tr>
               </thead>
+
               <tbody>
                 @for (l of r.lines; track l.category + l.description) {
                   <tr>

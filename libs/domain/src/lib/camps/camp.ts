@@ -42,3 +42,28 @@ export interface CampCostSummary {
   totalCampsCost: string;
   monthlyDistribution: { month: number; cost: string }[];
 }
+
+/**
+ * Detalhamento analítico de equipe de administração e indiretos de obra (Aba Indirectos / RF-41).
+ */
+export interface ProjectIndirectStaffItem {
+  id: string;
+  roleCode: string;
+  roleName: string;
+  category:
+    | 'MANAGEMENT'
+    | 'SUPERVISION'
+    | 'SAFETY_ENVIRONMENT'
+    | 'ADMINISTRATION'
+    | 'LOGISTICS';
+  headcount: number;
+  vehicleType?: string; // Ex: 'VEÍCULO TIPO DUSTER 4X4'
+  phoneTier?: string; // Ex: 'TELEFONE FROTA GAMA ALTA'
+  laptopAssigned?: boolean;
+  epiMonthlyBrl: number;
+  examsBrl: number;
+  travelMonthlyBrl: number;
+  salaryMonthlyBrl: number;
+  totalMonthlyBrl: number;
+}
+

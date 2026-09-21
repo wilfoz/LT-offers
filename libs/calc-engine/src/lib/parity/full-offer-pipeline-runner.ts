@@ -79,7 +79,7 @@ export class FullOfferPipelineRunner {
     const totalSpanKm = totalSpanM / 1000;
     const conductorsPerBundle =
       fixture.expectedBaseline.discrete['conductorsPerPhaseBundle'] ||
-      (fixture.nominalVoltageKv === 500 ? 4 : 2);
+      (fixture.nominalVoltageKv >= 500 ? 4 : 2);
     const totalPhases =
       fixture.expectedBaseline.discrete['totalPhasesPerCircuit'] || 3;
 

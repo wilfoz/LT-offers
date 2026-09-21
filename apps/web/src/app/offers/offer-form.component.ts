@@ -497,33 +497,120 @@ import { OffersApi } from './offers-api.service';
               </div>
 
               <div class="fieldset-content space-y-4">
-                <div class="structure-type-card selected">
+                <!-- Preset Pills -->
+                <div class="preset-pills-bar">
+                  <button
+                    type="button"
+                    class="preset-pill-btn"
+                    [class.active]="includeSelfSupporting() && includeGuyed()"
+                    (click)="setStructurePreset('BOTH')"
+                  >
+                    Ambas (Misto)
+                  </button>
+                  <button
+                    type="button"
+                    class="preset-pill-btn"
+                    [class.active]="includeSelfSupporting() && !includeGuyed()"
+                    (click)="setStructurePreset('SELF_SUPPORTING')"
+                  >
+                    Autoportante
+                  </button>
+                  <button
+                    type="button"
+                    class="preset-pill-btn"
+                    [class.active]="!includeSelfSupporting() && includeGuyed()"
+                    (click)="setStructurePreset('GUYED')"
+                  >
+                    Estaiada
+                  </button>
+                </div>
+
+                <!-- Card 1: Torre Autoportante -->
+                <div
+                  class="structure-type-card"
+                  [class.selected]="includeSelfSupporting()"
+                  (click)="toggleSelfSupporting()"
+                  role="checkbox"
+                  [attr.aria-checked]="includeSelfSupporting()"
+                  tabindex="0"
+                  (keydown.enter)="toggleSelfSupporting()"
+                  (keydown.space)="$event.preventDefault(); toggleSelfSupporting()"
+                >
                   <div class="struct-radio-box">
-                    <mat-icon class="struct-check">check_circle</mat-icon>
+                    <mat-icon class="struct-check" [class.checked]="includeSelfSupporting()">
+                      {{ includeSelfSupporting() ? 'check_box' : 'check_box_outline_blank' }}
+                    </mat-icon>
                   </div>
                   <div class="struct-info">
-                    <span class="struct-title">Torre Autoportante</span>
+                    <div class="struct-header-line">
+                      <span class="struct-title">Torre Autoportante</span>
+                      @if (includeSelfSupporting()) {
+                        <span class="struct-badge badge-blue">Habilitada</span>
+                      }
+                    </div>
                     <span class="struct-desc"
                       >Estrutura rígida treliçada com 4 pés. Alta estabilidade e
-                      fixação por fundação profunda/direta.</span
+                      fixação por fundação profunda/direta. Empregada em ancoragens, vértices e trechos urbanos.</span
                     >
                   </div>
                 </div>
 
-                <div class="structure-type-card">
+                <!-- Card 2: Torre Estaiada -->
+                <div
+                  class="structure-type-card"
+                  [class.selected]="includeGuyed()"
+                  (click)="toggleGuyed()"
+                  role="checkbox"
+                  [attr.aria-checked]="includeGuyed()"
+                  tabindex="0"
+                  (keydown.enter)="toggleGuyed()"
+                  (keydown.space)="$event.preventDefault(); toggleGuyed()"
+                >
                   <div class="struct-radio-box">
-                    <mat-icon class="struct-circle"
-                      >radio_button_unchecked</mat-icon
-                    >
+                    <mat-icon class="struct-check" [class.checked]="includeGuyed()">
+                      {{ includeGuyed() ? 'check_box' : 'check_box_outline_blank' }}
+                    </mat-icon>
                   </div>
                   <div class="struct-info">
-                    <span class="struct-title">Torre Estaiada</span>
+                    <div class="struct-header-line">
+                      <span class="struct-title">Torre Estaiada</span>
+                      @if (includeGuyed()) {
+                        <span class="struct-badge badge-amber">Habilitada</span>
+                      }
+                    </div>
                     <span class="struct-desc"
-                      >Mastro central suportado por cabos tensores externos.
-                      Ideal para grandes vãos e terrenos nivelados.</span
+                      >Mastro central suportado por cabos tensores (estais) externos.
+                      Ideal para suspensões em tangentes e longos vãos com economia de aço.</span
                     >
                   </div>
                 </div>
+
+                <!-- Status Summary Box -->
+                @if (includeSelfSupporting() && includeGuyed()) {
+                  <div class="struct-status-box status-both">
+                    <mat-icon class="status-icon">layers</mat-icon>
+                    <div class="status-text-content">
+                      <strong class="status-title">Configuração Híbrida: Ambas as Estruturas</strong>
+                      <p class="status-desc">O projeto contemplará tanto torres autoportantes (ângulos/ancoragens) quanto torres estaiadas (suspensões).</p>
+                    </div>
+                  </div>
+                } @else if (includeSelfSupporting()) {
+                  <div class="struct-status-box status-self">
+                    <mat-icon class="status-icon">filter_tilt_shift</mat-icon>
+                    <div class="status-text-content">
+                      <strong class="status-title">Configuração 100% Autoportante</strong>
+                      <p class="status-desc">O projeto empregará exclusivamente estruturas rígidas autoportantes de 4 apoios.</p>
+                    </div>
+                  </div>
+                } @else if (includeGuyed()) {
+                  <div class="struct-status-box status-guyed">
+                    <mat-icon class="status-icon">alt_route</mat-icon>
+                    <div class="status-text-content">
+                      <strong class="status-title">Configuração 100% Estaiada</strong>
+                      <p class="status-desc">O projeto empregará predominantemente mastros estaiados com cabos tensores externos.</p>
+                    </div>
+                  </div>
+                }
               </div>
             </div>
 
@@ -709,6 +796,35 @@ import { OffersApi } from './offers-api.service';
       width: 100%;
     }
 
+    .preset-pills-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .preset-pill-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--solaris-outline-variant);
+      background: var(--solaris-surface-container-lowest);
+      color: var(--solaris-on-surface-variant);
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: var(--solaris-surface-container-low);
+      }
+
+      &.active {
+        background: var(--solaris-primary);
+        color: #ffffff;
+        border-color: var(--solaris-primary);
+      }
+    }
+
     .structure-type-card {
       display: flex;
       gap: 12px;
@@ -738,12 +854,42 @@ import { OffersApi } from './offers-api.service';
           width: 20px;
           height: 20px;
           color: var(--solaris-outline);
+
+          &.checked {
+            color: var(--solaris-primary);
+          }
         }
       }
 
       .struct-info {
         display: flex;
         flex-direction: column;
+        flex: 1;
+
+        .struct-header-line {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+
+        .struct-badge {
+          font-size: 10px;
+          font-weight: 700;
+          padding: 1px 6px;
+          border-radius: 4px;
+          text-transform: uppercase;
+        }
+
+        .badge-blue {
+          background: #e0f2fe;
+          color: #0369a1;
+        }
+
+        .badge-amber {
+          background: #fef3c7;
+          color: #92400e;
+        }
 
         .struct-title {
           font-size: 13px;
@@ -757,6 +903,66 @@ import { OffersApi } from './offers-api.service';
           margin-top: 2px;
           line-height: 1.4;
         }
+      }
+    }
+
+    .struct-status-box {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      margin-top: 8px;
+
+      .status-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .status-title {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .status-desc {
+        margin: 0;
+        line-height: 1.35;
+      }
+    }
+
+    .status-both {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+
+      .status-icon {
+        color: #0284c7;
+      }
+    }
+
+    .status-self {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+
+      .status-icon {
+        color: #475569;
+      }
+    }
+
+    .status-guyed {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+
+      .status-icon {
+        color: #d97706;
       }
     }
 
@@ -815,6 +1021,9 @@ export class OfferFormComponent {
   readonly editId = signal<number | null>(null);
   readonly loading = signal(false);
   readonly saving = signal(false);
+
+  readonly includeSelfSupporting = signal<boolean>(true);
+  readonly includeGuyed = signal<boolean>(true);
 
   private readonly todayStr = new Date().toISOString().slice(0, 10);
 
@@ -886,6 +1095,43 @@ export class OfferFormComponent {
   cancelLink(): string[] {
     const id = this.editId();
     return id ? ['/offers', String(id)] : ['/offers'];
+  }
+
+  toggleSelfSupporting(): void {
+    if (this.includeSelfSupporting() && !this.includeGuyed()) {
+      this.snackBar.open(
+        'Selecione pelo menos um tipo de estrutura (Autoportante ou Estaiada).',
+        'OK',
+        { duration: 3000 },
+      );
+      return;
+    }
+    this.includeSelfSupporting.update((v) => !v);
+  }
+
+  toggleGuyed(): void {
+    if (this.includeGuyed() && !this.includeSelfSupporting()) {
+      this.snackBar.open(
+        'Selecione pelo menos um tipo de estrutura (Autoportante ou Estaiada).',
+        'OK',
+        { duration: 3000 },
+      );
+      return;
+    }
+    this.includeGuyed.update((v) => !v);
+  }
+
+  setStructurePreset(preset: 'BOTH' | 'SELF_SUPPORTING' | 'GUYED'): void {
+    if (preset === 'BOTH') {
+      this.includeSelfSupporting.set(true);
+      this.includeGuyed.set(true);
+    } else if (preset === 'SELF_SUPPORTING') {
+      this.includeSelfSupporting.set(true);
+      this.includeGuyed.set(false);
+    } else if (preset === 'GUYED') {
+      this.includeSelfSupporting.set(false);
+      this.includeGuyed.set(true);
+    }
   }
 
   hasScheduleInconsistency(): boolean {

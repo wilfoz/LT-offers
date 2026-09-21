@@ -26,18 +26,18 @@ describe('ParityController', () => {
 
   it('deve listar perfis através do controller', () => {
     const profiles = controller.getProfiles();
-    expect(profiles.length).toBeGreaterThanOrEqual(3);
+    expect(profiles.length).toBeGreaterThanOrEqual(4);
   });
 
   it('deve retornar todos os relatórios', () => {
     const reports = controller.getAllReports();
-    expect(reports.length).toBe(3);
-    expect(reports[0].isApproved).toBe(true);
+    expect(reports.length).toBe(4);
+    expect(reports.every((r) => r.isApproved)).toBe(true);
   });
 
   it('deve retornar relatório de um perfil específico', () => {
-    const report = controller.getReportByProfile('tucano');
-    expect(report.offerCode).toBe('OF-2025-042-TUCANO');
+    const report = controller.getReportByProfile('celeo');
+    expect(report.offerCode).toBe('OF-2026-CELEO-LOTE-04');
     expect(report.isApproved).toBe(true);
   });
 

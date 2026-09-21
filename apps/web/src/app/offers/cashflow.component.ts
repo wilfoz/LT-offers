@@ -19,7 +19,7 @@ import { CashflowApiService } from './cashflow-api.service';
           </h2>
           <p class="description">
             Projeção temporal mês a mês de saídas e faturamento, cronograma de
-            suprimentos e identificação da exposição financeira máxima.
+            suprimentos e identificação da exposição financeira máxima (Matriz DT).
           </p>
         </div>
 
@@ -221,103 +221,366 @@ import { CashflowApiService } from './cashflow-api.service';
           </div>
         }
 
-        <!-- Tabela Analítica Mês a Mês -->
-        <div class="table-card">
-          <div class="table-header">
-            <h3 class="table-title">
-              Detalhamento Analítico de Fluxo de Caixa (Quadro D / DT)
-            </h3>
-            <span class="badge badge-info"
-              >{{ cf.totalMonths }} Meses Projetados</span
-            >
-          </div>
+        <!-- Seletor de Modo de Visualização da Tabela de Caixa -->
+        <div class="table-mode-selector">
+          <button
+            type="button"
+            class="mode-btn"
+            [class.active]="activeDtView() === 'MATRIX_DT'"
+            (click)="activeDtView.set('MATRIX_DT')"
+          >
+            📊 Matriz Temporal Multi-Mês (Aba DT / M1..M24)
+          </button>
+          <button
+            type="button"
+            class="mode-btn"
+            [class.active]="activeDtView() === 'CHRONOLOGY'"
+            (click)="activeDtView.set('CHRONOLOGY')"
+          >
+            📋 Detalhamento Cronológico Mês a Mês (Quadro D)
+          </button>
+        </div>
 
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th class="text-center">Mês</th>
-                  <th class="text-right">Materiais</th>
-                  <th class="text-right">Serviços</th>
-                  <th class="text-right">Indiretos</th>
-                  <th class="text-right font-bold">Total Saídas</th>
-                  <th class="text-right text-muted">Saídas Acum.</th>
-                  <th class="text-right">Adiantamento</th>
-                  <th class="text-right">Medição</th>
-                  <th class="text-right font-bold">Total Entradas</th>
-                  <th class="text-right text-muted">Entradas Acum.</th>
-                  <th class="text-right font-bold">Saldo Mês</th>
-                  <th class="text-right font-bold">Saldo Acumulado</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (pt of cf.monthlyPoints; track pt.month) {
-                  <tr
-                    [class.highlight-peak]="
-                      pt.month === cf.financialExposure.peakMonth
-                    "
-                  >
-                    <td class="text-center font-mono font-bold">
-                      M{{ pt.month }}
-                      @if (pt.month === cf.financialExposure.peakMonth) {
-                        <span
-                          class="peak-tag"
-                          title="Mês de máxima exposição de caixa"
-                          >PICO</span
-                        >
-                      }
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(pt.materialsOutflow) }}
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(pt.servicesOutflow) }}
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(pt.indirectsOutflow) }}
-                    </td>
-                    <td class="text-right font-mono font-bold text-danger">
-                      {{ formatCurrency(pt.totalOutflow) }}
-                    </td>
-                    <td class="text-right font-mono text-muted">
-                      {{ formatCurrency(pt.accumulatedOutflow) }}
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(pt.advanceBilling) }}
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(pt.measurementBilling) }}
-                    </td>
-                    <td class="text-right font-mono font-bold highlight-text">
-                      {{ formatCurrency(pt.totalInflow) }}
-                    </td>
-                    <td class="text-right font-mono text-muted">
-                      {{ formatCurrency(pt.accumulatedInflow) }}
-                    </td>
-                    <td
-                      class="text-right font-mono font-bold"
-                      [ngClass]="{
-                        'text-danger': Number(pt.netMonthlyCashflow) < 0,
-                        'highlight-green': Number(pt.netMonthlyCashflow) > 0,
-                      }"
-                    >
-                      {{ formatCurrency(pt.netMonthlyCashflow) }}
-                    </td>
-                    <td
-                      class="text-right font-mono font-bold"
-                      [ngClass]="{
-                        'text-danger': Number(pt.accumulatedCashflow) < 0,
-                        'highlight-green': Number(pt.accumulatedCashflow) >= 0,
-                      }"
-                    >
-                      {{ formatCurrency(pt.accumulatedCashflow) }}
+        <!-- MODO 1: TABELA MATRICIAL MULTI-MÊS (Inspirada na sheet DT) -->
+        @if (activeDtView() === 'MATRIX_DT') {
+          <div class="table-card dt-matrix-card">
+            <div class="table-header">
+              <div>
+                <h3 class="table-title">
+                  Matriz de Distribuição Temporal de Custos e Faturamento (Aba DT)
+                </h3>
+                <p class="table-subtitle">
+                  Visão matricial contínua de fluxo de caixa por disciplina ao longo de {{ cf.totalMonths }} meses.
+                </p>
+              </div>
+              <span class="badge badge-info">Matriz DT (M1..M{{ cf.totalMonths }})</span>
+            </div>
+
+            <div class="table-responsive matrix-scroll-container">
+              <table class="data-table dt-matrix-table">
+                <thead>
+                  <tr class="header-level-1">
+                    <th class="sticky-col sticky-col-discipline" rowspan="2">DISCIPLINA / RUBRICA FINANCEIRA</th>
+                    <th class="sticky-col sticky-col-total text-right" rowspan="2">TOTAL CONSOLIDADO</th>
+                    <th [attr.colspan]="cf.monthlyPoints.length" class="group-header group-dark text-center">
+                      CRONOGRAMA TEMPORAL MÊS A MÊS (PERÍODO DA OBRA)
+                    </th>
+                  </tr>
+                  <tr class="header-level-2">
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <th class="text-center font-mono" [class.highlight-peak-header]="pt.month === cf.financialExposure.peakMonth">
+                        M{{ pt.month }}
+                        @if (pt.month === cf.financialExposure.peakMonth) {
+                          <span class="peak-dot" title="Mês de máxima exposição">●</span>
+                        }
+                      </th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- GRUPO: SAÍDAS DE CAIXA -->
+                  <tr class="section-divider-row">
+                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-danger">
+                      ▼ 1. SAÍDAS DE CAIXA & DESEMBOLSO OPERACIONAL (OUTFLOW)
                     </td>
                   </tr>
-                }
-              </tbody>
-            </table>
+
+                  <!-- Linha: Materiais -->
+                  <tr class="matrix-data-row">
+                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                      📦 Materiais & Equipamentos Principais (Torres, Cabos, Isoladores)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                      {{ formatCurrency(getTotalMaterialsOutflow(cf)) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.materialsOutflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Linha: Serviços Diretos -->
+                  <tr class="matrix-data-row">
+                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                      🔨 Serviços Diretos de Construção & Montagem (Civil, Eletromecânica)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                      {{ formatCurrency(getTotalServicesOutflow(cf)) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.servicesOutflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Linha: Indiretos -->
+                  <tr class="matrix-data-row">
+                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                      ⛺ Custos Indiretos de Obra & Apoio Operacional (Canteiros, Equipe)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                      {{ formatCurrency(getTotalIndirectsOutflow(cf)) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.indirectsOutflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Subtotal: Total Saídas Mensais -->
+                  <tr class="subtotal-row subtotal-danger">
+                    <td class="sticky-col sticky-col-discipline font-bold">
+                      🔴 TOTAL DESEMBOLSO MENSAL (SAÍDAS)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold text-danger">
+                      {{ formatCurrency(cf.totalOutflow) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono font-bold text-danger">
+                        {{ formatCurrency(pt.totalOutflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Desembolso Acumulado -->
+                  <tr class="accumulated-row">
+                    <td class="sticky-col sticky-col-discipline text-xs text-muted">
+                      ↳ Desembolso Acumulado
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono text-xs text-muted">
+                      {{ formatCurrency(cf.totalOutflow) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-xs text-muted">
+                        {{ formatCurrency(pt.accumulatedOutflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- GRUPO: ENTRADAS DE CAIXA -->
+                  <tr class="section-divider-row">
+                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-sky">
+                      ▼ 2. ENTRADAS DE CAIXA & FATURAMENTO CONTRATUAL (INFLOW)
+                    </td>
+                  </tr>
+
+                  <!-- Linha: Adiantamento -->
+                  <tr class="matrix-data-row">
+                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                      💵 Adiantamento Contratual (Mobilização Inicial)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                      {{ formatCurrency(getTotalAdvanceBilling(cf)) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.advanceBilling) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Linha: Medições -->
+                  <tr class="matrix-data-row">
+                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                      📋 Medições Mensais de Campo (Produção & Suprimentos)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                      {{ formatCurrency(getTotalMeasurementBilling(cf)) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.measurementBilling) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Subtotal: Total Entradas Mensais -->
+                  <tr class="subtotal-row subtotal-sky">
+                    <td class="sticky-col sticky-col-discipline font-bold">
+                      🔵 TOTAL FATURAMENTO MENSAL (ENTRADAS)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold highlight-text">
+                      {{ formatCurrency(cf.totalInflow) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono font-bold highlight-text">
+                        {{ formatCurrency(pt.totalInflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Faturamento Acumulado -->
+                  <tr class="accumulated-row">
+                    <td class="sticky-col sticky-col-discipline text-xs text-muted">
+                      ↳ Faturamento Acumulado
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono text-xs text-muted">
+                      {{ formatCurrency(cf.totalInflow) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono text-xs text-muted">
+                        {{ formatCurrency(pt.accumulatedInflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- GRUPO: SALDO LÍQUIDO & FLUXO ACUMULADO -->
+                  <tr class="section-divider-row">
+                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-emerald">
+                      ▼ 3. BALANÇO FINANCEIRO & POSIÇÃO LÍQUIDA DE CAIXA (NET FLOW)
+                    </td>
+                  </tr>
+
+                  <!-- Saldo Líquido do Mês -->
+                  <tr class="matrix-data-row net-month-row">
+                    <td class="sticky-col sticky-col-discipline font-bold">
+                      ⚡ Saldo Líquido do Mês (Entradas - Saídas)
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold"
+                        [ngClass]="{
+                          'text-danger': Number(cf.finalAccumulatedBalance) < 0,
+                          'highlight-green': Number(cf.finalAccumulatedBalance) >= 0
+                        }">
+                      {{ formatCurrency(cf.finalAccumulatedBalance) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono font-bold"
+                          [ngClass]="{
+                            'text-danger': Number(pt.netMonthlyCashflow) < 0,
+                            'highlight-green': Number(pt.netMonthlyCashflow) >= 0
+                          }">
+                        {{ formatCurrency(pt.netMonthlyCashflow) }}
+                      </td>
+                    }
+                  </tr>
+
+                  <!-- Saldo de Caixa Acumulado -->
+                  <tr class="total-row net-accum-row">
+                    <td class="sticky-col sticky-col-discipline font-bold">
+                      📈 FLUXO DE CAIXA ACUMULADO
+                    </td>
+                    <td class="sticky-col sticky-col-total text-right font-mono font-bold highlight-green font-lg">
+                      {{ formatCurrency(cf.finalAccumulatedBalance) }}
+                    </td>
+                    @for (pt of cf.monthlyPoints; track pt.month) {
+                      <td class="text-right font-mono font-bold"
+                          [class.highlight-peak-cell]="pt.month === cf.financialExposure.peakMonth"
+                          [ngClass]="{
+                            'text-danger': Number(pt.accumulatedCashflow) < 0,
+                            'highlight-green': Number(pt.accumulatedCashflow) >= 0
+                          }">
+                        {{ formatCurrency(pt.accumulatedCashflow) }}
+                      </td>
+                    }
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        }
+
+        <!-- MODO 2: DETALHAMENTO CRONOLÓGICO MÊS A MÊS (Quadro D) -->
+        @if (activeDtView() === 'CHRONOLOGY') {
+          <div class="table-card">
+            <div class="table-header">
+              <h3 class="table-title">
+                Detalhamento Cronológico de Fluxo de Caixa (Quadro D)
+              </h3>
+              <span class="badge badge-info"
+                >{{ cf.totalMonths }} Meses Projetados</span
+              >
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="text-center">Mês</th>
+                    <th class="text-right">Materiais</th>
+                    <th class="text-right">Serviços</th>
+                    <th class="text-right">Indiretos</th>
+                    <th class="text-right font-bold">Total Saídas</th>
+                    <th class="text-right text-muted">Saídas Acum.</th>
+                    <th class="text-right">Adiantamento</th>
+                    <th class="text-right">Medição</th>
+                    <th class="text-right font-bold">Total Entradas</th>
+                    <th class="text-right text-muted">Entradas Acum.</th>
+                    <th class="text-right font-bold">Saldo Mês</th>
+                    <th class="text-right font-bold">Saldo Acumulado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (pt of cf.monthlyPoints; track pt.month) {
+                    <tr
+                      [class.highlight-peak]="
+                        pt.month === cf.financialExposure.peakMonth
+                      "
+                    >
+                      <td class="text-center font-mono font-bold">
+                        M{{ pt.month }}
+                        @if (pt.month === cf.financialExposure.peakMonth) {
+                          <span
+                            class="peak-tag"
+                            title="Mês de máxima exposição de caixa"
+                            >PICO</span
+                          >
+                        }
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(pt.materialsOutflow) }}
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(pt.servicesOutflow) }}
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(pt.indirectsOutflow) }}
+                      </td>
+                      <td class="text-right font-mono font-bold text-danger">
+                        {{ formatCurrency(pt.totalOutflow) }}
+                      </td>
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.accumulatedOutflow) }}
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(pt.advanceBilling) }}
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(pt.measurementBilling) }}
+                      </td>
+                      <td class="text-right font-mono font-bold highlight-text">
+                        {{ formatCurrency(pt.totalInflow) }}
+                      </td>
+                      <td class="text-right font-mono text-muted">
+                        {{ formatCurrency(pt.accumulatedInflow) }}
+                      </td>
+                      <td
+                        class="text-right font-mono font-bold"
+                        [ngClass]="{
+                          'text-danger': Number(pt.netMonthlyCashflow) < 0,
+                          'highlight-green': Number(pt.netMonthlyCashflow) > 0,
+                        }"
+                      >
+                        {{ formatCurrency(pt.netMonthlyCashflow) }}
+                      </td>
+                      <td
+                        class="text-right font-mono font-bold"
+                        [ngClass]="{
+                          'text-danger': Number(pt.accumulatedCashflow) < 0,
+                          'highlight-green': Number(pt.accumulatedCashflow) >= 0,
+                        }"
+                      >
+                        {{ formatCurrency(pt.accumulatedCashflow) }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
       }
     </div>
   `,
@@ -569,6 +832,34 @@ import { CashflowApiService } from './cashflow-api.service';
         font-weight: 600;
         color: #64748b;
       }
+
+      /* Tab mode selector */
+      .table-mode-selector {
+        display: flex;
+        gap: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+      }
+      .mode-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .mode-btn:hover {
+        background: #f1f5f9;
+      }
+      .mode-btn.active {
+        background: #0284c7;
+        color: #ffffff;
+        border-color: #0284c7;
+      }
+
       .supplies-card,
       .table-card {
         background: #ffffff;
@@ -588,7 +879,12 @@ import { CashflowApiService } from './cashflow-api.service';
         font-size: 1rem;
         font-weight: 700;
         color: #0f172a;
-        margin: 1rem 1.25rem 0.5rem 1.25rem;
+        margin: 0;
+      }
+      .table-subtitle {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin: 0.25rem 0 0 0;
       }
       .table-responsive {
         overflow-x: auto;
@@ -613,6 +909,104 @@ import { CashflowApiService } from './cashflow-api.service';
         color: #1e293b;
         white-space: nowrap;
       }
+
+      /* DT Matrix Styles */
+      .dt-matrix-table .header-level-1 th {
+        border-bottom: 1px solid #cbd5e1;
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+      }
+      .dt-matrix-table .group-dark {
+        background: #334155;
+        color: #ffffff;
+      }
+      .dt-matrix-table .header-level-2 th {
+        background: #f1f5f9;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.5rem 0.65rem;
+      }
+      .sticky-col {
+        position: sticky;
+        background: #ffffff;
+        z-index: 2;
+      }
+      .header-level-1 .sticky-col,
+      .header-level-2 .sticky-col {
+        background: #f8fafc;
+        z-index: 3;
+      }
+      .sticky-col-discipline {
+        left: 0;
+        min-width: 280px;
+        max-width: 320px;
+        border-right: 1px solid #e2e8f0;
+      }
+      .sticky-col-total {
+        left: 320px;
+        min-width: 130px;
+        border-right: 2px solid #cbd5e1;
+        background: #f8fafc;
+      }
+      .pl-indent {
+        padding-left: 1.5rem !important;
+      }
+      .section-divider-row td {
+        background: #f1f5f9;
+        padding: 0.5rem 0.85rem;
+        font-weight: 800;
+        font-size: 0.8rem;
+        border-top: 1px solid #cbd5e1;
+        border-bottom: 1px solid #cbd5e1;
+      }
+      .section-divider-title.text-danger {
+        color: #991b1b;
+      }
+      .section-divider-title.text-sky {
+        color: #0369a1;
+      }
+      .section-divider-title.text-emerald {
+        color: #065f46;
+      }
+      .subtotal-row td {
+        font-weight: 700;
+        background: #f8fafc;
+        border-top: 1px solid #cbd5e1;
+        border-bottom: 1px solid #cbd5e1;
+      }
+      .subtotal-danger td {
+        background: #fef2f2;
+      }
+      .subtotal-sky td {
+        background: #f0f9ff;
+      }
+      .accumulated-row td {
+        background: #fafafa;
+        border-bottom: 1px dashed #e2e8f0;
+      }
+      .net-month-row td {
+        background: #fcfcfc;
+      }
+      .net-accum-row td {
+        background: #ecfdf5 !important;
+        border-top: 2px solid #059669 !important;
+        border-bottom: 2px solid #059669 !important;
+      }
+      .highlight-peak-header {
+        background: #fef3c7 !important;
+        color: #92400e !important;
+      }
+      .peak-dot {
+        color: #d97706;
+        font-size: 0.65rem;
+        margin-left: 2px;
+      }
+      .highlight-peak-cell {
+        background: #fef3c7 !important;
+        font-weight: 800 !important;
+      }
+
       .highlight-peak td {
         background: #fffbeb !important;
       }
@@ -637,6 +1031,12 @@ import { CashflowApiService } from './cashflow-api.service';
       }
       .font-bold {
         font-weight: 700;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .font-lg {
+        font-size: 0.95rem;
       }
       .text-danger {
         color: #dc2626;
@@ -679,6 +1079,8 @@ export class CashflowComponent implements OnInit {
   loading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
+  activeDtView = signal<'MATRIX_DT' | 'CHRONOLOGY'>('MATRIX_DT');
+
   ngOnInit(): void {
     if (this.lines && this.lines.length > 0) {
       this.selectedLineId.set(this.lines[0].id);
@@ -718,6 +1120,41 @@ export class CashflowComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  getTotalMaterialsOutflow(cf: CashflowSummary): number {
+    return (cf.monthlyPoints || []).reduce(
+      (acc, pt) => acc + Number(pt.materialsOutflow || 0),
+      0,
+    );
+  }
+
+  getTotalServicesOutflow(cf: CashflowSummary): number {
+    return (cf.monthlyPoints || []).reduce(
+      (acc, pt) => acc + Number(pt.servicesOutflow || 0),
+      0,
+    );
+  }
+
+  getTotalIndirectsOutflow(cf: CashflowSummary): number {
+    return (cf.monthlyPoints || []).reduce(
+      (acc, pt) => acc + Number(pt.indirectsOutflow || 0),
+      0,
+    );
+  }
+
+  getTotalAdvanceBilling(cf: CashflowSummary): number {
+    return (cf.monthlyPoints || []).reduce(
+      (acc, pt) => acc + Number(pt.advanceBilling || 0),
+      0,
+    );
+  }
+
+  getTotalMeasurementBilling(cf: CashflowSummary): number {
+    return (cf.monthlyPoints || []).reduce(
+      (acc, pt) => acc + Number(pt.measurementBilling || 0),
+      0,
+    );
   }
 
   getBarHeight(valStr?: string): number {

@@ -2,7 +2,9 @@
   "name": "@lt-offers/source",
   "version": "0.0.0",
   "license": "UNLICENSED",
-  "scripts": {},
+  "scripts": {
+    "db:seed": "node -r @swc-node/register prisma/seed.ts"
+  },
   "private": true,
   "engines": {
     "node": ">=22"

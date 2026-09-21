@@ -7,6 +7,7 @@ import {
   SOLARIS_MG_500KV_FIXTURE,
   TUCANO_MULTILINE_FIXTURE,
   REIDI_DIRECT_BILL_FIXTURE,
+  CELEO_LOTE_04_2026_FIXTURE,
 } from '@lt-offers/calc-engine';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class ParityService {
     solaris: SOLARIS_MG_500KV_FIXTURE,
     tucano: TUCANO_MULTILINE_FIXTURE,
     reidi: REIDI_DIRECT_BILL_FIXTURE,
+    celeo: CELEO_LOTE_04_2026_FIXTURE,
   };
 
   /**

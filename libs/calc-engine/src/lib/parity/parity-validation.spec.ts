@@ -2,6 +2,7 @@ import {
   SOLARIS_MG_500KV_FIXTURE,
   TUCANO_MULTILINE_FIXTURE,
   REIDI_DIRECT_BILL_FIXTURE,
+  CELEO_LOTE_04_2026_FIXTURE,
 } from './fixtures';
 import { FullOfferPipelineRunner } from './full-offer-pipeline-runner';
 import { ParityEvaluator } from './parity-evaluator';
@@ -78,6 +79,24 @@ describe('Suíte de Paridade Numérica e Fixtures Reais (§14)', () => {
       );
       expect(directBilled).toBeDefined();
       expect(directBilled?.status).toBe('CONFORME');
+    });
+  });
+
+  describe('Perfil 4: Template Real Celeo Lote 04 525 kV (Calculo LT-CELEO)', () => {
+    it('deve validar paridade numérica de 100% contra a planilha mestre do Lote 04', () => {
+      const runResult = runner.run(CELEO_LOTE_04_2026_FIXTURE);
+      const report = evaluator.evaluate(
+        CELEO_LOTE_04_2026_FIXTURE,
+        runResult,
+        new Date('2026-09-20T12:00:00Z'),
+      );
+
+      expect(report.isApproved).toBe(true);
+      expect(report.desvioCount).toBe(0);
+
+      const md = reportGenerator.generateMarkdown(report);
+      expect(md).toContain('🟢 **HOMOLOGADO / APROVADO**');
+      expect(md).toContain('OF-2026-CELEO-LOTE-04');
     });
   });
 });

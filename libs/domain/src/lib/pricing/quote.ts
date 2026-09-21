@@ -36,6 +36,34 @@ export interface MaterialQuote {
   isWinner?: boolean; // Fornecedor selecionado para a oferta
 }
 
+export interface SupplierQuoteMatrixSupplier {
+  supplierName: string;
+  supplierState: string;
+  currency: CurrencyCode;
+  unitPrice: number;
+  unitPriceBrl: number;
+  isWinner: boolean;
+}
+
+export interface SupplierQuoteMatrixItem {
+  id: string;
+  materialCode: string;
+  materialName: string;
+  unit: string;
+  totalQuantity: string;
+  suppliers: SupplierQuoteMatrixSupplier[];
+  selectedSupplierName: string;
+  selectedSupplierState: string;
+  selectedUnitPriceBrl: number;
+  totalNetBrl: number;
+  ipiBrl: number;
+  icmsOriginBrl: number;
+  difalDestBrl: number;
+  fecoepBrl: number;
+  pisCofinsBrl: number;
+  totalGrossBrl: number;
+}
+
 /**
  * DTO para seleção de cotação vencedora.
  */
@@ -45,3 +73,4 @@ export interface QuoteSelection {
   appliedExchangeRate: number;
   reason?: string;
 }
+

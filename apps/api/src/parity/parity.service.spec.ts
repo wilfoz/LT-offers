@@ -19,10 +19,11 @@ describe('ParityService', () => {
 
   it('deve listar os perfis históricos disponíveis', () => {
     const profiles = service.getAvailableProfiles();
-    expect(profiles.length).toBeGreaterThanOrEqual(3);
+    expect(profiles.length).toBeGreaterThanOrEqual(4);
     expect(profiles.some((p) => p.key === 'solaris')).toBe(true);
     expect(profiles.some((p) => p.key === 'tucano')).toBe(true);
     expect(profiles.some((p) => p.key === 'reidi')).toBe(true);
+    expect(profiles.some((p) => p.key === 'celeo')).toBe(true);
   });
 
   it('deve avaliar a paridade do perfil solaris com aprovação', () => {
@@ -32,9 +33,16 @@ describe('ParityService', () => {
     expect(report.desvioCount).toBe(0);
   });
 
+  it('deve avaliar a paridade do perfil celeo lote 04 com aprovação', () => {
+    const report = service.evaluateProfile('celeo');
+    expect(report.isApproved).toBe(true);
+    expect(report.offerCode).toBe('OF-2026-CELEO-LOTE-04');
+    expect(report.desvioCount).toBe(0);
+  });
+
   it('deve avaliar todos os perfis simultaneamente', () => {
     const reports = service.evaluateAllProfiles();
-    expect(reports.length).toBe(3);
+    expect(reports.length).toBe(4);
     expect(reports.every((r) => r.isApproved)).toBe(true);
   });
 
