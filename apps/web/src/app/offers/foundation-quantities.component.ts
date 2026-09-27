@@ -358,7 +358,10 @@ import { FoundationsApi } from './foundations-api.service';
                 <div class="tab-content">
                   <div class="sub-tab-desc">
                     <p class="text-sm text-slate-600">
-                      Relação de cruzamentos especiais cadastrados no traçado (rodovias federais/estaduais, ferrovias, rios navegáveis e outras linhas de transmissão), com medidas de segurança e proteções de rede.
+                      Relação de cruzamentos especiais cadastrados no traçado
+                      (rodovias federais/estaduais, ferrovias, rios navegáveis e
+                      outras linhas de transmissão), com medidas de segurança e
+                      proteções de rede.
                     </p>
                   </div>
                   <table class="quantities-table native-full-table">
@@ -375,22 +378,48 @@ import { FoundationsApi } from './foundations-api.service';
                     <tbody>
                       @for (trv of specialCrossings; track trv.id) {
                         <tr>
-                          <td><span class="code-badge">{{ trv.code }}</span></td>
-                          <td><span class="meta-tag fnd-tag">{{ trv.crossingTypeName }}</span></td>
-                          <td><strong>{{ trv.description }}</strong></td>
-                          <td class="text-right font-mono">{{ trv.spanMeters }} m</td>
-                          <td><span class="text-xs text-slate-600">{{ trv.safetyRequirement }}</span></td>
-                          <td class="text-right font-mono font-bold text-emerald-800">
-                            {{ trv.estimatedCostBrl | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                          <td>
+                            <span class="code-badge">{{ trv.code }}</span>
+                          </td>
+                          <td>
+                            <span class="meta-tag fnd-tag">{{
+                              trv.crossingTypeName
+                            }}</span>
+                          </td>
+                          <td>
+                            <strong>{{ trv.description }}</strong>
+                          </td>
+                          <td class="text-right font-mono">
+                            {{ trv.spanMeters }} m
+                          </td>
+                          <td>
+                            <span class="text-xs text-slate-600">{{
+                              trv.safetyRequirement
+                            }}</span>
+                          </td>
+                          <td
+                            class="text-right font-mono font-bold text-emerald-800"
+                          >
+                            {{
+                              trv.estimatedCostBrl
+                                | currency: 'BRL' : 'symbol' : '1.2-2'
+                            }}
                           </td>
                         </tr>
                       }
                     </tbody>
                     <tfoot>
                       <tr class="footer-summary-row">
-                        <td colspan="5" class="font-bold">TOTAL DE TRAVESSIAS ESPECIAIS:</td>
-                        <td class="text-right font-mono font-bold text-emerald-800">
-                          {{ totalCrossingsCost | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                        <td colspan="5" class="font-bold">
+                          TOTAL DE TRAVESSIAS ESPECIAIS:
+                        </td>
+                        <td
+                          class="text-right font-mono font-bold text-emerald-800"
+                        >
+                          {{
+                            totalCrossingsCost
+                              | currency: 'BRL' : 'symbol' : '1.2-2'
+                          }}
                         </td>
                       </tr>
                     </tfoot>
@@ -403,7 +432,9 @@ import { FoundationsApi } from './foundations-api.service';
                 <div class="tab-content dual-tables-grid">
                   <!-- Tabela 1: Acessos -->
                   <div class="sub-table-card">
-                    <h4 class="sub-table-title">🛣️ Abertura e Manutenção de Acessos (Accesos)</h4>
+                    <h4 class="sub-table-title">
+                      🛣️ Abertura e Manutenção de Acessos (Accesos)
+                    </h4>
                     <table class="quantities-table native-full-table">
                       <thead>
                         <tr>
@@ -416,11 +447,25 @@ import { FoundationsApi } from './foundations-api.service';
                       <tbody>
                         @for (acc of accessOpenings; track acc.id) {
                           <tr>
-                            <td><strong>{{ acc.terrainTypeName }}</strong></td>
-                            <td class="text-right font-mono">{{ acc.lengthKm | number: '1.2-2' }} km</td>
-                            <td class="text-right font-mono">{{ acc.unitCostPerKm | currency: 'BRL' : '' : '1.2-2' }}</td>
-                            <td class="text-right font-mono font-bold text-slate-800">
-                              {{ acc.totalCostBrl | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                            <td>
+                              <strong>{{ acc.terrainTypeName }}</strong>
+                            </td>
+                            <td class="text-right font-mono">
+                              {{ acc.lengthKm | number: '1.2-2' }} km
+                            </td>
+                            <td class="text-right font-mono">
+                              {{
+                                acc.unitCostPerKm
+                                  | currency: 'BRL' : '' : '1.2-2'
+                              }}
+                            </td>
+                            <td
+                              class="text-right font-mono font-bold text-slate-800"
+                            >
+                              {{
+                                acc.totalCostBrl
+                                  | currency: 'BRL' : 'symbol' : '1.2-2'
+                              }}
                             </td>
                           </tr>
                         }
@@ -428,10 +473,17 @@ import { FoundationsApi } from './foundations-api.service';
                       <tfoot>
                         <tr class="footer-summary-row">
                           <td class="font-bold">Total Acessos:</td>
-                          <td class="text-right font-mono font-bold">{{ totalAccessKm | number: '1.2-2' }} km</td>
+                          <td class="text-right font-mono font-bold">
+                            {{ totalAccessKm | number: '1.2-2' }} km
+                          </td>
                           <td></td>
-                          <td class="text-right font-mono font-bold text-emerald-800">
-                            {{ totalAccessCost | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                          <td
+                            class="text-right font-mono font-bold text-emerald-800"
+                          >
+                            {{
+                              totalAccessCost
+                                | currency: 'BRL' : 'symbol' : '1.2-2'
+                            }}
                           </td>
                         </tr>
                       </tfoot>
@@ -440,7 +492,9 @@ import { FoundationsApi } from './foundations-api.service';
 
                   <!-- Tabela 2: Limpeza de Faixa -->
                   <div class="sub-table-card">
-                    <h4 class="sub-table-title">🌳 Supressão Vegetal e Limpeza de Faixa (Limpieza)</h4>
+                    <h4 class="sub-table-title">
+                      🌳 Supressão Vegetal e Limpeza de Faixa (Limpieza)
+                    </h4>
                     <table class="quantities-table native-full-table">
                       <thead>
                         <tr>
@@ -453,11 +507,25 @@ import { FoundationsApi } from './foundations-api.service';
                       <tbody>
                         @for (veg of vegetationClearings; track veg.id) {
                           <tr>
-                            <td><strong>{{ veg.clearingTypeName }}</strong></td>
-                            <td class="text-right font-mono">{{ veg.areaHectares | number: '1.2-2' }} ha</td>
-                            <td class="text-right font-mono">{{ veg.unitCostPerHa | currency: 'BRL' : '' : '1.2-2' }}</td>
-                            <td class="text-right font-mono font-bold text-slate-800">
-                              {{ veg.totalCostBrl | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                            <td>
+                              <strong>{{ veg.clearingTypeName }}</strong>
+                            </td>
+                            <td class="text-right font-mono">
+                              {{ veg.areaHectares | number: '1.2-2' }} ha
+                            </td>
+                            <td class="text-right font-mono">
+                              {{
+                                veg.unitCostPerHa
+                                  | currency: 'BRL' : '' : '1.2-2'
+                              }}
+                            </td>
+                            <td
+                              class="text-right font-mono font-bold text-slate-800"
+                            >
+                              {{
+                                veg.totalCostBrl
+                                  | currency: 'BRL' : 'symbol' : '1.2-2'
+                              }}
                             </td>
                           </tr>
                         }
@@ -465,10 +533,17 @@ import { FoundationsApi } from './foundations-api.service';
                       <tfoot>
                         <tr class="footer-summary-row">
                           <td class="font-bold">Total Supressão:</td>
-                          <td class="text-right font-mono font-bold">{{ totalClearingHa | number: '1.2-2' }} ha</td>
+                          <td class="text-right font-mono font-bold">
+                            {{ totalClearingHa | number: '1.2-2' }} ha
+                          </td>
                           <td></td>
-                          <td class="text-right font-mono font-bold text-emerald-800">
-                            {{ totalClearingCost | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                          <td
+                            class="text-right font-mono font-bold text-emerald-800"
+                          >
+                            {{
+                              totalClearingCost
+                                | currency: 'BRL' : 'symbol' : '1.2-2'
+                            }}
                           </td>
                         </tr>
                       </tfoot>
@@ -948,7 +1023,8 @@ export class FoundationQuantitiesComponent implements OnInit, OnChanges {
       crossingTypeName: 'Rodovia Federal BR-101',
       description: 'Cruzamento com rede de proteção e alteamento de estrutura',
       spanMeters: 450,
-      safetyRequirement: 'Rede de proteção sobre pista dupla + estrutura ancoragem reforçada',
+      safetyRequirement:
+        'Rede de proteção sobre pista dupla + estrutura ancoragem reforçada',
       estimatedCostBrl: 185000,
     },
     {
@@ -958,7 +1034,8 @@ export class FoundationQuantitiesComponent implements OnInit, OnChanges {
       crossingTypeName: 'Rio Pardo (Navegável)',
       description: 'Vão longo com fundação especial em tubulão a ar comprimido',
       spanMeters: 780,
-      safetyRequirement: 'Gabarito náutico de 25m + sinalização diurna/noturna ICAO',
+      safetyRequirement:
+        'Gabarito náutico de 25m + sinalização diurna/noturna ICAO',
       estimatedCostBrl: 340000,
     },
     {
@@ -974,19 +1051,64 @@ export class FoundationQuantitiesComponent implements OnInit, OnChanges {
   ];
 
   readonly accessOpenings: AccessOpeningItem[] = [
-    { id: 'ACC-01', terrainType: 'FLAT', terrainTypeName: 'Terreno Plano (Solo Comum)', lengthKm: 42.5, unitCostPerKm: 18000, totalCostBrl: 765000 },
-    { id: 'ACC-02', terrainType: 'ROLLING', terrainTypeName: 'Terreno Ondulado / Cascalho', lengthKm: 28.0, unitCostPerKm: 28000, totalCostBrl: 784000 },
-    { id: 'ACC-03', terrainType: 'MOUNTAINOUS', terrainTypeName: 'Terreno Montanhoso / Rocha', lengthKm: 14.2, unitCostPerKm: 55000, totalCostBrl: 781000 },
+    {
+      id: 'ACC-01',
+      terrainType: 'FLAT',
+      terrainTypeName: 'Terreno Plano (Solo Comum)',
+      lengthKm: 42.5,
+      unitCostPerKm: 18000,
+      totalCostBrl: 765000,
+    },
+    {
+      id: 'ACC-02',
+      terrainType: 'ROLLING',
+      terrainTypeName: 'Terreno Ondulado / Cascalho',
+      lengthKm: 28.0,
+      unitCostPerKm: 28000,
+      totalCostBrl: 784000,
+    },
+    {
+      id: 'ACC-03',
+      terrainType: 'MOUNTAINOUS',
+      terrainTypeName: 'Terreno Montanhoso / Rocha',
+      lengthKm: 14.2,
+      unitCostPerKm: 55000,
+      totalCostBrl: 781000,
+    },
   ];
 
   readonly vegetationClearings: RightOfWayClearingItem[] = [
-    { id: 'VEG-01', clearingType: 'LIGHT', clearingTypeName: 'Supressão Leve (Pastagem / Capineira)', areaHectares: 120.0, unitCostPerHa: 4500, totalCostBrl: 540000 },
-    { id: 'VEG-02', clearingType: 'MEDIUM', clearingTypeName: 'Supressão Média (Cerrado / Mata Secundária)', areaHectares: 85.0, unitCostPerHa: 8500, totalCostBrl: 722500 },
-    { id: 'VEG-03', clearingType: 'HEAVY', clearingTypeName: 'Supressão Pesada (Mata Densa / Floresta)', areaHectares: 32.5, unitCostPerHa: 16000, totalCostBrl: 520000 },
+    {
+      id: 'VEG-01',
+      clearingType: 'LIGHT',
+      clearingTypeName: 'Supressão Leve (Pastagem / Capineira)',
+      areaHectares: 120.0,
+      unitCostPerHa: 4500,
+      totalCostBrl: 540000,
+    },
+    {
+      id: 'VEG-02',
+      clearingType: 'MEDIUM',
+      clearingTypeName: 'Supressão Média (Cerrado / Mata Secundária)',
+      areaHectares: 85.0,
+      unitCostPerHa: 8500,
+      totalCostBrl: 722500,
+    },
+    {
+      id: 'VEG-03',
+      clearingType: 'HEAVY',
+      clearingTypeName: 'Supressão Pesada (Mata Densa / Floresta)',
+      areaHectares: 32.5,
+      unitCostPerHa: 16000,
+      totalCostBrl: 520000,
+    },
   ];
 
   get totalCrossingsCost(): number {
-    return this.specialCrossings.reduce((acc, c) => acc + c.estimatedCostBrl, 0);
+    return this.specialCrossings.reduce(
+      (acc, c) => acc + c.estimatedCostBrl,
+      0,
+    );
   }
 
   get totalAccessKm(): number {
@@ -1049,4 +1171,3 @@ export class FoundationQuantitiesComponent implements OnInit, OnChanges {
     });
   }
 }
-

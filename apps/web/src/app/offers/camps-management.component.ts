@@ -191,11 +191,14 @@ import { ScheduleApiService } from './schedule-api.service';
                 Equipe de Gestão e Indiretos de Obra (Aba Indirectos)
               </h3>
               <p class="indirects-subtitle">
-                Relação analítica do staff administrativo de campo cruzado com benefícios e apoio operacional (veículo 4x4, telefonia, TI, EPI, exames e viagens).
+                Relação analítica do staff administrativo de campo cruzado com
+                benefícios e apoio operacional (veículo 4x4, telefonia, TI, EPI,
+                exames e viagens).
               </p>
             </div>
             <span class="badge-indirects font-mono">
-              Total Mensal Indiretos: {{ formatCurrency(totalMonthlyIndirects) }}
+              Total Mensal Indiretos:
+              {{ formatCurrency(totalMonthlyIndirects) }}
             </span>
           </div>
 
@@ -217,14 +220,38 @@ import { ScheduleApiService } from './schedule-api.service';
               <tbody>
                 @for (staff of indirectStaff; track staff.id) {
                   <tr>
-                    <td><span class="code-badge font-mono">{{ staff.roleCode }}</span></td>
-                    <td><strong>{{ staff.roleName }}</strong></td>
-                    <td class="text-center font-bold font-mono">{{ staff.headcount }}</td>
-                    <td><span class="vehicle-badge">{{ staff.vehicleType || '—' }}</span></td>
-                    <td><span class="phone-badge">{{ staff.phoneTier || 'BÁSICO' }}</span></td>
-                    <td class="text-right font-mono">{{ formatCurrency(staff.epiMonthlyBrl) }}</td>
-                    <td class="text-right font-mono">{{ formatCurrency(staff.examsBrl + staff.travelMonthlyBrl) }}</td>
-                    <td class="text-right font-mono font-medium">{{ formatCurrency(staff.salaryMonthlyBrl) }}</td>
+                    <td>
+                      <span class="code-badge font-mono">{{
+                        staff.roleCode
+                      }}</span>
+                    </td>
+                    <td>
+                      <strong>{{ staff.roleName }}</strong>
+                    </td>
+                    <td class="text-center font-bold font-mono">
+                      {{ staff.headcount }}
+                    </td>
+                    <td>
+                      <span class="vehicle-badge">{{
+                        staff.vehicleType || '—'
+                      }}</span>
+                    </td>
+                    <td>
+                      <span class="phone-badge">{{
+                        staff.phoneTier || 'BÁSICO'
+                      }}</span>
+                    </td>
+                    <td class="text-right font-mono">
+                      {{ formatCurrency(staff.epiMonthlyBrl) }}
+                    </td>
+                    <td class="text-right font-mono">
+                      {{
+                        formatCurrency(staff.examsBrl + staff.travelMonthlyBrl)
+                      }}
+                    </td>
+                    <td class="text-right font-mono font-medium">
+                      {{ formatCurrency(staff.salaryMonthlyBrl) }}
+                    </td>
                     <td class="text-right font-mono font-bold text-emerald-800">
                       {{ formatCurrency(staff.totalMonthlyBrl) }}
                     </td>
@@ -233,10 +260,18 @@ import { ScheduleApiService } from './schedule-api.service';
               </tbody>
               <tfoot>
                 <tr class="footer-total-row">
-                  <td colspan="2" class="font-bold">TOTAL EQUIPE INDIRETA / MÊS:</td>
-                  <td class="text-center font-bold font-mono">{{ totalIndirectHeadcount }}</td>
-                  <td colspan="5" class="text-right font-bold">CUSTO MENSAL CONSOLIDADO:</td>
-                  <td class="text-right font-mono font-bold text-emerald-800 font-lg">
+                  <td colspan="2" class="font-bold">
+                    TOTAL EQUIPE INDIRETA / MÊS:
+                  </td>
+                  <td class="text-center font-bold font-mono">
+                    {{ totalIndirectHeadcount }}
+                  </td>
+                  <td colspan="5" class="text-right font-bold">
+                    CUSTO MENSAL CONSOLIDADO:
+                  </td>
+                  <td
+                    class="text-right font-mono font-bold text-emerald-800 font-lg"
+                  >
                     {{ formatCurrency(totalMonthlyIndirects) }}
                   </td>
                 </tr>
@@ -246,7 +281,6 @@ import { ScheduleApiService } from './schedule-api.service';
         </div>
       }
     </div>
-
   `,
   styles: [
     `
@@ -493,98 +527,99 @@ export class CampsManagementComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   campsSummary = signal<CampCostSummary | null>(null);
 
-  readonly indirectStaff: import('@lt-offers/domain').ProjectIndirectStaffItem[] = [
-    {
-      id: 'IND-01',
-      roleCode: 'DIR-01',
-      roleName: 'Gerente de Contratos / Diretor de Obra',
-      category: 'MANAGEMENT',
-      headcount: 1,
-      vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
-      phoneTier: 'FROTA GAMA ALTA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 350,
-      examsBrl: 600,
-      travelMonthlyBrl: 3200,
-      salaryMonthlyBrl: 38000,
-      totalMonthlyBrl: 42150,
-    },
-    {
-      id: 'IND-02',
-      roleCode: 'DIR-02',
-      roleName: 'Engenheiro Residente Geral',
-      category: 'MANAGEMENT',
-      headcount: 1,
-      vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
-      phoneTier: 'FROTA GAMA ALTA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 350,
-      examsBrl: 600,
-      travelMonthlyBrl: 2400,
-      salaryMonthlyBrl: 28000,
-      totalMonthlyBrl: 31350,
-    },
-    {
-      id: 'IND-03',
-      roleCode: 'DIR-03',
-      roleName: 'Engenheiro de Planejamento e Controle',
-      category: 'MANAGEMENT',
-      headcount: 1,
-      vehicleType: 'VEÍCULO LEVE SEDAN',
-      phoneTier: 'FROTA GAMA MÉDIA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 250,
-      examsBrl: 600,
-      travelMonthlyBrl: 1800,
-      salaryMonthlyBrl: 22000,
-      totalMonthlyBrl: 24650,
-    },
-    {
-      id: 'IND-04',
-      roleCode: 'DIR-04',
-      roleName: 'Engenheiro Eletromecânico de Campo',
-      category: 'SUPERVISION',
-      headcount: 2,
-      vehicleType: 'PICK-UP 4X4 CABINE DUPLA',
-      phoneTier: 'FROTA GAMA MÉDIA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 500,
-      examsBrl: 1200,
-      travelMonthlyBrl: 2800,
-      salaryMonthlyBrl: 36000,
-      totalMonthlyBrl: 40500,
-    },
-    {
-      id: 'IND-05',
-      roleCode: 'DIR-05',
-      roleName: 'Topógrafo Chefe de Obras',
-      category: 'SUPERVISION',
-      headcount: 2,
-      vehicleType: 'PICK-UP 4X4 CABINE DUPLA',
-      phoneTier: 'FROTA GAMA MÉDIA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 600,
-      examsBrl: 1200,
-      travelMonthlyBrl: 1600,
-      salaryMonthlyBrl: 24000,
-      totalMonthlyBrl: 27400,
-    },
-    {
-      id: 'IND-06',
-      roleCode: 'DIR-06',
-      roleName: 'Técnico em Segurança do Trabalho (TST)',
-      category: 'SAFETY_ENVIRONMENT',
-      headcount: 3,
-      vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
-      phoneTier: 'FROTA GAMA MÉDIA',
-      laptopAssigned: true,
-      epiMonthlyBrl: 900,
-      examsBrl: 1800,
-      travelMonthlyBrl: 1200,
-      salaryMonthlyBrl: 21000,
-      totalMonthlyBrl: 24900,
-    },
-  ];
+  readonly indirectStaff: import('@lt-offers/domain').ProjectIndirectStaffItem[] =
+    [
+      {
+        id: 'IND-01',
+        roleCode: 'DIR-01',
+        roleName: 'Gerente de Contratos / Diretor de Obra',
+        category: 'MANAGEMENT',
+        headcount: 1,
+        vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
+        phoneTier: 'FROTA GAMA ALTA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 350,
+        examsBrl: 600,
+        travelMonthlyBrl: 3200,
+        salaryMonthlyBrl: 38000,
+        totalMonthlyBrl: 42150,
+      },
+      {
+        id: 'IND-02',
+        roleCode: 'DIR-02',
+        roleName: 'Engenheiro Residente Geral',
+        category: 'MANAGEMENT',
+        headcount: 1,
+        vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
+        phoneTier: 'FROTA GAMA ALTA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 350,
+        examsBrl: 600,
+        travelMonthlyBrl: 2400,
+        salaryMonthlyBrl: 28000,
+        totalMonthlyBrl: 31350,
+      },
+      {
+        id: 'IND-03',
+        roleCode: 'DIR-03',
+        roleName: 'Engenheiro de Planejamento e Controle',
+        category: 'MANAGEMENT',
+        headcount: 1,
+        vehicleType: 'VEÍCULO LEVE SEDAN',
+        phoneTier: 'FROTA GAMA MÉDIA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 250,
+        examsBrl: 600,
+        travelMonthlyBrl: 1800,
+        salaryMonthlyBrl: 22000,
+        totalMonthlyBrl: 24650,
+      },
+      {
+        id: 'IND-04',
+        roleCode: 'DIR-04',
+        roleName: 'Engenheiro Eletromecânico de Campo',
+        category: 'SUPERVISION',
+        headcount: 2,
+        vehicleType: 'PICK-UP 4X4 CABINE DUPLA',
+        phoneTier: 'FROTA GAMA MÉDIA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 500,
+        examsBrl: 1200,
+        travelMonthlyBrl: 2800,
+        salaryMonthlyBrl: 36000,
+        totalMonthlyBrl: 40500,
+      },
+      {
+        id: 'IND-05',
+        roleCode: 'DIR-05',
+        roleName: 'Topógrafo Chefe de Obras',
+        category: 'SUPERVISION',
+        headcount: 2,
+        vehicleType: 'PICK-UP 4X4 CABINE DUPLA',
+        phoneTier: 'FROTA GAMA MÉDIA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 600,
+        examsBrl: 1200,
+        travelMonthlyBrl: 1600,
+        salaryMonthlyBrl: 24000,
+        totalMonthlyBrl: 27400,
+      },
+      {
+        id: 'IND-06',
+        roleCode: 'DIR-06',
+        roleName: 'Técnico em Segurança do Trabalho (TST)',
+        category: 'SAFETY_ENVIRONMENT',
+        headcount: 3,
+        vehicleType: 'VEÍCULO TIPO DUSTER 4X4',
+        phoneTier: 'FROTA GAMA MÉDIA',
+        laptopAssigned: true,
+        epiMonthlyBrl: 900,
+        examsBrl: 1800,
+        travelMonthlyBrl: 1200,
+        salaryMonthlyBrl: 21000,
+        totalMonthlyBrl: 24900,
+      },
+    ];
 
   get totalIndirectHeadcount(): number {
     return this.indirectStaff.reduce((acc, s) => acc + s.headcount, 0);
@@ -625,4 +660,3 @@ export class CampsManagementComponent implements OnInit {
     return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 }
-

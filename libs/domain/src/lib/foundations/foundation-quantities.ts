@@ -520,4 +520,3 @@ export interface RightOfWayClearingItem {
   unitCostPerHa: number;
   totalCostBrl: number;
 }
-

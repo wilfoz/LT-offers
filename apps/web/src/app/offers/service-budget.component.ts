@@ -199,74 +199,74 @@ export const SERVICE_GROUP_LABELS: Record<ServiceGroup, string> = {
                   </tr>
                 </thead>
 
-              <tbody>
-                @for (item of filteredItems(); track item.id) {
-                  <tr>
-                    <td class="font-mono text-muted">{{ item.code }}</td>
-                    <td class="font-bold">
-                      {{ item.name }}
-                      @if (item.notes) {
-                        <div class="item-notes">{{ item.notes }}</div>
-                      }
+                <tbody>
+                  @for (item of filteredItems(); track item.id) {
+                    <tr>
+                      <td class="font-mono text-muted">{{ item.code }}</td>
+                      <td class="font-bold">
+                        {{ item.name }}
+                        @if (item.notes) {
+                          <div class="item-notes">{{ item.notes }}</div>
+                        }
+                      </td>
+                      <td>
+                        <span class="cip-badge">{{
+                          item.cipCode || 'S/ CIP'
+                        }}</span>
+                      </td>
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="{
+                            'badge-primary':
+                              item.costSource === 'SCHEDULE_DIRECT',
+                            'badge-warning':
+                              item.costSource === 'PARAMETRIC_ADJUSTED',
+                            'badge-success':
+                              item.costSource === 'SUBCONTRACT_QUOTED',
+                          }"
+                        >
+                          {{ getCostSourceLabel(item.costSource) }}
+                        </span>
+                      </td>
+                      <td class="text-right font-mono">{{ item.quantity }}</td>
+                      <td class="text-center font-mono">{{ item.unit }}</td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(item.unitDirectCost) }}
+                      </td>
+                      <td class="text-right font-mono font-bold">
+                        {{ formatCurrency(item.totalDirectCost) }}
+                      </td>
+                      <td class="text-center font-mono">
+                        {{ item.bdiPercentage }}%
+                      </td>
+                      <td class="text-right font-mono">
+                        {{ formatCurrency(item.unitSalePrice) }}
+                      </td>
+                      <td class="text-right font-mono font-bold highlight-text">
+                        {{ formatCurrency(item.totalSalePrice) }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr class="total-row">
+                    <td colspan="7" class="text-right font-bold">
+                      TOTAL CONSOLIDADO DE SERVIÇOS:
                     </td>
-                    <td>
-                      <span class="cip-badge">{{
-                        item.cipCode || 'S/ CIP'
-                      }}</span>
+                    <td class="text-right font-bold font-mono">
+                      {{ formatCurrency(b.totalDirectCost) }}
                     </td>
-                    <td>
-                      <span
-                        class="badge"
-                        [ngClass]="{
-                          'badge-primary':
-                            item.costSource === 'SCHEDULE_DIRECT',
-                          'badge-warning':
-                            item.costSource === 'PARAMETRIC_ADJUSTED',
-                          'badge-success':
-                            item.costSource === 'SUBCONTRACT_QUOTED',
-                        }"
-                      >
-                        {{ getCostSourceLabel(item.costSource) }}
-                      </span>
-                    </td>
-                    <td class="text-right font-mono">{{ item.quantity }}</td>
-                    <td class="text-center font-mono">{{ item.unit }}</td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(item.unitDirectCost) }}
-                    </td>
-                    <td class="text-right font-mono font-bold">
-                      {{ formatCurrency(item.totalDirectCost) }}
-                    </td>
-                    <td class="text-center font-mono">
-                      {{ item.bdiPercentage }}%
-                    </td>
-                    <td class="text-right font-mono">
-                      {{ formatCurrency(item.unitSalePrice) }}
-                    </td>
-                    <td class="text-right font-mono font-bold highlight-text">
-                      {{ formatCurrency(item.totalSalePrice) }}
+                    <td></td>
+                    <td></td>
+                    <td class="text-right font-bold font-mono highlight-text">
+                      {{ formatCurrency(b.totalSalePrice) }}
                     </td>
                   </tr>
-                }
-              </tbody>
-              <tfoot>
-                <tr class="total-row">
-                  <td colspan="7" class="text-right font-bold">
-                    TOTAL CONSOLIDADO DE SERVIÇOS:
-                  </td>
-                  <td class="text-right font-bold font-mono">
-                    {{ formatCurrency(b.totalDirectCost) }}
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td class="text-right font-bold font-mono highlight-text">
-                    {{ formatCurrency(b.totalSalePrice) }}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+                </tfoot>
+              </table>
+            </div>
           </div>
-        </div>
 
           <!-- Resumo por Grupo -->
           <div class="groups-summary-grid">
@@ -300,10 +300,12 @@ export const SERVICE_GROUP_LABELS: Record<ServiceGroup, string> = {
             <div class="table-header">
               <div>
                 <h3 class="table-title">
-                  Folha de Variações de Preços Unitários Contratuais (Aba PU1 / RF-48)
+                  Folha de Variações de Preços Unitários Contratuais (Aba PU1 /
+                  RF-48)
                 </h3>
                 <p class="table-subtitle">
-                  Preços unitários contratuais de venda com BDI aplicados para aditivos e medições de campo.
+                  Preços unitários contratuais de venda com BDI aplicados para
+                  aditivos e medições de campo.
                 </p>
               </div>
               <span class="badge badge-info">Tabela Contratual PU1</span>
@@ -313,10 +315,21 @@ export const SERVICE_GROUP_LABELS: Record<ServiceGroup, string> = {
               <table class="data-table multi-tier-table">
                 <thead>
                   <tr class="header-level-1">
-                    <th colspan="2" class="group-header group-dark">ITEM / DISCIPLINA CONTRATUAL</th>
-                    <th colspan="2" class="group-header group-blue text-center">QUANTITATIVO CONTRATADO</th>
-                    <th colspan="2" class="group-header group-green text-center">PREÇO DE VENDA (BDI INCLUSO)</th>
-                    <th class="group-header group-action text-center">OBSERVAÇÕES</th>
+                    <th colspan="2" class="group-header group-dark">
+                      ITEM / DISCIPLINA CONTRATUAL
+                    </th>
+                    <th colspan="2" class="group-header group-blue text-center">
+                      QUANTITATIVO CONTRATADO
+                    </th>
+                    <th
+                      colspan="2"
+                      class="group-header group-green text-center"
+                    >
+                      PREÇO DE VENDA (BDI INCLUSO)
+                    </th>
+                    <th class="group-header group-action text-center">
+                      OBSERVAÇÕES
+                    </th>
                   </tr>
                   <tr class="header-level-2">
                     <th>Item</th>
@@ -332,19 +345,49 @@ export const SERVICE_GROUP_LABELS: Record<ServiceGroup, string> = {
                   @for (pu of puVariations; track pu.itemNumber) {
                     <tr [class.category-header-row]="pu.isHeader">
                       <td class="font-mono font-bold">{{ pu.itemNumber }}</td>
-                      <td [class.font-bold]="pu.isHeader">{{ pu.description }}</td>
-                      <td class="text-center font-mono">{{ pu.unit || '—' }}</td>
-                      <td class="text-right font-mono">{{ pu.contractQty !== undefined ? (pu.contractQty | number: '1.2-2') : '—' }}</td>
-                      <td class="text-right font-mono font-bold">{{ pu.unitPriceBrl !== undefined ? formatCurrency(pu.unitPriceBrl) : '—' }}</td>
-                      <td class="text-right font-mono font-bold text-emerald-800">{{ pu.totalPriceBrl !== undefined ? formatCurrency(pu.totalPriceBrl) : '—' }}</td>
-                      <td class="text-xs text-muted">{{ pu.criteria || '—' }}</td>
+                      <td [class.font-bold]="pu.isHeader">
+                        {{ pu.description }}
+                      </td>
+                      <td class="text-center font-mono">
+                        {{ pu.unit || '—' }}
+                      </td>
+                      <td class="text-right font-mono">
+                        {{
+                          pu.contractQty !== undefined
+                            ? (pu.contractQty | number: '1.2-2')
+                            : '—'
+                        }}
+                      </td>
+                      <td class="text-right font-mono font-bold">
+                        {{
+                          pu.unitPriceBrl !== undefined
+                            ? formatCurrency(pu.unitPriceBrl)
+                            : '—'
+                        }}
+                      </td>
+                      <td
+                        class="text-right font-mono font-bold text-emerald-800"
+                      >
+                        {{
+                          pu.totalPriceBrl !== undefined
+                            ? formatCurrency(pu.totalPriceBrl)
+                            : '—'
+                        }}
+                      </td>
+                      <td class="text-xs text-muted">
+                        {{ pu.criteria || '—' }}
+                      </td>
                     </tr>
                   }
                 </tbody>
                 <tfoot>
                   <tr class="total-row">
-                    <td colspan="5" class="text-right font-bold">TOTAL GERAL FOLHA PU1:</td>
-                    <td class="text-right font-mono font-bold text-emerald-800 font-lg">
+                    <td colspan="5" class="text-right font-bold">
+                      TOTAL GERAL FOLHA PU1:
+                    </td>
+                    <td
+                      class="text-right font-mono font-bold text-emerald-800 font-lg"
+                    >
                       {{ formatCurrency(totalPuContractValue) }}
                     </td>
                     <td></td>
@@ -714,21 +757,125 @@ export class ServiceBudgetComponent implements OnInit {
     criteria?: string;
   }> = [
     { itemNumber: '1.', description: 'ENGENHARIA E PROJETOS', isHeader: true },
-    { itemNumber: '1.1', description: 'Projeto Básico de Linha de Transmissão', unit: 'gb', contractQty: 1, unitPriceBrl: 673389.95, totalPriceBrl: 673389.95, criteria: 'Aprovação ONS/Cliente' },
-    { itemNumber: '1.2', description: 'Projeto Executivo de Traçado e Eletromecânico', unit: 'gb', contractQty: 1, unitPriceBrl: 3187938.39, totalPriceBrl: 3187938.39, criteria: 'Emissão para Construção (EPC)' },
-    { itemNumber: '1.3', description: 'Engenharia e Detalhamento de Torres', unit: 'gb', contractQty: 7, unitPriceBrl: 170720.68, totalPriceBrl: 1195044.77, criteria: 'Protótipos e Listas de Corte' },
-    { itemNumber: '1.4', description: 'Ensaio Mecânico de Cadeias de Isoladores', unit: 'ens', contractQty: 2, unitPriceBrl: 379723.71, totalPriceBrl: 759447.43, criteria: 'Relatório Aprovado em Laboratório' },
-    { itemNumber: '2.', description: 'OBRAS CIVIS E INFRAESTRUTURA', isHeader: true },
-    { itemNumber: '2.1', description: 'Abertura e Reabilitação de Acessos', unit: 'km', contractQty: 84.7, unitPriceBrl: 27500.0, totalPriceBrl: 2329250.0, criteria: 'Medição por km transitável' },
-    { itemNumber: '2.2', description: 'Supressão Vegetal e Limpeza de Faixa', unit: 'ha', contractQty: 237.5, unitPriceBrl: 7500.0, totalPriceBrl: 1781250.0, criteria: 'Hectares liberados com ASV' },
-    { itemNumber: '2.3', description: 'Escavação em Solo Comum / Rocha', unit: 'm³', contractQty: 12500.0, unitPriceBrl: 165.0, totalPriceBrl: 2062500.0, criteria: 'Volume in situ aferido' },
-    { itemNumber: '2.4', description: 'Concreto Estrutural fck >= 25 MPa', unit: 'm³', contractQty: 4800.0, unitPriceBrl: 1420.0, totalPriceBrl: 6816000.0, criteria: 'Volume concretado com CP rompido' },
-    { itemNumber: '3.', description: 'MONTAGEM ELETROMECÂNICA', isHeader: true },
-    { itemNumber: '3.1', description: 'Montagem de Estruturas Autoportantes', unit: 'ton', contractQty: 3200.0, unitPriceBrl: 4850.0, totalPriceBrl: 15520000.0, criteria: 'Torre montada e verticalizada' },
-    { itemNumber: '3.2', description: 'Montagem de Estruturas Estaiadas', unit: 'ton', contractQty: 2150.0, unitPriceBrl: 3950.0, totalPriceBrl: 8492500.0, criteria: 'Torre e estais tensionados' },
+    {
+      itemNumber: '1.1',
+      description: 'Projeto Básico de Linha de Transmissão',
+      unit: 'gb',
+      contractQty: 1,
+      unitPriceBrl: 673389.95,
+      totalPriceBrl: 673389.95,
+      criteria: 'Aprovação ONS/Cliente',
+    },
+    {
+      itemNumber: '1.2',
+      description: 'Projeto Executivo de Traçado e Eletromecânico',
+      unit: 'gb',
+      contractQty: 1,
+      unitPriceBrl: 3187938.39,
+      totalPriceBrl: 3187938.39,
+      criteria: 'Emissão para Construção (EPC)',
+    },
+    {
+      itemNumber: '1.3',
+      description: 'Engenharia e Detalhamento de Torres',
+      unit: 'gb',
+      contractQty: 7,
+      unitPriceBrl: 170720.68,
+      totalPriceBrl: 1195044.77,
+      criteria: 'Protótipos e Listas de Corte',
+    },
+    {
+      itemNumber: '1.4',
+      description: 'Ensaio Mecânico de Cadeias de Isoladores',
+      unit: 'ens',
+      contractQty: 2,
+      unitPriceBrl: 379723.71,
+      totalPriceBrl: 759447.43,
+      criteria: 'Relatório Aprovado em Laboratório',
+    },
+    {
+      itemNumber: '2.',
+      description: 'OBRAS CIVIS E INFRAESTRUTURA',
+      isHeader: true,
+    },
+    {
+      itemNumber: '2.1',
+      description: 'Abertura e Reabilitação de Acessos',
+      unit: 'km',
+      contractQty: 84.7,
+      unitPriceBrl: 27500.0,
+      totalPriceBrl: 2329250.0,
+      criteria: 'Medição por km transitável',
+    },
+    {
+      itemNumber: '2.2',
+      description: 'Supressão Vegetal e Limpeza de Faixa',
+      unit: 'ha',
+      contractQty: 237.5,
+      unitPriceBrl: 7500.0,
+      totalPriceBrl: 1781250.0,
+      criteria: 'Hectares liberados com ASV',
+    },
+    {
+      itemNumber: '2.3',
+      description: 'Escavação em Solo Comum / Rocha',
+      unit: 'm³',
+      contractQty: 12500.0,
+      unitPriceBrl: 165.0,
+      totalPriceBrl: 2062500.0,
+      criteria: 'Volume in situ aferido',
+    },
+    {
+      itemNumber: '2.4',
+      description: 'Concreto Estrutural fck >= 25 MPa',
+      unit: 'm³',
+      contractQty: 4800.0,
+      unitPriceBrl: 1420.0,
+      totalPriceBrl: 6816000.0,
+      criteria: 'Volume concretado com CP rompido',
+    },
+    {
+      itemNumber: '3.',
+      description: 'MONTAGEM ELETROMECÂNICA',
+      isHeader: true,
+    },
+    {
+      itemNumber: '3.1',
+      description: 'Montagem de Estruturas Autoportantes',
+      unit: 'ton',
+      contractQty: 3200.0,
+      unitPriceBrl: 4850.0,
+      totalPriceBrl: 15520000.0,
+      criteria: 'Torre montada e verticalizada',
+    },
+    {
+      itemNumber: '3.2',
+      description: 'Montagem de Estruturas Estaiadas',
+      unit: 'ton',
+      contractQty: 2150.0,
+      unitPriceBrl: 3950.0,
+      totalPriceBrl: 8492500.0,
+      criteria: 'Torre e estais tensionados',
+    },
     { itemNumber: '4.', description: 'LANÇAMENTO DE CABOS', isHeader: true },
-    { itemNumber: '4.1', description: 'Lançamento e Tensionamento de Cabos Condutores (Feixe 4x)', unit: 'km-fase', contractQty: 691.5, unitPriceBrl: 21500.0, totalPriceBrl: 14867250.0, criteria: 'Cabo grampeado na flecha de projeto' },
-    { itemNumber: '4.2', description: 'Lançamento de Cabo OPGW / Para-raios', unit: 'km', contractQty: 230.5, unitPriceBrl: 12400.0, totalPriceBrl: 2858200.0, criteria: 'Fusões ópticas e atenuação aprovadas' },
+    {
+      itemNumber: '4.1',
+      description: 'Lançamento e Tensionamento de Cabos Condutores (Feixe 4x)',
+      unit: 'km-fase',
+      contractQty: 691.5,
+      unitPriceBrl: 21500.0,
+      totalPriceBrl: 14867250.0,
+      criteria: 'Cabo grampeado na flecha de projeto',
+    },
+    {
+      itemNumber: '4.2',
+      description: 'Lançamento de Cabo OPGW / Para-raios',
+      unit: 'km',
+      contractQty: 230.5,
+      unitPriceBrl: 12400.0,
+      totalPriceBrl: 2858200.0,
+      criteria: 'Fusões ópticas e atenuação aprovadas',
+    },
   ];
 
   get totalPuContractValue(): number {
@@ -805,4 +952,3 @@ export class ServiceBudgetComponent implements OnInit {
     return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 }
-

@@ -534,11 +534,20 @@ import { OffersApi } from './offers-api.service';
                   [attr.aria-checked]="includeSelfSupporting()"
                   tabindex="0"
                   (keydown.enter)="toggleSelfSupporting()"
-                  (keydown.space)="$event.preventDefault(); toggleSelfSupporting()"
+                  (keydown.space)="
+                    $event.preventDefault(); toggleSelfSupporting()
+                  "
                 >
                   <div class="struct-radio-box">
-                    <mat-icon class="struct-check" [class.checked]="includeSelfSupporting()">
-                      {{ includeSelfSupporting() ? 'check_box' : 'check_box_outline_blank' }}
+                    <mat-icon
+                      class="struct-check"
+                      [class.checked]="includeSelfSupporting()"
+                    >
+                      {{
+                        includeSelfSupporting()
+                          ? 'check_box'
+                          : 'check_box_outline_blank'
+                      }}
                     </mat-icon>
                   </div>
                   <div class="struct-info">
@@ -550,7 +559,8 @@ import { OffersApi } from './offers-api.service';
                     </div>
                     <span class="struct-desc"
                       >Estrutura rígida treliçada com 4 pés. Alta estabilidade e
-                      fixação por fundação profunda/direta. Empregada em ancoragens, vértices e trechos urbanos.</span
+                      fixação por fundação profunda/direta. Empregada em
+                      ancoragens, vértices e trechos urbanos.</span
                     >
                   </div>
                 </div>
@@ -567,8 +577,13 @@ import { OffersApi } from './offers-api.service';
                   (keydown.space)="$event.preventDefault(); toggleGuyed()"
                 >
                   <div class="struct-radio-box">
-                    <mat-icon class="struct-check" [class.checked]="includeGuyed()">
-                      {{ includeGuyed() ? 'check_box' : 'check_box_outline_blank' }}
+                    <mat-icon
+                      class="struct-check"
+                      [class.checked]="includeGuyed()"
+                    >
+                      {{
+                        includeGuyed() ? 'check_box' : 'check_box_outline_blank'
+                      }}
                     </mat-icon>
                   </div>
                   <div class="struct-info">
@@ -579,8 +594,9 @@ import { OffersApi } from './offers-api.service';
                       }
                     </div>
                     <span class="struct-desc"
-                      >Mastro central suportado por cabos tensores (estais) externos.
-                      Ideal para suspensões em tangentes e longos vãos com economia de aço.</span
+                      >Mastro central suportado por cabos tensores (estais)
+                      externos. Ideal para suspensões em tangentes e longos vãos
+                      com economia de aço.</span
                     >
                   </div>
                 </div>
@@ -590,24 +606,40 @@ import { OffersApi } from './offers-api.service';
                   <div class="struct-status-box status-both">
                     <mat-icon class="status-icon">layers</mat-icon>
                     <div class="status-text-content">
-                      <strong class="status-title">Configuração Híbrida: Ambas as Estruturas</strong>
-                      <p class="status-desc">O projeto contemplará tanto torres autoportantes (ângulos/ancoragens) quanto torres estaiadas (suspensões).</p>
+                      <strong class="status-title"
+                        >Configuração Híbrida: Ambas as Estruturas</strong
+                      >
+                      <p class="status-desc">
+                        O projeto contemplará tanto torres autoportantes
+                        (ângulos/ancoragens) quanto torres estaiadas
+                        (suspensões).
+                      </p>
                     </div>
                   </div>
                 } @else if (includeSelfSupporting()) {
                   <div class="struct-status-box status-self">
                     <mat-icon class="status-icon">filter_tilt_shift</mat-icon>
                     <div class="status-text-content">
-                      <strong class="status-title">Configuração 100% Autoportante</strong>
-                      <p class="status-desc">O projeto empregará exclusivamente estruturas rígidas autoportantes de 4 apoios.</p>
+                      <strong class="status-title"
+                        >Configuração 100% Autoportante</strong
+                      >
+                      <p class="status-desc">
+                        O projeto empregará exclusivamente estruturas rígidas
+                        autoportantes de 4 apoios.
+                      </p>
                     </div>
                   </div>
                 } @else if (includeGuyed()) {
                   <div class="struct-status-box status-guyed">
                     <mat-icon class="status-icon">alt_route</mat-icon>
                     <div class="status-text-content">
-                      <strong class="status-title">Configuração 100% Estaiada</strong>
-                      <p class="status-desc">O projeto empregará predominantemente mastros estaiados com cabos tensores externos.</p>
+                      <strong class="status-title"
+                        >Configuração 100% Estaiada</strong
+                      >
+                      <p class="status-desc">
+                        O projeto empregará predominantemente mastros estaiados
+                        com cabos tensores externos.
+                      </p>
                     </div>
                   </div>
                 }

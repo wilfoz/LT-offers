@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, inject, signal, computed } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,7 +19,8 @@ import {
   PricingSimulationPayload,
 } from './pricing-api.service';
 
-export type StretchViewMode = 'CONSOLIDATED' | 'STRETCH_1' | 'STRETCH_2' | 'STRETCH_3';
+export type StretchViewMode =
+  'CONSOLIDATED' | 'STRETCH_1' | 'STRETCH_2' | 'STRETCH_3';
 
 export interface BenchmarkSupplierQuoteDisplay {
   supplierName: string;
@@ -30,10 +38,14 @@ export interface BenchmarkSupplierQuoteDisplay {
       <!-- 1. Header & Actions Bar -->
       <div class="header-section">
         <div>
-          <div class="subtitle-badge">Fase F3 · Módulo M06 · Inspirado em Precios & Materiales</div>
+          <div class="subtitle-badge">
+            Fase F3 · Módulo M06 · Inspirado em Precios & Materiales
+          </div>
           <h2 class="title">Preços, Commodities & Tributos Brasileiros</h2>
           <p class="description">
-            Formação dinâmica de preços com curva LME/Midwest, matriz comparativa de fornecedores, apuração fiscal (ICMS, DIFAL base dupla, FECOEP, IPI, PIS/COFINS) e benefícios REIDI.
+            Formação dinâmica de preços com curva LME/Midwest, matriz
+            comparativa de fornecedores, apuração fiscal (ICMS, DIFAL base
+            dupla, FECOEP, IPI, PIS/COFINS) e benefícios REIDI.
           </p>
         </div>
 
@@ -213,9 +225,7 @@ export interface BenchmarkSupplierQuoteDisplay {
               <span class="kpi-icon">📦</span>
             </div>
             <div class="kpi-value">
-              {{
-                filteredTotalNet() | currency: 'BRL' : 'symbol' : '1.2-2'
-              }}
+              {{ filteredTotalNet() | currency: 'BRL' : 'symbol' : '1.2-2' }}
             </div>
             <div class="kpi-foot">Base sem impostos por fora</div>
           </div>
@@ -226,19 +236,13 @@ export interface BenchmarkSupplierQuoteDisplay {
               <span class="kpi-icon">🏛️</span>
             </div>
             <div class="kpi-value text-amber">
-              {{
-                filteredTotalTaxes() | currency: 'BRL' : 'symbol' : '1.2-2'
-              }}
+              {{ filteredTotalTaxes() | currency: 'BRL' : 'symbol' : '1.2-2' }}
             </div>
             <div class="kpi-foot">
               IPI:
-              {{
-                filteredTotalIpi() | currency: 'BRL' : 'symbol' : '1.0-0'
-              }}
+              {{ filteredTotalIpi() | currency: 'BRL' : 'symbol' : '1.0-0' }}
               · DIFAL:
-              {{
-                filteredTotalDifal() | currency: 'BRL' : 'symbol' : '1.0-0'
-              }}
+              {{ filteredTotalDifal() | currency: 'BRL' : 'symbol' : '1.0-0' }}
             </div>
           </div>
 
@@ -248,9 +252,7 @@ export interface BenchmarkSupplierQuoteDisplay {
               <span class="kpi-icon">💰</span>
             </div>
             <div class="kpi-value text-emerald">
-              {{
-                filteredTotalGross() | currency: 'BRL' : 'symbol' : '1.2-2'
-              }}
+              {{ filteredTotalGross() | currency: 'BRL' : 'symbol' : '1.2-2' }}
             </div>
             <div class="kpi-foot">
               Regime:
@@ -264,9 +266,7 @@ export interface BenchmarkSupplierQuoteDisplay {
               <span class="kpi-icon">🛡️</span>
             </div>
             <div class="kpi-value text-sky">
-              {{
-                filteredTotalReidi() | currency: 'BRL' : 'symbol' : '1.2-2'
-              }}
+              {{ filteredTotalReidi() | currency: 'BRL' : 'symbol' : '1.2-2' }}
             </div>
             <div class="kpi-foot">PIS/COFINS desonerados (9,25%)</div>
           </div>
@@ -280,7 +280,9 @@ export interface BenchmarkSupplierQuoteDisplay {
                 Matriz Comparativa de Cotações e Apuração Fiscal (RF-28, RF-34)
               </h3>
               <p class="table-subtitle">
-                Estrutura de cotações por fabricante (Brametal, Brafer, Incomisa, SAE) e tributação conforme sheets Precios e Materiales.
+                Estrutura de cotações por fabricante (Brametal, Brafer,
+                Incomisa, SAE) e tributação conforme sheets Precios e
+                Materiales.
               </p>
             </div>
             <span class="table-badge font-mono"
@@ -293,11 +295,21 @@ export interface BenchmarkSupplierQuoteDisplay {
               <thead>
                 <!-- Nível 1: Macro-Grupos -->
                 <tr class="header-level-1">
-                  <th colspan="3" class="group-header group-material">IDENTIFICAÇÃO DO MATERIAL</th>
-                  <th colspan="5" class="group-header group-quotes">COTAÇÃO COMPARATIVA DE FABRICANTES (PRECIOS)</th>
-                  <th colspan="5" class="group-header group-taxes">TRIBUTOS DE ENTRADA (MATERIALES)</th>
-                  <th colspan="2" class="group-header group-totals">VALORES TOTAIS</th>
-                  <th rowspan="2" class="group-header group-action text-center">MEMÓRIA</th>
+                  <th colspan="3" class="group-header group-material">
+                    IDENTIFICAÇÃO DO MATERIAL
+                  </th>
+                  <th colspan="5" class="group-header group-quotes">
+                    COTAÇÃO COMPARATIVA DE FABRICANTES (PRECIOS)
+                  </th>
+                  <th colspan="5" class="group-header group-taxes">
+                    TRIBUTOS DE ENTRADA (MATERIALES)
+                  </th>
+                  <th colspan="2" class="group-header group-totals">
+                    VALORES TOTAIS
+                  </th>
+                  <th rowspan="2" class="group-header group-action text-center">
+                    MEMÓRIA
+                  </th>
                 </tr>
                 <!-- Nível 2: Colunas Analíticas -->
                 <tr class="header-level-2">
@@ -328,12 +340,17 @@ export interface BenchmarkSupplierQuoteDisplay {
                 @for (item of displayedItems(); track item.itemCode) {
                   <tr>
                     <td>
-                      <span class="code-badge font-mono">{{ item.itemCode }}</span>
+                      <span class="code-badge font-mono">{{
+                        item.itemCode
+                      }}</span>
                     </td>
                     <td>
-                      <div class="font-medium text-main">{{ item.itemName }}</div>
+                      <div class="font-medium text-main">
+                        {{ item.itemName }}
+                      </div>
                       <div class="text-xs text-muted">
-                        UF Origem: <span class="mono-badge">{{ item.originState }}</span>
+                        UF Origem:
+                        <span class="mono-badge">{{ item.originState }}</span>
                       </div>
                     </td>
                     <td class="text-right font-mono font-bold">
@@ -342,16 +359,28 @@ export interface BenchmarkSupplierQuoteDisplay {
 
                     <!-- Colunas Comparativas de Fabricantes -->
                     @let quotes = getBenchmarkQuotes(item);
-                    <td class="text-right font-mono supplier-cell" [class.is-winner-cell]="quotes[0]?.isWinner">
+                    <td
+                      class="text-right font-mono supplier-cell"
+                      [class.is-winner-cell]="quotes[0]?.isWinner"
+                    >
                       {{ quotes[0]?.priceBrl | currency: 'BRL' : '' : '1.2-2' }}
                     </td>
-                    <td class="text-right font-mono supplier-cell" [class.is-winner-cell]="quotes[1]?.isWinner">
+                    <td
+                      class="text-right font-mono supplier-cell"
+                      [class.is-winner-cell]="quotes[1]?.isWinner"
+                    >
                       {{ quotes[1]?.priceBrl | currency: 'BRL' : '' : '1.2-2' }}
                     </td>
-                    <td class="text-right font-mono supplier-cell" [class.is-winner-cell]="quotes[2]?.isWinner">
+                    <td
+                      class="text-right font-mono supplier-cell"
+                      [class.is-winner-cell]="quotes[2]?.isWinner"
+                    >
                       {{ quotes[2]?.priceBrl | currency: 'BRL' : '' : '1.2-2' }}
                     </td>
-                    <td class="text-right font-mono supplier-cell" [class.is-winner-cell]="quotes[3]?.isWinner">
+                    <td
+                      class="text-right font-mono supplier-cell"
+                      [class.is-winner-cell]="quotes[3]?.isWinner"
+                    >
                       {{ quotes[3]?.priceBrl | currency: 'BRL' : '' : '1.2-2' }}
                     </td>
                     <td class="text-center">
@@ -364,20 +393,32 @@ export interface BenchmarkSupplierQuoteDisplay {
                     <td class="text-right font-mono text-muted">
                       {{ item.ipiAmount | currency: 'BRL' : '' : '1.2-2' }}
                       @if (item.ipiRatePercent > 0) {
-                        <span class="text-xs text-slate-400">({{ item.ipiRatePercent }}%)</span>
+                        <span class="text-xs text-slate-400"
+                          >({{ item.ipiRatePercent }}%)</span
+                        >
                       }
                     </td>
                     <td class="text-right font-mono text-muted">
-                      {{ item.totalIcmsOriginAmount | currency: 'BRL' : '' : '1.2-2' }}
+                      {{
+                        item.totalIcmsOriginAmount
+                          | currency: 'BRL' : '' : '1.2-2'
+                      }}
                     </td>
                     <td class="text-right font-mono text-amber-700 font-medium">
-                      {{ item.totalDifalAmount | currency: 'BRL' : '' : '1.2-2' }}
+                      {{
+                        item.totalDifalAmount | currency: 'BRL' : '' : '1.2-2'
+                      }}
                     </td>
                     <td class="text-right font-mono text-muted">
-                      {{ item.totalFecoepAmount | currency: 'BRL' : '' : '1.2-2' }}
+                      {{
+                        item.totalFecoepAmount | currency: 'BRL' : '' : '1.2-2'
+                      }}
                     </td>
                     <td class="text-right font-mono text-muted">
-                      {{ (item.pisAmount + item.cofinsAmount) | currency: 'BRL' : '' : '1.2-2' }}
+                      {{
+                        item.pisAmount + item.cofinsAmount
+                          | currency: 'BRL' : '' : '1.2-2'
+                      }}
                     </td>
 
                     <!-- Totais -->
@@ -385,7 +426,9 @@ export interface BenchmarkSupplierQuoteDisplay {
                       {{ item.netTotalAmount | currency: 'BRL' : '' : '1.2-2' }}
                     </td>
                     <td class="text-right font-mono font-bold text-emerald-800">
-                      {{ item.grossTotalAmount | currency: 'BRL' : '' : '1.2-2' }}
+                      {{
+                        item.grossTotalAmount | currency: 'BRL' : '' : '1.2-2'
+                      }}
                     </td>
                     <td class="text-center">
                       <button
@@ -408,17 +451,24 @@ export interface BenchmarkSupplierQuoteDisplay {
                     TOTAL DA VISÃO ({{ selectedViewLabel() }}):
                   </td>
                   <td class="text-right font-mono font-bold">—</td>
-                  <td colspan="4" class="text-center text-muted font-mono text-xs">
+                  <td
+                    colspan="4"
+                    class="text-center text-muted font-mono text-xs"
+                  >
                     Matriz Multi-Fabricante Homologada
                   </td>
                   <td class="text-center">
-                    <span class="badge-elegida-total font-mono">100% ELEGIDAS</span>
+                    <span class="badge-elegida-total font-mono"
+                      >100% ELEGIDAS</span
+                    >
                   </td>
                   <td class="text-right font-mono font-bold">
                     {{ filteredTotalIpi() | currency: 'BRL' : '' : '1.2-2' }}
                   </td>
                   <td class="text-right font-mono font-bold">
-                    {{ filteredTotalIcmsOrigin() | currency: 'BRL' : '' : '1.2-2' }}
+                    {{
+                      filteredTotalIcmsOrigin() | currency: 'BRL' : '' : '1.2-2'
+                    }}
                   </td>
                   <td class="text-right font-mono font-bold text-amber-700">
                     {{ filteredTotalDifal() | currency: 'BRL' : '' : '1.2-2' }}
@@ -427,13 +477,22 @@ export interface BenchmarkSupplierQuoteDisplay {
                     {{ filteredTotalFecoep() | currency: 'BRL' : '' : '1.2-2' }}
                   </td>
                   <td class="text-right font-mono font-bold">
-                    {{ filteredTotalPisCofins() | currency: 'BRL' : '' : '1.2-2' }}
+                    {{
+                      filteredTotalPisCofins() | currency: 'BRL' : '' : '1.2-2'
+                    }}
                   </td>
                   <td class="text-right font-mono font-bold text-blue-900">
-                    {{ filteredTotalNet() | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                    {{
+                      filteredTotalNet() | currency: 'BRL' : 'symbol' : '1.2-2'
+                    }}
                   </td>
-                  <td class="text-right font-mono font-bold text-emerald-800 font-lg">
-                    {{ filteredTotalGross() | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  <td
+                    class="text-right font-mono font-bold text-emerald-800 font-lg"
+                  >
+                    {{
+                      filteredTotalGross()
+                        | currency: 'BRL' : 'symbol' : '1.2-2'
+                    }}
                   </td>
                   <td class="text-center font-mono text-xs text-muted">—</td>
                 </tr>
@@ -607,7 +666,9 @@ export interface BenchmarkSupplierQuoteDisplay {
                       selectedItem()?.pisAmount === 0 &&
                       selectedItem()?.cofinsAmount === 0
                     ) {
-                      <strong class="text-sky-700">0,00 (REIDI / Desoneração)</strong>
+                      <strong class="text-sky-700"
+                        >0,00 (REIDI / Desoneração)</strong
+                      >
                     } @else {
                       {{
                         (selectedItem()?.pisAmount || 0) +
@@ -1039,7 +1100,7 @@ export interface BenchmarkSupplierQuoteDisplay {
       border-top: 2px solid #94a3b8;
       border-bottom: 2px solid #94a3b8;
       font-weight: 700;
-      box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
       z-index: 10;
     }
 
@@ -1309,7 +1370,8 @@ export class MaterialPricingComponent implements OnInit {
       return raw;
     }
     // Rateio parametrizado por trecho (E1=60%, E2=30%, E3=10%) para visualização
-    const factor = mode === 'STRETCH_1' ? 0.6 : mode === 'STRETCH_2' ? 0.3 : 0.1;
+    const factor =
+      mode === 'STRETCH_1' ? 0.6 : mode === 'STRETCH_2' ? 0.3 : 0.1;
     return raw.map((item) => ({
       ...item,
       quantity: item.quantity * factor,
@@ -1327,31 +1389,37 @@ export class MaterialPricingComponent implements OnInit {
   });
 
   readonly filteredTotalNet = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.netTotalAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.netTotalAmount, 0),
   );
   readonly filteredTotalIpi = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.ipiAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.ipiAmount, 0),
   );
   readonly filteredTotalIcmsOrigin = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.totalIcmsOriginAmount, 0)
+    this.displayedItems().reduce(
+      (acc, it) => acc + it.totalIcmsOriginAmount,
+      0,
+    ),
   );
   readonly filteredTotalDifal = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.totalDifalAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.totalDifalAmount, 0),
   );
   readonly filteredTotalFecoep = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.totalFecoepAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.totalFecoepAmount, 0),
   );
   readonly filteredTotalPisCofins = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.pisAmount + it.cofinsAmount, 0)
+    this.displayedItems().reduce(
+      (acc, it) => acc + it.pisAmount + it.cofinsAmount,
+      0,
+    ),
   );
   readonly filteredTotalTaxes = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.totalTaxesAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.totalTaxesAmount, 0),
   );
   readonly filteredTotalGross = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.grossTotalAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.grossTotalAmount, 0),
   );
   readonly filteredTotalReidi = computed(() =>
-    this.displayedItems().reduce((acc, it) => acc + it.reidiBenefitAmount, 0)
+    this.displayedItems().reduce((acc, it) => acc + it.reidiBenefitAmount, 0),
   );
 
   ngOnInit(): void {
@@ -1397,10 +1465,25 @@ export class MaterialPricingComponent implements OnInit {
   getBenchmarkQuotes(item: ItemTaxBreakdown): BenchmarkSupplierQuoteDisplay[] {
     const base = item.netUnitPrice;
     return [
-      { supplierName: 'BRAMETAL', state: 'ES', priceBrl: base * 1.02, isWinner: false },
-      { supplierName: 'BRAFER', state: 'RJ', priceBrl: base * 1.04, isWinner: false },
+      {
+        supplierName: 'BRAMETAL',
+        state: 'ES',
+        priceBrl: base * 1.02,
+        isWinner: false,
+      },
+      {
+        supplierName: 'BRAFER',
+        state: 'RJ',
+        priceBrl: base * 1.04,
+        isWinner: false,
+      },
       { supplierName: 'INCOMISA', state: 'SP', priceBrl: base, isWinner: true },
-      { supplierName: 'SAE', state: 'MG', priceBrl: base * 1.015, isWinner: false },
+      {
+        supplierName: 'SAE',
+        state: 'MG',
+        priceBrl: base * 1.015,
+        isWinner: false,
+      },
     ];
   }
 

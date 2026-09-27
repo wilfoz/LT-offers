@@ -66,4 +66,3 @@ export interface ProjectIndirectStaffItem {
   salaryMonthlyBrl: number;
   totalMonthlyBrl: number;
 }
-

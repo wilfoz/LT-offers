@@ -136,11 +136,21 @@ import { EconomicResultApiService } from './economic-result-api.service';
               <thead>
                 <!-- Nível 1: Agrupamento Estrutural RT -->
                 <tr class="header-level-1">
-                  <th class="group-header group-dark">MACRO-DISCIPLINA / PACOTE</th>
-                  <th class="group-header group-blue text-right">BASE LÍQUIDA</th>
-                  <th colspan="6" class="group-header group-amber text-center">TRIBUTOS DE ENTRADA & DIFAL (RN-04..RN-06)</th>
-                  <th colspan="2" class="group-header group-purple text-center">FATURAMENTO (REIDI)</th>
-                  <th class="group-header group-green text-right">PREÇO VENDA (BDI)</th>
+                  <th class="group-header group-dark">
+                    MACRO-DISCIPLINA / PACOTE
+                  </th>
+                  <th class="group-header group-blue text-right">
+                    BASE LÍQUIDA
+                  </th>
+                  <th colspan="6" class="group-header group-amber text-center">
+                    TRIBUTOS DE ENTRADA & DIFAL (RN-04..RN-06)
+                  </th>
+                  <th colspan="2" class="group-header group-purple text-center">
+                    FATURAMENTO (REIDI)
+                  </th>
+                  <th class="group-header group-green text-right">
+                    PREÇO VENDA (BDI)
+                  </th>
                 </tr>
                 <!-- Nível 2: Colunas Analíticas -->
                 <tr class="header-level-2">

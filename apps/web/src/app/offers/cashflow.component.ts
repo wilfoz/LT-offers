@@ -19,7 +19,8 @@ import { CashflowApiService } from './cashflow-api.service';
           </h2>
           <p class="description">
             Projeção temporal mês a mês de saídas e faturamento, cronograma de
-            suprimentos e identificação da exposição financeira máxima (Matriz DT).
+            suprimentos e identificação da exposição financeira máxima (Matriz
+            DT).
           </p>
         </div>
 
@@ -247,31 +248,52 @@ import { CashflowApiService } from './cashflow-api.service';
             <div class="table-header">
               <div>
                 <h3 class="table-title">
-                  Matriz de Distribuição Temporal de Custos e Faturamento (Aba DT)
+                  Matriz de Distribuição Temporal de Custos e Faturamento (Aba
+                  DT)
                 </h3>
                 <p class="table-subtitle">
-                  Visão matricial contínua de fluxo de caixa por disciplina ao longo de {{ cf.totalMonths }} meses.
+                  Visão matricial contínua de fluxo de caixa por disciplina ao
+                  longo de {{ cf.totalMonths }} meses.
                 </p>
               </div>
-              <span class="badge badge-info">Matriz DT (M1..M{{ cf.totalMonths }})</span>
+              <span class="badge badge-info"
+                >Matriz DT (M1..M{{ cf.totalMonths }})</span
+              >
             </div>
 
             <div class="table-responsive matrix-scroll-container">
               <table class="data-table dt-matrix-table">
                 <thead>
                   <tr class="header-level-1">
-                    <th class="sticky-col sticky-col-discipline" rowspan="2">DISCIPLINA / RUBRICA FINANCEIRA</th>
-                    <th class="sticky-col sticky-col-total text-right" rowspan="2">TOTAL CONSOLIDADO</th>
-                    <th [attr.colspan]="cf.monthlyPoints.length" class="group-header group-dark text-center">
+                    <th class="sticky-col sticky-col-discipline" rowspan="2">
+                      DISCIPLINA / RUBRICA FINANCEIRA
+                    </th>
+                    <th
+                      class="sticky-col sticky-col-total text-right"
+                      rowspan="2"
+                    >
+                      TOTAL CONSOLIDADO
+                    </th>
+                    <th
+                      [attr.colspan]="cf.monthlyPoints.length"
+                      class="group-header group-dark text-center"
+                    >
                       CRONOGRAMA TEMPORAL MÊS A MÊS (PERÍODO DA OBRA)
                     </th>
                   </tr>
                   <tr class="header-level-2">
                     @for (pt of cf.monthlyPoints; track pt.month) {
-                      <th class="text-center font-mono" [class.highlight-peak-header]="pt.month === cf.financialExposure.peakMonth">
+                      <th
+                        class="text-center font-mono"
+                        [class.highlight-peak-header]="
+                          pt.month === cf.financialExposure.peakMonth
+                        "
+                      >
                         M{{ pt.month }}
                         @if (pt.month === cf.financialExposure.peakMonth) {
-                          <span class="peak-dot" title="Mês de máxima exposição">●</span>
+                          <span class="peak-dot" title="Mês de máxima exposição"
+                            >●</span
+                          >
                         }
                       </th>
                     }
@@ -280,17 +302,25 @@ import { CashflowApiService } from './cashflow-api.service';
                 <tbody>
                   <!-- GRUPO: SAÍDAS DE CAIXA -->
                   <tr class="section-divider-row">
-                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-danger">
+                    <td
+                      [attr.colspan]="cf.monthlyPoints.length + 2"
+                      class="section-divider-title text-danger"
+                    >
                       ▼ 1. SAÍDAS DE CAIXA & DESEMBOLSO OPERACIONAL (OUTFLOW)
                     </td>
                   </tr>
 
                   <!-- Linha: Materiais -->
                   <tr class="matrix-data-row">
-                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
-                      📦 Materiais & Equipamentos Principais (Torres, Cabos, Isoladores)
+                    <td
+                      class="sticky-col sticky-col-discipline font-semibold pl-indent"
+                    >
+                      📦 Materiais & Equipamentos Principais (Torres, Cabos,
+                      Isoladores)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                    >
                       {{ formatCurrency(getTotalMaterialsOutflow(cf)) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -302,10 +332,15 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- Linha: Serviços Diretos -->
                   <tr class="matrix-data-row">
-                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
-                      🔨 Serviços Diretos de Construção & Montagem (Civil, Eletromecânica)
+                    <td
+                      class="sticky-col sticky-col-discipline font-semibold pl-indent"
+                    >
+                      🔨 Serviços Diretos de Construção & Montagem (Civil,
+                      Eletromecânica)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                    >
                       {{ formatCurrency(getTotalServicesOutflow(cf)) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -317,10 +352,15 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- Linha: Indiretos -->
                   <tr class="matrix-data-row">
-                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
-                      ⛺ Custos Indiretos de Obra & Apoio Operacional (Canteiros, Equipe)
+                    <td
+                      class="sticky-col sticky-col-discipline font-semibold pl-indent"
+                    >
+                      ⛺ Custos Indiretos de Obra & Apoio Operacional
+                      (Canteiros, Equipe)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                    >
                       {{ formatCurrency(getTotalIndirectsOutflow(cf)) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -335,7 +375,9 @@ import { CashflowApiService } from './cashflow-api.service';
                     <td class="sticky-col sticky-col-discipline font-bold">
                       🔴 TOTAL DESEMBOLSO MENSAL (SAÍDAS)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold text-danger">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold text-danger"
+                    >
                       {{ formatCurrency(cf.totalOutflow) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -347,10 +389,14 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- Desembolso Acumulado -->
                   <tr class="accumulated-row">
-                    <td class="sticky-col sticky-col-discipline text-xs text-muted">
+                    <td
+                      class="sticky-col sticky-col-discipline text-xs text-muted"
+                    >
                       ↳ Desembolso Acumulado
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono text-xs text-muted">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono text-xs text-muted"
+                    >
                       {{ formatCurrency(cf.totalOutflow) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -362,17 +408,24 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- GRUPO: ENTRADAS DE CAIXA -->
                   <tr class="section-divider-row">
-                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-sky">
+                    <td
+                      [attr.colspan]="cf.monthlyPoints.length + 2"
+                      class="section-divider-title text-sky"
+                    >
                       ▼ 2. ENTRADAS DE CAIXA & FATURAMENTO CONTRATUAL (INFLOW)
                     </td>
                   </tr>
 
                   <!-- Linha: Adiantamento -->
                   <tr class="matrix-data-row">
-                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                    <td
+                      class="sticky-col sticky-col-discipline font-semibold pl-indent"
+                    >
                       💵 Adiantamento Contratual (Mobilização Inicial)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                    >
                       {{ formatCurrency(getTotalAdvanceBilling(cf)) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -384,10 +437,14 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- Linha: Medições -->
                   <tr class="matrix-data-row">
-                    <td class="sticky-col sticky-col-discipline font-semibold pl-indent">
+                    <td
+                      class="sticky-col sticky-col-discipline font-semibold pl-indent"
+                    >
                       📋 Medições Mensais de Campo (Produção & Suprimentos)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                    >
                       {{ formatCurrency(getTotalMeasurementBilling(cf)) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -402,7 +459,9 @@ import { CashflowApiService } from './cashflow-api.service';
                     <td class="sticky-col sticky-col-discipline font-bold">
                       🔵 TOTAL FATURAMENTO MENSAL (ENTRADAS)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold highlight-text">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold highlight-text"
+                    >
                       {{ formatCurrency(cf.totalInflow) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -414,10 +473,14 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- Faturamento Acumulado -->
                   <tr class="accumulated-row">
-                    <td class="sticky-col sticky-col-discipline text-xs text-muted">
+                    <td
+                      class="sticky-col sticky-col-discipline text-xs text-muted"
+                    >
                       ↳ Faturamento Acumulado
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono text-xs text-muted">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono text-xs text-muted"
+                    >
                       {{ formatCurrency(cf.totalInflow) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
@@ -429,8 +492,12 @@ import { CashflowApiService } from './cashflow-api.service';
 
                   <!-- GRUPO: SALDO LÍQUIDO & FLUXO ACUMULADO -->
                   <tr class="section-divider-row">
-                    <td [attr.colspan]="cf.monthlyPoints.length + 2" class="section-divider-title text-emerald">
-                      ▼ 3. BALANÇO FINANCEIRO & POSIÇÃO LÍQUIDA DE CAIXA (NET FLOW)
+                    <td
+                      [attr.colspan]="cf.monthlyPoints.length + 2"
+                      class="section-divider-title text-emerald"
+                    >
+                      ▼ 3. BALANÇO FINANCEIRO & POSIÇÃO LÍQUIDA DE CAIXA (NET
+                      FLOW)
                     </td>
                   </tr>
 
@@ -439,19 +506,24 @@ import { CashflowApiService } from './cashflow-api.service';
                     <td class="sticky-col sticky-col-discipline font-bold">
                       ⚡ Saldo Líquido do Mês (Entradas - Saídas)
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold"
-                        [ngClass]="{
-                          'text-danger': Number(cf.finalAccumulatedBalance) < 0,
-                          'highlight-green': Number(cf.finalAccumulatedBalance) >= 0
-                        }">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold"
+                      [ngClass]="{
+                        'text-danger': Number(cf.finalAccumulatedBalance) < 0,
+                        'highlight-green':
+                          Number(cf.finalAccumulatedBalance) >= 0,
+                      }"
+                    >
                       {{ formatCurrency(cf.finalAccumulatedBalance) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
-                      <td class="text-right font-mono font-bold"
-                          [ngClass]="{
-                            'text-danger': Number(pt.netMonthlyCashflow) < 0,
-                            'highlight-green': Number(pt.netMonthlyCashflow) >= 0
-                          }">
+                      <td
+                        class="text-right font-mono font-bold"
+                        [ngClass]="{
+                          'text-danger': Number(pt.netMonthlyCashflow) < 0,
+                          'highlight-green': Number(pt.netMonthlyCashflow) >= 0,
+                        }"
+                      >
                         {{ formatCurrency(pt.netMonthlyCashflow) }}
                       </td>
                     }
@@ -462,16 +534,23 @@ import { CashflowApiService } from './cashflow-api.service';
                     <td class="sticky-col sticky-col-discipline font-bold">
                       📈 FLUXO DE CAIXA ACUMULADO
                     </td>
-                    <td class="sticky-col sticky-col-total text-right font-mono font-bold highlight-green font-lg">
+                    <td
+                      class="sticky-col sticky-col-total text-right font-mono font-bold highlight-green font-lg"
+                    >
                       {{ formatCurrency(cf.finalAccumulatedBalance) }}
                     </td>
                     @for (pt of cf.monthlyPoints; track pt.month) {
-                      <td class="text-right font-mono font-bold"
-                          [class.highlight-peak-cell]="pt.month === cf.financialExposure.peakMonth"
-                          [ngClass]="{
-                            'text-danger': Number(pt.accumulatedCashflow) < 0,
-                            'highlight-green': Number(pt.accumulatedCashflow) >= 0
-                          }">
+                      <td
+                        class="text-right font-mono font-bold"
+                        [class.highlight-peak-cell]="
+                          pt.month === cf.financialExposure.peakMonth
+                        "
+                        [ngClass]="{
+                          'text-danger': Number(pt.accumulatedCashflow) < 0,
+                          'highlight-green':
+                            Number(pt.accumulatedCashflow) >= 0,
+                        }"
+                      >
                         {{ formatCurrency(pt.accumulatedCashflow) }}
                       </td>
                     }
@@ -569,7 +648,8 @@ import { CashflowApiService } from './cashflow-api.service';
                         class="text-right font-mono font-bold"
                         [ngClass]="{
                           'text-danger': Number(pt.accumulatedCashflow) < 0,
-                          'highlight-green': Number(pt.accumulatedCashflow) >= 0,
+                          'highlight-green':
+                            Number(pt.accumulatedCashflow) >= 0,
                         }"
                       >
                         {{ formatCurrency(pt.accumulatedCashflow) }}

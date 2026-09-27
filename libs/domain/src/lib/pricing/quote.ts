@@ -73,4 +73,3 @@ export interface QuoteSelection {
   appliedExchangeRate: number;
   reason?: string;
 }
-
