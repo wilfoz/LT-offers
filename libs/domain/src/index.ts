@@ -24,6 +24,8 @@ export * from './lib/electromechanical/cable-quantity';
 export * from './lib/electromechanical/hardware-quantity';
 export * from './lib/electromechanical/summary';
 export * from './lib/schedule/activity';
+export * from './lib/schedule/rainfall-parameters';
+export * from './lib/calendar/work-calendar';
 export * from './lib/camps/camp';
 export * from './lib/histogram/histogram';
 export * from './lib/services/service-budget';

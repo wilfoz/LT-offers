@@ -10,31 +10,53 @@ import {
   ProductionPeriod,
 } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+// Imports relativos: o seed roda fora do Nx (@swc-node/register não resolve
+// os aliases de tsconfig) — fonte única dos defaults segue sendo a domain.
+import {
+  DEFAULT_RAINFALL_PARAMETERS,
+  DEFAULT_RAINFALL_SEVERITY_BANDS,
+} from '../libs/domain/src/lib/schedule/rainfall-parameters';
+import { DEFAULT_WORK_CALENDAR } from '../libs/domain/src/lib/calendar/work-calendar';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as xlsx from 'xlsx';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({
-    connectionString: process.env.DATABASE_URL ?? 'postgresql://lt_offers:lt_offers_dev@localhost:5432/lt_offers',
+    connectionString:
+      process.env.DATABASE_URL ??
+      'postgresql://lt_offers:lt_offers_dev@localhost:5432/lt_offers',
   }),
 });
 
 async function main() {
-  console.log('🌱 =========================================================================');
-  console.log('🌱 Iniciando Seed do Banco de Dados com Catálogos e Oferta Celeo Lote 04...');
-  console.log('🌱 =========================================================================');
+  console.log(
+    '🌱 =========================================================================',
+  );
+  console.log(
+    '🌱 Iniciando Seed do Banco de Dados com Catálogos e Oferta Celeo Lote 04...',
+  );
+  console.log(
+    '🌱 =========================================================================',
+  );
 
   const now = new Date('2026-03-25T00:00:00.000Z');
   const user = 'sistema@celeoredes.com.br';
 
-  const templatePath = path.join(process.cwd(), 'template/Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03.xlsm');
+  const templatePath = path.join(
+    process.cwd(),
+    'template/Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03.xlsm',
+  );
   let wb: xlsx.WorkBook | null = null;
   if (fs.existsSync(templatePath)) {
-    console.log(`  📂 Planilha mestre carregada: ${path.basename(templatePath)}`);
+    console.log(
+      `  📂 Planilha mestre carregada: ${path.basename(templatePath)}`,
+    );
     wb = xlsx.readFile(templatePath, { cellFormula: false, cellHTML: false });
   } else {
-    console.log('  ⚠️ Planilha mestre não encontrada localmente. Utilizando catálogo base interno.');
+    console.log(
+      '  ⚠️ Planilha mestre não encontrada localmente. Utilizando catálogo base interno.',
+    );
   }
 
   // =========================================================================
@@ -73,7 +95,9 @@ async function main() {
   ];
 
   for (const c of conductorSeedList) {
-    let item = await prisma.conductorCable.findUnique({ where: { code: c.code } });
+    let item = await prisma.conductorCable.findUnique({
+      where: { code: c.code },
+    });
     if (!item) {
       item = await prisma.conductorCable.create({
         data: {
@@ -98,7 +122,9 @@ async function main() {
   // -------------------------------------------------------------------------
   // 1.2 Cabos de Guarda e OPGW (DB_CGA, DB_OPGW)
   // -------------------------------------------------------------------------
-  console.log('\n[2/10] Processando Catálogo de Cabos de Guarda e OPGW (DB_CGA / DB_OPGW)...');
+  console.log(
+    '\n[2/10] Processando Catálogo de Cabos de Guarda e OPGW (DB_CGA / DB_OPGW)...',
+  );
   const groundWireSeedList = [
     {
       code: 'OPGW-24F-CELEO',
@@ -154,7 +180,9 @@ async function main() {
       });
     }
   }
-  console.log(`  ✓ ${groundWireSeedList.length} Cabos de Guarda e OPGW cadastrados.`);
+  console.log(
+    `  ✓ ${groundWireSeedList.length} Cabos de Guarda e OPGW cadastrados.`,
+  );
 
   // -------------------------------------------------------------------------
   // 1.3 Cabos de Aço para Tirantes (DB_CTI)
@@ -163,7 +191,8 @@ async function main() {
   const guyWireSeedList = [
     {
       code: 'CABO-ACO-TIRANTE-5/8',
-      description: 'Cabo de Aço Galvanizado EHS 5/8" para Tirantes de Torre Estaiada',
+      description:
+        'Cabo de Aço Galvanizado EHS 5/8" para Tirantes de Torre Estaiada',
       weightTonPerKm: 0.89,
       reelLengthM: 1000,
       diameterMm: 15.87,
@@ -240,11 +269,36 @@ async function main() {
   }
 
   const towerTypeConfigs = [
-    { code: 'RS4SL-AUTO', function: TowerFunction.SUSPENSION, guyCount: 0, weightKg: 14800 },
-    { code: 'RS4SP-AUTO', function: TowerFunction.SUSPENSION, guyCount: 0, weightKg: 18600 },
-    { code: 'RS4EL-ESTAI', function: TowerFunction.SUSPENSION, guyCount: 4, weightKg: 9500 },
-    { code: 'RS4A1-ANCOR', function: TowerFunction.ANCHOR, guyCount: 0, weightKg: 26850 },
-    { code: 'RS4AT-ANCOR', function: TowerFunction.ANCHOR, guyCount: 0, weightKg: 34200 },
+    {
+      code: 'RS4SL-AUTO',
+      function: TowerFunction.SUSPENSION,
+      guyCount: 0,
+      weightKg: 14800,
+    },
+    {
+      code: 'RS4SP-AUTO',
+      function: TowerFunction.SUSPENSION,
+      guyCount: 0,
+      weightKg: 18600,
+    },
+    {
+      code: 'RS4EL-ESTAI',
+      function: TowerFunction.SUSPENSION,
+      guyCount: 4,
+      weightKg: 9500,
+    },
+    {
+      code: 'RS4A1-ANCOR',
+      function: TowerFunction.ANCHOR,
+      guyCount: 0,
+      weightKg: 26850,
+    },
+    {
+      code: 'RS4AT-ANCOR',
+      function: TowerFunction.ANCHOR,
+      guyCount: 0,
+      weightKg: 34200,
+    },
   ];
 
   const towerTypeMap: Record<string, number> = {};
@@ -282,7 +336,9 @@ async function main() {
     }
     towerTypeMap[tc.code] = tt.id;
   }
-  console.log(`  ✓ Série '${serie.name}' com ${Object.keys(towerTypeMap).length} tipos de torre cadastrados.`);
+  console.log(
+    `  ✓ Série '${serie.name}' com ${Object.keys(towerTypeMap).length} tipos de torre cadastrados.`,
+  );
 
   // -------------------------------------------------------------------------
   // 1.5 Isoladores (DB_AIS)
@@ -290,7 +346,10 @@ async function main() {
   console.log('\n[5/10] Processando Catálogo de Isoladores (DB_AIS)...');
   let aisCount = 0;
   if (wb && wb.Sheets['DB_AIS']) {
-    const dataAIS = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_AIS'], { header: 1, defval: '' });
+    const dataAIS = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_AIS'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 4; i < dataAIS.length; i++) {
       const row = dataAIS[i];
       if (row && typeof row[0] === 'number' && row[1]) {
@@ -332,9 +391,39 @@ async function main() {
   } else {
     // Fallback básico
     const fallbackAis = [
-      { code: 'AIS-01', desc: '100 kN F100/46 - SEDIVER', type: '100 kN F100/46', mfg: 'SEDIVER', prof: 'Normal', r: 100, d: 255, s: 146, c: 320 },
-      { code: 'AIS-02', desc: '160 kN F160CG/170 - SEDIVER', type: '160 kN F160CG/170', mfg: 'SEDIVER', prof: 'Normal', r: 160, d: 280, s: 170, c: 380 },
-      { code: 'AIS-03', desc: '210 kN F21/170 - SEDIVER', type: '210 kN F21/170', mfg: 'SEDIVER', prof: 'Normal', r: 210, d: 280, s: 170, c: 380 },
+      {
+        code: 'AIS-01',
+        desc: '100 kN F100/46 - SEDIVER',
+        type: '100 kN F100/46',
+        mfg: 'SEDIVER',
+        prof: 'Normal',
+        r: 100,
+        d: 255,
+        s: 146,
+        c: 320,
+      },
+      {
+        code: 'AIS-02',
+        desc: '160 kN F160CG/170 - SEDIVER',
+        type: '160 kN F160CG/170',
+        mfg: 'SEDIVER',
+        prof: 'Normal',
+        r: 160,
+        d: 280,
+        s: 170,
+        c: 380,
+      },
+      {
+        code: 'AIS-03',
+        desc: '210 kN F21/170 - SEDIVER',
+        type: '210 kN F21/170',
+        mfg: 'SEDIVER',
+        prof: 'Normal',
+        r: 210,
+        d: 280,
+        s: 170,
+        c: 380,
+      },
     ];
     for (const fa of fallbackAis) {
       let ais = await prisma.insulator.findUnique({ where: { code: fa.code } });
@@ -372,15 +461,23 @@ async function main() {
   let soilCount = 0;
 
   if (wb && wb.Sheets['DB_FUN']) {
-    const dataFUN = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FUN'], { header: 1, defval: '' });
+    const dataFUN = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FUN'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 6; i < 16; i++) {
       const row = dataFUN[i];
       if (row && row[1] && row[2]) {
         const tipo = String(row[2]).trim();
         const code = `SOLO-${tipo}`;
         const desc = String(row[3]).trim();
-        const submergedStr = String(row[4] || '').trim().toLowerCase();
-        const submerged = submergedStr.includes('si') || submergedStr.includes('sí') || submergedStr.includes('yes');
+        const submergedStr = String(row[4] || '')
+          .trim()
+          .toLowerCase();
+        const submerged =
+          submergedStr.includes('si') ||
+          submergedStr.includes('sí') ||
+          submergedStr.includes('yes');
         const allowableStress = typeof row[5] === 'number' ? row[5] : null;
         const specificWeight = typeof row[6] === 'number' ? row[6] : null;
         const internalFriction = typeof row[7] === 'number' ? row[7] : null;
@@ -425,10 +522,30 @@ async function main() {
 
   // Se algum solo base do modelo ainda não estiver mapeado:
   const baseSoils = [
-    { code: 'SOLO-I', desc: 'Solo Arenoso / Pouco Coesivo (NSPT 2-6)', min: 2, max: 6 },
-    { code: 'SOLO-II', desc: 'Solo Argiloso Médio (NSPT 6-15)', min: 6, max: 15 },
-    { code: 'SOLO-III', desc: 'Solo Silte-Argiloso Compacto (NSPT 15-30)', min: 15, max: 30 },
-    { code: 'SOLO-IV', desc: 'Rocha Sã / Alteração de Rocha (NSPT > 30)', min: 30, max: 60 },
+    {
+      code: 'SOLO-I',
+      desc: 'Solo Arenoso / Pouco Coesivo (NSPT 2-6)',
+      min: 2,
+      max: 6,
+    },
+    {
+      code: 'SOLO-II',
+      desc: 'Solo Argiloso Médio (NSPT 6-15)',
+      min: 6,
+      max: 15,
+    },
+    {
+      code: 'SOLO-III',
+      desc: 'Solo Silte-Argiloso Compacto (NSPT 15-30)',
+      min: 15,
+      max: 30,
+    },
+    {
+      code: 'SOLO-IV',
+      desc: 'Rocha Sã / Alteração de Rocha (NSPT > 30)',
+      min: 30,
+      max: 60,
+    },
   ];
   for (const bs of baseSoils) {
     if (!soilTypeMap[bs.code]) {
@@ -465,18 +582,26 @@ async function main() {
   let fndCount = 0;
 
   if (wb && wb.Sheets['DB_FUN']) {
-    const dataFUN = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FUN'], { header: 1, defval: '' });
+    const dataFUN = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FUN'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 20; i < 55; i++) {
       const row = dataFUN[i];
       if (row && row[1] && row[2]) {
         const tipo = String(row[2]).trim();
         const code = `FND-${tipo.replace(/\s+/g, '-')}`;
         const desc = String(row[3]).trim();
-        const appStr = String(row[4] || '').trim().toLowerCase();
+        const appStr = String(row[4] || '')
+          .trim()
+          .toLowerCase();
 
-        let application: FoundationApplication = FoundationApplication.SELF_SUPPORTING;
-        if (appStr.includes('estaiada') || appStr.includes('guyed')) application = FoundationApplication.GUYED;
-        else if (appStr.includes('crossrope') || appStr.includes('cross')) application = FoundationApplication.CROSS_ROPE;
+        let application: FoundationApplication =
+          FoundationApplication.SELF_SUPPORTING;
+        if (appStr.includes('estaiada') || appStr.includes('guyed'))
+          application = FoundationApplication.GUYED;
+        else if (appStr.includes('crossrope') || appStr.includes('cross'))
+          application = FoundationApplication.CROSS_ROPE;
 
         const spreadFooting = typeof row[5] === 'number' ? row[5] : null;
         const precastMast = typeof row[6] === 'number' ? row[6] : null;
@@ -523,14 +648,32 @@ async function main() {
 
   // Fundações base representativas para o estaqueamento
   const baseFoundations = [
-    { code: 'FND-4PILAS-CAMPANA', app: FoundationApplication.SELF_SUPPORTING, desc: '4 Pilões com Sino / Tubulão a Céu Aberto' },
-    { code: 'FND-MASTRO-PILA-4TIR', app: FoundationApplication.GUYED, desc: 'Mastro Central + 4 Tirantes de Estai' },
-    { code: 'FND-GRELHA-METALICA', app: FoundationApplication.SELF_SUPPORTING, desc: 'Grelha Metálica Embutida' },
-    { code: 'FND-SAPATA-ROCHA', app: FoundationApplication.SELF_SUPPORTING, desc: 'Sapata com Tirantes Chumbados em Rocha' },
+    {
+      code: 'FND-4PILAS-CAMPANA',
+      app: FoundationApplication.SELF_SUPPORTING,
+      desc: '4 Pilões com Sino / Tubulão a Céu Aberto',
+    },
+    {
+      code: 'FND-MASTRO-PILA-4TIR',
+      app: FoundationApplication.GUYED,
+      desc: 'Mastro Central + 4 Tirantes de Estai',
+    },
+    {
+      code: 'FND-GRELHA-METALICA',
+      app: FoundationApplication.SELF_SUPPORTING,
+      desc: 'Grelha Metálica Embutida',
+    },
+    {
+      code: 'FND-SAPATA-ROCHA',
+      app: FoundationApplication.SELF_SUPPORTING,
+      desc: 'Sapata com Tirantes Chumbados em Rocha',
+    },
   ];
   for (const bf of baseFoundations) {
     if (!foundationTypeMap[bf.code]) {
-      let ft = await prisma.foundationType.findUnique({ where: { code: bf.code } });
+      let ft = await prisma.foundationType.findUnique({
+        where: { code: bf.code },
+      });
       if (!ft) {
         ft = await prisma.foundationType.create({
           data: {
@@ -555,12 +698,17 @@ async function main() {
   // -------------------------------------------------------------------------
   // 1.8 Mão de Obra e Funções (DB_MO)
   // -------------------------------------------------------------------------
-  console.log('\n[8/10] Processando Catálogo de Mão de Obra e Funções (DB_MO)...');
+  console.log(
+    '\n[8/10] Processando Catálogo de Mão de Obra e Funções (DB_MO)...',
+  );
   let laborCount = 0;
   const laborRoleMap: Record<number, number> = {}; // sheetId -> dbId
 
   if (wb && wb.Sheets['DB_MO']) {
-    const dataMO = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_MO'], { header: 1, defval: '' });
+    const dataMO = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_MO'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 7; i < dataMO.length; i++) {
       const row = dataMO[i];
       if (row && typeof row[0] === 'number' && row[1]) {
@@ -568,18 +716,31 @@ async function main() {
         const name = String(row[1]).trim();
         const code = `MO-${String(sheetId).padStart(3, '0')}`;
         const baseSalary = typeof row[2] === 'number' ? row[2] : null;
-        
+
         // Percentuais (ratios 0..1 para caber em Decimal(6,4))
         const hazardVal = typeof row[3] === 'number' ? row[3] : 0;
         const overtimeVal = typeof row[4] === 'number' ? row[4] : 0;
         const dsrVal = typeof row[5] === 'number' ? row[5] : 0;
         const encargosVal = typeof row[6] === 'number' ? row[6] : 0;
 
-        const hazardPayPercent = baseSalary && baseSalary > 0 && hazardVal > 0 ? Number((hazardVal / baseSalary).toFixed(4)) : 0;
-        const overtimePercent = baseSalary && baseSalary > 0 && overtimeVal > 0 ? Number((overtimeVal / baseSalary).toFixed(4)) : 0;
-        const dsrOvertimePercent = baseSalary && baseSalary > 0 && dsrVal > 0 ? Number((dsrVal / baseSalary).toFixed(4)) : 0;
-        const baseAndExtras = (baseSalary || 0) + hazardVal + overtimeVal + dsrVal;
-        const socialChargesPercent = baseAndExtras > 0 && encargosVal > 0 ? Number((encargosVal / baseAndExtras).toFixed(4)) : 0.7596;
+        const hazardPayPercent =
+          baseSalary && baseSalary > 0 && hazardVal > 0
+            ? Number((hazardVal / baseSalary).toFixed(4))
+            : 0;
+        const overtimePercent =
+          baseSalary && baseSalary > 0 && overtimeVal > 0
+            ? Number((overtimeVal / baseSalary).toFixed(4))
+            : 0;
+        const dsrOvertimePercent =
+          baseSalary && baseSalary > 0 && dsrVal > 0
+            ? Number((dsrVal / baseSalary).toFixed(4))
+            : 0;
+        const baseAndExtras =
+          (baseSalary || 0) + hazardVal + overtimeVal + dsrVal;
+        const socialChargesPercent =
+          baseAndExtras > 0 && encargosVal > 0
+            ? Number((encargosVal / baseAndExtras).toFixed(4))
+            : 0.7596;
 
         const food = typeof row[8] === 'number' ? row[8] : null;
         const housing = typeof row[10] === 'number' ? row[10] : null;
@@ -627,7 +788,10 @@ async function main() {
   const eqMap: Record<number, number> = {}; // sheetId -> dbId
 
   if (wb && wb.Sheets['DB_EQ']) {
-    const dataEQ = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_EQ'], { header: 1, defval: '' });
+    const dataEQ = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_EQ'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 7; i < dataEQ.length; i++) {
       const row = dataEQ[i];
       if (row && typeof row[1] === 'number' && row[2]) {
@@ -642,7 +806,10 @@ async function main() {
         const category = row[21] ? String(row[21]).trim() : null;
         const fuel = typeof row[28] === 'number' ? row[28] : null;
         const maintenance = typeof row[29] === 'number' ? row[29] : null;
-        const fuelMaintenance = (fuel !== null || maintenance !== null) ? ((fuel || 0) + (maintenance || 0)) : null;
+        const fuelMaintenance =
+          fuel !== null || maintenance !== null
+            ? (fuel || 0) + (maintenance || 0)
+            : null;
 
         let eq = await prisma.equipment.findUnique({ where: { code } });
         if (!eq) {
@@ -656,8 +823,12 @@ async function main() {
                   externalRentalMonthly: externalRental,
                   internalRentalMonthly: internalRental,
                   purchasePrice,
-                  depreciationYears: depreciation ? Math.round(depreciation) : null,
-                  ownedAvailabilityCount: ownedAvail ? Math.round(ownedAvail) : null,
+                  depreciationYears: depreciation
+                    ? Math.round(depreciation)
+                    : null,
+                  ownedAvailabilityCount: ownedAvail
+                    ? Math.round(ownedAvail)
+                    : null,
                   fuelMaintenanceMonthly: fuelMaintenance,
                   effectiveFrom: now,
                   createdBy: user,
@@ -680,23 +851,32 @@ async function main() {
   let fiCount = 0;
 
   if (wb && wb.Sheets['DB_FI']) {
-    const dataFI = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FI'], { header: 1, defval: '' });
+    const dataFI = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DB_FI'], {
+      header: 1,
+      defval: '',
+    });
     for (let i = 5; i < dataFI.length; i++) {
       const row = dataFI[i];
       if (row && typeof row[0] === 'number' && row[1]) {
         const sheetId = row[0];
         const item = String(row[1]).trim();
-        const tipo = String(row[2] || '').trim().toUpperCase();
+        const tipo = String(row[2] || '')
+          .trim()
+          .toUpperCase();
         const coste = typeof row[3] === 'number' ? row[3] : null;
         const desc = String(row[4] || '').trim();
         const code = `FI-${String(sheetId).padStart(3, '0')}`;
 
         let category: FixedCostCategory = FixedCostCategory.OTHER;
         if (tipo.includes('EPI')) category = FixedCostCategory.EPI;
-        else if (tipo.includes('EXAM')) category = FixedCostCategory.MEDICAL_EXAM;
-        else if (tipo.includes('ROUPA') || tipo.includes('UNIFORM')) category = FixedCostCategory.UNIFORM;
-        else if (tipo.includes('MOB') || tipo.includes('DEMOB')) category = FixedCostCategory.MOB_DEMOB;
-        else if (tipo.includes('VIAGEN') || tipo.includes('TRAVEL')) category = FixedCostCategory.TRAVEL_HOUSING;
+        else if (tipo.includes('EXAM'))
+          category = FixedCostCategory.MEDICAL_EXAM;
+        else if (tipo.includes('ROUPA') || tipo.includes('UNIFORM'))
+          category = FixedCostCategory.UNIFORM;
+        else if (tipo.includes('MOB') || tipo.includes('DEMOB'))
+          category = FixedCostCategory.MOB_DEMOB;
+        else if (tipo.includes('VIAGEN') || tipo.includes('TRAVEL'))
+          category = FixedCostCategory.TRAVEL_HOUSING;
         else if (tipo.includes('INFORMAT')) category = FixedCostCategory.OTHER;
 
         let fc = await prisma.fixedCost.findUnique({ where: { code } });
@@ -726,14 +906,27 @@ async function main() {
   // -------------------------------------------------------------------------
   // 1.11 Equipes de Trabalho e Composições (Equipos & DesEquipos)
   // -------------------------------------------------------------------------
-  console.log('\n[+] Processando Equipes de Trabalho e Composições (Equipos & DesEquipos)...');
+  console.log(
+    '\n[+] Processando Equipes de Trabalho e Composições (Equipos & DesEquipos)...',
+  );
   let crewCount = 0;
   let crewLaborCount = 0;
   let crewEqCount = 0;
 
   if (wb && wb.Sheets['Equipos'] && wb.Sheets['DesEquipos']) {
-    const dataEqMeta = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['Equipos'], { header: 1, defval: '' });
-    const equiposMetaMap: Record<number, { name: string; prodRate: number | null; unit: string | null; period: ProductionPeriod | null }> = {};
+    const dataEqMeta = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['Equipos'], {
+      header: 1,
+      defval: '',
+    });
+    const equiposMetaMap: Record<
+      number,
+      {
+        name: string;
+        prodRate: number | null;
+        unit: string | null;
+        period: ProductionPeriod | null;
+      }
+    > = {};
 
     for (let i = 4; i < dataEqMeta.length; i++) {
       const row = dataEqMeta[i];
@@ -744,16 +937,23 @@ async function main() {
         const unit = row[4] ? String(row[4]).trim() : null;
         const periodStr = row[5] ? String(row[5]).trim().toLowerCase() : '';
         let period: ProductionPeriod | null = null;
-        if (periodStr.includes('hora') || periodStr.includes('h')) period = ProductionPeriod.HOUR;
-        else if (periodStr.includes('dia') || periodStr.includes('d')) period = ProductionPeriod.DAY;
-        else if (periodStr.includes('sem') || periodStr.includes('w')) period = ProductionPeriod.WEEK;
-        else if (periodStr.includes('mes') || periodStr.includes('m')) period = ProductionPeriod.MONTH;
+        if (periodStr.includes('hora') || periodStr.includes('h'))
+          period = ProductionPeriod.HOUR;
+        else if (periodStr.includes('dia') || periodStr.includes('d'))
+          period = ProductionPeriod.DAY;
+        else if (periodStr.includes('sem') || periodStr.includes('w'))
+          period = ProductionPeriod.WEEK;
+        else if (periodStr.includes('mes') || periodStr.includes('m'))
+          period = ProductionPeriod.MONTH;
 
         equiposMetaMap[id] = { name, prodRate: val, unit, period };
       }
     }
 
-    const dataDes = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DesEquipos'], { header: 1, defval: '' });
+    const dataDes = xlsx.utils.sheet_to_json<any[]>(wb.Sheets['DesEquipos'], {
+      header: 1,
+      defval: '',
+    });
 
     interface ParsedCrew {
       sheetId: number;
@@ -777,7 +977,12 @@ async function main() {
       if (row[1] === 'id' && typeof row[2] === 'number') {
         if (currentCrew) crews.push(currentCrew);
         const sId = row[2];
-        const meta = equiposMetaMap[sId] || { name: '', prodRate: null, unit: null, period: null };
+        const meta = equiposMetaMap[sId] || {
+          name: '',
+          prodRate: null,
+          unit: null,
+          period: null,
+        };
         currentCrew = {
           sheetId: sId,
           code: `CREW-${String(sId).padStart(3, '0')}`,
@@ -812,10 +1017,17 @@ async function main() {
         if (section === 'labor') {
           const roleSheetId = row[2];
           const qtd = row[11];
-          if (typeof roleSheetId === 'number' && typeof qtd === 'number' && qtd > 0) {
+          if (
+            typeof roleSheetId === 'number' &&
+            typeof qtd === 'number' &&
+            qtd > 0
+          ) {
             const dbLaborId = laborRoleMap[roleSheetId];
             if (dbLaborId) {
-              currentCrew.laborRoles.push({ laborRoleId: dbLaborId, quantity: qtd });
+              currentCrew.laborRoles.push({
+                laborRoleId: dbLaborId,
+                quantity: qtd,
+              });
             }
           }
         }
@@ -823,10 +1035,17 @@ async function main() {
         if (section === 'equipment') {
           const eqSheetId = row[2];
           const qtd = row[11];
-          if (typeof eqSheetId === 'number' && typeof qtd === 'number' && qtd > 0) {
+          if (
+            typeof eqSheetId === 'number' &&
+            typeof qtd === 'number' &&
+            qtd > 0
+          ) {
             const dbEqId = eqMap[eqSheetId];
             if (dbEqId) {
-              currentCrew.equipments.push({ equipmentId: dbEqId, quantity: qtd });
+              currentCrew.equipments.push({
+                equipmentId: dbEqId,
+                quantity: qtd,
+              });
             }
           }
         }
@@ -837,7 +1056,9 @@ async function main() {
     for (const c of crews) {
       let crew = await prisma.workCrew.findUnique({
         where: { code: c.code },
-        include: { versions: { include: { laborRoles: true, equipments: true } } },
+        include: {
+          versions: { include: { laborRoles: true, equipments: true } },
+        },
       });
 
       if (!crew) {
@@ -867,7 +1088,9 @@ async function main() {
               },
             },
           },
-          include: { versions: { include: { laborRoles: true, equipments: true } } },
+          include: {
+            versions: { include: { laborRoles: true, equipments: true } },
+          },
         });
       }
       crewCount++;
@@ -875,21 +1098,122 @@ async function main() {
       crewEqCount += c.equipments.length;
     }
   }
-  console.log(`  ✓ ${crewCount} Equipes de Trabalho cadastradas com ${crewLaborCount} funções e ${crewEqCount} equipamentos vinculados.`);
+  console.log(
+    `  ✓ ${crewCount} Equipes de Trabalho cadastradas com ${crewLaborCount} funções e ${crewEqCount} equipamentos vinculados.`,
+  );
+
+  // -------------------------------------------------------------------------
+  // 1.11 Parâmetros de Chuva (RN-16, RF-37) e Calendário de Trabalho (M07)
+  // Versão inicial com vigência retroativa: qualquer data de referência
+  // existente resolve para estes valores, preservando a paridade numérica.
+  // -------------------------------------------------------------------------
+  console.log(
+    '\n[+] Processando Parâmetros de Chuva e Calendário de Trabalho (M07)...',
+  );
+  const scheduleConfigEffectiveFrom = new Date('2020-01-01T00:00:00.000Z');
+
+  const existingRainfall = await prisma.rainfallParameterVersion.findUnique({
+    where: { effectiveFrom: scheduleConfigEffectiveFrom },
+  });
+  if (existingRainfall) {
+    console.log(
+      '  ℹ️ Parâmetros de chuva já cadastrados. Mantendo versão existente.',
+    );
+  } else {
+    const monthFields = [
+      'janMm',
+      'febMm',
+      'marMm',
+      'aprMm',
+      'mayMm',
+      'junMm',
+      'julMm',
+      'augMm',
+      'sepMm',
+      'octMm',
+      'novMm',
+      'decMm',
+    ] as const;
+    await prisma.rainfallParameterVersion.create({
+      data: {
+        effectiveFrom: scheduleConfigEffectiveFrom,
+        createdBy: user,
+        severityBands: {
+          create: DEFAULT_RAINFALL_SEVERITY_BANDS.map((band) => ({
+            position: band.position,
+            upperLimitMm: band.upperLimitMm,
+            productivityFactor: band.productivityFactor,
+          })),
+        },
+        ufRows: {
+          create: DEFAULT_RAINFALL_PARAMETERS.ufSeries.map((series) => ({
+            uf: series.uf,
+            ...Object.fromEntries(
+              monthFields.map((field, index) => [
+                field,
+                series.monthlyMm[index],
+              ]),
+            ),
+          })),
+        },
+      },
+    });
+    console.log(
+      '  ✓ Parâmetros de chuva cadastrados (5 faixas, 27 UFs × 12 meses).',
+    );
+  }
+
+  const existingCalendar = await prisma.workCalendarVersion.findUnique({
+    where: { effectiveFrom: scheduleConfigEffectiveFrom },
+  });
+  if (existingCalendar) {
+    console.log(
+      '  ℹ️ Calendário de trabalho já cadastrado. Mantendo versão existente.',
+    );
+  } else {
+    await prisma.workCalendarVersion.create({
+      data: {
+        effectiveFrom: scheduleConfigEffectiveFrom,
+        standardWorkingDaysPerMonth:
+          DEFAULT_WORK_CALENDAR.standardWorkingDaysPerMonth,
+        nonWorkingWeekdays: DEFAULT_WORK_CALENDAR.nonWorkingWeekdays,
+        createdBy: user,
+        holidays: {
+          create: DEFAULT_WORK_CALENDAR.holidays.map((holiday) => ({
+            date: new Date(`${holiday.date}T00:00:00.000Z`),
+            name: holiday.name,
+            recurring: holiday.recurring,
+            uf: holiday.uf,
+          })),
+        },
+      },
+    });
+    console.log(
+      `  ✓ Calendário de trabalho cadastrado (sáb/dom não laborais, ${DEFAULT_WORK_CALENDAR.holidays.length} feriados nacionais recorrentes).`,
+    );
+  }
 
   // =========================================================================
   // 2. OFERTA PRINCIPAL (CELEO LOTE 04 - 2026)
   // =========================================================================
-  console.log('\n[+] Processando Oferta Principal Celeo Lote 04 (Leilão 004/2026)...');
+  console.log(
+    '\n[+] Processando Oferta Principal Celeo Lote 04 (Leilão 004/2026)...',
+  );
   const offerCode = 'OF-2026-CELEO-LOTE-04';
 
   let offer = await prisma.offer.findUnique({
     where: { code: offerCode },
-    include: { revisions: { include: { transmissionLines: true, scopeMatrixItems: true } } },
+    include: {
+      revisions: {
+        include: { transmissionLines: true, scopeMatrixItems: true },
+      },
+    },
   });
 
   if (offer) {
-    console.log(`  ℹ️ Oferta '${offerCode}' já cadastrada. Atualizando para sincronia total...`);
+    console.log(
+      `  ℹ️ Oferta '${offerCode}' já cadastrada. Atualizando para sincronia total...`,
+    );
     await prisma.offer.delete({ where: { code: offerCode } });
   }
 
@@ -911,9 +1235,10 @@ async function main() {
           scheduleStartDate: new Date('2026-07-01T00:00:00.000Z'),
           commercialOperationDate: new Date('2029-06-30T00:00:00.000Z'),
           estimatedCapex: 2382080065.89, // Total Custo EPC (R$ 2.382 bilhões)
-          maxRap: 535000000.00,
-          winningRap: 480000000.00,
-          notes: 'Proposta mestre extraída de Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03. Contém 3 linhas 525 kV (856 km), regime REIDI, faturamento direto e estruturas autoportantes e estaiadas.',
+          maxRap: 535000000.0,
+          winningRap: 480000000.0,
+          notes:
+            'Proposta mestre extraída de Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03. Contém 3 linhas 525 kV (856 km), regime REIDI, faturamento direto e estruturas autoportantes e estaiadas.',
           createdBy: user,
           // 2.1 Linhas de Transmissão (3 trechos)
           transmissionLines: {
@@ -962,13 +1287,15 @@ async function main() {
             create: [
               {
                 itemCode: 'MAT-TORRES-525KV',
-                itemName: 'Estruturas Metálicas de Torres 525 kV (Aço Galvanizado)',
+                itemName:
+                  'Estruturas Metálicas de Torres 525 kV (Aço Galvanizado)',
                 category: 'TOWER',
                 responsibleParty: ScopeResponsibleParty.CONTRACTOR,
                 acceptsDirectBilling: true,
                 currencyRiskParty: ScopeResponsibleParty.CONTRACTOR,
                 commodityRiskParty: ScopeResponsibleParty.CONTRACTOR,
-                notes: 'Faturamento direto pelo cliente com suspensão PIS/COFINS (REIDI). Custo Líquido R$ 412,47M',
+                notes:
+                  'Faturamento direto pelo cliente com suspensão PIS/COFINS (REIDI). Custo Líquido R$ 412,47M',
               },
               {
                 itemCode: 'MAT-CONDUTOR-CAL-998',
@@ -978,7 +1305,8 @@ async function main() {
                 acceptsDirectBilling: true,
                 currencyRiskParty: ScopeResponsibleParty.CONTRACTOR,
                 commodityRiskParty: ScopeResponsibleParty.CONTRACTOR,
-                notes: 'Faturamento direto com hedge de alumínio LME. Custo Líquido R$ 384,12M',
+                notes:
+                  'Faturamento direto com hedge de alumínio LME. Custo Líquido R$ 384,12M',
               },
               {
                 itemCode: 'MAT-OPGW-24F',
@@ -988,7 +1316,8 @@ async function main() {
                 acceptsDirectBilling: true,
                 currencyRiskParty: ScopeResponsibleParty.CONTRACTOR,
                 commodityRiskParty: ScopeResponsibleParty.CONTRACTOR,
-                notes: 'Faturamento direto com suspensão REIDI. Custo Líquido R$ 42,35M',
+                notes:
+                  'Faturamento direto com suspensão REIDI. Custo Líquido R$ 42,35M',
               },
               {
                 itemCode: 'MAT-ISOLADORES-525KV',
@@ -1032,7 +1361,8 @@ async function main() {
               },
               {
                 itemCode: 'SRV-TENDIDO-CABOS',
-                itemName: 'Lançamento e Tensionamento de Cabos Condutores e OPGW',
+                itemName:
+                  'Lançamento e Tensionamento de Cabos Condutores e OPGW',
                 category: 'STRINGING',
                 responsibleParty: ScopeResponsibleParty.CONTRACTOR,
                 acceptsDirectBilling: false,
@@ -1042,13 +1372,15 @@ async function main() {
               },
               {
                 itemCode: 'SRV-CANTEIROS-ADMINISTRACAO',
-                itemName: 'Canteiros Principais, Avançados, Pátios e Direção de Obra',
+                itemName:
+                  'Canteiros Principais, Avançados, Pátios e Direção de Obra',
                 category: 'INDIRECTS',
                 responsibleParty: ScopeResponsibleParty.CONTRACTOR,
                 acceptsDirectBilling: false,
                 currencyRiskParty: ScopeResponsibleParty.CONTRACTOR,
                 commodityRiskParty: ScopeResponsibleParty.CONTRACTOR,
-                notes: 'Canteiros R$ 203,00M + Pátios R$ 61,58M + Preliminares R$ 23,38M + Engenharia R$ 20,37M',
+                notes:
+                  'Canteiros R$ 203,00M + Pátios R$ 61,58M + Preliminares R$ 23,38M + Engenharia R$ 20,37M',
               },
             ],
           },
@@ -1065,37 +1397,139 @@ async function main() {
     },
   });
 
-  console.log(`  ✓ Oferta '${offer.code}' (${offer.name}) inserida com sucesso!`);
+  console.log(
+    `  ✓ Oferta '${offer.code}' (${offer.name}) inserida com sucesso!`,
+  );
   console.log(`    - ID da Oferta: ${offer.id}`);
   console.log(`    - Revisão 0 ID: ${offer.revisions[0].id}`);
-  console.log(`    - ${offer.revisions[0].transmissionLines.length} Linhas de Transmissão cadastradas:`);
+  console.log(
+    `    - ${offer.revisions[0].transmissionLines.length} Linhas de Transmissão cadastradas:`,
+  );
   for (const tl of offer.revisions[0].transmissionLines) {
-    console.log(`      * [${tl.code}] ${tl.name} (${tl.refinedLengthKm} km, ${tl.nominalVoltageKv} kV)`);
+    console.log(
+      `      * [${tl.code}] ${tl.name} (${tl.refinedLengthKm} km, ${tl.nominalVoltageKv} kV)`,
+    );
   }
-  console.log(`    - ${offer.revisions[0].scopeMatrixItems.length} Itens de Matriz de Escopo cadastrados.`);
+  console.log(
+    `    - ${offer.revisions[0].scopeMatrixItems.length} Itens de Matriz de Escopo cadastrados.`,
+  );
 
   // -------------------------------------------------------------------------
   // 2.3 Inserção de Torres de Estaqueamento Representativas
   // -------------------------------------------------------------------------
-  const line1 = offer.revisions[0].transmissionLines.find((l) => l.code === 'LT-525-RB-SAR')!;
-  const line2 = offer.revisions[0].transmissionLines.find((l) => l.code === 'LT-525-CHP-RB')!;
-  const line3 = offer.revisions[0].transmissionLines.find((l) => l.code === 'LT-525-RVN-CHP')!;
+  const line1 = offer.revisions[0].transmissionLines.find(
+    (l) => l.code === 'LT-525-RB-SAR',
+  )!;
+  const line2 = offer.revisions[0].transmissionLines.find(
+    (l) => l.code === 'LT-525-CHP-RB',
+  )!;
+  const line3 = offer.revisions[0].transmissionLines.find(
+    (l) => l.code === 'LT-525-RVN-CHP',
+  )!;
 
   const sampleStaking = [
     // Trecho 1: Rio Brilhante - Sarandi
-    { lineId: line1.id, num: 'E1-T001', station: 0.0, towerType: 'RS4EL-ESTAI', soil: 'SOLO-IV', fnd: 'FND-MASTRO-PILA-4TIR', diff: AccessDifficulty.NORMAL },
-    { lineId: line1.id, num: 'E1-T002', station: 450.0, towerType: 'RS4SL-AUTO', soil: 'SOLO-II', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.NORMAL },
-    { lineId: line1.id, num: 'E1-T003', station: 890.0, towerType: 'RS4A1-ANCOR', soil: 'SOLO-I', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.DIFFICULT },
-    { lineId: line1.id, num: 'E1-T004', station: 1340.0, towerType: 'RS4EL-ESTAI', soil: 'SOLO-III', fnd: 'FND-MASTRO-PILA-4TIR', diff: AccessDifficulty.NORMAL },
-    { lineId: line1.id, num: 'E1-T005', station: 1800.0, towerType: 'RS4SP-AUTO', soil: 'SOLO-II', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.NORMAL },
+    {
+      lineId: line1.id,
+      num: 'E1-T001',
+      station: 0.0,
+      towerType: 'RS4EL-ESTAI',
+      soil: 'SOLO-IV',
+      fnd: 'FND-MASTRO-PILA-4TIR',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line1.id,
+      num: 'E1-T002',
+      station: 450.0,
+      towerType: 'RS4SL-AUTO',
+      soil: 'SOLO-II',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line1.id,
+      num: 'E1-T003',
+      station: 890.0,
+      towerType: 'RS4A1-ANCOR',
+      soil: 'SOLO-I',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.DIFFICULT,
+    },
+    {
+      lineId: line1.id,
+      num: 'E1-T004',
+      station: 1340.0,
+      towerType: 'RS4EL-ESTAI',
+      soil: 'SOLO-III',
+      fnd: 'FND-MASTRO-PILA-4TIR',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line1.id,
+      num: 'E1-T005',
+      station: 1800.0,
+      towerType: 'RS4SP-AUTO',
+      soil: 'SOLO-II',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.NORMAL,
+    },
     // Trecho 2: Chapadão - Rio Brilhante
-    { lineId: line2.id, num: 'E2-T001', station: 0.0, towerType: 'RS4A1-ANCOR', soil: 'SOLO-I', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.NORMAL },
-    { lineId: line2.id, num: 'E2-T002', station: 480.0, towerType: 'RS4EL-ESTAI', soil: 'SOLO-IV', fnd: 'FND-MASTRO-PILA-4TIR', diff: AccessDifficulty.NORMAL },
-    { lineId: line2.id, num: 'E2-T003', station: 950.0, towerType: 'RS4SL-AUTO', soil: 'SOLO-II', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.NORMAL },
+    {
+      lineId: line2.id,
+      num: 'E2-T001',
+      station: 0.0,
+      towerType: 'RS4A1-ANCOR',
+      soil: 'SOLO-I',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line2.id,
+      num: 'E2-T002',
+      station: 480.0,
+      towerType: 'RS4EL-ESTAI',
+      soil: 'SOLO-IV',
+      fnd: 'FND-MASTRO-PILA-4TIR',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line2.id,
+      num: 'E2-T003',
+      station: 950.0,
+      towerType: 'RS4SL-AUTO',
+      soil: 'SOLO-II',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.NORMAL,
+    },
     // Trecho 3: Rio Verde Norte - Chapadão
-    { lineId: line3.id, num: 'E3-T001', station: 0.0, towerType: 'RS4AT-ANCOR', soil: 'SOLO-I', fnd: 'FND-SAPATA-ROCHA', diff: AccessDifficulty.DIFFICULT },
-    { lineId: line3.id, num: 'E3-T002', station: 460.0, towerType: 'RS4EL-ESTAI', soil: 'SOLO-III', fnd: 'FND-MASTRO-PILA-4TIR', diff: AccessDifficulty.NORMAL },
-    { lineId: line3.id, num: 'E3-T003', station: 920.0, towerType: 'RS4SL-AUTO', soil: 'SOLO-II', fnd: 'FND-4PILAS-CAMPANA', diff: AccessDifficulty.NORMAL },
+    {
+      lineId: line3.id,
+      num: 'E3-T001',
+      station: 0.0,
+      towerType: 'RS4AT-ANCOR',
+      soil: 'SOLO-I',
+      fnd: 'FND-SAPATA-ROCHA',
+      diff: AccessDifficulty.DIFFICULT,
+    },
+    {
+      lineId: line3.id,
+      num: 'E3-T002',
+      station: 460.0,
+      towerType: 'RS4EL-ESTAI',
+      soil: 'SOLO-III',
+      fnd: 'FND-MASTRO-PILA-4TIR',
+      diff: AccessDifficulty.NORMAL,
+    },
+    {
+      lineId: line3.id,
+      num: 'E3-T003',
+      station: 920.0,
+      towerType: 'RS4SL-AUTO',
+      soil: 'SOLO-II',
+      fnd: 'FND-4PILAS-CAMPANA',
+      diff: AccessDifficulty.NORMAL,
+    },
   ];
 
   for (const st of sampleStaking) {
@@ -1111,7 +1545,9 @@ async function main() {
       },
     });
   }
-  console.log(`  ✓ ${sampleStaking.length} Torres de estaqueamento representativas cadastradas.`);
+  console.log(
+    `  ✓ ${sampleStaking.length} Torres de estaqueamento representativas cadastradas.`,
+  );
 
   // -------------------------------------------------------------------------
   // 2.4 Distribuição Preliminar Paramétrica
@@ -1137,9 +1573,13 @@ async function main() {
   }
   console.log('  ✓ Distribuições preliminares de solo e fundação associadas.');
 
-  console.log('\n✨ =========================================================================');
+  console.log(
+    '\n✨ =========================================================================',
+  );
   console.log('✨ Seed concluído com 100% de sucesso em todos os catálogos!');
-  console.log('✨ =========================================================================\n');
+  console.log(
+    '✨ =========================================================================\n',
+  );
 }
 
 main()

@@ -703,6 +703,89 @@ model StakingTower {
   @@map("staking_tower")
 }
 
+// M07 — Parâmetros de chuva (RN-16, RF-37) e calendário de trabalho:
+// catálogos singleton de configuração. Existe um único conjunto de cada no
+// sistema, então não há tabela de item — apenas versões imutáveis com
+// vigência derivada (RNF-05). Tabelas filhas pertencem à versão e são
+// imutáveis com ela (nested create).
+model RainfallParameterVersion {
+  id            Int                    @id @default(autoincrement())
+  effectiveFrom DateTime               @unique @map("effective_from") @db.Date
+  createdBy     String                 @map("created_by")
+  createdAt     DateTime               @default(now()) @map("created_at")
+  severityBands RainfallSeverityBand[]
+  ufRows        RainfallUfRow[]
+
+  @@map("rainfall_parameter_version")
+}
+
+// Faixas de severidade de precipitação ordenadas por posição; a última faixa
+// é aberta (upper_limit_mm nulo = sem limite superior).
+model RainfallSeverityBand {
+  id                         Int                      @id @default(autoincrement())
+  rainfallParameterVersionId Int                      @map("rainfall_parameter_version_id")
+  rainfallParameterVersion   RainfallParameterVersion @relation(fields: [rainfallParameterVersionId], references: [id])
+  position                   Int
+  upperLimitMm               Decimal?                 @map("upper_limit_mm") @db.Decimal(6, 1)
+  productivityFactor         Decimal                  @map("productivity_factor") @db.Decimal(5, 4)
+
+  // Nome explícito: o auto-gerado ultrapassaria 63 caracteres do Postgres.
+  @@unique([rainfallParameterVersionId, position], map: "rainfall_severity_band_version_position_key")
+  @@map("rainfall_severity_band")
+}
+
+// Precipitação média histórica mensal (mm) por UF — uma linha por UF com as
+// 12 colunas de mês, espelhando a forma da planilha (aba Precip).
+model RainfallUfRow {
+  id                         Int                      @id @default(autoincrement())
+  rainfallParameterVersionId Int                      @map("rainfall_parameter_version_id")
+  rainfallParameterVersion   RainfallParameterVersion @relation(fields: [rainfallParameterVersionId], references: [id])
+  uf                         String                   @db.VarChar(2)
+  janMm                      Decimal                  @map("jan_mm") @db.Decimal(6, 1)
+  febMm                      Decimal                  @map("feb_mm") @db.Decimal(6, 1)
+  marMm                      Decimal                  @map("mar_mm") @db.Decimal(6, 1)
+  aprMm                      Decimal                  @map("apr_mm") @db.Decimal(6, 1)
+  mayMm                      Decimal                  @map("may_mm") @db.Decimal(6, 1)
+  junMm                      Decimal                  @map("jun_mm") @db.Decimal(6, 1)
+  julMm                      Decimal                  @map("jul_mm") @db.Decimal(6, 1)
+  augMm                      Decimal                  @map("aug_mm") @db.Decimal(6, 1)
+  sepMm                      Decimal                  @map("sep_mm") @db.Decimal(6, 1)
+  octMm                      Decimal                  @map("oct_mm") @db.Decimal(6, 1)
+  novMm                      Decimal                  @map("nov_mm") @db.Decimal(6, 1)
+  decMm                      Decimal                  @map("dec_mm") @db.Decimal(6, 1)
+
+  @@unique([rainfallParameterVersionId, uf], map: "rainfall_uf_row_version_uf_key")
+  @@map("rainfall_uf_row")
+}
+
+model WorkCalendarVersion {
+  id                          Int       @id @default(autoincrement())
+  effectiveFrom               DateTime  @unique @map("effective_from") @db.Date
+  standardWorkingDaysPerMonth Decimal   @map("standard_working_days_per_month") @db.Decimal(4, 2)
+  // Dias da semana não laborais: 0=domingo .. 6=sábado.
+  nonWorkingWeekdays          Int[]     @map("non_working_weekdays")
+  createdBy                   String    @map("created_by")
+  createdAt                   DateTime  @default(now()) @map("created_at")
+  holidays                    Holiday[]
+
+  @@map("work_calendar_version")
+}
+
+// Feriado com data civil; recorrente repete todo ano pelo par mês-dia.
+// uf nula = feriado nacional; preenchida = aplicável só a linhas daquela UF.
+model Holiday {
+  id                    Int                 @id @default(autoincrement())
+  workCalendarVersionId Int                 @map("work_calendar_version_id")
+  workCalendarVersion   WorkCalendarVersion @relation(fields: [workCalendarVersionId], references: [id])
+  date                  DateTime            @db.Date
+  name                  String
+  recurring             Boolean             @default(false)
+  uf                    String?             @db.VarChar(2)
+
+  @@index([workCalendarVersionId])
+  @@map("holiday")
+}
+
 model PreliminaryStakingDistribution {
   id                    Int              @id @default(autoincrement())
   transmissionLineId    Int              @unique @map("transmission_line_id")

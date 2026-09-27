@@ -296,6 +296,19 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | cota de terreno (m)                                 | `elevationMeters` / `elevation_meters`                                                                  |
 | grau de dificuldade de acesso                       | `AccessDifficulty`: `NORMAL` \| `DIFFICULT` \| `CROSSING`                                               |
 | distribuição paramétrica preliminar                 | `PreliminaryStakingDistribution` / `preliminary_staking_distribution`                                   |
+| parâmetros de chuva                                 | `RainfallParameterVersion` / `rainfall_parameter_version`                                               |
+| faixa de severidade de chuva                        | `RainfallSeverityBand` / `rainfall_severity_band`                                                       |
+| limite superior da faixa (mm)                       | `upperLimitMm` / `upper_limit_mm`                                                                       |
+| fator de produtividade (chuva)                      | `productivityFactor` / `productivity_factor`                                                            |
+| linha de precipitação por UF                        | `RainfallUfRow` / `rainfall_uf_row`                                                                     |
+| precipitação do mês (mm)                            | `janMm`..`decMm` / `jan_mm`..`dec_mm`                                                                   |
+| calendário de trabalho                              | `WorkCalendarVersion` / `work_calendar_version`                                                         |
+| feriado                                             | `Holiday` / `holiday`                                                                                   |
+| recorrente (feriado fixo anual)                     | `recurring`                                                                                             |
+| dias não laborais da semana                         | `nonWorkingWeekdays` / `non_working_weekdays`                                                           |
+| dias úteis padrão por mês                           | `standardWorkingDaysPerMonth` / `standard_working_days_per_month`                                       |
+| dias úteis                                          | `workingDays` / `working_days`                                                                          |
+| fator de calendário                                 | `calendarFactor` / `calendar_factor`                                                                    |
 
 ### Demais convenções
 
