@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { RainfallParametersComponent } from './rainfall-parameters.component';
+import { WorkCalendarComponent } from './work-calendar.component';
 import { ConductorCableFormComponent } from './conductor-cable-form.component';
 import { ConductorCableHistoryComponent } from './conductor-cable-history.component';
 import { ConductorCableListComponent } from './conductor-cable-list.component';
@@ -125,4 +127,14 @@ export const CATALOGS_ROUTES: Routes = [
   { path: 'work-crews/new', component: WorkCrewFormComponent },
   { path: 'work-crews/:id/edit', component: WorkCrewFormComponent },
   { path: 'work-crews/:id/history', component: WorkCrewHistoryComponent },
+  // Catálogos singleton de configuração do cronograma (M07): sem lista nem
+  // histórico próprio — a tela edita a versão vigente criando uma nova.
+  {
+    path: 'schedule-parameters/rainfall',
+    component: RainfallParametersComponent,
+  },
+  {
+    path: 'schedule-parameters/work-calendar',
+    component: WorkCalendarComponent,
+  },
 ];

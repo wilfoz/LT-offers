@@ -87,7 +87,8 @@ export const ACTIVITY_GROUP_COLORS: Record<ActivityGroup, string> = {
               <span class="unit">meses</span>
             </div>
             <div class="kpi-subtext">
-              Início no Mês {{ schedule()?.startMonth }}
+              Início no Mês {{ schedule()?.startMonth }} ·
+              {{ startDateLabel() }}
             </div>
           </div>
 
@@ -231,6 +232,7 @@ export const ACTIVITY_GROUP_COLORS: Record<ActivityGroup, string> = {
                         act.status === 'WARNING_OVERPRODUCTION'
                       "
                       [class.bar-critical]="act.status === 'CRITICAL'"
+                      [title]="breakdownTooltip(act)"
                     >
                       <span class="bar-label"
                         >{{ act.durationMonths }}m (M{{ act.startMonth }}..M{{
@@ -292,7 +294,15 @@ export const ACTIVITY_GROUP_COLORS: Record<ActivityGroup, string> = {
                     <td class="text-center font-mono">
                       M{{ act.startMonth }}..M{{ act.endMonth }}
                     </td>
-                    <td class="text-right">{{ act.monthlyProduction }}</td>
+                    <td class="text-right">
+                      {{ act.monthlyProduction }}
+                      @if (penalizedMonths(act) > 0) {
+                        <span class="factor-tag" [title]="breakdownTooltip(act)"
+                          >fatores em {{ penalizedMonths(act) }}
+                          {{ penalizedMonths(act) === 1 ? 'mês' : 'meses' }}
+                        </span>
+                      }
+                    </td>
                     <td class="text-right">
                       {{ formatCurrency(act.mobilizationCost) }}
                     </td>
@@ -736,6 +746,18 @@ export const ACTIVITY_GROUP_COLORS: Record<ActivityGroup, string> = {
         color: #b91c1c;
       }
 
+      .factor-tag {
+        display: inline-block;
+        margin-left: 0.375rem;
+        padding: 0.1rem 0.35rem;
+        border-radius: 4px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        background: #e0f2fe;
+        color: #0369a1;
+        cursor: help;
+      }
+
       .loading-panel {
         display: flex;
         align-items: center;
@@ -842,6 +864,37 @@ export class ScheduleGanttComponent implements OnInit {
     const total = Math.max(18, this.schedule()?.totalDurationMonths || 18);
     const d = Math.max(1, durationMonths);
     return (d / total) * 100;
+  }
+
+  /** Ancoragem civil do cronograma; ausência é pendência (RNF-09). */
+  startDateLabel(): string {
+    const date = this.schedule()?.scheduleStartDate;
+    return date ? `Obra a partir de ${date}` : 'Data de início não informada';
+  }
+
+  /** Meses da atividade penalizados por chuva ou calendário (fator < 1). */
+  penalizedMonths(act: ScheduleActivity): number {
+    return (act.monthlyBreakdown ?? []).filter(
+      (entry) =>
+        Number(entry.rainfallFactor) < 1 || Number(entry.calendarFactor) < 1,
+    ).length;
+  }
+
+  /** Plano mensal da atividade: fatores aplicados e produção efetiva. */
+  breakdownTooltip(act: ScheduleActivity): string {
+    const entries = act.monthlyBreakdown ?? [];
+    if (entries.length === 0) {
+      return '';
+    }
+    return entries
+      .map((entry) => {
+        const civil =
+          entry.civilYear && entry.civilMonth
+            ? ` (${String(entry.civilMonth).padStart(2, '0')}/${entry.civilYear})`
+            : '';
+        return `M${entry.projectMonth}${civil}: chuva ${entry.rainfallFactor} × calendário ${entry.calendarFactor} → ${entry.effectiveProduction}/mês`;
+      })
+      .join('\n');
   }
 
   formatCurrency(val?: string | number): string {

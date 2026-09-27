@@ -29,10 +29,10 @@
 
 ## 5. Interface web
 
-- [ ] 5.1 Tela de parâmetros de chuva: grade UF × 12 meses e edição das faixas (limites + percentuais), criação de nova versão com vigência, callbacks de erro em toda leitura, prefill bloqueante e botão refletindo `form.disabled`
-- [ ] 5.2 Tela de calendário de trabalho: feriados (data, nome, recorrente, UF opcional — recorrente exibido como mês-dia sem ano), dias não laborais da semana e dias úteis padrão, com as mesmas guardas de erro/prefill
-- [ ] 5.3 Exibir no cronograma (Gantt) os alertas novos (data de início ausente, mês com produção zero) e o efeito dos fatores mensais aplicados
-- [ ] 5.4 Testes dos componentes web cobrindo os cenários de interface (incluindo validação de percentual fora de 0–1 e data de feriado inválida)
+- [x] 5.1 Tela de parâmetros de chuva: grade UF × 12 meses e edição das faixas (limites + percentuais), criação de nova versão com vigência, callbacks de erro em toda leitura, prefill bloqueante e botão refletindo `form.disabled`
+- [x] 5.2 Tela de calendário de trabalho: feriados (data, nome, recorrente, UF opcional — recorrente exibido como mês-dia sem ano), dias não laborais da semana e dias úteis padrão, com as mesmas guardas de erro/prefill
+- [x] 5.3 Exibir no cronograma (Gantt) os alertas novos (data de início ausente, mês com produção zero) e o efeito dos fatores mensais aplicados
+- [x] 5.4 Testes dos componentes web cobrindo os cenários de interface (incluindo validação de percentual fora de 0–1 e data de feriado inválida)
 
 ## 6. Verificação final e paridade
 

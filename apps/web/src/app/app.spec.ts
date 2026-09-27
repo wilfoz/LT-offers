@@ -53,6 +53,8 @@ describe('App (casca de navegação)', () => {
       'Equipamentos',
       'Custos fixos',
       'Equipes de trabalho',
+      'Parâmetros de chuva',
+      'Calendário de trabalho',
     ]);
   });
 
@@ -68,7 +70,7 @@ describe('App (casca de navegação)', () => {
     expect(active[0].textContent).toContain('Cabos de tirante');
     expect(
       (fixture.nativeElement as HTMLElement).querySelectorAll('mat-nav-list a'),
-    ).toHaveLength(13);
+    ).toHaveLength(15);
   });
 
   it('em tela larga a navegação fica fixa, sem botão de menu', async () => {

@@ -103,4 +103,88 @@ describe('ScheduleGanttComponent', () => {
     component.selectedGroupFilter = 'STRINGING';
     expect(component.filteredActivities().length).toBe(0);
   });
+
+  it('deve exibir a pendência de data de início quando o cronograma não está ancorado (RNF-09)', () => {
+    expect(component.startDateLabel()).toBe('Data de início não informada');
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Data de início não informada');
+  });
+
+  it('deve exibir a data de início quando o cronograma está ancorado', () => {
+    apiSpy.getLineSchedule.mockReturnValue(
+      of({ ...mockSchedule, scheduleStartDate: '2026-07-01' }),
+    );
+    component.loadSchedule();
+    fixture.detectChanges();
+
+    expect(component.startDateLabel()).toBe('Obra a partir de 2026-07-01');
+  });
+
+  it('deve contar os meses penalizados e montar o tooltip com os fatores aplicados', () => {
+    const withBreakdown = {
+      ...mockSchedule.activities[0],
+      monthlyBreakdown: [
+        {
+          projectMonth: 2,
+          civilYear: 2026,
+          civilMonth: 8,
+          rainfallFactor: '1.0000',
+          calendarFactor: '0.9545',
+          effectiveProduction: '19.09',
+          plannedProduction: '19.09',
+        },
+        {
+          projectMonth: 3,
+          civilYear: 2026,
+          civilMonth: 9,
+          rainfallFactor: '0.9500',
+          calendarFactor: '1.0000',
+          effectiveProduction: '19.00',
+          plannedProduction: '19.00',
+        },
+        {
+          projectMonth: 4,
+          civilYear: 2026,
+          civilMonth: 10,
+          rainfallFactor: '1.0000',
+          calendarFactor: '1.0000',
+          effectiveProduction: '20.00',
+          plannedProduction: '20.00',
+        },
+      ],
+    };
+    apiSpy.getLineSchedule.mockReturnValue(
+      of({ ...mockSchedule, activities: [withBreakdown] }),
+    );
+    component.loadSchedule();
+    fixture.detectChanges();
+
+    const act = component.schedule()!.activities[0];
+    expect(component.penalizedMonths(act)).toBe(2);
+    const tooltip = component.breakdownTooltip(act);
+    expect(tooltip).toContain(
+      'M2 (08/2026): chuva 1.0000 × calendário 0.9545 → 19.09/mês',
+    );
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('fatores em 2 meses');
+  });
+
+  it('deve renderizar os alertas do motor (mês parado, pendências) no banner', () => {
+    apiSpy.getLineSchedule.mockReturnValue(
+      of({
+        ...mockSchedule,
+        warnings: [
+          'Data de início do cronograma não informada: feriados e dias não laborais não foram considerados no cálculo.',
+          "Atividade 'Obras Civis': mês 3 sem produção efetiva — a atividade avança sem consumo no período.",
+        ],
+      }),
+    );
+    component.loadSchedule();
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Data de início do cronograma não informada');
+    expect(text).toContain('mês 3 sem produção efetiva');
+  });
 });

@@ -109,6 +109,16 @@ export class App {
       label: 'Equipes de trabalho',
       icon: 'groups',
     },
+    {
+      path: '/catalogs/schedule-parameters/rainfall',
+      label: 'Parâmetros de chuva',
+      icon: 'rainy',
+    },
+    {
+      path: '/catalogs/schedule-parameters/work-calendar',
+      label: 'Calendário de trabalho',
+      icon: 'event_available',
+    },
   ];
 
   protected toggleMenu(): void {
