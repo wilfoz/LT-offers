@@ -11,6 +11,7 @@ import { BaselineModule } from '../contexts/baseline/infrastructure/baseline.mod
 
 import { ElectromechanicalModule } from '../contexts/electromechanical/infrastructure/electromechanical.module';
 import { ScheduleModule } from '../contexts/schedule/infrastructure/schedule.module';
+import { FieldFactorsModule } from '../field-factors/field-factors.module';
 import { HistogramModule } from '../contexts/histogram/infrastructure/histogram.module';
 import { RisksModule } from '../contexts/risks/infrastructure/risks.module';
 import { ChecksModule } from '../contexts/checks/infrastructure/checks.module';
@@ -31,6 +32,9 @@ describe('Módulos de contexto compilam com injeção de dependência real', () 
     ['PricingModule', PricingModule],
     ['ElectromechanicalModule', ElectromechanicalModule],
     ['ScheduleModule', ScheduleModule],
+    // FieldFactorsModule importa o ScheduleModule para resolver os parâmetros
+    // de chuva vigentes — a cadeia inteira precisa compilar com DI real.
+    ['FieldFactorsModule', FieldFactorsModule],
     ['HistogramModule', HistogramModule],
     ['EconomicsModule', EconomicsModule],
     ['BaselineModule', BaselineModule],

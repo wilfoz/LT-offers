@@ -22,10 +22,10 @@
 
 ## 4. API
 
-- [ ] 4.1 Endpoints de configuração `GET/POST /schedule-parameters/rainfall` e `GET/POST /schedule-parameters/work-calendar` com `?referenceDate=` resolvida na borda, autor via `X-User`, DTOs com strings decimais e validação de calendário round-trip, imutabilidade de versões, `P2002` → 409 e mensagens em pt-BR (reutilizando pipes, `resolveAuthor`, `resolveReferenceDate` e `prisma-errors` da base de catálogos)
-- [ ] 4.2 Teste de paridade DTO × contrato da domain (payload com todas as chaves inválidas → 1 erro por campo), evitando descarte silencioso pela whitelist do `ValidationPipe`
-- [ ] 4.3 Contexto `schedule` (porta + adapter Prisma) e `field-factors` passam a resolver a versão vigente dos dois catálogos pela data de referência e injetar os parâmetros no motor, removendo o consumo das constantes; incluir módulos/providers novos no teste permanente `app/context-modules-di.spec.ts`
-- [ ] 4.4 Testes de controller e use case cobrindo resolução por vigência (oferta fechada reproduz números originais), UF ausente na matriz → 400 identificando a UF, e alerta de `scheduleStartDate` ausente propagado na resposta
+- [x] 4.1 Endpoints de configuração `GET/POST /schedule-parameters/rainfall` e `GET/POST /schedule-parameters/work-calendar` com `?referenceDate=` resolvida na borda, autor via `X-User`, DTOs com strings decimais e validação de calendário round-trip, imutabilidade de versões, `P2002` → 409 e mensagens em pt-BR (reutilizando pipes, `resolveAuthor`, `resolveReferenceDate` e `prisma-errors` da base de catálogos)
+- [x] 4.2 Teste de paridade DTO × contrato da domain (payload com todas as chaves inválidas → 1 erro por campo), evitando descarte silencioso pela whitelist do `ValidationPipe`
+- [x] 4.3 Contexto `schedule` (porta + adapter Prisma) e `field-factors` passam a resolver a versão vigente dos dois catálogos pela data de referência e injetar os parâmetros no motor, removendo o consumo das constantes; incluir módulos/providers novos no teste permanente `app/context-modules-di.spec.ts`
+- [x] 4.4 Testes de controller e use case cobrindo resolução por vigência (oferta fechada reproduz números originais), UF ausente na matriz → 400 identificando a UF, e alerta de `scheduleStartDate` ausente propagado na resposta
 
 ## 5. Interface web
 

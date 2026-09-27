@@ -8,6 +8,10 @@ export interface ScheduleLineData {
   totalTowers: number;
   uf: string;
   startMonth: number;
+  /** Data de referência da oferta (data civil AAAA-MM-DD) para resolução de vigência (RNF-05). */
+  referenceDate: string;
+  /** Data civil de início da obra; ausente = pendência de primeira classe (RNF-09). */
+  scheduleStartDate?: string;
   milestones: MilestoneContract[];
   activitiesInput: ScheduleCalculationInput['activities'];
 }

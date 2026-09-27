@@ -41,7 +41,19 @@ export class PrismaScheduleDataQueryAdapter implements ScheduleDataQueryPort {
           : 100,
     );
     const totalTowers = Math.max(1, Math.round(lengthKm * 2.5));
-    const uf = 'MG'; // UF padrão de referência da proposta
+    // UF primária de destino da linha; fallback histórico MG quando ausente.
+    const uf = line.destinationStatePrimary || 'MG';
+
+    // Data de referência da oferta (vigência RNF-05) e ancoragem civil do
+    // cronograma; ausência de scheduleStartDate é pendência do motor (RNF-09).
+    const referenceDate = (line.offerRevision.offerDate as Date)
+      .toISOString()
+      .slice(0, 10);
+    const scheduleStartDate = line.offerRevision.scheduleStartDate
+      ? (line.offerRevision.scheduleStartDate as Date)
+          .toISOString()
+          .slice(0, 10)
+      : undefined;
 
     const milestones: MilestoneContract[] = [
       {
@@ -178,6 +190,8 @@ export class PrismaScheduleDataQueryAdapter implements ScheduleDataQueryPort {
       totalTowers,
       uf,
       startMonth: 1,
+      referenceDate,
+      scheduleStartDate,
       milestones,
       activitiesInput,
     };

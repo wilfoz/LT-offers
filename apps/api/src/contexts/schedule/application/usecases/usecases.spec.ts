@@ -1,14 +1,23 @@
+import {
+  DEFAULT_RAINFALL_PARAMETERS,
+  DEFAULT_WORK_CALENDAR,
+} from '@lt-offers/domain';
 import { GetLineScheduleUseCase } from './get-line-schedule.usecase';
 import { GetLineCampsUseCase } from './get-line-camps.usecase';
+import { GetEffectiveRainfallParametersUseCase } from './rainfall-parameters.usecases';
+import { GetEffectiveWorkCalendarUseCase } from './work-calendar.usecases';
 import {
   ScheduleDataQueryPort,
   ScheduleLineData,
   ScheduleLineCampsData,
+  ScheduleParametersPort,
   LineScheduleNotFoundException,
+  NoEffectiveScheduleParametersException,
 } from '../../domain';
 
 describe('Schedule Use Cases (M07, RF-35..RF-41)', () => {
   let mockPort: ScheduleDataQueryPort;
+  let mockParametersPort: ScheduleParametersPort;
   let getLineScheduleUseCase: GetLineScheduleUseCase;
   let getLineCampsUseCase: GetLineCampsUseCase;
 
@@ -19,6 +28,8 @@ describe('Schedule Use Cases (M07, RF-35..RF-41)', () => {
     totalTowers: 250,
     uf: 'MG',
     startMonth: 1,
+    referenceDate: '2026-03-25',
+    scheduleStartDate: '2026-07-01',
     milestones: [
       {
         id: 'ms-li-1',
@@ -231,7 +242,31 @@ describe('Schedule Use Cases (M07, RF-35..RF-41)', () => {
       findLineCampsData: jest.fn().mockResolvedValue(sampleCampsData),
     };
 
-    getLineScheduleUseCase = new GetLineScheduleUseCase(mockPort);
+    // Porta dos catálogos de configuração: versão vigente = seed retroativo.
+    mockParametersPort = {
+      findEffectiveRainfall: jest.fn().mockResolvedValue({
+        id: 1,
+        effectiveFrom: '2020-01-01',
+        createdBy: 'sistema',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        parameters: DEFAULT_RAINFALL_PARAMETERS,
+      }),
+      createRainfallVersion: jest.fn(),
+      findEffectiveWorkCalendar: jest.fn().mockResolvedValue({
+        id: 1,
+        effectiveFrom: '2020-01-01',
+        createdBy: 'sistema',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        calendar: DEFAULT_WORK_CALENDAR,
+      }),
+      createWorkCalendarVersion: jest.fn(),
+    };
+
+    getLineScheduleUseCase = new GetLineScheduleUseCase(
+      mockPort,
+      new GetEffectiveRainfallParametersUseCase(mockParametersPort),
+      new GetEffectiveWorkCalendarUseCase(mockParametersPort),
+    );
     getLineCampsUseCase = new GetLineCampsUseCase(mockPort);
   });
 
@@ -244,6 +279,56 @@ describe('Schedule Use Cases (M07, RF-35..RF-41)', () => {
       expect(summary.milestones.length).toBe(2);
       expect(summary.totalDurationMonths).toBeGreaterThanOrEqual(12);
       expect(parseFloat(summary.totalScheduleCost)).toBeGreaterThan(0);
+    });
+
+    it('deve resolver os catálogos de configuração pela data de referência da oferta (RNF-05)', async () => {
+      await getLineScheduleUseCase.execute(1);
+
+      expect(mockParametersPort.findEffectiveRainfall).toHaveBeenCalledWith(
+        '2026-03-25',
+      );
+      expect(mockParametersPort.findEffectiveWorkCalendar).toHaveBeenCalledWith(
+        '2026-03-25',
+      );
+    });
+
+    it('deve ancorar o cronograma na data de início e não emitir pendência quando informada', async () => {
+      const summary = await getLineScheduleUseCase.execute(1);
+
+      expect(summary.scheduleStartDate).toBe('2026-07-01');
+      expect(
+        summary.warnings.some((w) =>
+          w.includes('Data de início do cronograma não informada'),
+        ),
+      ).toBe(false);
+    });
+
+    it('deve propagar o alerta de pendência quando a revisão não tem data de início (RNF-09)', async () => {
+      jest.spyOn(mockPort, 'findLineScheduleData').mockResolvedValue({
+        ...sampleLineData,
+        scheduleStartDate: undefined,
+      });
+
+      const summary = await getLineScheduleUseCase.execute(1);
+
+      expect(summary.scheduleStartDate).toBeUndefined();
+      expect(
+        summary.warnings.some((w) =>
+          w.includes(
+            'Data de início do cronograma não informada: feriados e dias não laborais não foram considerados',
+          ),
+        ),
+      ).toBe(true);
+    });
+
+    it('deve falhar com mensagem explícita quando não há versão de parâmetros vigente', async () => {
+      jest
+        .spyOn(mockParametersPort, 'findEffectiveRainfall')
+        .mockResolvedValue(null);
+
+      await expect(getLineScheduleUseCase.execute(1)).rejects.toThrow(
+        NoEffectiveScheduleParametersException,
+      );
     });
 
     it('deve lançar LineScheduleNotFoundException quando a linha não existir', async () => {

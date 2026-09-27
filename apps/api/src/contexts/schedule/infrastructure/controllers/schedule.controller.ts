@@ -10,7 +10,10 @@ import {
   GetLineScheduleUseCase,
   GetLineCampsUseCase,
 } from '../../application/usecases';
-import { LineScheduleNotFoundException } from '../../domain';
+import {
+  LineScheduleNotFoundException,
+  NoEffectiveScheduleParametersException,
+} from '../../domain';
 
 @Controller('lines/:lineId/schedule')
 export class ScheduleController {
@@ -26,7 +29,10 @@ export class ScheduleController {
     try {
       return await this.getLineScheduleUseCase.execute(lineId);
     } catch (err) {
-      if (err instanceof LineScheduleNotFoundException) {
+      if (
+        err instanceof LineScheduleNotFoundException ||
+        err instanceof NoEffectiveScheduleParametersException
+      ) {
         throw new NotFoundException(err.message);
       }
       throw err;
