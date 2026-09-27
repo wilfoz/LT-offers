@@ -15,10 +15,10 @@
 
 ## 3. Motor de cálculo (refit calc-engine)
 
-- [ ] 3.1 Refit do `PrecipitationCalculator` para operar sobre `RainfallParameters` recebido por parâmetro, removendo `DEFAULT_PRECIPITATION_BY_UF`, `classifyLevel` com limites fixos e `PRODUCTIVITY_FACTORS_BY_LEVEL` (sem fallback interno — design D2), preservando escalas e arredondamentos atuais
-- [ ] 3.2 Novo `WorkCalendarCalculator`: fator de calendário do mês civil = dias úteis ÷ dias padrão, arredondado a 4 casas half-up, a partir de `WorkCalendarParameters` e da UF da linha
-- [ ] 3.3 Refit do `ScheduleCalculator`: ancoragem do mês 1 em `scheduleStartDate` (ausência = pendência explícita com alerta, cálculo cíclico sem fator de calendário — RNF-09), consumo do quantitativo mês a mês com produção efetiva composta (nominal × equipes × chuva × calendário ÷ acesso, 2 casas half-up por mês), produção mensal programada real na validação RN-15, guarda de mês com produção zero (alerta e avanço) e horizonte máximo de 600 meses com erro explícito
-- [ ] 3.4 Testes golden comparando o método anterior (média fixa de 6 meses) com o novo consumo mês a mês, quantificando o desvio de duração; testes dos cenários do delta `cronograma` (fatores variáveis por mês, mês zerado, composição multiplicativa, grupos Indiretos/Canteiros fora da penalização)
+- [x] 3.1 Refit do `PrecipitationCalculator` para operar sobre `RainfallParameters` recebido por parâmetro, removendo `DEFAULT_PRECIPITATION_BY_UF`, `classifyLevel` com limites fixos e `PRODUCTIVITY_FACTORS_BY_LEVEL` (sem fallback interno — design D2), preservando escalas e arredondamentos atuais
+- [x] 3.2 Novo `WorkCalendarCalculator`: fator de calendário do mês civil = dias úteis ÷ dias padrão, arredondado a 4 casas half-up, a partir de `WorkCalendarParameters` e da UF da linha
+- [x] 3.3 Refit do `ScheduleCalculator`: ancoragem do mês 1 em `scheduleStartDate` (ausência = pendência explícita com alerta, cálculo cíclico sem fator de calendário — RNF-09), consumo do quantitativo mês a mês com produção efetiva composta (nominal × equipes × chuva × calendário ÷ acesso, 2 casas half-up por mês), produção mensal programada real na validação RN-15, guarda de mês com produção zero (alerta e avanço) e horizonte máximo de 600 meses com erro explícito
+- [x] 3.4 Testes golden comparando o método anterior (média fixa de 6 meses) com o novo consumo mês a mês, quantificando o desvio de duração; testes dos cenários do delta `cronograma` (fatores variáveis por mês, mês zerado, composição multiplicativa, grupos Indiretos/Canteiros fora da penalização)
 
 ## 4. API
 

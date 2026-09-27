@@ -10,6 +10,7 @@ export * from './lib/electromechanical/hardware-calculator';
 export * from './lib/electromechanical/access-calculator';
 export * from './lib/electromechanical/summary-calculator';
 export * from './lib/schedule/precipitation-calculator';
+export * from './lib/schedule/work-calendar-calculator';
 export * from './lib/schedule/schedule-calculator';
 export * from './lib/camps/camp-calculator';
 export * from './lib/histogram/histogram-calculator';

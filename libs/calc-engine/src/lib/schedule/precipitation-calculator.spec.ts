@@ -1,11 +1,11 @@
-import {
-  PrecipitationCalculator,
-  UF_METADATA_MAP,
-} from './precipitation-calculator';
+import { DEFAULT_RAINFALL_PARAMETERS } from '@lt-offers/domain';
+import { PrecipitationCalculator } from './precipitation-calculator';
 
-describe('PrecipitationCalculator (27 UFs & RN-16 Calibration)', () => {
-  it('should cover all 27 Brazilian UFs without omissions', () => {
-    const allUfs = PrecipitationCalculator.getAllUfData();
+const params = DEFAULT_RAINFALL_PARAMETERS;
+
+describe('PrecipitationCalculator — parâmetros vigentes injetados (27 UFs, RN-16)', () => {
+  it('deve cobrir as 27 UFs brasileiras sem omissões', () => {
+    const allUfs = PrecipitationCalculator.getAllUfData(params);
     expect(allUfs.length).toBe(27);
 
     const ufCodes = allUfs.map((u) => u.uf);
@@ -41,12 +41,15 @@ describe('PrecipitationCalculator (27 UFs & RN-16 Calibration)', () => {
 
     for (const uf of expectedUfs) {
       expect(ufCodes).toContain(uf);
-      expect(PrecipitationCalculator.isKnownUf(uf)).toBe(true);
+      expect(PrecipitationCalculator.isKnownUf(uf, params)).toBe(true);
     }
   });
 
-  it('should return complete 12 months data with valid regions for each UF', () => {
-    const paData = PrecipitationCalculator.getUfPrecipitationSeries('PA');
+  it('deve retornar os 12 meses completos com região válida por UF', () => {
+    const paData = PrecipitationCalculator.getUfPrecipitationSeries(
+      'PA',
+      params,
+    );
     expect(paData.uf).toBe('PA');
     expect(paData.name).toBe('Pará');
     expect(paData.region).toBe('NORTE');
@@ -63,30 +66,74 @@ describe('PrecipitationCalculator (27 UFs & RN-16 Calibration)', () => {
     }
   });
 
-  it('should classify precipitation severity levels correctly per RN-16', () => {
-    expect(PrecipitationCalculator.classifyLevel(20)).toBe(1); // < 50mm
-    expect(PrecipitationCalculator.classifyLevel(80)).toBe(2); // 50-100mm
-    expect(PrecipitationCalculator.classifyLevel(150)).toBe(3); // 100-200mm
-    expect(PrecipitationCalculator.classifyLevel(250)).toBe(4); // 200-300mm
-    expect(PrecipitationCalculator.classifyLevel(350)).toBe(5); // > 300mm
+  it('UF fora da matriz vigente é erro explícito, nunca fallback silencioso (RNF-09)', () => {
+    expect(PrecipitationCalculator.isKnownUf('XX', params)).toBe(false);
+    expect(() =>
+      PrecipitationCalculator.getUfPrecipitationSeries('XX', params),
+    ).toThrow("UF 'XX' não encontrada na matriz de precipitação vigente.");
+    expect(() =>
+      PrecipitationCalculator.getPrecipitationForUfAndMonth('XX', 1, params),
+    ).toThrow("UF 'XX' não encontrada na matriz de precipitação vigente.");
   });
 
-  it('should calculate effective production adjusted by precipitation', () => {
-    // Para MG no mês 1 (Janeiro = 280mm -> Nível 4 -> Fator 0.75)
-    // Produção nominal 20 -> 20 * 0.75 = 15.00
+  it('deve classificar a severidade nas faixas vigentes preservando as fronteiras históricas (RN-16)', () => {
+    expect(PrecipitationCalculator.classifyBand(20, params).position).toBe(1);
+    expect(PrecipitationCalculator.classifyBand(80, params).position).toBe(2);
+    expect(PrecipitationCalculator.classifyBand(100, params).position).toBe(2);
+    expect(PrecipitationCalculator.classifyBand(150, params).position).toBe(3);
+    expect(PrecipitationCalculator.classifyBand(250, params).position).toBe(4);
+    expect(PrecipitationCalculator.classifyBand(300, params).position).toBe(4);
+    expect(PrecipitationCalculator.classifyBand(350, params).position).toBe(5);
+  });
+
+  it('deve retornar o fator de produtividade da faixa pela posição', () => {
+    expect(
+      PrecipitationCalculator.getProductivityFactor(1, params).toText(),
+    ).toBe('1');
+    expect(
+      PrecipitationCalculator.getProductivityFactor(5, params).toText(),
+    ).toBe('0.65');
+    expect(() =>
+      PrecipitationCalculator.getProductivityFactor(9, params),
+    ).toThrow(
+      'Faixa de severidade de posição 9 não existe nos parâmetros de chuva vigentes.',
+    );
+  });
+
+  it('deve calcular a produção efetiva ajustada pela chuva do mês', () => {
+    // MG em Janeiro = 280 mm -> faixa 4 -> fator 0.75; 20 * 0.75 = 15.00
     const effProd = PrecipitationCalculator.calculateEffectiveProduction(
       20,
       'MG',
       1,
+      params,
     );
     expect(effProd.toFixed(2)).toBe('15.00');
   });
 
-  it('should calculate average productivity factor over a duration period', () => {
+  it('fator editado pelo usuário reflete na produção efetiva (percentuais configuráveis)', () => {
+    const edited = {
+      ...params,
+      bands: params.bands.map((b) =>
+        b.position === 4 ? { ...b, productivityFactor: '0.80' } : b,
+      ),
+    };
+    // MG em Janeiro = 280 mm -> faixa 4 agora com fator 0.80; 20 * 0.80 = 16.00
+    const effProd = PrecipitationCalculator.calculateEffectiveProduction(
+      20,
+      'MG',
+      1,
+      edited,
+    );
+    expect(effProd.toFixed(2)).toBe('16.00');
+  });
+
+  it('deve calcular o fator médio de produtividade de um período (método legado)', () => {
     const avgFactor = PrecipitationCalculator.getAverageProductivityFactor(
       'MG',
       1,
       6,
+      params,
     );
     expect(avgFactor.toNumber()).toBeGreaterThan(0.7);
     expect(avgFactor.toNumber()).toBeLessThanOrEqual(1.0);

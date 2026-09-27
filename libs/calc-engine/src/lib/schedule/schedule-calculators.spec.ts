@@ -1,43 +1,81 @@
 import {
+  DEFAULT_RAINFALL_PARAMETERS,
+  DEFAULT_WORK_CALENDAR,
+} from '@lt-offers/domain';
+import {
   PrecipitationCalculator,
   ScheduleCalculator,
   CampCalculator,
   HistogramCalculator,
 } from '../../index';
 
+// Parâmetros vigentes injetados nos cálculos (idênticos ao seed inicial).
+const rainfallParameters = DEFAULT_RAINFALL_PARAMETERS;
+const workCalendar = DEFAULT_WORK_CALENDAR;
+
 describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', () => {
   describe('PrecipitationCalculator (RF-37, RN-16)', () => {
-    it('deve classificar corretamente os 5 níveis de precipitação pluviométrica', () => {
-      expect(PrecipitationCalculator.classifyLevel(30)).toBe(1);
-      expect(PrecipitationCalculator.classifyLevel(80)).toBe(2);
-      expect(PrecipitationCalculator.classifyLevel(150)).toBe(3);
-      expect(PrecipitationCalculator.classifyLevel(250)).toBe(4);
-      expect(PrecipitationCalculator.classifyLevel(350)).toBe(5);
+    it('deve classificar corretamente os níveis de precipitação nas faixas vigentes', () => {
+      expect(
+        PrecipitationCalculator.classifyBand(30, rainfallParameters).position,
+      ).toBe(1);
+      expect(
+        PrecipitationCalculator.classifyBand(80, rainfallParameters).position,
+      ).toBe(2);
+      expect(
+        PrecipitationCalculator.classifyBand(150, rainfallParameters).position,
+      ).toBe(3);
+      expect(
+        PrecipitationCalculator.classifyBand(250, rainfallParameters).position,
+      ).toBe(4);
+      expect(
+        PrecipitationCalculator.classifyBand(350, rainfallParameters).position,
+      ).toBe(5);
     });
 
-    it('deve retornar os fatores de produtividade normativos para cada nível', () => {
-      expect(PrecipitationCalculator.getProductivityFactor(1).toText()).toBe(
-        '1',
-      );
-      expect(PrecipitationCalculator.getProductivityFactor(2).toText()).toBe(
-        '0.95',
-      );
-      expect(PrecipitationCalculator.getProductivityFactor(3).toText()).toBe(
-        '0.85',
-      );
-      expect(PrecipitationCalculator.getProductivityFactor(4).toText()).toBe(
-        '0.75',
-      );
-      expect(PrecipitationCalculator.getProductivityFactor(5).toText()).toBe(
-        '0.65',
-      );
+    it('deve retornar os fatores de produtividade vigentes para cada nível', () => {
+      expect(
+        PrecipitationCalculator.getProductivityFactor(
+          1,
+          rainfallParameters,
+        ).toText(),
+      ).toBe('1');
+      expect(
+        PrecipitationCalculator.getProductivityFactor(
+          2,
+          rainfallParameters,
+        ).toText(),
+      ).toBe('0.95');
+      expect(
+        PrecipitationCalculator.getProductivityFactor(
+          3,
+          rainfallParameters,
+        ).toText(),
+      ).toBe('0.85');
+      expect(
+        PrecipitationCalculator.getProductivityFactor(
+          4,
+          rainfallParameters,
+        ).toText(),
+      ).toBe('0.75');
+      expect(
+        PrecipitationCalculator.getProductivityFactor(
+          5,
+          rainfallParameters,
+        ).toText(),
+      ).toBe('0.65');
     });
 
     it('deve calcular a produção efetiva reduzida no período chuvoso', () => {
       // MG em Janeiro possui ~280 mm (Nível 4 -> Fator 0.75)
       // Produção nominal = 20 fundações/mês -> Produção efetiva = 20 * 0.75 = 15 fundações/mês
       const effectiveProd =
-        PrecipitationCalculator.calculateEffectiveProduction('20.00', 'MG', 1);
+        PrecipitationCalculator.calculateEffectiveProduction(
+          '20.00',
+          'MG',
+          1,
+          rainfallParameters,
+        );
       expect(effectiveProd.toFixed(2)).toBe('15.00');
     });
 
@@ -47,6 +85,7 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         'MG',
         6,
         3,
+        rainfallParameters,
       );
       expect(avgFactor.toFixed(2)).toBe('1.00');
     });
@@ -59,6 +98,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineName: 'LT 500 kV Teste',
         uf: 'MG',
         startMonth: 1,
+        rainfallParameters,
+        workCalendar,
         milestones: [
           {
             id: 'm-li',
@@ -131,6 +172,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineId: 1,
         uf: 'SP',
         startMonth: 1,
+        rainfallParameters,
+        workCalendar,
         activities: [
           {
             id: 'act-over',
@@ -153,7 +196,9 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
 
       expect(summary.activities[0].status).toBe('WARNING_OVERPRODUCTION');
       expect(summary.warnings.length).toBeGreaterThan(0);
-      expect(summary.warnings[0]).toContain('excede o limite máximo');
+      expect(
+        summary.warnings.some((w) => w.includes('excede o limite máximo')),
+      ).toBe(true);
     });
 
     it('deve ajustar a duração estimada quando informado fator de severidade de acesso', () => {
@@ -162,6 +207,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineId: 1,
         uf: 'MG',
         startMonth: 5,
+        rainfallParameters,
+        workCalendar,
         accessDifficultyFactor: 1.0,
         activities: [
           {
@@ -185,6 +232,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineId: 1,
         uf: 'MG',
         startMonth: 5,
+        rainfallParameters,
+        workCalendar,
         accessDifficultyFactor: 1.25,
         activities: [
           {
@@ -217,6 +266,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineId: 1,
         uf: 'MG',
         startMonth: 1,
+        rainfallParameters,
+        workCalendar,
         activities: [
           {
             id: 'act-str',
@@ -239,7 +290,11 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       const act = summary.activities[0];
       expect(act.status).toBe('WARNING_OVERPRODUCTION');
       expect(summary.warnings.length).toBeGreaterThan(0);
-      expect(summary.warnings[0]).toContain('excede o limite máximo da equipe');
+      expect(
+        summary.warnings.some((w) =>
+          w.includes('excede o limite máximo da equipe'),
+        ),
+      ).toBe(true);
     });
 
     it('deve emitir alertas de precedência quando atividade inicia antes da Licença de Instalação (LI)', () => {
@@ -247,6 +302,8 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
         lineId: 1,
         uf: 'MG',
         startMonth: 1,
+        rainfallParameters,
+        workCalendar,
         milestones: [
           {
             id: 'm-li',
@@ -275,9 +332,11 @@ describe('Schedule, Precipitation, Camps & Histogram Calculators (M07 & M08)', (
       });
 
       expect(summary.activities[0].status).toBe('WARNING_PRECEDENCE');
-      expect(summary.warnings[0]).toContain(
-        'antes da obtenção da Licença de Instalação',
-      );
+      expect(
+        summary.warnings.some((w) =>
+          w.includes('antes da obtenção da Licença de Instalação'),
+        ),
+      ).toBe(true);
     });
   });
 

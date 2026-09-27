@@ -78,9 +78,15 @@ export interface ScheduleActivity {
   totalCost: string;
   status: ActivityScheduleStatus;
   statusNotes?: string[];
+  /** Presente quando a duração foi calculada por consumo mês a mês. */
+  monthlyBreakdown?: ActivityMonthlyPlanEntry[];
 }
 
-export type PrecipitationLevel = 1 | 2 | 3 | 4 | 5;
+/**
+ * Nível de severidade = posição da faixa vigente (1 = menos severa). O total
+ * de faixas é configurável pelo usuário; o seed provê as 5 históricas.
+ */
+export type PrecipitationLevel = number;
 
 export interface PrecipitationFactor {
   uf: string;
@@ -90,10 +96,30 @@ export interface PrecipitationFactor {
   productivityFactor: string; // Ex: "1.00", "0.95", "0.85", "0.75", "0.65"
 }
 
+/**
+ * Plano mensal de uma atividade dimensionada por produção: fatores aplicados
+ * e produção programada em cada mês do projeto (RF-36, RF-37, RN-16).
+ * Ano/mês civis presentes apenas quando o cronograma está ancorado em
+ * `scheduleStartDate` (sem ancoragem o fator de calendário é neutro).
+ */
+export interface ActivityMonthlyPlanEntry {
+  projectMonth: number;
+  civilYear?: number;
+  civilMonth?: number; // 1 (Jan) a 12 (Dez)
+  rainfallFactor: string;
+  calendarFactor: string;
+  /** Capacidade efetiva do mês (nominal × equipes × fatores ÷ acesso). */
+  effectiveProduction: string;
+  /** Consumo programado no mês (≤ capacidade; último mês pode ser parcial). */
+  plannedProduction: string;
+}
+
 export interface ScheduleSummary {
   lineId: number;
   lineName?: string;
   startMonth: number;
+  /** Data civil de início da obra; ausente = cronograma não ancorado (RNF-09). */
+  scheduleStartDate?: string;
   totalDurationMonths: number;
   activities: ScheduleActivity[];
   milestones: MilestoneContract[];

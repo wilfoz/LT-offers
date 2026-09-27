@@ -1,3 +1,4 @@
+import { DEFAULT_RAINFALL_PARAMETERS } from '@lt-offers/domain';
 import { DecimalValue } from '../decimal-value';
 import { TaxCalculator } from '../tax/tax-calculator';
 import { CommodityCalculator } from '../pricing/commodity-calculator';
@@ -66,12 +67,18 @@ describe('Validação de Casos Limite de Regras de Negócio (RN-01..RN-26 & RNF-
 
   describe('RN-16: Fator de Produtividade sob Precipitação Pluviométrica Máxima', () => {
     it('deve aplicar redução drástica de produtividade em mês com chuva extrema (> 250 mm)', () => {
-      const levelDry = PrecipitationCalculator.classifyLevel(30); // 30 mm
-      const levelExtreme = PrecipitationCalculator.classifyLevel(320); // 320 mm
+      const params = DEFAULT_RAINFALL_PARAMETERS;
+      const bandDry = PrecipitationCalculator.classifyBand(30, params); // 30 mm
+      const bandExtreme = PrecipitationCalculator.classifyBand(320, params); // 320 mm
 
-      const factorDry = PrecipitationCalculator.getProductivityFactor(levelDry);
-      const factorExtreme =
-        PrecipitationCalculator.getProductivityFactor(levelExtreme);
+      const factorDry = PrecipitationCalculator.getProductivityFactor(
+        bandDry.position,
+        params,
+      );
+      const factorExtreme = PrecipitationCalculator.getProductivityFactor(
+        bandExtreme.position,
+        params,
+      );
 
       expect(factorDry.toNumber()).toBe(1.0);
       expect(factorExtreme.toNumber()).toBe(0.65); // Redução de 35%
