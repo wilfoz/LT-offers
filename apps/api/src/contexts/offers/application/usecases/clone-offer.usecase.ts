@@ -80,6 +80,20 @@ export class CloneOfferUseCase {
           'Leilão',
         lotName:
           payload.targetLotName?.trim() || sourceRevision.lotName || 'Lote',
+        // Identidade normalizada: destino informado prevalece; sem destino,
+        // copia a origem (cenário "Lote 1 - Leilão 01/2025 → Lote 3 - 02/2026").
+        auctionNumber:
+          payload.targetAuctionNumber?.trim() ||
+          sourceRevision.auctionNumber ||
+          null,
+        lotNumber: payload.targetLotNumber ?? sourceRevision.lotNumber ?? null,
+        subLotCode:
+          payload.targetSubLotCode?.trim().toUpperCase() ||
+          sourceRevision.subLotCode ||
+          null,
+        contractSigningDate: sourceRevision.contractSigningDate ?? null,
+        constructionDeadlineMonths:
+          sourceRevision.constructionDeadlineMonths ?? null,
         offerDate: sourceRevision.offerDate,
         auctionDate: sourceRevision.auctionDate ?? null,
         scheduleStartDate: sourceRevision.scheduleStartDate ?? null,

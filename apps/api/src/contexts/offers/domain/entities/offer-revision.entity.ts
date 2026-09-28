@@ -1,5 +1,8 @@
 import { OfferRevisionStatus } from '@lt-offers/domain';
-import { RevisionFrozenException } from '../exceptions/offer-domain.exceptions';
+import {
+  InvalidStatusTransitionException,
+  RevisionFrozenException,
+} from '../exceptions/offer-domain.exceptions';
 import {
   ScopeMatrixItem,
   ScopeMatrixItemProps,
@@ -16,10 +19,15 @@ export interface OfferRevisionProps {
   status: OfferRevisionStatus;
   auctionName: string;
   lotName: string;
+  auctionNumber?: string | null;
+  lotNumber?: number | null;
+  subLotCode?: string | null;
   offerDate: string;
   auctionDate?: string | null;
   scheduleStartDate?: string | null;
   commercialOperationDate?: string | null;
+  contractSigningDate?: string | null;
+  constructionDeadlineMonths?: number | null;
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
@@ -40,10 +48,15 @@ export interface OfferRevisionRawProps {
   status: OfferRevisionStatus;
   auctionName: string;
   lotName: string;
+  auctionNumber?: string | null;
+  lotNumber?: number | null;
+  subLotCode?: string | null;
   offerDate: string;
   auctionDate?: string | null;
   scheduleStartDate?: string | null;
   commercialOperationDate?: string | null;
+  contractSigningDate?: string | null;
+  constructionDeadlineMonths?: number | null;
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
@@ -117,6 +130,18 @@ export class OfferRevision {
     return this._props.lotName;
   }
 
+  get auctionNumber(): string | null | undefined {
+    return this._props.auctionNumber;
+  }
+
+  get lotNumber(): number | null | undefined {
+    return this._props.lotNumber;
+  }
+
+  get subLotCode(): string | null | undefined {
+    return this._props.subLotCode;
+  }
+
   get offerDate(): string {
     return this._props.offerDate;
   }
@@ -131,6 +156,14 @@ export class OfferRevision {
 
   get commercialOperationDate(): string | null | undefined {
     return this._props.commercialOperationDate;
+  }
+
+  get contractSigningDate(): string | null | undefined {
+    return this._props.contractSigningDate;
+  }
+
+  get constructionDeadlineMonths(): number | null | undefined {
+    return this._props.constructionDeadlineMonths;
   }
 
   get estimatedCapex(): string | null | undefined {
@@ -189,6 +222,24 @@ export class OfferRevision {
     return this._props.status === 'DELIVERED';
   }
 
+  isWon(): boolean {
+    return this._props.status === 'WON';
+  }
+
+  isInExecution(): boolean {
+    return this._props.status === 'IN_EXECUTION';
+  }
+
+  /** Revisão imutável (RNF-05): fechada, entregue, vencedora ou em execução. */
+  isClosed(): boolean {
+    return (
+      this._props.status === 'FROZEN' ||
+      this._props.status === 'DELIVERED' ||
+      this._props.status === 'WON' ||
+      this._props.status === 'IN_EXECUTION'
+    );
+  }
+
   assertIsDraft(action = 'modificar'): void {
     if (this._props.status !== 'DRAFT') {
       throw new RevisionFrozenException(this._props.revisionNumber, action);
@@ -213,11 +264,43 @@ export class OfferRevision {
     this._props.updatedAt = new Date();
   }
 
+  /** Marca a revisão entregue como vencedora do leilão (RF-02). */
+  markWon(): void {
+    if (this._props.status !== 'DELIVERED') {
+      throw new InvalidStatusTransitionException(this._props.status, 'WON');
+    }
+    this._props.status = 'WON';
+    this._props.updatedAt = new Date();
+  }
+
+  /** Coloca a revisão vencedora em execução de obra (RF-02). */
+  markInExecution(): void {
+    if (this._props.status !== 'WON') {
+      throw new InvalidStatusTransitionException(
+        this._props.status,
+        'IN_EXECUTION',
+      );
+    }
+    this._props.status = 'IN_EXECUTION';
+    this._props.updatedAt = new Date();
+  }
+
   updateParameters(params: Partial<OfferRevisionProps>): void {
     this.assertIsDraft('atualizar parâmetros');
     if (params.auctionName !== undefined)
       this._props.auctionName = params.auctionName;
     if (params.lotName !== undefined) this._props.lotName = params.lotName;
+    if (params.auctionNumber !== undefined)
+      this._props.auctionNumber = params.auctionNumber;
+    if (params.lotNumber !== undefined)
+      this._props.lotNumber = params.lotNumber;
+    if (params.subLotCode !== undefined)
+      this._props.subLotCode = params.subLotCode;
+    if (params.contractSigningDate !== undefined)
+      this._props.contractSigningDate = params.contractSigningDate;
+    if (params.constructionDeadlineMonths !== undefined)
+      this._props.constructionDeadlineMonths =
+        params.constructionDeadlineMonths;
     if (params.offerDate !== undefined)
       this._props.offerDate = params.offerDate;
     if (params.auctionDate !== undefined)

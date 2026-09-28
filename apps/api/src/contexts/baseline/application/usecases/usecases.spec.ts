@@ -37,7 +37,10 @@ describe('Casos de uso do contexto baseline (Fase F7)', () => {
   let changeOrders: InMemoryChangeOrdersRepository;
   let progressRecords: InMemoryProgressRecordsRepository;
   let auditTrail: { logEvent: jest.Mock };
-  let offerQuery: { findOfferBasics: jest.Mock };
+  let offerQuery: {
+    findOfferBasics: jest.Mock;
+    findRevisionStatus: jest.Mock;
+  };
   let economicsFacade: { getConsolidatedEconomicResult: jest.Mock };
 
   let getBaselineById: GetBaselineByIdUseCase;
@@ -54,6 +57,7 @@ describe('Casos de uso do contexto baseline (Fase F7)', () => {
         code: 'OFR-2026-001',
         name: 'LT 500kV Curitiba-Joinville',
       }),
+      findRevisionStatus: jest.fn().mockResolvedValue('DELIVERED'),
     };
     economicsFacade = {
       getConsolidatedEconomicResult: jest.fn().mockResolvedValue({

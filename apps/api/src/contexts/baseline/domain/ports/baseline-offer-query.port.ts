@@ -1,3 +1,5 @@
+import { OfferRevisionStatus } from '@lt-offers/domain';
+
 /**
  * Dados básicos da oferta consumidos pelo congelamento e pelo pacote ERP —
  * a única consulta deste contexto que toca o banco.
@@ -10,4 +12,6 @@ export interface BaselineOfferBasics {
 
 export interface BaselineOfferQueryPort {
   findOfferBasics(offerId: number): Promise<BaselineOfferBasics | null>;
+  /** Status real da revisão, para a auditoria não inventar transições. */
+  findRevisionStatus(revisionId: number): Promise<OfferRevisionStatus | null>;
 }

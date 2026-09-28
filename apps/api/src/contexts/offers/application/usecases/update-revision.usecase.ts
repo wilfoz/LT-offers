@@ -1,21 +1,32 @@
-import { UpdateOfferRevisionPayload } from '@lt-offers/domain';
+import {
+  OfferRevisionStatus,
+  UpdateOfferRevisionPayload,
+  UserRole,
+} from '@lt-offers/domain';
 import { Offer } from '../../domain/entities/offer.entity';
+import { OfferRevision } from '../../domain/entities/offer-revision.entity';
 import { TransmissionLine } from '../../domain/entities/transmission-line.entity';
 import { ScopeMatrixItem } from '../../domain/entities/scope-matrix-item.entity';
 import {
+  InvalidStatusTransitionException,
   OfferNotFoundException,
   RevisionNotFoundException,
   RevisionFrozenException,
 } from '../../domain/exceptions/offer-domain.exceptions';
+import { OffersAuditTrailPort } from '../../domain/ports/audit-trail.port';
 import { OffersUnitOfWork } from '../../domain/ports/offers-unit-of-work';
 
 export class UpdateRevisionUseCase {
-  constructor(private readonly uow: OffersUnitOfWork) {}
+  constructor(
+    private readonly uow: OffersUnitOfWork,
+    private readonly auditTrail?: OffersAuditTrailPort,
+  ) {}
 
   async execute(
     offerId: number,
     revisionId: number,
     payload: UpdateOfferRevisionPayload,
+    user?: { id: string; name: string; role: UserRole },
   ): Promise<Offer> {
     return this.uow.runInTransaction(async ({ offers, revisions }) => {
       const offer = await offers.findById(offerId);
@@ -28,7 +39,7 @@ export class UpdateRevisionUseCase {
         throw new RevisionNotFoundException(revisionId);
       }
 
-      const isClosed = revision.isFrozen() || revision.isDelivered();
+      const isClosed = revision.isClosed();
       const hasOnlyStatus =
         payload.status !== undefined &&
         Object.keys(payload).filter((k) => (payload as any)[k] !== undefined)
@@ -53,32 +64,65 @@ export class UpdateRevisionUseCase {
         }
       }
 
-      // Atualiza parâmetros da revisão
-      revision.updateParameters({
-        auctionName: payload.auctionName?.trim(),
-        lotName: payload.lotName?.trim(),
-        offerDate: payload.offerDate,
-        auctionDate: payload.auctionDate ?? undefined,
-        scheduleStartDate: payload.scheduleStartDate ?? undefined,
-        commercialOperationDate: payload.commercialOperationDate ?? undefined,
-        estimatedCapex: payload.estimatedCapex ?? undefined,
-        maxRap: payload.maxRap ?? undefined,
-        winningRap: payload.winningRap ?? undefined,
-        notes: payload.notes?.trim() || undefined,
-      });
-
-      // Se informou status:
-      if (payload.status === 'FROZEN' && !revision.isFrozen()) {
-        revision.freeze();
-      } else if (payload.status === 'DELIVERED' && !revision.isDelivered()) {
-        if (!revision.isFrozen()) {
-          revision.freeze();
-        }
-        revision.markDelivered();
+      // Atualiza parâmetros da revisão (somente rascunho chega até aqui com
+      // outros campos; transição pura de status não altera parâmetros).
+      if (!isClosed) {
+        // Campos novos: undefined ignora, null limpa e texto vazio vira null
+        // (RNF-09 — nunca persistir string vazia como "informado").
+        revision.updateParameters({
+          auctionName: payload.auctionName?.trim(),
+          lotName: payload.lotName?.trim(),
+          auctionNumber:
+            payload.auctionNumber === undefined
+              ? undefined
+              : payload.auctionNumber?.trim() || null,
+          lotNumber: payload.lotNumber,
+          subLotCode:
+            payload.subLotCode === undefined
+              ? undefined
+              : payload.subLotCode?.trim().toUpperCase() || null,
+          contractSigningDate: payload.contractSigningDate,
+          constructionDeadlineMonths: payload.constructionDeadlineMonths,
+          offerDate: payload.offerDate,
+          auctionDate: payload.auctionDate ?? undefined,
+          scheduleStartDate: payload.scheduleStartDate ?? undefined,
+          commercialOperationDate: payload.commercialOperationDate ?? undefined,
+          estimatedCapex: payload.estimatedCapex ?? undefined,
+          maxRap: payload.maxRap ?? undefined,
+          winningRap: payload.winningRap ?? undefined,
+          notes: payload.notes?.trim() || undefined,
+        });
       }
+
+      const previousStatus = revision.status;
+      this.applyStatusTransition(revision, payload.status);
 
       // Salva revisão atualizada
       await revisions.save(revision);
+
+      // Auditoria das transições novas com status anterior e novo (RF-65).
+      if (
+        previousStatus !== revision.status &&
+        (revision.status === 'WON' || revision.status === 'IN_EXECUTION')
+      ) {
+        this.auditTrail?.logEvent({
+          userId: user?.id ?? 'sistema',
+          userName: user?.name ?? 'sistema',
+          userRole: user?.role ?? 'ADMIN',
+          resource: 'REVISION',
+          resourceId: String(revisionId),
+          offerId: String(offerId),
+          action: 'UPDATE',
+          description: `Transição de status da revisão R${revision.revisionNumber}: ${previousStatus} → ${revision.status}`,
+          diffs: [
+            {
+              field: 'status',
+              previousValue: previousStatus,
+              newValue: revision.status,
+            },
+          ],
+        });
+      }
 
       // Atualiza linhas se informadas
       if (payload.transmissionLines !== undefined) {
@@ -136,5 +180,55 @@ export class UpdateRevisionUseCase {
       }
       return updatedOffer;
     });
+  }
+
+  /**
+   * Transições válidas (spec ofertas/cadastro-revisoes-linhas): DRAFT →
+   * FROZEN → DELIVERED → WON → IN_EXECUTION. Status igual ao atual é no-op;
+   * DRAFT como alvo e transições fora de ordem são rejeitados — a API nunca
+   * aceita e ignora um status em silêncio.
+   */
+  private applyStatusTransition(
+    revision: OfferRevision,
+    target: OfferRevisionStatus | undefined,
+  ): void {
+    if (target === undefined || target === revision.status) {
+      return;
+    }
+    switch (target) {
+      case 'DRAFT':
+        // Não existe reabertura de revisão: criar uma nova revisão (RNF-05).
+        throw new InvalidStatusTransitionException(revision.status, 'DRAFT');
+      case 'FROZEN':
+        if (!revision.isDraft()) {
+          throw new InvalidStatusTransitionException(revision.status, 'FROZEN');
+        }
+        revision.freeze();
+        break;
+      case 'DELIVERED':
+        // Atalho preservado: rascunho entregue congela e entrega no mesmo ato.
+        if (!revision.isDraft() && !revision.isFrozen()) {
+          throw new InvalidStatusTransitionException(
+            revision.status,
+            'DELIVERED',
+          );
+        }
+        if (!revision.isFrozen()) {
+          revision.freeze();
+        }
+        revision.markDelivered();
+        break;
+      case 'WON':
+        revision.markWon();
+        break;
+      case 'IN_EXECUTION':
+        revision.markInExecution();
+        break;
+      default: {
+        // Exaustividade garantida em compilação: novo status exige tratamento.
+        const exhaustive: never = target;
+        throw new InvalidStatusTransitionException(revision.status, exhaustive);
+      }
+    }
   }
 }

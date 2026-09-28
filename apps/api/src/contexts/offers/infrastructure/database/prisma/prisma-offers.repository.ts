@@ -156,9 +156,16 @@ export class PrismaOffersRepository implements OffersRepository {
         data: {
           offerId: createdOffer.id,
           revisionNumber: rev.revisionNumber,
-          status: rev.status as any,
+          status: rev.status,
           auctionName: rev.auctionName,
           lotName: rev.lotName,
+          auctionNumber: rev.auctionNumber ?? null,
+          lotNumber: rev.lotNumber ?? null,
+          subLotCode: rev.subLotCode ?? null,
+          contractSigningDate: rev.contractSigningDate
+            ? new Date(rev.contractSigningDate)
+            : null,
+          constructionDeadlineMonths: rev.constructionDeadlineMonths ?? null,
           offerDate: new Date(rev.offerDate),
           auctionDate: rev.auctionDate ? new Date(rev.auctionDate) : null,
           scheduleStartDate: rev.scheduleStartDate

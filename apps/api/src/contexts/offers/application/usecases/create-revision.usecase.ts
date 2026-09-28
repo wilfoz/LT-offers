@@ -65,6 +65,12 @@ export class CreateRevisionUseCase {
         status: 'DRAFT',
         auctionName: latestRevision?.auctionName ?? 'Leilão',
         lotName: latestRevision?.lotName ?? 'Lote',
+        auctionNumber: latestRevision?.auctionNumber ?? null,
+        lotNumber: latestRevision?.lotNumber ?? null,
+        subLotCode: latestRevision?.subLotCode ?? null,
+        contractSigningDate: latestRevision?.contractSigningDate ?? null,
+        constructionDeadlineMonths:
+          latestRevision?.constructionDeadlineMonths ?? null,
         offerDate:
           latestRevision?.offerDate ?? new Date().toISOString().slice(0, 10),
         auctionDate: latestRevision?.auctionDate ?? null,

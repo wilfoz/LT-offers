@@ -86,10 +86,9 @@ export interface OfferRevisionItem {
   winningRap?: string | null;
   notes?: string | null;
   // Derivados em leitura (nunca persistidos nem aceitos como entrada).
-  // Opcionais até o presenter do grupo 2 passar a fornecê-los (task 2.5).
-  contractualDeadlineDate?: string | null;
-  discountPercent?: string | null;
-  scheduleWarnings?: ScheduleWarningCode[];
+  contractualDeadlineDate: string | null;
+  discountPercent: string | null;
+  scheduleWarnings: ScheduleWarningCode[];
   closedAt?: string | null;
   deliveredAt?: string | null;
   createdBy: string;

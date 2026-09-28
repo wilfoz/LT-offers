@@ -1,5 +1,6 @@
 import { Module, Provider } from '@nestjs/common';
 import { PrismaService } from '../../../app/prisma.service';
+import { AuditModule } from '../../../audit/audit.module';
 import {
   OFFERS_REPOSITORY,
   OffersRepository,
@@ -12,9 +13,14 @@ import {
   OFFERS_UNIT_OF_WORK,
   OffersUnitOfWork,
 } from '../domain/ports/offers-unit-of-work';
+import {
+  OFFERS_AUDIT_TRAIL_PORT,
+  OffersAuditTrailPort,
+} from '../domain/ports/audit-trail.port';
 import { PrismaOffersRepository } from './database/prisma/prisma-offers.repository';
 import { PrismaOfferRevisionsRepository } from './database/prisma/prisma-offer-revisions.repository';
 import { PrismaOffersUnitOfWork } from './database/prisma/prisma-offers-unit-of-work';
+import { OffersAuditTrailAdapter } from './audit/audit-service-trail.adapter';
 import {
   CreateOfferUseCase,
   GetOfferDetailsUseCase,
@@ -72,8 +78,9 @@ const useCaseProviders: Provider[] = [
   },
   {
     provide: UpdateRevisionUseCase,
-    useFactory: (uow: OffersUnitOfWork) => new UpdateRevisionUseCase(uow),
-    inject: [OFFERS_UNIT_OF_WORK],
+    useFactory: (uow: OffersUnitOfWork, auditTrail: OffersAuditTrailPort) =>
+      new UpdateRevisionUseCase(uow, auditTrail),
+    inject: [OFFERS_UNIT_OF_WORK, OFFERS_AUDIT_TRAIL_PORT],
   },
   {
     provide: FreezeRevisionUseCase,
@@ -117,6 +124,7 @@ const useCaseProviders: Provider[] = [
 ];
 
 @Module({
+  imports: [AuditModule],
   controllers: [OffersController],
   providers: [
     PrismaService,
@@ -131,6 +139,10 @@ const useCaseProviders: Provider[] = [
     {
       provide: OFFERS_UNIT_OF_WORK,
       useClass: PrismaOffersUnitOfWork,
+    },
+    {
+      provide: OFFERS_AUDIT_TRAIL_PORT,
+      useClass: OffersAuditTrailAdapter,
     },
     ...useCaseProviders,
   ],

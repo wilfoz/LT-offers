@@ -25,6 +25,7 @@ import { Offer } from '../../domain/entities/offer.entity';
 import { OfferRevision } from '../../domain/entities/offer-revision.entity';
 import { TransmissionLine } from '../../domain/entities/transmission-line.entity';
 import { ScopeMatrixItem } from '../../domain/entities/scope-matrix-item.entity';
+import { OfferPresenter } from './presenters/offer.presenter';
 
 describe('Hexagonal OffersController', () => {
   let controller: OffersController;
@@ -160,6 +161,7 @@ describe('Hexagonal OffersController', () => {
       1,
       10,
       revisionDto,
+      undefined,
     );
   });
 
@@ -203,6 +205,67 @@ describe('Hexagonal OffersController', () => {
       expect(errors.length).toBeGreaterThan(0);
     });
 
+    it('rejeita número do leilão fora do formato NNN/AAAA com mensagem em português', async () => {
+      for (const invalid of ['4/2026', '2026-004']) {
+        const dto = plainToInstance(CreateOfferDto, {
+          auctionNumber: invalid,
+        } as any);
+        const errors = await validate(dto);
+        const auctionError = errors.find((e) => e.property === 'auctionNumber');
+        expect(auctionError?.constraints?.['matches']).toBe(
+          'O número do leilão deve estar no formato NNN/AAAA (ex.: 004/2026)',
+        );
+      }
+    });
+
+    it('rejeita prazo de construção zero com mensagem em português', async () => {
+      const dto = plainToInstance(UpdateOfferRevisionDto, {
+        constructionDeadlineMonths: 0,
+      } as any);
+      const errors = await validate(dto);
+      const deadlineError = errors.find(
+        (e) => e.property === 'constructionDeadlineMonths',
+      );
+      expect(deadlineError?.constraints?.['min']).toBe(
+        'O prazo de construção deve ser maior que zero',
+      );
+    });
+
+    it('rejeita sublote com 4 caracteres com mensagem em português', async () => {
+      const dto = plainToInstance(UpdateOfferRevisionDto, {
+        subLotCode: '4ABC',
+      } as any);
+      const errors = await validate(dto);
+      const subLotError = errors.find((e) => e.property === 'subLotCode');
+      expect(subLotError?.constraints?.['maxLength']).toBe(
+        'O sublote deve ter no máximo 3 caracteres',
+      );
+    });
+
+    it('rejeita data de assinatura inexistente no calendário (2027-02-30) sem rollover', async () => {
+      const dto = plainToInstance(CreateOfferDto, {
+        contractSigningDate: '2027-02-30',
+      } as any);
+      const errors = await validate(dto);
+      const signingError = errors.find(
+        (e) => e.property === 'contractSigningDate',
+      );
+      expect(signingError?.constraints?.['isCivilDate']).toBe(
+        'A data de assinatura do contrato deve ser uma data de calendário válida no formato AAAA-MM-DD',
+      );
+    });
+
+    it('mensagem do status lista os cinco valores válidos', async () => {
+      const dto = plainToInstance(UpdateOfferRevisionDto, {
+        status: 'REOPENED',
+      } as any);
+      const errors = await validate(dto);
+      const statusError = errors.find((e) => e.property === 'status');
+      expect(statusError?.constraints?.['isIn']).toBe(
+        'O status da revisão deve ser DRAFT, FROZEN, DELIVERED, WON ou IN_EXECUTION',
+      );
+    });
+
     it('aceita CreateOfferDto válido com linhas aninhadas', async () => {
       const dto = plainToInstance(CreateOfferDto, {
         code: 'PROP-VAL',
@@ -227,6 +290,77 @@ describe('Hexagonal OffersController', () => {
       } as any);
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
+    });
+  });
+
+  describe('OfferPresenter — identidade, prazos e derivados no envelope', () => {
+    it('expõe deságio, data-limite contratual e alertas derivados na leitura', () => {
+      const revision = OfferRevision.create({
+        revisionNumber: 0,
+        status: 'DRAFT',
+        auctionName: 'Leilão Aneel 004/2026',
+        lotName: 'Lote 04',
+        auctionNumber: '004/2026',
+        lotNumber: 4,
+        subLotCode: '4A',
+        offerDate: '2026-09-01',
+        contractSigningDate: '2027-02-26',
+        constructionDeadlineMonths: 60,
+        commercialOperationDate: '2029-06-30',
+        maxRap: '762630000.00',
+        winningRap: '381315000.00',
+        createdBy: 'test@epc.com',
+        transmissionLines: [],
+        scopeMatrixItems: [],
+      });
+
+      const item = OfferPresenter.toRevisionItem(
+        OfferRevision.reconstitute({
+          ...revision.toRawProps(),
+          id: 10,
+          offerId: 1,
+        }),
+      );
+
+      expect(item.auctionNumber).toBe('004/2026');
+      expect(item.lotNumber).toBe(4);
+      expect(item.subLotCode).toBe('4A');
+      expect(item.contractSigningDate).toBe('2027-02-26');
+      expect(item.constructionDeadlineMonths).toBe(60);
+      expect(item.contractualDeadlineDate).toBe('2032-02-26');
+      expect(item.discountPercent).toBe('50.00');
+      // Data-limite 2032-02-26 posterior à entrada em operação 2029-06-30.
+      expect(item.scheduleWarnings).toEqual(['DEADLINE_AFTER_COD']);
+    });
+
+    it('sem os campos informados, expõe null e não deriva nada (RNF-09)', () => {
+      const revision = OfferRevision.create({
+        revisionNumber: 0,
+        status: 'DRAFT',
+        auctionName: 'Leilão 01',
+        lotName: 'Lote 1',
+        offerDate: '2026-05-01',
+        createdBy: 'test@epc.com',
+        transmissionLines: [],
+        scopeMatrixItems: [],
+      });
+
+      const item = OfferPresenter.toRevisionItem(
+        OfferRevision.reconstitute({
+          ...revision.toRawProps(),
+          id: 11,
+          offerId: 1,
+        }),
+      );
+
+      expect(item.auctionNumber).toBeNull();
+      expect(item.lotNumber).toBeNull();
+      expect(item.subLotCode).toBeNull();
+      expect(item.contractSigningDate).toBeNull();
+      expect(item.constructionDeadlineMonths).toBeNull();
+      expect(item.contractualDeadlineDate).toBeNull();
+      expect(item.discountPercent).toBeNull();
+      expect(item.scheduleWarnings).toEqual([]);
     });
   });
 });

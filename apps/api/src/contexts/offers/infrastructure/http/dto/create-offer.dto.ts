@@ -1,14 +1,22 @@
-import { DATE_PATTERN, POSITIVE_DECIMAL_PATTERN } from '@lt-offers/domain';
+import {
+  AUCTION_NUMBER_PATTERN,
+  DATE_PATTERN,
+  POSITIVE_DECIMAL_PATTERN,
+} from '@lt-offers/domain';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
+  Max,
   MaxLength,
+  Min,
   ValidateNested,
 } from 'class-validator';
+import { IsCivilDate } from './civil-date.validator';
 import { ScopeMatrixItemDto } from './scope-matrix-item.dto';
 import { TransmissionLineItemDto } from './transmission-line-item.dto';
 
@@ -53,6 +61,23 @@ export class CreateOfferDto {
   })
   lotName!: string;
 
+  @IsOptional()
+  @Matches(AUCTION_NUMBER_PATTERN, {
+    message:
+      'O número do leilão deve estar no formato NNN/AAAA (ex.: 004/2026)',
+  })
+  auctionNumber?: string | null;
+
+  @IsOptional()
+  @IsInt({ message: 'O número do lote deve ser um número inteiro' })
+  @Min(1, { message: 'O número do lote deve ser maior ou igual a 1' })
+  lotNumber?: number | null;
+
+  @IsOptional()
+  @IsString({ message: 'O sublote deve ser um texto' })
+  @MaxLength(3, { message: 'O sublote deve ter no máximo 3 caracteres' })
+  subLotCode?: string | null;
+
   @IsString({ message: 'A data da oferta é obrigatória' })
   @Matches(DATE_PATTERN, {
     message: 'A data da oferta deve estar no formato AAAA-MM-DD',
@@ -76,6 +101,23 @@ export class CreateOfferDto {
     message: 'A data de entrada em operação deve estar no formato AAAA-MM-DD',
   })
   commercialOperationDate?: string | null;
+
+  @IsOptional()
+  @IsCivilDate({
+    message:
+      'A data de assinatura do contrato deve ser uma data de calendário válida no formato AAAA-MM-DD',
+  })
+  contractSigningDate?: string | null;
+
+  @IsOptional()
+  @IsInt({
+    message: 'O prazo de construção deve ser um número inteiro de meses',
+  })
+  @Min(1, { message: 'O prazo de construção deve ser maior que zero' })
+  @Max(240, {
+    message: 'O prazo de construção deve ser de no máximo 240 meses',
+  })
+  constructionDeadlineMonths?: number | null;
 
   @IsOptional()
   @Matches(POSITIVE_DECIMAL_PATTERN, {

@@ -1,7 +1,8 @@
-import { OfferDetail, OfferSummary } from '@lt-offers/domain';
+import { OfferDetail, OfferSummary, UserProfile } from '@lt-offers/domain';
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -42,10 +43,15 @@ import {
   RevisionFrozenException,
   InvalidScopeMatrixException,
   InvalidDestinationSharesException,
+  InvalidStatusTransitionException,
 } from '../../domain/exceptions/offer-domain.exceptions';
 import { OfferPresenter } from './presenters/offer.presenter';
 import { RolesGuard } from '../../../../auth/roles.guard';
-import { RequireScopes, Audited } from '../../../../auth/auth.decorators';
+import {
+  RequireScopes,
+  Audited,
+  CurrentUser,
+} from '../../../../auth/auth.decorators';
 
 @Controller('offers')
 @UseGuards(RolesGuard)
@@ -144,12 +150,14 @@ export class OffersController {
     @Param('offerId', ParseIntPipe) offerId: number,
     @Param('revisionId', ParseIntPipe) revisionId: number,
     @Body() dto: UpdateOfferRevisionDto,
+    @CurrentUser() user?: UserProfile,
   ): Promise<OfferDetail> {
     try {
       const offer = await this.updateRevisionUseCase.execute(
         offerId,
         revisionId,
         dto as any,
+        user,
       );
       return OfferPresenter.toDetail(offer);
     } catch (error) {
@@ -224,6 +232,11 @@ export class OffersController {
       error instanceof LineNotFoundException
     ) {
       throw new NotFoundException(error.message);
+    }
+
+    // Transição de status fora de ordem: conflito com o estado atual (409).
+    if (error instanceof InvalidStatusTransitionException) {
+      throw new ConflictException(error.message);
     }
 
     if (

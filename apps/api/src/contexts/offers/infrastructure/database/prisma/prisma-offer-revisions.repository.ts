@@ -63,9 +63,17 @@ export class PrismaOfferRevisionsRepository implements OfferRevisionsRepository 
       const updated = await this.prisma.offerRevision.update({
         where: { id: revision.id },
         data: {
-          status: revision.status as any,
+          status: revision.status,
           auctionName: revision.auctionName,
           lotName: revision.lotName,
+          auctionNumber: revision.auctionNumber ?? null,
+          lotNumber: revision.lotNumber ?? null,
+          subLotCode: revision.subLotCode ?? null,
+          contractSigningDate: revision.contractSigningDate
+            ? new Date(revision.contractSigningDate)
+            : null,
+          constructionDeadlineMonths:
+            revision.constructionDeadlineMonths ?? null,
           offerDate: new Date(revision.offerDate),
           auctionDate: revision.auctionDate
             ? new Date(revision.auctionDate)
@@ -108,9 +116,16 @@ export class PrismaOfferRevisionsRepository implements OfferRevisionsRepository 
       data: {
         offerId: revision.offerId,
         revisionNumber: revision.revisionNumber,
-        status: revision.status as any,
+        status: revision.status,
         auctionName: revision.auctionName,
         lotName: revision.lotName,
+        auctionNumber: revision.auctionNumber ?? null,
+        lotNumber: revision.lotNumber ?? null,
+        subLotCode: revision.subLotCode ?? null,
+        contractSigningDate: revision.contractSigningDate
+          ? new Date(revision.contractSigningDate)
+          : null,
+        constructionDeadlineMonths: revision.constructionDeadlineMonths ?? null,
         offerDate: new Date(revision.offerDate),
         auctionDate: revision.auctionDate
           ? new Date(revision.auctionDate)

@@ -60,9 +60,12 @@ export class PrismaOfferMapper {
       id: raw.id,
       offerId: raw.offerId,
       revisionNumber: raw.revisionNumber,
-      status: raw.status as any,
+      status: raw.status,
       auctionName: raw.auctionName,
       lotName: raw.lotName,
+      auctionNumber: raw.auctionNumber,
+      lotNumber: raw.lotNumber,
+      subLotCode: raw.subLotCode,
       offerDate: raw.offerDate.toISOString().slice(0, 10),
       auctionDate: raw.auctionDate
         ? raw.auctionDate.toISOString().slice(0, 10)
@@ -73,6 +76,10 @@ export class PrismaOfferMapper {
       commercialOperationDate: raw.commercialOperationDate
         ? raw.commercialOperationDate.toISOString().slice(0, 10)
         : null,
+      contractSigningDate: raw.contractSigningDate
+        ? raw.contractSigningDate.toISOString().slice(0, 10)
+        : null,
+      constructionDeadlineMonths: raw.constructionDeadlineMonths,
       estimatedCapex: raw.estimatedCapex ? raw.estimatedCapex.toFixed(2) : null,
       maxRap: raw.maxRap ? raw.maxRap.toFixed(2) : null,
       winningRap: raw.winningRap ? raw.winningRap.toFixed(2) : null,

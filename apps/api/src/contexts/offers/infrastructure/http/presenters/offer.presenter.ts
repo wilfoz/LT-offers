@@ -4,6 +4,9 @@ import {
   OfferSummary,
   ScopeMatrixItemPayload,
   TransmissionLineItem,
+  contractualDeadlineDate,
+  discountPercent,
+  scheduleWarnings,
 } from '@lt-offers/domain';
 import { DecimalValue } from '@lt-offers/calc-engine';
 import { Offer } from '../../../domain/entities/offer.entity';
@@ -85,6 +88,16 @@ export class OfferPresenter {
   }
 
   static toRevisionItem(rev: OfferRevision): OfferRevisionItem {
+    const scheduleStartDate = rev.scheduleStartDate
+      ? rev.scheduleStartDate.slice(0, 10)
+      : null;
+    const commercialOperationDate = rev.commercialOperationDate
+      ? rev.commercialOperationDate.slice(0, 10)
+      : null;
+    const contractSigningDate = rev.contractSigningDate
+      ? rev.contractSigningDate.slice(0, 10)
+      : null;
+    const constructionDeadlineMonths = rev.constructionDeadlineMonths ?? null;
     return {
       id: rev.id!,
       offerId: rev.offerId!,
@@ -92,14 +105,30 @@ export class OfferPresenter {
       status: rev.status,
       auctionName: rev.auctionName,
       lotName: rev.lotName,
+      auctionNumber: rev.auctionNumber ?? null,
+      lotNumber: rev.lotNumber ?? null,
+      subLotCode: rev.subLotCode ?? null,
       offerDate: rev.offerDate.slice(0, 10),
       auctionDate: rev.auctionDate ? rev.auctionDate.slice(0, 10) : null,
-      scheduleStartDate: rev.scheduleStartDate
-        ? rev.scheduleStartDate.slice(0, 10)
-        : null,
-      commercialOperationDate: rev.commercialOperationDate
-        ? rev.commercialOperationDate.slice(0, 10)
-        : null,
+      scheduleStartDate,
+      commercialOperationDate,
+      contractSigningDate,
+      constructionDeadlineMonths,
+      // Derivados em leitura (RN-02, RNF-09): nunca persistidos.
+      contractualDeadlineDate: contractualDeadlineDate(
+        contractSigningDate,
+        constructionDeadlineMonths,
+      ),
+      discountPercent: discountPercent(
+        rev.maxRap ?? null,
+        rev.winningRap ?? null,
+      ),
+      scheduleWarnings: scheduleWarnings({
+        scheduleStartDate,
+        commercialOperationDate,
+        contractSigningDate,
+        constructionDeadlineMonths,
+      }).map((w) => w.code),
       estimatedCapex: rev.estimatedCapex
         ? DecimalValue.of(rev.estimatedCapex).toFixed(2)
         : null,

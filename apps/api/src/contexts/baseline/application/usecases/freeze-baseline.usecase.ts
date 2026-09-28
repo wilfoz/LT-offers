@@ -82,7 +82,11 @@ export class FreezeBaselineUseCase {
       updatedAt: frozenAt.toISOString(),
     });
 
-    // Registra na trilha de auditoria (RF-65, RNF-12)
+    // Registra na trilha de auditoria (RF-65, RNF-12) com o status real da
+    // revisão — o congelamento da baseline não transiciona status de revisão.
+    const revisionStatus = await this.offerQuery.findRevisionStatus(
+      payload.revisionId,
+    );
     this.auditTrail.logEvent({
       userId: user || 'user-admin',
       userName: user || 'Administrador',
@@ -93,7 +97,11 @@ export class FreezeBaselineUseCase {
       action: 'FREEZE',
       description: `Congelamento da Linha de Base Contratual Data 0 para a oferta ${offer.code} (${offer.name})`,
       diffs: [
-        { field: 'status', previousValue: 'DELIVERED', newValue: 'WON' },
+        {
+          field: 'revisionStatus',
+          previousValue: revisionStatus,
+          newValue: revisionStatus,
+        },
         { field: 'baselineNumber', previousValue: null, newValue: 0 },
         {
           field: 'totalContractValue',

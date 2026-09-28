@@ -14,6 +14,7 @@ import { ScopeMatrixItem } from '../../domain/entities/scope-matrix-item.entity'
 import {
   DuplicateOfferCodeException,
   InvalidDestinationSharesException,
+  InvalidStatusTransitionException,
   OfferNotFoundException,
   RevisionFrozenException,
   RevisionNotFoundException,
@@ -725,6 +726,227 @@ describe('Offers Context - Hexagonal Application Use Cases (Pure Unit Tests)', (
       expect(withoutLine.getCurrentRevision()!.transmissionLines.length).toBe(
         0,
       );
+    });
+  });
+
+  describe('7. Identidade do leilão, prazos do edital e transições WON/IN_EXECUTION (RF-01, RF-02, RN-02)', () => {
+    const auctionIdentity = {
+      auctionNumber: '004/2026',
+      lotNumber: 4,
+      subLotCode: '4A',
+      contractSigningDate: '2027-02-26',
+      constructionDeadlineMonths: 60,
+    };
+
+    const singleLine = [
+      {
+        code: 'LT-01',
+        name: 'Linha 1',
+        nominalVoltageKv: '525',
+        refinedLengthKm: '100',
+        reportLengthKm: '100',
+        circuitCount: 1,
+        bundleConductorCount: 4,
+        destinationStatePrimary: 'MG',
+        destinationPercentagePrimary: '100',
+      },
+    ];
+
+    async function createOfferWithIdentity(code: string) {
+      const createOffer = new CreateOfferUseCase(uow);
+      return createOffer.execute({
+        code,
+        name: 'Proposta Leilão 4/2026',
+        clientName: 'Cliente',
+        auctionName: 'Leilão Aneel 004/2026',
+        lotName: 'Lote 04',
+        ...auctionIdentity,
+        offerDate: '2026-09-01',
+        transmissionLines: singleLine,
+      });
+    }
+
+    it('deve persistir identidade normalizada e prazos do edital na criação da oferta', async () => {
+      const offer = await createOfferWithIdentity('PROP-ID-01');
+      const r0 = offer.getCurrentRevision()!;
+      expect(r0.auctionNumber).toBe('004/2026');
+      expect(r0.lotNumber).toBe(4);
+      expect(r0.subLotCode).toBe('4A');
+      expect(r0.contractSigningDate).toBe('2027-02-26');
+      expect(r0.constructionDeadlineMonths).toBe(60);
+    });
+
+    it('nova revisão copia identidade e prazos da revisão anterior', async () => {
+      const offer = await createOfferWithIdentity('PROP-ID-02');
+      const createRev = new CreateRevisionUseCase(uow);
+      const updated = await createRev.execute(offer.id!, {});
+      const r1 = updated.getRevisionByNumber(1)!;
+      expect(r1.auctionNumber).toBe('004/2026');
+      expect(r1.lotNumber).toBe(4);
+      expect(r1.subLotCode).toBe('4A');
+      expect(r1.contractSigningDate).toBe('2027-02-26');
+      expect(r1.constructionDeadlineMonths).toBe(60);
+    });
+
+    it('clonagem copia identidade e prazos da origem quando o destino não informa', async () => {
+      const source = await createOfferWithIdentity('PROP-ID-03');
+      const clone = new CloneOfferUseCase(uow);
+      const cloned = await clone.execute(source.id!, {
+        targetCode: 'PROP-ID-03-CLONE',
+        targetName: 'Clonada sem destino',
+      });
+      const rev = cloned.getCurrentRevision()!;
+      expect(rev.auctionNumber).toBe('004/2026');
+      expect(rev.lotNumber).toBe(4);
+      expect(rev.subLotCode).toBe('4A');
+      expect(rev.contractSigningDate).toBe('2027-02-26');
+      expect(rev.constructionDeadlineMonths).toBe(60);
+    });
+
+    it('clonagem sobrescreve a identidade quando o destino informa os campos target*', async () => {
+      const source = await createOfferWithIdentity('PROP-ID-04');
+      const clone = new CloneOfferUseCase(uow);
+      const cloned = await clone.execute(source.id!, {
+        targetCode: 'PROP-ID-04-CLONE',
+        targetName: 'Clonada para outro lote',
+        targetAuctionNumber: '002/2027',
+        targetLotNumber: 3,
+        targetSubLotCode: '3b',
+      });
+      const rev = cloned.getCurrentRevision()!;
+      expect(rev.auctionNumber).toBe('002/2027');
+      expect(rev.lotNumber).toBe(3);
+      expect(rev.subLotCode).toBe('3B');
+      // Prazos do edital seguem a origem: não há target* para eles.
+      expect(rev.contractSigningDate).toBe('2027-02-26');
+      expect(rev.constructionDeadlineMonths).toBe(60);
+    });
+
+    it('sublote com texto vazio persiste null e null explícito limpa o campo (RNF-09)', async () => {
+      const offer = await createOfferWithIdentity('PROP-ID-EMPTY');
+      const revisionId = offer.getCurrentRevision()!.id!;
+      const update = new UpdateRevisionUseCase(uow);
+
+      const afterEmpty = await update.execute(offer.id!, revisionId, {
+        subLotCode: '  ',
+        auctionNumber: '',
+      });
+      const revEmpty = afterEmpty.getRevisionById(revisionId)!;
+      expect(revEmpty.subLotCode).toBeNull();
+      expect(revEmpty.auctionNumber).toBeNull();
+
+      const afterNull = await update.execute(offer.id!, revisionId, {
+        lotNumber: null,
+        contractSigningDate: null,
+        constructionDeadlineMonths: null,
+      });
+      const revNull = afterNull.getRevisionById(revisionId)!;
+      expect(revNull.lotNumber).toBeNull();
+      expect(revNull.contractSigningDate).toBeNull();
+      expect(revNull.constructionDeadlineMonths).toBeNull();
+    });
+
+    it('transições válidas DELIVERED → WON → IN_EXECUTION persistem e emitem auditoria com status anterior e novo', async () => {
+      const auditTrail = { logEvent: jest.fn() };
+      const offer = await createOfferWithIdentity('PROP-ST-01');
+      const revisionId = offer.getCurrentRevision()!.id!;
+      const update = new UpdateRevisionUseCase(uow, auditTrail);
+
+      await update.execute(offer.id!, revisionId, { status: 'DELIVERED' });
+      const won = await update.execute(offer.id!, revisionId, {
+        status: 'WON',
+      });
+      expect(won.getRevisionById(revisionId)!.status).toBe('WON');
+
+      const inExecution = await update.execute(offer.id!, revisionId, {
+        status: 'IN_EXECUTION',
+      });
+      expect(inExecution.getRevisionById(revisionId)!.status).toBe(
+        'IN_EXECUTION',
+      );
+
+      expect(auditTrail.logEvent).toHaveBeenCalledTimes(2);
+      expect(auditTrail.logEvent).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          resource: 'REVISION',
+          action: 'UPDATE',
+          diffs: [
+            { field: 'status', previousValue: 'DELIVERED', newValue: 'WON' },
+          ],
+        }),
+      );
+      expect(auditTrail.logEvent).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          diffs: [
+            {
+              field: 'status',
+              previousValue: 'WON',
+              newValue: 'IN_EXECUTION',
+            },
+          ],
+        }),
+      );
+    });
+
+    it.each([
+      ['DRAFT', 'WON'],
+      ['FROZEN', 'WON'],
+      ['DELIVERED', 'IN_EXECUTION'],
+    ] as const)(
+      'transição fora de ordem %s → %s é rejeitada com mensagem em português sem alterar a revisão',
+      async (initialStatus, targetStatus) => {
+        const offer = await createOfferWithIdentity(
+          `PROP-ST-${initialStatus}-${targetStatus}`,
+        );
+        const revisionId = offer.getCurrentRevision()!.id!;
+        const update = new UpdateRevisionUseCase(uow);
+
+        if (initialStatus === 'FROZEN') {
+          await update.execute(offer.id!, revisionId, { status: 'FROZEN' });
+        } else if (initialStatus === 'DELIVERED') {
+          await update.execute(offer.id!, revisionId, { status: 'DELIVERED' });
+        }
+
+        await expect(
+          update.execute(offer.id!, revisionId, { status: targetStatus }),
+        ).rejects.toThrow(
+          `Transição de status não permitida: a revisão está em ${initialStatus} e não pode ir para ${targetStatus}.`,
+        );
+
+        const untouched = await new GetOfferDetailsUseCase(
+          uow.offersRepo,
+        ).execute(offer.id!);
+        expect(untouched.getRevisionById(revisionId)!.status).toBe(
+          initialStatus,
+        );
+      },
+    );
+
+    it('DRAFT como alvo é rejeitado: não existe reabertura de revisão fechada', async () => {
+      const offer = await createOfferWithIdentity('PROP-ST-REOPEN');
+      const revisionId = offer.getCurrentRevision()!.id!;
+      const update = new UpdateRevisionUseCase(uow);
+      await update.execute(offer.id!, revisionId, { status: 'FROZEN' });
+
+      await expect(
+        update.execute(offer.id!, revisionId, { status: 'DRAFT' }),
+      ).rejects.toThrow(InvalidStatusTransitionException);
+    });
+
+    it('status igual ao atual é no-op explícito, sem exceção e sem auditoria', async () => {
+      const auditTrail = { logEvent: jest.fn() };
+      const offer = await createOfferWithIdentity('PROP-ST-NOOP');
+      const revisionId = offer.getCurrentRevision()!.id!;
+      const update = new UpdateRevisionUseCase(uow, auditTrail);
+      await update.execute(offer.id!, revisionId, { status: 'DELIVERED' });
+
+      const unchanged = await update.execute(offer.id!, revisionId, {
+        status: 'DELIVERED',
+      });
+      expect(unchanged.getRevisionById(revisionId)!.status).toBe('DELIVERED');
+      expect(auditTrail.logEvent).not.toHaveBeenCalled();
     });
   });
 });

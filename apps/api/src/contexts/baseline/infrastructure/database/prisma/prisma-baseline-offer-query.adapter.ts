@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { OfferRevisionStatus } from '@lt-offers/domain';
 import { PrismaService } from '../../../../../app/prisma.service';
 import { BaselineOfferBasics, BaselineOfferQueryPort } from '../../../domain';
 
@@ -24,5 +25,16 @@ export class PrismaBaselineOfferQueryAdapter implements BaselineOfferQueryPort {
       code: offer.code,
       name: offer.name,
     };
+  }
+
+  async findRevisionStatus(
+    revisionId: number,
+  ): Promise<OfferRevisionStatus | null> {
+    const revision = await this.prisma.offerRevision.findUnique({
+      where: { id: revisionId },
+      select: { status: true },
+    });
+
+    return revision?.status ?? null;
   }
 }

@@ -28,6 +28,14 @@ export class RevisionFrozenException extends OfferDomainException {
   }
 }
 
+export class InvalidStatusTransitionException extends OfferDomainException {
+  constructor(currentStatus: string, intendedStatus: string) {
+    super(
+      `Transição de status não permitida: a revisão está em ${currentStatus} e não pode ir para ${intendedStatus}.`,
+    );
+  }
+}
+
 export class InvalidScopeMatrixException extends OfferDomainException {
   constructor(message: string) {
     super(`Matriz de escopo inválida: ${message}`);
