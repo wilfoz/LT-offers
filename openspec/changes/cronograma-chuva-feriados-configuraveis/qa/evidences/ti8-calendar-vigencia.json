@@ -1,0 +1,86 @@
+﻿{
+    "effectiveOn20270201":  {
+                                "feriadoBA":  1,
+                                "dias":  "21",
+                                "version":  "2027-01-01"
+                            },
+    "created":  {
+                    "id":  4,
+                    "effectiveFrom":  "2027-01-01",
+                    "createdBy":  "qa@teste.com",
+                    "createdAt":  "2026-09-27T12:35:32.588Z",
+                    "calendar":  {
+                                     "standardWorkingDaysPerMonth":  "21",
+                                     "nonWorkingWeekdays":  [
+                                                                0,
+                                                                6
+                                                            ],
+                                     "holidays":  [
+                                                      {
+                                                          "date":  "2020-01-01",
+                                                          "name":  "Confraterniza��o Universal",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-04-21",
+                                                          "name":  "Tiradentes",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-05-01",
+                                                          "name":  "Dia do Trabalho",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-09-07",
+                                                          "name":  "Independ�ncia do Brasil",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-10-12",
+                                                          "name":  "Nossa Senhora Aparecida",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-11-02",
+                                                          "name":  "Finados",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-11-15",
+                                                          "name":  "Proclama��o da Rep�blica",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-11-20",
+                                                          "name":  "Dia Nacional de Zumbi e da Consci�ncia Negra",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2020-12-25",
+                                                          "name":  "Natal",
+                                                          "recurring":  true,
+                                                          "uf":  null
+                                                      },
+                                                      {
+                                                          "date":  "2027-07-02",
+                                                          "name":  "Independencia da Bahia",
+                                                          "recurring":  true,
+                                                          "uf":  "BA"
+                                                      }
+                                                  ]
+                                 }
+                },
+    "effectiveOn20261110":  {
+                                "version":  "2020-01-01",
+                                "dias":  "22"
+                            }
+}

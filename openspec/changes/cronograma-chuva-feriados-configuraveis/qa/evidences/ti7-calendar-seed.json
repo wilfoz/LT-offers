@@ -1,0 +1,69 @@
+﻿{
+    "id":  1,
+    "effectiveFrom":  "2020-01-01",
+    "createdBy":  "sistema@celeoredes.com.br",
+    "createdAt":  "2026-09-27T10:31:37.190Z",
+    "calendar":  {
+                     "standardWorkingDaysPerMonth":  "22",
+                     "nonWorkingWeekdays":  [
+                                                0,
+                                                6
+                                            ],
+                     "holidays":  [
+                                      {
+                                          "date":  "2020-01-01",
+                                          "name":  "Confraternização Universal",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-04-21",
+                                          "name":  "Tiradentes",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-05-01",
+                                          "name":  "Dia do Trabalho",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-09-07",
+                                          "name":  "Independência do Brasil",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-10-12",
+                                          "name":  "Nossa Senhora Aparecida",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-11-02",
+                                          "name":  "Finados",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-11-15",
+                                          "name":  "Proclamação da República",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-11-20",
+                                          "name":  "Dia Nacional de Zumbi e da Consciência Negra",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      },
+                                      {
+                                          "date":  "2020-12-25",
+                                          "name":  "Natal",
+                                          "recurring":  true,
+                                          "uf":  null
+                                      }
+                                  ]
+                 }
+}

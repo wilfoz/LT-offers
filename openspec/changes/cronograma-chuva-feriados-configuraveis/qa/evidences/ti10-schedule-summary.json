@@ -1,0 +1,1016 @@
+﻿{
+    "lineId":  17,
+    "lineName":  "L.T. 525 kV Rio Brilhante - Sarandi C1-C2-CD",
+    "startMonth":  1,
+    "scheduleStartDate":  "2026-07-01",
+    "totalDurationMonths":  36,
+    "activities":  [
+                       {
+                           "id":  "act-ind-17",
+                           "lineId":  17,
+                           "code":  "ACT-01-IND",
+                           "name":  "Gestão, Engenharia e Apoio Indireto",
+                           "group":  "INDIRECTS",
+                           "quantitySource":  "MANUAL",
+                           "totalQuantity":  "18.00",
+                           "quantityUnit":  "meses",
+                           "crewCount":  1,
+                           "startMonth":  1,
+                           "durationMonths":  18,
+                           "endMonth":  18,
+                           "monthlyProduction":  "1.00",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "25000.00",
+                           "monthlyRecurringCost":  "65000.00",
+                           "demobilizationCost":  "15000.00",
+                           "totalCost":  "1210000.00",
+                           "status":  "PLANNED"
+                       },
+                       {
+                           "id":  "act-prelim-17",
+                           "lineId":  17,
+                           "code":  "ACT-02-PRELIM",
+                           "name":  "Abertura de Acessos e Limpeza de Faixa",
+                           "group":  "PRELIMINARIES",
+                           "quantitySource":  "ROW_CLEARING_HA",
+                           "totalQuantity":  "1535.00",
+                           "quantityUnit":  "ha",
+                           "assignedCrewId":  1,
+                           "assignedCrewName":  "Equipe de Terraplenagem e Desmatamento",
+                           "crewCount":  2,
+                           "startMonth":  2,
+                           "durationMonths":  21,
+                           "endMonth":  22,
+                           "monthlyProduction":  "73.10",
+                           "maxMonthlyProduction":  "120.00",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "70000.00",
+                           "monthlyRecurringCost":  "150000.00",
+                           "demobilizationCost":  "40000.00",
+                           "totalCost":  "3260000.00",
+                           "status":  "CRITICAL",
+                           "statusNotes":  [
+                                               "Atividade \u0027Abertura de Acessos e Limpeza de Faixa\u0027 termina no Mês 22, após o marco contratual de Operação Comercial (Mês 18)."
+                                           ],
+                           "monthlyBreakdown":  [
+                                                    {
+                                                        "projectMonth":  2,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "85.91",
+                                                        "plannedProduction":  "85.91"
+                                                    },
+                                                    {
+                                                        "projectMonth":  3,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "81.61",
+                                                        "plannedProduction":  "81.61"
+                                                    },
+                                                    {
+                                                        "projectMonth":  4,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "73.02",
+                                                        "plannedProduction":  "73.02"
+                                                    },
+                                                    {
+                                                        "projectMonth":  5,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "66.07",
+                                                        "plannedProduction":  "66.07"
+                                                    },
+                                                    {
+                                                        "projectMonth":  6,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "67.50",
+                                                        "plannedProduction":  "67.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  7,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "61.36",
+                                                        "plannedProduction":  "61.36"
+                                                    },
+                                                    {
+                                                        "projectMonth":  8,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "69.55",
+                                                        "plannedProduction":  "69.55"
+                                                    },
+                                                    {
+                                                        "projectMonth":  9,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "79.98",
+                                                        "plannedProduction":  "79.98"
+                                                    },
+                                                    {
+                                                        "projectMonth":  10,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "81.61",
+                                                        "plannedProduction":  "81.61"
+                                                    },
+                                                    {
+                                                        "projectMonth":  11,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "81.61",
+                                                        "plannedProduction":  "81.61"
+                                                    },
+                                                    {
+                                                        "projectMonth":  12,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "85.50",
+                                                        "plannedProduction":  "85.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  13,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "90.00",
+                                                        "plannedProduction":  "90.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  14,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "90.00",
+                                                        "plannedProduction":  "90.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  15,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "81.61",
+                                                        "plannedProduction":  "81.61"
+                                                    },
+                                                    {
+                                                        "projectMonth":  16,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "69.55",
+                                                        "plannedProduction":  "69.55"
+                                                    },
+                                                    {
+                                                        "projectMonth":  17,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "69.55",
+                                                        "plannedProduction":  "69.55"
+                                                    },
+                                                    {
+                                                        "projectMonth":  18,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "70.57",
+                                                        "plannedProduction":  "70.57"
+                                                    },
+                                                    {
+                                                        "projectMonth":  19,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "64.43",
+                                                        "plannedProduction":  "64.43"
+                                                    },
+                                                    {
+                                                        "projectMonth":  20,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "73.02",
+                                                        "plannedProduction":  "73.02"
+                                                    },
+                                                    {
+                                                        "projectMonth":  21,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "79.98",
+                                                        "plannedProduction":  "79.98"
+                                                    },
+                                                    {
+                                                        "projectMonth":  22,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "73.84",
+                                                        "plannedProduction":  "12.57"
+                                                    }
+                                                ]
+                       },
+                       {
+                           "id":  "act-civil-17",
+                           "lineId":  17,
+                           "code":  "ACT-03-CIVIL",
+                           "name":  "Escavação, Armação e Concretagem de Fundações",
+                           "group":  "CIVIL_WORKS",
+                           "quantitySource":  "TOTAL_FOUNDATIONS",
+                           "totalQuantity":  "768.00",
+                           "quantityUnit":  "torres",
+                           "assignedCrewId":  2,
+                           "assignedCrewName":  "Equipe de Obras Civis e Fundações",
+                           "crewCount":  3,
+                           "startMonth":  3,
+                           "durationMonths":  25,
+                           "endMonth":  27,
+                           "monthlyProduction":  "30.72",
+                           "maxMonthlyProduction":  "54.00",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "120000.00",
+                           "monthlyRecurringCost":  "255000.00",
+                           "demobilizationCost":  "75000.00",
+                           "totalCost":  "6570000.00",
+                           "status":  "CRITICAL",
+                           "statusNotes":  [
+                                               "Atividade \u0027Escavação, Armação e Concretagem de Fundações\u0027 termina no Mês 27, após o marco contratual de Operação Comercial (Mês 18)."
+                                           ],
+                           "monthlyBreakdown":  [
+                                                    {
+                                                        "projectMonth":  3,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "32.64",
+                                                        "plannedProduction":  "32.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  4,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "29.21",
+                                                        "plannedProduction":  "29.21"
+                                                    },
+                                                    {
+                                                        "projectMonth":  5,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "26.43",
+                                                        "plannedProduction":  "26.43"
+                                                    },
+                                                    {
+                                                        "projectMonth":  6,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "27.00",
+                                                        "plannedProduction":  "27.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  7,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "24.55",
+                                                        "plannedProduction":  "24.55"
+                                                    },
+                                                    {
+                                                        "projectMonth":  8,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "27.82",
+                                                        "plannedProduction":  "27.82"
+                                                    },
+                                                    {
+                                                        "projectMonth":  9,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "31.99",
+                                                        "plannedProduction":  "31.99"
+                                                    },
+                                                    {
+                                                        "projectMonth":  10,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "32.64",
+                                                        "plannedProduction":  "32.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  11,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "32.64",
+                                                        "plannedProduction":  "32.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  12,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "34.20",
+                                                        "plannedProduction":  "34.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  13,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "36.00",
+                                                        "plannedProduction":  "36.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  14,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "36.00",
+                                                        "plannedProduction":  "36.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  15,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "32.64",
+                                                        "plannedProduction":  "32.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  16,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "27.82",
+                                                        "plannedProduction":  "27.82"
+                                                    },
+                                                    {
+                                                        "projectMonth":  17,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "27.82",
+                                                        "plannedProduction":  "27.82"
+                                                    },
+                                                    {
+                                                        "projectMonth":  18,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "28.23",
+                                                        "plannedProduction":  "28.23"
+                                                    },
+                                                    {
+                                                        "projectMonth":  19,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "25.77",
+                                                        "plannedProduction":  "25.77"
+                                                    },
+                                                    {
+                                                        "projectMonth":  20,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "29.21",
+                                                        "plannedProduction":  "29.21"
+                                                    },
+                                                    {
+                                                        "projectMonth":  21,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "31.99",
+                                                        "plannedProduction":  "31.99"
+                                                    },
+                                                    {
+                                                        "projectMonth":  22,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "29.54",
+                                                        "plannedProduction":  "29.54"
+                                                    },
+                                                    {
+                                                        "projectMonth":  23,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "34.20",
+                                                        "plannedProduction":  "34.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  24,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "34.20",
+                                                        "plannedProduction":  "34.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  25,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "34.36",
+                                                        "plannedProduction":  "34.36"
+                                                    },
+                                                    {
+                                                        "projectMonth":  26,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "37.64",
+                                                        "plannedProduction":  "37.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  27,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "31.09",
+                                                        "plannedProduction":  "23.46"
+                                                    }
+                                                ]
+                       },
+                       {
+                           "id":  "act-erect-17",
+                           "lineId":  17,
+                           "code":  "ACT-04-ERECT",
+                           "name":  "Montagem Eletromecânica de Torres e Acessórios",
+                           "group":  "TOWER_ERECTION",
+                           "quantitySource":  "TOTAL_TOWERS",
+                           "totalQuantity":  "768.00",
+                           "quantityUnit":  "torres",
+                           "assignedCrewId":  3,
+                           "assignedCrewName":  "Equipe de Montagem Pesada",
+                           "crewCount":  2,
+                           "startMonth":  6,
+                           "durationMonths":  31,
+                           "endMonth":  36,
+                           "monthlyProduction":  "24.77",
+                           "maxMonthlyProduction":  "40.00",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "100000.00",
+                           "monthlyRecurringCost":  "190000.00",
+                           "demobilizationCost":  "60000.00",
+                           "totalCost":  "6050000.00",
+                           "status":  "CRITICAL",
+                           "statusNotes":  [
+                                               "Atividade \u0027Montagem Eletromecânica de Torres e Acessórios\u0027 termina no Mês 36, após o marco contratual de Operação Comercial (Mês 18)."
+                                           ],
+                           "monthlyBreakdown":  [
+                                                    {
+                                                        "projectMonth":  6,
+                                                        "civilYear":  2026,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "22.50",
+                                                        "plannedProduction":  "22.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  7,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "20.45",
+                                                        "plannedProduction":  "20.45"
+                                                    },
+                                                    {
+                                                        "projectMonth":  8,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  9,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "26.66",
+                                                        "plannedProduction":  "26.66"
+                                                    },
+                                                    {
+                                                        "projectMonth":  10,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  11,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  12,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "28.50",
+                                                        "plannedProduction":  "28.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  13,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "30.00",
+                                                        "plannedProduction":  "30.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  14,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "30.00",
+                                                        "plannedProduction":  "30.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  15,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  16,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  17,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  18,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "23.52",
+                                                        "plannedProduction":  "23.52"
+                                                    },
+                                                    {
+                                                        "projectMonth":  19,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "21.48",
+                                                        "plannedProduction":  "21.48"
+                                                    },
+                                                    {
+                                                        "projectMonth":  20,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "24.34",
+                                                        "plannedProduction":  "24.34"
+                                                    },
+                                                    {
+                                                        "projectMonth":  21,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "26.66",
+                                                        "plannedProduction":  "26.66"
+                                                    },
+                                                    {
+                                                        "projectMonth":  22,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "24.61",
+                                                        "plannedProduction":  "24.61"
+                                                    },
+                                                    {
+                                                        "projectMonth":  23,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "28.50",
+                                                        "plannedProduction":  "28.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  24,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "28.50",
+                                                        "plannedProduction":  "28.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  25,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "28.64",
+                                                        "plannedProduction":  "28.64"
+                                                    },
+                                                    {
+                                                        "projectMonth":  26,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "31.37",
+                                                        "plannedProduction":  "31.37"
+                                                    },
+                                                    {
+                                                        "projectMonth":  27,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "25.91",
+                                                        "plannedProduction":  "25.91"
+                                                    },
+                                                    {
+                                                        "projectMonth":  28,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "24.34",
+                                                        "plannedProduction":  "24.34"
+                                                    },
+                                                    {
+                                                        "projectMonth":  29,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.8636",
+                                                        "effectiveProduction":  "22.02",
+                                                        "plannedProduction":  "22.02"
+                                                    },
+                                                    {
+                                                        "projectMonth":  30,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "20.45",
+                                                        "plannedProduction":  "20.45"
+                                                    },
+                                                    {
+                                                        "projectMonth":  31,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "22.50",
+                                                        "plannedProduction":  "22.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  32,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  33,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "25.50",
+                                                        "plannedProduction":  "25.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  34,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  35,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "28.50",
+                                                        "plannedProduction":  "28.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  36,
+                                                        "civilYear":  2029,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "1.53"
+                                                    }
+                                                ]
+                       },
+                       {
+                           "id":  "act-string-17",
+                           "lineId":  17,
+                           "code":  "ACT-05-STRING",
+                           "name":  "Lançamento de Cabos Condutores e OPGW",
+                           "group":  "STRINGING",
+                           "quantitySource":  "CONDUCTOR_KM",
+                           "totalQuantity":  "307.00",
+                           "quantityUnit":  "km",
+                           "assignedCrewId":  4,
+                           "assignedCrewName":  "Equipe de Lançamento e Tensionamento",
+                           "crewCount":  2,
+                           "startMonth":  10,
+                           "durationMonths":  12,
+                           "endMonth":  21,
+                           "monthlyProduction":  "25.58",
+                           "maxMonthlyProduction":  "44.00",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "120000.00",
+                           "monthlyRecurringCost":  "240000.00",
+                           "demobilizationCost":  "70000.00",
+                           "totalCost":  "3070000.00",
+                           "status":  "CRITICAL",
+                           "statusNotes":  [
+                                               "Atividade \u0027Lançamento de Cabos Condutores e OPGW\u0027 termina no Mês 21, após o marco contratual de Operação Comercial (Mês 18)."
+                                           ],
+                           "monthlyBreakdown":  [
+                                                    {
+                                                        "projectMonth":  10,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  4,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  11,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  5,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  12,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  6,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "28.50",
+                                                        "plannedProduction":  "28.50"
+                                                    },
+                                                    {
+                                                        "projectMonth":  13,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  7,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "30.00",
+                                                        "plannedProduction":  "30.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  14,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  8,
+                                                        "rainfallFactor":  "1.0000",
+                                                        "calendarFactor":  "1.0000",
+                                                        "effectiveProduction":  "30.00",
+                                                        "plannedProduction":  "30.00"
+                                                    },
+                                                    {
+                                                        "projectMonth":  15,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  9,
+                                                        "rainfallFactor":  "0.9500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "27.20",
+                                                        "plannedProduction":  "27.20"
+                                                    },
+                                                    {
+                                                        "projectMonth":  16,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  10,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  17,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  11,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9091",
+                                                        "effectiveProduction":  "23.18",
+                                                        "plannedProduction":  "23.18"
+                                                    },
+                                                    {
+                                                        "projectMonth":  18,
+                                                        "civilYear":  2027,
+                                                        "civilMonth":  12,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "23.52",
+                                                        "plannedProduction":  "23.52"
+                                                    },
+                                                    {
+                                                        "projectMonth":  19,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  1,
+                                                        "rainfallFactor":  "0.7500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "21.48",
+                                                        "plannedProduction":  "21.48"
+                                                    },
+                                                    {
+                                                        "projectMonth":  20,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  2,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "0.9545",
+                                                        "effectiveProduction":  "24.34",
+                                                        "plannedProduction":  "24.34"
+                                                    },
+                                                    {
+                                                        "projectMonth":  21,
+                                                        "civilYear":  2028,
+                                                        "civilMonth":  3,
+                                                        "rainfallFactor":  "0.8500",
+                                                        "calendarFactor":  "1.0455",
+                                                        "effectiveProduction":  "26.66",
+                                                        "plannedProduction":  "21.20"
+                                                    }
+                                                ]
+                       },
+                       {
+                           "id":  "act-comm-17",
+                           "lineId":  17,
+                           "code":  "ACT-06-COMM",
+                           "name":  "Ensaios Elétricos, Comissionamento e Energização",
+                           "group":  "COMMISSIONING",
+                           "quantitySource":  "MANUAL",
+                           "totalQuantity":  "1.00",
+                           "quantityUnit":  "seção",
+                           "assignedCrewId":  5,
+                           "assignedCrewName":  "Equipe Especializada de Ensaios e Comissionamento",
+                           "crewCount":  1,
+                           "startMonth":  16,
+                           "durationMonths":  2,
+                           "endMonth":  17,
+                           "monthlyProduction":  "0.50",
+                           "accessDifficultyFactor":  "1.00",
+                           "predecessors":  [
+
+                                            ],
+                           "mobilizationCost":  "20000.00",
+                           "monthlyRecurringCost":  "90000.00",
+                           "demobilizationCost":  "15000.00",
+                           "totalCost":  "215000.00",
+                           "status":  "PLANNED"
+                       }
+                   ],
+    "milestones":  [
+                       {
+                           "id":  "ms-li-17",
+                           "code":  "LI",
+                           "name":  "Licença de Instalação (LI)",
+                           "targetMonth":  2,
+                           "isMandatory":  true,
+                           "description":  "Condição precedente obrigatória para obras de campo"
+                       },
+                       {
+                           "id":  "ms-lo-17",
+                           "code":  "LO",
+                           "name":  "Entrada em Operação Comercial (LO)",
+                           "targetMonth":  18,
+                           "isMandatory":  true,
+                           "description":  "Marco final de comissionamento e faturamento"
+                       }
+                   ],
+    "totalDirectLaborCost":  "19165000.00",
+    "totalEquipmentCost":  "0.00",
+    "totalIndirectCost":  "1210000.00",
+    "totalScheduleCost":  "20375000.00",
+    "warnings":  [
+                     "Atividade \u0027Abertura de Acessos e Limpeza de Faixa\u0027 termina no Mês 22, após o marco contratual de Operação Comercial (Mês 18).",
+                     "Atividade \u0027Escavação, Armação e Concretagem de Fundações\u0027 termina no Mês 27, após o marco contratual de Operação Comercial (Mês 18).",
+                     "Atividade \u0027Montagem Eletromecânica de Torres e Acessórios\u0027 termina no Mês 36, após o marco contratual de Operação Comercial (Mês 18).",
+                     "Atividade \u0027Lançamento de Cabos Condutores e OPGW\u0027 termina no Mês 21, após o marco contratual de Operação Comercial (Mês 18)."
+                 ]
+}

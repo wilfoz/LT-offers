@@ -36,6 +36,6 @@
 
 ## 6. Verificação final e paridade
 
-- [ ] 6.1 Rodar `npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status`; corrigir pendências
-- [ ] 6.2 Rodar as suítes de paridade numérica dos módulos a jusante (histograma, desembolso, resultado econômico) e documentar desvios de duração esperados decorrentes do método mês a mês
-- [ ] 6.3 Executar a skill executar-qa sobre os cenários dos três specs da change e gerar `qa/qa.md` com evidências
+- [x] 6.1 Rodar `npx nx run-many -t test lint -p api web domain calc-engine`, `npx nx format:check --all` e `npx prisma migrate status`; corrigir pendências
+- [x] 6.2 Rodar as suítes de paridade numérica dos módulos a jusante (histograma, desembolso, resultado econômico) e documentar desvios de duração esperados decorrentes do método mês a mês
+- [x] 6.3 Executar a skill executar-qa sobre os cenários dos três specs da change e gerar `qa/qa.md` com evidências
