@@ -1,0 +1,31 @@
+## 1. Nomenclatura, domain e modelo de dados
+
+- [x] 1.1 Adicionar ao mapa canônico pt-BR → inglês do README.md os termos: número do leilão → `auctionNumber`, número do lote → `lotNumber`, sublote → `subLotCode`, data de assinatura do contrato de concessão → `contractSigningDate`, prazo de construção (meses) → `constructionDeadlineMonths`, data-limite contratual → `contractualDeadlineDate`, deságio → `discountPercent`; atualizar a linha do enum `OfferRevisionStatus` para os cinco valores
+- [x] 1.2 Em `libs/domain/src/lib/offers/offers.ts`: adicionar os cinco campos opcionais a `OfferRevisionItem`, `CreateOfferPayload`, `UpdateOfferRevisionPayload` e os `target*` a `CloneOfferPayload`; adicionar os derivados somente-leitura `contractualDeadlineDate`, `discountPercent` e `scheduleWarnings` a `OfferRevisionItem`; exportar `AUCTION_NUMBER_PATTERN`
+- [x] 1.3 Criar `libs/domain/src/lib/offers/offer-derivations.ts` com `discountPercent`, `contractualDeadlineDate` (clamp de fim de mês via `daysInCivilMonth`) e `scheduleWarnings` (códigos tipados, sem texto), usando `decimal.js`; exportar em `libs/domain/src/index.ts`
+- [x] 1.4 Testes de unidade das derivações cobrindo os cenários do delta spec: deságio 50,00 / negativo / null com RAP zero ou ausente; data-limite `2027-02-26 + 60 = 2032-02-26`, clamp `2027-01-31 + 1 = 2027-02-28`, ano bissexto; cada código de alerta isolado e combinado; data inválida (`2027-02-30`) → null sem alerta
+- [x] 1.5 Modelar no `prisma/schema.prisma` as cinco colunas anuláveis de `OfferRevision` (design D1) e os valores `WON` e `IN_EXECUTION` no enum `OfferRevisionStatus`; gerar migration aditiva (somente `ALTER TABLE ADD COLUMN` e `ALTER TYPE ADD VALUE`, sem `UPDATE` com os valores novos) e conferir `npx prisma migrate status`
+
+## 2. API — contexto offers
+
+- [ ] 2.1 Entidade `OfferRevision`: novos props e getters, `updateParameters` aceitando os cinco campos, `isClosed()` cobrindo os quatro status imutáveis, `markWon()` (exige `DELIVERED`) e `markInExecution()` (exige `WON`) lançando `InvalidStatusTransitionException` com mensagem pt-BR "está em <atual> e não pode ir para <pretendido>"; mapear a exceção para HTTP 409 no filtro do contexto
+- [ ] 2.2 DTOs `CreateOfferDto`, `UpdateOfferRevisionDto` e `CloneOfferDto`: campos novos com validações do design D1 (padrão `NNN/AAAA`, inteiro ≥ 1, `VarChar(3)`, data civil com round-trip, meses 1..240) e mensagens pt-BR; mensagem do `status` listando os cinco valores
+- [ ] 2.3 Mapper e repositórios Prisma: ler/gravar os cinco campos (datas civis como `YYYY-MM-DD`), remover os `status as any` em favor do enum gerado pelo Prisma
+- [ ] 2.4 Use cases: `create-offer`, `clone-offer` (copia identidade/prazos da origem quando o destino não informa) e `create-revision` propagam os campos; `update-revision` substitui o bloco de status por `switch` exaustivo (FROZEN, DELIVERED, WON, IN_EXECUTION; DRAFT como alvo e transições fora de ordem → exceção; status igual → no-op) usando `isClosed()`; emitir evento de auditoria nas transições novas com status anterior e novo
+- [ ] 2.5 `OfferPresenter.toRevisionItem` expõe `contractualDeadlineDate`, `discountPercent` e `scheduleWarnings` calculados via `offer-derivations`; `freeze-baseline.usecase.ts` passa a registrar o status real da revisão no diff de auditoria
+- [ ] 2.6 Testes: use cases (transições válidas persistem; `DRAFT→WON`, `FROZEN→WON`, `DELIVERED→IN_EXECUTION` rejeitadas sem alterar a revisão; clonagem copia e sobrescreve identidade), controller (400 com mensagem pt-BR para `4/2026`, prazo `0`, sublote com 4 caracteres; payload sem os campos grava null e não deriva), presenter (deságio e data-limite no envelope; ausência → null) e paridade DTO × contrato (todas as chaves novas inválidas → 1 erro por campo; `discountPercent` enviado no payload é descartado)
+
+## 3. Interface web
+
+- [ ] 3.1 `offer-form.component.ts`: campos número do leilão, lote, sublote, assinatura do contrato e prazo de construção com validadores e mensagens pt-BR espelhando a API; rótulo do CAPEX passa a "CAPEX estimado ANEEL (lote inteiro, conforme edital)"; pré-visualização somente-leitura da data-limite e do deságio via `offer-derivations`
+- [ ] 3.2 `offer-detail.component.ts` (aba de parâmetros): mesmos campos com `[readonly]="!isDraft()"`; alerta RN-02 renderizando um item por código de `scheduleWarnings` com mensagens pt-BR (início após entrada em operação; data-limite contratual posterior à entrada em operação, citando a data; início antes da assinatura); "Deságio" ao lado da RAP em formato pt-BR (`50,00%`), "não informado" quando nulo e destaque quando negativo
+- [ ] 3.3 Ações de status no detalhe: "Marcar vencedora" (visível em `DELIVERED`) e "Iniciar execução" (visível em `WON`) reutilizando o endpoint de atualização; erro 409 em snackbar; chips de status já existentes exercitados
+- [ ] 3.4 Diálogo de clonagem: campos de identidade de destino pré-preenchidos com a origem e enviados como `target*`
+- [ ] 3.5 Testes dos componentes: validação dos campos novos, pré-visualização do deságio/data-limite, três alertas RN-02, ações de status por estado, callbacks de erro em toda leitura e botão refletindo `form.disabled`; conferir ausência de BOM nos arquivos editados
+
+## 4. Seed, fixtures e verificação
+
+- [ ] 4.1 `prisma/seed.ts`: oferta-mestre com `auctionNumber '004/2026'`, `lotNumber 4`, `auctionDate '2026-10-30'`, `contractSigningDate '2027-02-26'`, `constructionDeadlineMonths 60`, `estimatedCapex '4110000000.00'`, `maxRap '762630000.00'`, `winningRap null` e nota citando o edital 4/2026 (aprovado 22/09/2026) e explicando o alerta RN-02 esperado com `commercialOperationDate 2029-06-30`
+- [ ] 4.2 Fixtures de paridade: rótulo `auction` de `solaris-mg-500kv` e `reidi-direct-bill` → `Leilão Aneel 004/2025`, `tucano-multiline` → `Leilão Aneel 001/2026`; rodar a suíte de paridade e confirmar zero alteração numérica
+- [ ] 4.3 Rodar `npx nx run-many -t test lint -p api web domain calc-engine --skip-nx-cache`, `npx nx format:check --all` e `npx prisma migrate status`; corrigir pendências
+- [ ] 4.4 QA E2E: criar oferta com `004/2026`/lote 4/sublote `4A`/assinatura/prazo e ver data-limite `2032-02-26`; deságio calculado e "não informado"; três alertas RN-02; `DELIVERED → WON → IN_EXECUTION` persistindo e transição fora de ordem rejeitada com mensagem

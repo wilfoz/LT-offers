@@ -520,15 +520,15 @@ model WorkCrew {
 }
 
 model WorkCrewVersion {
-  id                     Int                  @id @default(autoincrement())
-  workCrewId             Int                  @map("work_crew_id")
-  workCrew               WorkCrew             @relation(fields: [workCrewId], references: [id])
-  standardProductionRate Decimal?             @map("standard_production_rate") @db.Decimal(12, 4)
-  productionUnit         String?              @map("production_unit") @db.VarChar(50)
-  productionPeriod       ProductionPeriod?    @map("production_period")
-  effectiveFrom          DateTime             @map("effective_from") @db.Date
-  createdBy              String               @map("created_by")
-  createdAt              DateTime             @default(now()) @map("created_at")
+  id                     Int                 @id @default(autoincrement())
+  workCrewId             Int                 @map("work_crew_id")
+  workCrew               WorkCrew            @relation(fields: [workCrewId], references: [id])
+  standardProductionRate Decimal?            @map("standard_production_rate") @db.Decimal(12, 4)
+  productionUnit         String?             @map("production_unit") @db.VarChar(50)
+  productionPeriod       ProductionPeriod?   @map("production_period")
+  effectiveFrom          DateTime            @map("effective_from") @db.Date
+  createdBy              String              @map("created_by")
+  createdAt              DateTime            @default(now()) @map("created_at")
   laborRoles             WorkCrewLaborRole[]
   equipments             WorkCrewEquipment[]
 
@@ -566,6 +566,8 @@ enum OfferRevisionStatus {
   DRAFT
   FROZEN
   DELIVERED
+  WON
+  IN_EXECUTION
 
   @@map("offer_revision_status")
 }
@@ -595,28 +597,33 @@ model Offer {
 }
 
 model OfferRevision {
-  id                      Int                 @id @default(autoincrement())
-  offerId                 Int                 @map("offer_id")
-  offer                   Offer               @relation(fields: [offerId], references: [id], onDelete: Cascade)
-  revisionNumber          Int                 @map("revision_number")
-  status                  OfferRevisionStatus @default(DRAFT)
-  auctionName             String              @map("auction_name")
-  lotName                 String              @map("lot_name")
-  offerDate               DateTime            @map("offer_date") @db.Date
-  auctionDate             DateTime?           @map("auction_date") @db.Date
-  scheduleStartDate       DateTime?           @map("schedule_start_date") @db.Date
-  commercialOperationDate DateTime?           @map("commercial_operation_date") @db.Date
-  estimatedCapex          Decimal?            @map("estimated_capex") @db.Decimal(16, 2)
-  maxRap                  Decimal?            @map("max_rap") @db.Decimal(16, 2)
-  winningRap              Decimal?            @map("winning_rap") @db.Decimal(16, 2)
-  notes                   String?
-  closedAt                DateTime?           @map("closed_at")
-  deliveredAt             DateTime?           @map("delivered_at")
-  createdBy               String              @map("created_by")
-  createdAt               DateTime            @default(now()) @map("created_at")
-  updatedAt               DateTime            @updatedAt @map("updated_at")
-  transmissionLines       TransmissionLine[]
-  scopeMatrixItems        ScopeMatrixItem[]
+  id                         Int                 @id @default(autoincrement())
+  offerId                    Int                 @map("offer_id")
+  offer                      Offer               @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  revisionNumber             Int                 @map("revision_number")
+  status                     OfferRevisionStatus @default(DRAFT)
+  auctionName                String              @map("auction_name")
+  lotName                    String              @map("lot_name")
+  auctionNumber              String?             @map("auction_number") @db.VarChar(15)
+  lotNumber                  Int?                @map("lot_number")
+  subLotCode                 String?             @map("sub_lot_code") @db.VarChar(3)
+  offerDate                  DateTime            @map("offer_date") @db.Date
+  auctionDate                DateTime?           @map("auction_date") @db.Date
+  scheduleStartDate          DateTime?           @map("schedule_start_date") @db.Date
+  commercialOperationDate    DateTime?           @map("commercial_operation_date") @db.Date
+  contractSigningDate        DateTime?           @map("contract_signing_date") @db.Date
+  constructionDeadlineMonths Int?                @map("construction_deadline_months")
+  estimatedCapex             Decimal?            @map("estimated_capex") @db.Decimal(16, 2)
+  maxRap                     Decimal?            @map("max_rap") @db.Decimal(16, 2)
+  winningRap                 Decimal?            @map("winning_rap") @db.Decimal(16, 2)
+  notes                      String?
+  closedAt                   DateTime?           @map("closed_at")
+  deliveredAt                DateTime?           @map("delivered_at")
+  createdBy                  String              @map("created_by")
+  createdAt                  DateTime            @default(now()) @map("created_at")
+  updatedAt                  DateTime            @updatedAt @map("updated_at")
+  transmissionLines          TransmissionLine[]
+  scopeMatrixItems           ScopeMatrixItem[]
 
   @@unique([offerId, revisionNumber])
   @@index([offerId, revisionNumber(sort: Desc)])
@@ -676,27 +683,27 @@ enum AccessDifficulty {
 }
 
 model StakingTower {
-  id                  Int               @id @default(autoincrement())
-  transmissionLineId  Int               @map("transmission_line_id")
-  transmissionLine    TransmissionLine  @relation(fields: [transmissionLineId], references: [id], onDelete: Cascade)
-  towerNumber         String            @map("tower_number") @db.VarChar(50)
-  stationMeters       Decimal           @map("station_meters") @db.Decimal(12, 3)
-  bodyExtensionMeters Decimal           @default(0) @map("body_extension_meters") @db.Decimal(8, 3)
-  deflectionAngleDeg  Decimal           @default(0) @map("deflection_angle_deg") @db.Decimal(8, 4)
-  lateralOffsetMeters Decimal           @default(0) @map("lateral_offset_meters") @db.Decimal(8, 3)
-  utmEast             Decimal?          @map("utm_east") @db.Decimal(12, 3)
-  utmNorth            Decimal?          @map("utm_north") @db.Decimal(12, 3)
-  elevationMeters     Decimal?          @map("elevation_meters") @db.Decimal(10, 3)
-  towerTypeId         Int?              @map("tower_type_id")
-  towerType           TowerType?        @relation(fields: [towerTypeId], references: [id], onDelete: SetNull)
-  soilTypeId          Int?              @map("soil_type_id")
-  soilType            SoilType?         @relation(fields: [soilTypeId], references: [id], onDelete: SetNull)
-  foundationTypeId    Int?              @map("foundation_type_id")
-  foundationType      FoundationType?   @relation(fields: [foundationTypeId], references: [id], onDelete: SetNull)
-  accessDifficulty    AccessDifficulty  @default(NORMAL) @map("access_difficulty")
+  id                  Int              @id @default(autoincrement())
+  transmissionLineId  Int              @map("transmission_line_id")
+  transmissionLine    TransmissionLine @relation(fields: [transmissionLineId], references: [id], onDelete: Cascade)
+  towerNumber         String           @map("tower_number") @db.VarChar(50)
+  stationMeters       Decimal          @map("station_meters") @db.Decimal(12, 3)
+  bodyExtensionMeters Decimal          @default(0) @map("body_extension_meters") @db.Decimal(8, 3)
+  deflectionAngleDeg  Decimal          @default(0) @map("deflection_angle_deg") @db.Decimal(8, 4)
+  lateralOffsetMeters Decimal          @default(0) @map("lateral_offset_meters") @db.Decimal(8, 3)
+  utmEast             Decimal?         @map("utm_east") @db.Decimal(12, 3)
+  utmNorth            Decimal?         @map("utm_north") @db.Decimal(12, 3)
+  elevationMeters     Decimal?         @map("elevation_meters") @db.Decimal(10, 3)
+  towerTypeId         Int?             @map("tower_type_id")
+  towerType           TowerType?       @relation(fields: [towerTypeId], references: [id], onDelete: SetNull)
+  soilTypeId          Int?             @map("soil_type_id")
+  soilType            SoilType?        @relation(fields: [soilTypeId], references: [id], onDelete: SetNull)
+  foundationTypeId    Int?             @map("foundation_type_id")
+  foundationType      FoundationType?  @relation(fields: [foundationTypeId], references: [id], onDelete: SetNull)
+  accessDifficulty    AccessDifficulty @default(NORMAL) @map("access_difficulty")
   notes               String?
-  createdAt           DateTime          @default(now()) @map("created_at")
-  updatedAt           DateTime          @updatedAt @map("updated_at")
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
 
   @@unique([transmissionLineId, towerNumber])
   @@index([transmissionLineId, stationMeters])
@@ -798,5 +805,3 @@ model PreliminaryStakingDistribution {
 
   @@map("preliminary_staking_distribution")
 }
-
-

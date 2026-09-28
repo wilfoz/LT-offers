@@ -264,7 +264,7 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | quantidade na composição                            | `quantity`                                                                                              |
 | proposta / oferta de leilão                         | `Offer` / `offer` / `offers`                                                                            |
 | revisão de oferta                                   | `OfferRevision` / `offer_revision` / `offer-revisions`                                                  |
-| status da revisão de oferta                         | `OfferRevisionStatus`: `DRAFT` \| `FROZEN` \| `DELIVERED`                                               |
+| status da revisão de oferta                         | `OfferRevisionStatus`: `DRAFT` \| `FROZEN` \| `DELIVERED` \| `WON` \| `IN_EXECUTION`                    |
 | linha de transmissão                                | `TransmissionLine` / `transmission_line` / `transmission-lines`                                         |
 | item da matriz de responsabilidade                  | `ScopeMatrixItem` / `scope_matrix_item` / `scope-matrix-items`                                          |
 | responsável pelo escopo                             | `ScopeResponsibleParty`: `CONTRACTOR` \| `CLIENT`                                                       |
@@ -273,6 +273,13 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | parte com risco de commodity                        | `commodityRiskParty` / `commodity_risk_party`                                                           |
 | leilão                                              | `auctionName` / `auction_name`                                                                          |
 | lote                                                | `lotName` / `lot_name`                                                                                  |
+| número do leilão                                    | `auctionNumber` / `auction_number`                                                                      |
+| número do lote                                      | `lotNumber` / `lot_number`                                                                              |
+| sublote                                             | `subLotCode` / `sub_lot_code`                                                                           |
+| data de assinatura do contrato de concessão         | `contractSigningDate` / `contract_signing_date`                                                         |
+| prazo de construção (meses)                         | `constructionDeadlineMonths` / `construction_deadline_months`                                           |
+| data-limite contratual (derivada)                   | `contractualDeadlineDate`                                                                               |
+| deságio (derivado, %)                               | `discountPercent`                                                                                       |
 | cliente / concessionária                            | `clientName` / `client_name`                                                                            |
 | entrada em operação comercial (edital)              | `commercialOperationDate` / `commercial_operation_date`                                                 |
 | início do cronograma                                | `scheduleStartDate` / `schedule_start_date`                                                             |

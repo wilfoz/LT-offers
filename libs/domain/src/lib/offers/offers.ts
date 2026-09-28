@@ -4,6 +4,8 @@
  * (RF-01..RF-06, RN-01..RN-04, RNF-03, RNF-05, RNF-08, RNF-09).
  */
 
+import type { ScheduleWarningCode } from './offer-derivations';
+
 export const OFFER_REVISION_STATUSES = [
   'DRAFT',
   'FROZEN',
@@ -21,6 +23,9 @@ export const OFFER_REVISION_STATUS_LABELS: Record<OfferRevisionStatus, string> =
     WON: 'Vencedora (Ganha)',
     IN_EXECUTION: 'Em Execução',
   };
+
+/** Formato de publicação do número do leilão pela ANEEL (ex.: 004/2026). */
+export const AUCTION_NUMBER_PATTERN = /^\d{3}\/\d{4}$/;
 
 export const SCOPE_RESPONSIBLE_PARTIES = ['CONTRACTOR', 'CLIENT'] as const;
 export type ScopeResponsibleParty = (typeof SCOPE_RESPONSIBLE_PARTIES)[number];
@@ -67,14 +72,24 @@ export interface OfferRevisionItem {
   status: OfferRevisionStatus;
   auctionName: string;
   lotName: string;
+  auctionNumber?: string | null;
+  lotNumber?: number | null;
+  subLotCode?: string | null;
   offerDate: string; // ISO Date YYYY-MM-DD
   auctionDate?: string | null;
   scheduleStartDate?: string | null;
   commercialOperationDate?: string | null;
+  contractSigningDate?: string | null;
+  constructionDeadlineMonths?: number | null;
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
   notes?: string | null;
+  // Derivados em leitura (nunca persistidos nem aceitos como entrada).
+  // Opcionais até o presenter do grupo 2 passar a fornecê-los (task 2.5).
+  contractualDeadlineDate?: string | null;
+  discountPercent?: string | null;
+  scheduleWarnings?: ScheduleWarningCode[];
   closedAt?: string | null;
   deliveredAt?: string | null;
   createdBy: string;
@@ -123,10 +138,15 @@ export interface CreateOfferPayload {
   baseCurrency?: string;
   auctionName: string;
   lotName: string;
+  auctionNumber?: string | null;
+  lotNumber?: number | null;
+  subLotCode?: string | null;
   offerDate: string; // YYYY-MM-DD
   auctionDate?: string | null;
   scheduleStartDate?: string | null;
   commercialOperationDate?: string | null;
+  contractSigningDate?: string | null;
+  constructionDeadlineMonths?: number | null;
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
@@ -145,10 +165,15 @@ export interface UpdateOfferGeneralPayload {
 export interface UpdateOfferRevisionPayload {
   auctionName?: string;
   lotName?: string;
+  auctionNumber?: string | null;
+  lotNumber?: number | null;
+  subLotCode?: string | null;
   offerDate?: string;
   auctionDate?: string | null;
   scheduleStartDate?: string | null;
   commercialOperationDate?: string | null;
+  contractSigningDate?: string | null;
+  constructionDeadlineMonths?: number | null;
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
@@ -168,6 +193,9 @@ export interface CloneOfferPayload {
   targetName: string;
   targetAuctionName?: string;
   targetLotName?: string;
+  targetAuctionNumber?: string | null;
+  targetLotNumber?: number | null;
+  targetSubLotCode?: string | null;
   createdBy?: string;
 }
 
