@@ -16,7 +16,7 @@ export const REIDI_DIRECT_BILL_FIXTURE: HistoricalOfferFixture = {
       code: 'OF-2025-055-REIDI',
       name: 'LT 500 kV Rio Verde - Palmas',
       client: 'Equatorial / Eletrobras',
-      auction: 'Leilão Aneel 01/2025',
+      auction: 'Leilão Aneel 004/2025',
       lot: 'Lote 05',
       currency: 'BRL',
       exchangeRate: 5.68,

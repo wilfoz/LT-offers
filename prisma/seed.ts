@@ -1230,15 +1230,26 @@ async function main() {
           status: OfferRevisionStatus.DRAFT,
           auctionName: 'Leilão Aneel 004/2026',
           lotName: 'Lote 04',
+          // Identidade normalizada do Leilão 4/2026 da ANEEL (edital aprovado
+          // em 22/09/2026): Lote 4, três linhas 525 kV. O sublote fica nulo
+          // porque a planilha-mestre cobre o lote inteiro (4A + 4B).
+          auctionNumber: '004/2026',
+          lotNumber: 4,
+          subLotCode: null,
           offerDate: now,
-          auctionDate: new Date('2026-03-27T00:00:00.000Z'),
+          auctionDate: new Date('2026-10-30T00:00:00.000Z'),
           scheduleStartDate: new Date('2026-07-01T00:00:00.000Z'),
           commercialOperationDate: new Date('2029-06-30T00:00:00.000Z'),
-          estimatedCapex: 2382080065.89, // Total Custo EPC (R$ 2.382 bilhões)
-          maxRap: 535000000.0,
-          winningRap: 480000000.0,
+          contractSigningDate: new Date('2027-02-26T00:00:00.000Z'),
+          constructionDeadlineMonths: 60,
+          // Estimativa oficial ANEEL do lote inteiro (linhas, subestações e
+          // compensações) — o custo EPC de R$ 2,38 bi é produzido pelo motor.
+          estimatedCapex: '4110000000.00',
+          maxRap: '762630000.00',
+          // Leilão ainda não realizado: RAP vencedora não informada (RNF-09).
+          winningRap: null,
           notes:
-            'Proposta mestre extraída de Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03. Contém 3 linhas 525 kV (856 km), regime REIDI, faturamento direto e estruturas autoportantes e estaiadas.',
+            'Proposta mestre extraída de Calculo LT-CELEO-LOTE-04-2026-XXX_R0_COM REIDI BR-v03. Contém 3 linhas 525 kV (856 km), regime REIDI, faturamento direto e estruturas autoportantes e estaiadas. Identidade e prazos conforme o edital do Leilão 4/2026 da ANEEL (aprovado em 22/09/2026): assinatura do contrato em 2027-02-26 e prazo de construção de 60 meses, com data-limite contratual derivada 2032-02-26. Dois alertas RN-02 são ESPERADOS nesta oferta: (1) data-limite contratual (2032-02-26) posterior à entrada em operação do edital (2029-06-30); (2) início do cronograma (2026-07-01) anterior à assinatura do contrato (2027-02-26) — o orçamento planeja mobilização antes da assinatura.',
           createdBy: user,
           // 2.1 Linhas de Transmissão (3 trechos)
           transmissionLines: {

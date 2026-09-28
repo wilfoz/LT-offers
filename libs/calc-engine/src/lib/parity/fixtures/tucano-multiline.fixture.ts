@@ -16,7 +16,7 @@ export const TUCANO_MULTILINE_FIXTURE: HistoricalOfferFixture = {
       code: 'OF-2025-042-TUCANO',
       name: 'Lote 03 - Complexo Tucano',
       client: 'Taesa / Chesf',
-      auction: 'Leilão Aneel 02/2025',
+      auction: 'Leilão Aneel 001/2026',
       lot: 'Lote 03',
       currency: 'BRL',
       exchangeRate: 5.62,

@@ -16,7 +16,7 @@ export const SOLARIS_MG_500KV_FIXTURE: HistoricalOfferFixture = {
       code: 'OF-2025-029-SOLARIS',
       name: 'LT 500 kV Solaris MG',
       client: 'Axia Transmissão',
-      auction: 'Leilão Aneel 01/2025',
+      auction: 'Leilão Aneel 004/2025',
       lot: 'Lote 01',
       currency: 'BRL',
       exchangeRate: 5.65,
