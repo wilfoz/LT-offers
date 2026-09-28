@@ -332,9 +332,11 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     comp.saveLine();
 
     expect(comp.lineUfError()).toBeNull();
+    // Regressão BUG-1 do QA: a API resolve por id da revisão (10), não pelo
+    // número sequencial (0) — enviar o número resultava em 404.
     expect(apiMock.updateRevision).toHaveBeenCalledWith(
       1,
-      0,
+      10,
       expect.objectContaining({
         transmissionLines: expect.arrayContaining([
           expect.objectContaining({
@@ -380,7 +382,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     const fixture = await mount();
     fixture.componentInstance.freezeRevision();
 
-    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 0, {
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 10, {
       status: 'FROZEN',
     });
   });
@@ -442,7 +444,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
 
     expect(apiMock.updateRevision).toHaveBeenCalledWith(
       1,
-      0,
+      10,
       expect.objectContaining({
         auctionNumber: '004/2026',
         lotNumber: 4,
@@ -536,7 +538,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     expect(text).toContain('Marcar vencedora');
 
     fixture.componentInstance.markWon();
-    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 0, {
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 10, {
       status: 'WON',
     });
   });
@@ -553,7 +555,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     expect(text).toContain('Vencedora (Ganha)');
 
     fixture.componentInstance.markInExecution();
-    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 0, {
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 10, {
       status: 'IN_EXECUTION',
     });
   });

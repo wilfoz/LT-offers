@@ -2828,7 +2828,9 @@ export class OfferDetailComponent {
     if (!off || !rev) return;
 
     this.saving.set(true);
-    this.api.updateRevision(off.id, rev.revisionNumber, payload).subscribe({
+    // A rota da API resolve a revisão pelo id (chave primária), não pelo
+    // número sequencial — enviar revisionNumber resultava em 404 (BUG-1 do QA).
+    this.api.updateRevision(off.id, rev.id, payload).subscribe({
       next: (updated) => {
         this.offer.set(updated);
         this.syncRevisionToForm();

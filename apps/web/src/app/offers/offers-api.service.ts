@@ -47,11 +47,14 @@ export class OffersApi {
 
   updateRevision(
     offerId: number,
-    revisionNumber: number,
+    // Id da revisão (chave primária), não o número sequencial R0/R1: a rota
+    // da API resolve por id — enviar o número resulta em 404 (bug do QA da
+    // change identidade-leilao-e-prazos).
+    revisionId: number,
     payload: UpdateOfferRevisionPayload,
   ): Observable<OfferDetail> {
     return this.http.put<OfferDetail>(
-      `${this.baseUrl}/${offerId}/revisions/${revisionNumber}`,
+      `${this.baseUrl}/${offerId}/revisions/${revisionId}`,
       payload,
     );
   }
