@@ -3,7 +3,7 @@
  * (não informado) — nunca "0" implícito (RNF-09).
  */
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { decimalScaleViolation } from '@lt-offers/domain';
+import { decimalScaleViolation, isValidCivilDate } from '@lt-offers/domain';
 
 export function orNull(text: string | null | undefined): string | null {
   if (text === null || text === undefined) return null;
@@ -13,6 +13,19 @@ export function orNull(text: string | null | undefined): string | null {
 export function intOrNull(text: string | null | undefined): number | null {
   if (text === null || text === undefined) return null;
   return text.trim() === '' ? null : Number(text.trim());
+}
+
+/**
+ * Data civil com round-trip de calendário (mesma domain da API): rejeita
+ * datas inexistentes como 2027-02-30 sem rollover. Branco é válido —
+ * required é validador próprio.
+ */
+export function civilDateValidator(
+  control: AbstractControl,
+): ValidationErrors | null {
+  const value = control.value;
+  if (!value) return null;
+  return isValidCivilDate(String(value).trim()) ? null : { civilDate: true };
 }
 
 /**

@@ -21,18 +21,28 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
+  AUCTION_NUMBER_PATTERN,
   CANONICAL_SCOPE_ITEMS,
   DATE_PATTERN,
   OfferDetail,
   OfferRevisionItem,
   OfferRevisionStatus,
   POSITIVE_DECIMAL_PATTERN,
+  ScheduleWarning,
   ScopeMatrixItemPayload,
   ScopeResponsibleParty,
   TransmissionLineItem,
   UpdateOfferRevisionPayload,
+  contractualDeadlineDate,
+  discountPercent,
+  scheduleWarnings,
 } from '@lt-offers/domain';
-import { decimalScaleValidator, orNull } from '../catalogs/form-utils';
+import {
+  civilDateValidator,
+  decimalScaleValidator,
+  intOrNull,
+  orNull,
+} from '../catalogs/form-utils';
 import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
 import { StakingTableComponent } from './staking-table.component';
@@ -271,6 +281,32 @@ const BRAZILIAN_UFS = [
                 <mat-icon>add</mat-icon> Nova revisão
               </button>
             } @else if (isDelivered()) {
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="markWon()"
+                matTooltip="Registra a revisão entregue como vencedora do leilão"
+              >
+                <mat-icon>emoji_events</mat-icon> Marcar vencedora
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="createNewRevision()"
+                matTooltip="Cria uma nova revisão derivada desta"
+              >
+                <mat-icon>add</mat-icon> Nova revisão
+              </button>
+            } @else if (isWon()) {
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="markInExecution()"
+                matTooltip="Inicia a execução da obra da revisão vencedora"
+              >
+                <mat-icon>construction</mat-icon> Iniciar execução
+              </button>
               <button
                 mat-flat-button
                 color="primary"
@@ -1386,6 +1422,71 @@ const BRAZILIAN_UFS = [
                 <mat-form-field
                   appearance="outline"
                   floatLabel="always"
+                  class="col-4"
+                >
+                  <mat-label>Nº do Leilão (ANEEL)</mat-label>
+                  <input
+                    matInput
+                    id="revAuctionNumber"
+                    formControlName="auctionNumber"
+                    placeholder="Ex: 004/2026"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (
+                    revParamsForm.controls.auctionNumber.errors?.['pattern']
+                  ) {
+                    <mat-error
+                      >O número do leilão deve estar no formato NNN/AAAA (ex.:
+                      004/2026)</mat-error
+                    >
+                  }
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-4"
+                >
+                  <mat-label>Nº do Lote</mat-label>
+                  <input
+                    matInput
+                    id="revLotNumber"
+                    formControlName="lotNumber"
+                    placeholder="Ex: 4"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (revParamsForm.controls.lotNumber.invalid) {
+                    <mat-error
+                      >O número do lote deve ser um número inteiro maior ou
+                      igual a 1</mat-error
+                    >
+                  }
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-4"
+                >
+                  <mat-label>Sublote</mat-label>
+                  <input
+                    matInput
+                    id="revSubLotCode"
+                    formControlName="subLotCode"
+                    placeholder="Ex: 4A"
+                    maxlength="3"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (revParamsForm.controls.subLotCode.invalid) {
+                    <mat-error
+                      >O sublote deve ter no máximo 3 caracteres</mat-error
+                    >
+                  }
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
                   class="col-3"
                 >
                   <mat-label>Data da Oferta *</mat-label>
@@ -1439,14 +1540,78 @@ const BRAZILIAN_UFS = [
                   />
                 </mat-form-field>
 
-                @if (hasRevScheduleWarning()) {
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
+                  <mat-label>Assinatura do Contrato</mat-label>
+                  <input
+                    matInput
+                    id="revContractSigningDate"
+                    formControlName="contractSigningDate"
+                    placeholder="AAAA-MM-DD"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (
+                    revParamsForm.controls.contractSigningDate.errors?.[
+                      'civilDate'
+                    ]
+                  ) {
+                    <mat-error
+                      >A data de assinatura do contrato deve ser uma data de
+                      calendário válida no formato AAAA-MM-DD</mat-error
+                    >
+                  }
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-3"
+                >
+                  <mat-label>Prazo de Construção (meses)</mat-label>
+                  <input
+                    matInput
+                    id="revConstructionDeadlineMonths"
+                    formControlName="constructionDeadlineMonths"
+                    placeholder="Ex: 60"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (
+                    revParamsForm.controls.constructionDeadlineMonths.invalid
+                  ) {
+                    <mat-error
+                      >O prazo de construção deve ser um número inteiro entre 1
+                      e 240 meses</mat-error
+                    >
+                  }
+                </mat-form-field>
+
+                @if (revContractualDeadline(); as deadline) {
+                  <div class="col-6 derived-inline">
+                    <mat-icon class="derived-icon">event_available</mat-icon>
+                    <span>
+                      Data-limite contratual:
+                      <strong>{{ deadline }}</strong>
+                    </span>
+                  </div>
+                }
+
+                @if (revScheduleWarnings().length > 0) {
                   <div class="col-12 alert-schedule" role="alert">
                     <mat-icon>warning</mat-icon>
-                    <span>
-                      <strong>Alerta de Cronograma (RN-02):</strong> Data de
-                      início posterior à data prevista de entrada em operação do
-                      edital.
-                    </span>
+                    <div>
+                      <strong>Alerta de Cronograma (RN-02):</strong>
+                      <ul class="warning-list">
+                        @for (
+                          warning of revScheduleWarnings();
+                          track warning.code
+                        ) {
+                          <li>{{ warningMessage(warning) }}</li>
+                        }
+                      </ul>
+                    </div>
                   </div>
                 }
 
@@ -1492,6 +1657,24 @@ const BRAZILIAN_UFS = [
                   />
                 </mat-form-field>
 
+                <div
+                  class="col-12 derived-inline"
+                  [class.discount-negative]="isDiscountNegative()"
+                >
+                  <mat-icon class="derived-icon">percent</mat-icon>
+                  <span>
+                    Deságio:
+                    <strong data-testid="discount-percent">{{
+                      discountDisplay()
+                    }}</strong>
+                    @if (isDiscountNegative()) {
+                      <span class="discount-alert-text">
+                        — a RAP estimada supera o teto do edital</span
+                      >
+                    }
+                  </span>
+                </div>
+
                 <mat-form-field
                   appearance="outline"
                   floatLabel="always"
@@ -1513,7 +1696,11 @@ const BRAZILIAN_UFS = [
                       mat-flat-button
                       color="primary"
                       type="submit"
-                      [disabled]="saving() || revParamsForm.invalid"
+                      [disabled]="
+                        saving() ||
+                        revParamsForm.invalid ||
+                        revParamsForm.disabled
+                      "
                     >
                       <mat-icon>{{
                         saving() ? 'hourglass_empty' : 'save'
@@ -1724,6 +1911,12 @@ const BRAZILIAN_UFS = [
     .status-dot[data-status='DELIVERED'] {
       background: #16a34a;
     }
+    .status-dot[data-status='WON'] {
+      background: #ca8a04;
+    }
+    .status-dot[data-status='IN_EXECUTION'] {
+      background: #7c3aed;
+    }
     .revision-status-info {
       display: flex;
       align-items: center;
@@ -1752,6 +1945,16 @@ const BRAZILIAN_UFS = [
       background: #dcfce7;
       color: #15803d;
       border: 1px solid #86efac;
+    }
+    .status-chip[data-status='WON'] {
+      background: #fef9c3;
+      color: #a16207;
+      border: 1px solid #fde047;
+    }
+    .status-chip[data-status='IN_EXECUTION'] {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #c4b5fd;
     }
     .health-badge-btn {
       display: inline-flex;
@@ -1941,6 +2144,32 @@ const BRAZILIAN_UFS = [
     .alert-schedule mat-icon {
       color: #b45309;
     }
+    .warning-list {
+      margin: 0.25rem 0 0;
+      padding-left: 1.25rem;
+    }
+    .derived-inline {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--solaris-surface-container-low);
+      border: 1px solid var(--solaris-outline-variant);
+      color: var(--solaris-on-surface-variant);
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+    }
+    .derived-inline .derived-icon {
+      color: var(--solaris-primary);
+    }
+    .derived-inline.discount-negative {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+    .derived-inline.discount-negative .derived-icon {
+      color: #b91c1c;
+    }
     .actions-right {
       display: flex;
       justify-content: flex-end;
@@ -2084,6 +2313,10 @@ export class OfferDetailComponent {
   readonly isDelivered = computed(
     () => this.currentRevision()?.status === 'DELIVERED',
   );
+  readonly isWon = computed(() => this.currentRevision()?.status === 'WON');
+  readonly isInExecution = computed(
+    () => this.currentRevision()?.status === 'IN_EXECUTION',
+  );
 
   readonly totalRefinedKm = computed(() => {
     const lines = this.currentRevision()?.transmissionLines ?? [];
@@ -2179,6 +2412,20 @@ export class OfferDetailComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
+    auctionNumber: new FormControl('', [
+      Validators.pattern(AUCTION_NUMBER_PATTERN),
+    ]),
+    lotNumber: new FormControl('', [
+      Validators.pattern(/^\d+$/),
+      Validators.min(1),
+    ]),
+    subLotCode: new FormControl('', [Validators.maxLength(3)]),
+    contractSigningDate: new FormControl('', [civilDateValidator]),
+    constructionDeadlineMonths: new FormControl('', [
+      Validators.pattern(/^\d+$/),
+      Validators.min(1),
+      Validators.max(240),
+    ]),
     offerDate: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(DATE_PATTERN)],
@@ -2220,10 +2467,60 @@ export class OfferDetailComponent {
     this.syncRevisionToForm();
   }
 
-  hasRevScheduleWarning(): boolean {
-    const start = this.revParamsForm.controls.scheduleStartDate.value;
-    const end = this.revParamsForm.controls.commercialOperationDate.value;
-    return !!(start && end && start > end);
+  /** Alertas RN-02 derivados dos valores do formulário (mesma domain da API). */
+  revScheduleWarnings(): ScheduleWarning[] {
+    return scheduleWarnings({
+      scheduleStartDate: orNull(
+        this.revParamsForm.controls.scheduleStartDate.value,
+      ),
+      commercialOperationDate: orNull(
+        this.revParamsForm.controls.commercialOperationDate.value,
+      ),
+      contractSigningDate: orNull(
+        this.revParamsForm.controls.contractSigningDate.value,
+      ),
+      constructionDeadlineMonths: intOrNull(
+        this.revParamsForm.controls.constructionDeadlineMonths.value,
+      ),
+    });
+  }
+
+  warningMessage(warning: ScheduleWarning): string {
+    switch (warning.code) {
+      case 'START_AFTER_COD':
+        return 'Data de início do cronograma posterior à data prevista de entrada em operação do edital.';
+      case 'DEADLINE_AFTER_COD':
+        return `Data-limite contratual (${warning.contractualDeadlineDate}) posterior à entrada em operação do edital.`;
+      case 'START_BEFORE_SIGNING':
+        return 'Data de início do cronograma anterior à assinatura do contrato de concessão.';
+    }
+  }
+
+  /** Data-limite contratual derivada (assinatura + prazo), só leitura. */
+  revContractualDeadline(): string | null {
+    return contractualDeadlineDate(
+      orNull(this.revParamsForm.controls.contractSigningDate.value),
+      intOrNull(this.revParamsForm.controls.constructionDeadlineMonths.value),
+    );
+  }
+
+  revDiscountPercent(): string | null {
+    return discountPercent(
+      orNull(this.revParamsForm.controls.maxRap.value),
+      orNull(this.revParamsForm.controls.winningRap.value),
+    );
+  }
+
+  /** Deságio em formato pt-BR (50,00%) ou "não informado" (RNF-09). */
+  discountDisplay(): string {
+    const discount = this.revDiscountPercent();
+    return discount === null
+      ? 'não informado'
+      : `${discount.replace('.', ',')}%`;
+  }
+
+  isDiscountNegative(): boolean {
+    return this.revDiscountPercent()?.startsWith('-') ?? false;
   }
 
   // --- Linhas de Transmissão ---
@@ -2363,6 +2660,11 @@ export class OfferDetailComponent {
     this.persistRevision({
       auctionName: raw.auctionName.trim(),
       lotName: raw.lotName.trim(),
+      auctionNumber: orNull(raw.auctionNumber),
+      lotNumber: intOrNull(raw.lotNumber),
+      subLotCode: orNull(raw.subLotCode?.toUpperCase()),
+      contractSigningDate: orNull(raw.contractSigningDate),
+      constructionDeadlineMonths: intOrNull(raw.constructionDeadlineMonths),
       offerDate: raw.offerDate.trim(),
       auctionDate: orNull(raw.auctionDate),
       scheduleStartDate: orNull(raw.scheduleStartDate),
@@ -2396,6 +2698,24 @@ export class OfferDetailComponent {
       return;
     }
     this.persistRevision({ status: 'DELIVERED' });
+  }
+
+  markWon(): void {
+    if (
+      !confirm(
+        'Deseja marcar esta revisão como vencedora do leilão? A revisão continua imutável.',
+      )
+    ) {
+      return;
+    }
+    this.persistRevision({ status: 'WON' });
+  }
+
+  markInExecution(): void {
+    if (!confirm('Deseja iniciar a execução da obra desta revisão?')) {
+      return;
+    }
+    this.persistRevision({ status: 'IN_EXECUTION' });
   }
 
   createNewRevision(): void {
@@ -2435,6 +2755,7 @@ export class OfferDetailComponent {
   cloneCurrentOffer(): void {
     const off = this.offer();
     if (!off) return;
+    const rev = this.currentRevision();
     const newCode = prompt(
       'Informe o código da nova proposta:',
       `${off.code}-COPIA`,
@@ -2447,11 +2768,43 @@ export class OfferDetailComponent {
     );
     if (!newName || !newName.trim()) return;
 
+    // Identidade normalizada do destino pré-preenchida com a origem: confirme
+    // ou ajuste para o leilão/lote da nova proposta (vazio = mantém a origem).
+    const newAuctionNumber = prompt(
+      'Número do leilão de destino (NNN/AAAA; vazio = mantém o da origem):',
+      rev?.auctionNumber ?? '',
+    );
+    if (newAuctionNumber === null) return;
+
+    const newLotNumber = prompt(
+      'Número do lote de destino (inteiro; vazio = mantém o da origem):',
+      rev?.lotNumber != null ? String(rev.lotNumber) : '',
+    );
+    if (newLotNumber === null) return;
+    // Sem validação, "abc" viraria NaN → null e copiaria a origem em silêncio.
+    if (newLotNumber.trim() !== '' && !/^\d+$/.test(newLotNumber.trim())) {
+      this.snackBar.open(
+        'O número do lote de destino deve ser um número inteiro.',
+        'Fechar',
+        { duration: 5000 },
+      );
+      return;
+    }
+
+    const newSubLotCode = prompt(
+      'Sublote de destino (até 3 caracteres; vazio = mantém o da origem):',
+      rev?.subLotCode ?? '',
+    );
+    if (newSubLotCode === null) return;
+
     this.saving.set(true);
     this.api
       .clone(off.id, {
         targetCode: newCode.trim(),
         targetName: newName.trim(),
+        targetAuctionNumber: orNull(newAuctionNumber),
+        targetLotNumber: intOrNull(newLotNumber),
+        targetSubLotCode: orNull(newSubLotCode.toUpperCase()),
       })
       .subscribe({
         next: (cloned) => {
@@ -2567,6 +2920,14 @@ export class OfferDetailComponent {
     this.revParamsForm.patchValue({
       auctionName: rev.auctionName,
       lotName: rev.lotName,
+      auctionNumber: rev.auctionNumber ?? '',
+      lotNumber: rev.lotNumber != null ? String(rev.lotNumber) : '',
+      subLotCode: rev.subLotCode ?? '',
+      contractSigningDate: rev.contractSigningDate ?? '',
+      constructionDeadlineMonths:
+        rev.constructionDeadlineMonths != null
+          ? String(rev.constructionDeadlineMonths)
+          : '',
       offerDate: rev.offerDate,
       auctionDate: rev.auctionDate ?? '',
       scheduleStartDate: rev.scheduleStartDate ?? '',

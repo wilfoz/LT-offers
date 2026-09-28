@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { OfferDetail } from '@lt-offers/domain';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { OfferDetailComponent } from './offer-detail.component';
 import { OffersApi } from './offers-api.service';
@@ -34,10 +34,18 @@ const mockDetail = (overrides: Partial<OfferDetail> = {}): OfferDetail => ({
       status: 'DRAFT',
       auctionName: 'Leilão 01/2026',
       lotName: 'Lote 1',
+      auctionNumber: '004/2026',
+      lotNumber: 4,
+      subLotCode: '4A',
       offerDate: '2026-03-01',
       auctionDate: '2026-04-15',
       scheduleStartDate: '2026-06-01',
       commercialOperationDate: '2029-06-01',
+      contractSigningDate: null,
+      constructionDeadlineMonths: null,
+      contractualDeadlineDate: null,
+      discountPercent: '16.00',
+      scheduleWarnings: [],
       estimatedCapex: '150000000.00',
       maxRap: '25000000.00',
       winningRap: '21000000.00',
@@ -415,5 +423,233 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
 
     expect(fixture.componentInstance.activeTabIndex()).toBe(2);
     expect(fixture.componentInstance.selectedStakingLineId()).toBe(101);
+  });
+
+  it('preenche identidade do leilão no formulário e envia os campos novos ao salvar', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+    apiMock.updateRevision.mockReturnValue(of(mockDetail()));
+
+    expect(comp.revParamsForm.controls.auctionNumber.value).toBe('004/2026');
+    expect(comp.revParamsForm.controls.lotNumber.value).toBe('4');
+    expect(comp.revParamsForm.controls.subLotCode.value).toBe('4A');
+
+    comp.revParamsForm.patchValue({
+      contractSigningDate: '2027-02-26',
+      constructionDeadlineMonths: '60',
+    });
+    comp.saveRevisionChanges();
+
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(
+      1,
+      0,
+      expect.objectContaining({
+        auctionNumber: '004/2026',
+        lotNumber: 4,
+        subLotCode: '4A',
+        contractSigningDate: '2027-02-26',
+        constructionDeadlineMonths: 60,
+      }),
+    );
+  });
+
+  it('número do leilão inválido bloqueia o salvamento com mensagem em português', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+
+    comp.revParamsForm.patchValue({ auctionNumber: '4/2026' });
+    comp.saveRevisionChanges();
+
+    expect(comp.revParamsForm.invalid).toBe(true);
+    expect(apiMock.updateRevision).not.toHaveBeenCalled();
+
+    fixture.detectChanges();
+    comp.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain(
+      'O número do leilão deve estar no formato NNN/AAAA (ex.: 004/2026)',
+    );
+  });
+
+  it('deriva a data-limite contratual e exibe deságio em formato pt-BR', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+
+    comp.revParamsForm.patchValue({
+      contractSigningDate: '2027-02-26',
+      constructionDeadlineMonths: '60',
+    });
+
+    expect(comp.revContractualDeadline()).toBe('2032-02-26');
+    // maxRap 25000000, winningRap 21000000 → (1 − 21/25) × 100 = 16,00%.
+    expect(comp.discountDisplay()).toBe('16,00%');
+
+    comp.revParamsForm.patchValue({ winningRap: '' });
+    expect(comp.discountDisplay()).toBe('não informado');
+
+    comp.revParamsForm.patchValue({ winningRap: '26000000.00' });
+    expect(comp.discountDisplay()).toBe('-4,00%');
+    expect(comp.isDiscountNegative()).toBe(true);
+  });
+
+  it('renderiza um alerta RN-02 por código com mensagens em português', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+
+    comp.revParamsForm.patchValue({
+      scheduleStartDate: '2029-07-01',
+      commercialOperationDate: '2029-06-30',
+      contractSigningDate: '2029-08-01',
+      constructionDeadlineMonths: '60',
+    });
+
+    const warnings = comp.revScheduleWarnings();
+    expect(warnings.map((w) => w.code)).toEqual([
+      'START_AFTER_COD',
+      'DEADLINE_AFTER_COD',
+      'START_BEFORE_SIGNING',
+    ]);
+
+    comp.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain(
+      'Data de início do cronograma posterior à data prevista de entrada em operação do edital.',
+    );
+    expect(text).toContain(
+      'Data-limite contratual (2034-08-01) posterior à entrada em operação do edital.',
+    );
+    expect(text).toContain(
+      'Data de início do cronograma anterior à assinatura do contrato de concessão.',
+    );
+  });
+
+  it('exibe "Marcar vencedora" em DELIVERED e persiste a transição para WON', async () => {
+    const deliveredDetail = mockDetail();
+    deliveredDetail.revisions[0].status = 'DELIVERED';
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    apiMock.updateRevision.mockReturnValue(of(deliveredDetail));
+
+    const fixture = await mount(deliveredDetail);
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Marcar vencedora');
+
+    fixture.componentInstance.markWon();
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 0, {
+      status: 'WON',
+    });
+  });
+
+  it('exibe "Iniciar execução" em WON e persiste a transição para IN_EXECUTION', async () => {
+    const wonDetail = mockDetail();
+    wonDetail.revisions[0].status = 'WON';
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    apiMock.updateRevision.mockReturnValue(of(wonDetail));
+
+    const fixture = await mount(wonDetail);
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Iniciar execução');
+    expect(text).toContain('Vencedora (Ganha)');
+
+    fixture.componentInstance.markInExecution();
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(1, 0, {
+      status: 'IN_EXECUTION',
+    });
+  });
+
+  it('erro 409 de transição fora de ordem é exibido em snackbar', async () => {
+    const deliveredDetail = mockDetail();
+    deliveredDetail.revisions[0].status = 'DELIVERED';
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    apiMock.updateRevision.mockReturnValue(
+      throwError(() => ({
+        error: {
+          message:
+            'Transição de status não permitida: a revisão está em DELIVERED e não pode ir para IN_EXECUTION.',
+        },
+      })),
+    );
+
+    const fixture = await mount(deliveredDetail);
+    fixture.componentInstance.markInExecution();
+
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      'Transição de status não permitida: a revisão está em DELIVERED e não pode ir para IN_EXECUTION.',
+      'Fechar',
+      expect.anything(),
+    );
+  });
+
+  it('clonagem pré-preenche a identidade da origem e envia os campos target*', async () => {
+    const promptSpy = vi
+      .spyOn(window, 'prompt')
+      .mockReturnValueOnce('OF-2026-L1-COPIA')
+      .mockReturnValueOnce('Lote 1 - Linhas Sul (Cópia)')
+      .mockReturnValueOnce('002/2027')
+      .mockReturnValueOnce('3')
+      .mockReturnValueOnce('3b');
+    apiMock.clone.mockReturnValue(of(mockDetail({ id: 2 })));
+
+    const fixture = await mount();
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    fixture.componentInstance.cloneCurrentOffer();
+
+    // Prompts de identidade pré-preenchidos com os valores da origem.
+    expect(promptSpy).toHaveBeenNthCalledWith(
+      3,
+      expect.stringContaining('Número do leilão de destino'),
+      '004/2026',
+    );
+    expect(promptSpy).toHaveBeenNthCalledWith(
+      4,
+      expect.stringContaining('Número do lote de destino'),
+      '4',
+    );
+    expect(promptSpy).toHaveBeenNthCalledWith(
+      5,
+      expect.stringContaining('Sublote de destino'),
+      '4A',
+    );
+    expect(apiMock.clone).toHaveBeenCalledWith(1, {
+      targetCode: 'OF-2026-L1-COPIA',
+      targetName: 'Lote 1 - Linhas Sul (Cópia)',
+      targetAuctionNumber: '002/2027',
+      targetLotNumber: 3,
+      targetSubLotCode: '3B',
+    });
+    expect(navigateSpy).toHaveBeenCalledWith(['/offers', 2]);
+  });
+
+  it('clonagem com lote de destino não numérico é bloqueada com mensagem, sem chamar a API', async () => {
+    vi.spyOn(window, 'prompt')
+      .mockReturnValueOnce('OF-2026-L1-COPIA')
+      .mockReturnValueOnce('Lote 1 - Linhas Sul (Cópia)')
+      .mockReturnValueOnce('004/2026')
+      .mockReturnValueOnce('abc');
+
+    const fixture = await mount();
+    fixture.componentInstance.cloneCurrentOffer();
+
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      'O número do lote de destino deve ser um número inteiro.',
+      'Fechar',
+      expect.anything(),
+    );
+    expect(apiMock.clone).not.toHaveBeenCalled();
+  });
+
+  it('botão de salvar parâmetros reflete o estado desabilitado do formulário', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+    comp.activeTabIndex.set(13);
+    comp.revParamsForm.disable();
+    fixture.detectChanges();
+
+    const button = (fixture.nativeElement as HTMLElement).querySelector(
+      'form[class*="params-grid"] button[type="submit"]',
+    ) as HTMLButtonElement | null;
+    expect(button?.disabled).toBe(true);
   });
 });

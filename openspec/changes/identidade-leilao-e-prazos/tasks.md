@@ -1,4 +1,4 @@
-﻿## 1. Nomenclatura, domain e modelo de dados
+## 1. Nomenclatura, domain e modelo de dados
 
 - [x] 1.1 Adicionar ao mapa canônico pt-BR → inglês do README.md os termos: número do leilão → `auctionNumber`, número do lote → `lotNumber`, sublote → `subLotCode`, data de assinatura do contrato de concessão → `contractSigningDate`, prazo de construção (meses) → `constructionDeadlineMonths`, data-limite contratual → `contractualDeadlineDate`, deságio → `discountPercent`; atualizar a linha do enum `OfferRevisionStatus` para os cinco valores
 - [x] 1.2 Em `libs/domain/src/lib/offers/offers.ts`: adicionar os cinco campos opcionais a `OfferRevisionItem`, `CreateOfferPayload`, `UpdateOfferRevisionPayload` e os `target*` a `CloneOfferPayload`; adicionar os derivados somente-leitura `contractualDeadlineDate`, `discountPercent` e `scheduleWarnings` a `OfferRevisionItem`; exportar `AUCTION_NUMBER_PATTERN`
@@ -17,11 +17,11 @@
 
 ## 3. Interface web
 
-- [ ] 3.1 `offer-form.component.ts`: campos número do leilão, lote, sublote, assinatura do contrato e prazo de construção com validadores e mensagens pt-BR espelhando a API; rótulo do CAPEX passa a "CAPEX estimado ANEEL (lote inteiro, conforme edital)"; pré-visualização somente-leitura da data-limite e do deságio via `offer-derivations`
-- [ ] 3.2 `offer-detail.component.ts` (aba de parâmetros): mesmos campos com `[readonly]="!isDraft()"`; alerta RN-02 renderizando um item por código de `scheduleWarnings` com mensagens pt-BR (início após entrada em operação; data-limite contratual posterior à entrada em operação, citando a data; início antes da assinatura); "Deságio" ao lado da RAP em formato pt-BR (`50,00%`), "não informado" quando nulo e destaque quando negativo
-- [ ] 3.3 Ações de status no detalhe: "Marcar vencedora" (visível em `DELIVERED`) e "Iniciar execução" (visível em `WON`) reutilizando o endpoint de atualização; erro 409 em snackbar; chips de status já existentes exercitados
-- [ ] 3.4 Diálogo de clonagem: campos de identidade de destino pré-preenchidos com a origem e enviados como `target*`
-- [ ] 3.5 Testes dos componentes: validação dos campos novos, pré-visualização do deságio/data-limite, três alertas RN-02, ações de status por estado, callbacks de erro em toda leitura e botão refletindo `form.disabled`; conferir ausência de BOM nos arquivos editados
+- [x] 3.1 `offer-form.component.ts`: campos número do leilão, lote, sublote, assinatura do contrato e prazo de construção com validadores e mensagens pt-BR espelhando a API; rótulo do CAPEX passa a "CAPEX estimado ANEEL (lote inteiro, conforme edital)"; pré-visualização somente-leitura da data-limite e do deságio via `offer-derivations`
+- [x] 3.2 `offer-detail.component.ts` (aba de parâmetros): mesmos campos com `[readonly]="!isDraft()"`; alerta RN-02 renderizando um item por código de `scheduleWarnings` com mensagens pt-BR (início após entrada em operação; data-limite contratual posterior à entrada em operação, citando a data; início antes da assinatura); "Deságio" ao lado da RAP em formato pt-BR (`50,00%`), "não informado" quando nulo e destaque quando negativo
+- [x] 3.3 Ações de status no detalhe: "Marcar vencedora" (visível em `DELIVERED`) e "Iniciar execução" (visível em `WON`) reutilizando o endpoint de atualização; erro 409 em snackbar; chips de status já existentes exercitados
+- [x] 3.4 Diálogo de clonagem: campos de identidade de destino pré-preenchidos com a origem e enviados como `target*`
+- [x] 3.5 Testes dos componentes: validação dos campos novos, pré-visualização do deságio/data-limite, três alertas RN-02, ações de status por estado, callbacks de erro em toda leitura e botão refletindo `form.disabled`; conferir ausência de BOM nos arquivos editados
 
 ## 4. Seed, fixtures e verificação
 

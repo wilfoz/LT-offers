@@ -14,12 +14,20 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
+  AUCTION_NUMBER_PATTERN,
   CreateOfferPayload,
   DATE_PATTERN,
   POSITIVE_DECIMAL_PATTERN,
   UpdateOfferGeneralPayload,
+  contractualDeadlineDate,
+  discountPercent,
 } from '@lt-offers/domain';
-import { decimalScaleValidator, orNull } from '../catalogs/form-utils';
+import {
+  civilDateValidator,
+  decimalScaleValidator,
+  intOrNull,
+  orNull,
+} from '../catalogs/form-utils';
 import { OffersApi } from './offers-api.service';
 
 @Component({
@@ -74,7 +82,7 @@ import { OffersApi } from './offers-api.service';
             type="button"
             class="btn-primary-gradient"
             (click)="save()"
-            [disabled]="saving() || form.invalid"
+            [disabled]="saving() || form.invalid || form.disabled"
           >
             <mat-icon>{{
               saving() ? 'sync' : editId() ? 'save' : 'add_task'
@@ -261,6 +269,80 @@ import { OffersApi } from './offers-api.service';
                     </mat-form-field>
                   </div>
 
+                  <div class="col-4">
+                    <label
+                      class="form-label font-label-caps"
+                      for="auctionNumber"
+                      >Nº DO LEILÃO (ANEEL)</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
+                      <input
+                        matInput
+                        id="auctionNumber"
+                        formControlName="auctionNumber"
+                        placeholder="Ex: 004/2026"
+                        maxlength="15"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('auctionNumber')) {
+                        <mat-error>{{ errorFor('auctionNumber') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-4">
+                    <label class="form-label font-label-caps" for="lotNumber"
+                      >Nº DO LOTE</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
+                      <input
+                        matInput
+                        id="lotNumber"
+                        formControlName="lotNumber"
+                        inputmode="numeric"
+                        placeholder="Ex: 4"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('lotNumber')) {
+                        <mat-error>{{ errorFor('lotNumber') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-4">
+                    <label class="form-label font-label-caps" for="subLotCode"
+                      >SUBLOTE</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
+                      <input
+                        matInput
+                        id="subLotCode"
+                        formControlName="subLotCode"
+                        placeholder="Ex: 4A"
+                        maxlength="3"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('subLotCode')) {
+                        <mat-error>{{ errorFor('subLotCode') }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
                   <div class="col-6">
                     <label class="form-label font-label-caps" for="offerDate"
                       >DATA DA OFERTA *</label
@@ -361,6 +443,73 @@ import { OffersApi } from './offers-api.service';
                     </mat-form-field>
                   </div>
 
+                  <div class="col-6">
+                    <label
+                      class="form-label font-label-caps"
+                      for="contractSigningDate"
+                      >ASSINATURA DO CONTRATO DE CONCESSÃO</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
+                      <input
+                        matInput
+                        id="contractSigningDate"
+                        formControlName="contractSigningDate"
+                        placeholder="AAAA-MM-DD"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('contractSigningDate')) {
+                        <mat-error>{{
+                          errorFor('contractSigningDate')
+                        }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-6">
+                    <label
+                      class="form-label font-label-caps"
+                      for="constructionDeadlineMonths"
+                      >PRAZO DE CONSTRUÇÃO (MESES)</label
+                    >
+                    <mat-form-field
+                      appearance="outline"
+                      floatLabel="always"
+                      subscriptSizing="dynamic"
+                      class="w-full"
+                    >
+                      <input
+                        matInput
+                        id="constructionDeadlineMonths"
+                        formControlName="constructionDeadlineMonths"
+                        inputmode="numeric"
+                        placeholder="Ex: 60"
+                        class="font-numeric-tabular"
+                      />
+                      @if (errorFor('constructionDeadlineMonths')) {
+                        <mat-error>{{
+                          errorFor('constructionDeadlineMonths')
+                        }}</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  @if (previewContractualDeadline(); as deadline) {
+                    <div class="col-12 derived-preview">
+                      <mat-icon class="derived-icon">event_available</mat-icon>
+                      <span>
+                        Data-limite contratual derivada (assinatura + prazo):
+                        <strong class="font-numeric-tabular">{{
+                          deadline
+                        }}</strong>
+                      </span>
+                    </div>
+                  }
+
                   @if (hasScheduleInconsistency()) {
                     <div
                       class="col-12 alert-schedule technical-border"
@@ -391,7 +540,8 @@ import { OffersApi } from './offers-api.service';
                     <label
                       class="form-label font-label-caps"
                       for="estimatedCapex"
-                      >CAPEX ANEEL</label
+                      >CAPEX estimado ANEEL (lote inteiro, conforme
+                      edital)</label
                     >
                     <mat-form-field
                       appearance="outline"
@@ -460,6 +610,18 @@ import { OffersApi } from './offers-api.service';
                       }
                     </mat-form-field>
                   </div>
+
+                  @if (previewDiscountPercent(); as discount) {
+                    <div class="col-12 derived-preview">
+                      <mat-icon class="derived-icon">percent</mat-icon>
+                      <span>
+                        Deságio derivado (1 − RAP estimada ÷ RAP máxima):
+                        <strong class="font-numeric-tabular">{{
+                          formatDiscount(discount)
+                        }}</strong>
+                      </span>
+                    </div>
+                  }
 
                   <div class="col-12">
                     <label class="form-label font-label-caps" for="notes"
@@ -651,7 +813,7 @@ import { OffersApi } from './offers-api.service';
               <button
                 type="submit"
                 class="btn-primary-gradient w-full submit-large-btn"
-                [disabled]="saving() || form.invalid"
+                [disabled]="saving() || form.invalid || form.disabled"
               >
                 <mat-icon>{{
                   saving() ? 'sync' : editId() ? 'save' : 'add_task'
@@ -1024,6 +1186,25 @@ import { OffersApi } from './offers-api.service';
       }
     }
 
+    .derived-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--solaris-surface-container-low);
+      border: 1px solid var(--solaris-outline-variant);
+      color: var(--solaris-on-surface-variant);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+
+      .derived-icon {
+        color: var(--solaris-primary);
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+
     .alert-schedule {
       display: flex;
       align-items: center;
@@ -1085,6 +1266,20 @@ export class OfferFormComponent {
       nonNullable: true,
       validators: [Validators.maxLength(100)],
     }),
+    auctionNumber: new FormControl('', [
+      Validators.pattern(AUCTION_NUMBER_PATTERN),
+    ]),
+    lotNumber: new FormControl('', [
+      Validators.pattern(/^\d+$/),
+      Validators.min(1),
+    ]),
+    subLotCode: new FormControl('', [Validators.maxLength(3)]),
+    contractSigningDate: new FormControl('', [civilDateValidator]),
+    constructionDeadlineMonths: new FormControl('', [
+      Validators.pattern(/^\d+$/),
+      Validators.min(1),
+      Validators.max(240),
+    ]),
     offerDate: new FormControl(this.todayStr, {
       nonNullable: true,
       validators: [Validators.pattern(DATE_PATTERN)],
@@ -1176,14 +1371,54 @@ export class OfferFormComponent {
     const c = this.form.get(controlName);
     if (!c || !c.touched || !c.errors) return null;
     if (c.errors['required']) return 'Campo obrigatório';
-    if (c.errors['maxlength']) return 'Texto muito longo';
+    if (c.errors['maxlength']) {
+      if (controlName === 'subLotCode')
+        return 'O sublote deve ter no máximo 3 caracteres';
+      return 'Texto muito longo';
+    }
+    if (c.errors['civilDate'])
+      return 'A data de assinatura do contrato deve ser uma data de calendário válida no formato AAAA-MM-DD';
     if (c.errors['pattern']) {
+      if (controlName === 'auctionNumber')
+        return 'O número do leilão deve estar no formato NNN/AAAA (ex.: 004/2026)';
+      if (controlName === 'lotNumber')
+        return 'O número do lote deve ser um número inteiro';
+      if (controlName === 'constructionDeadlineMonths')
+        return 'O prazo de construção deve ser um número inteiro de meses';
       if (controlName.includes('Date'))
         return 'Data inválida (formato AAAA-MM-DD)';
       return 'Valor decimal inválido (ex.: 1500.00)';
     }
+    if (c.errors['min']) {
+      if (controlName === 'lotNumber')
+        return 'O número do lote deve ser maior ou igual a 1';
+      return 'O prazo de construção deve ser maior que zero';
+    }
+    if (c.errors['max'])
+      return 'O prazo de construção deve ser de no máximo 240 meses';
     if (c.errors['decimalScale']) return 'Máximo de 2 casas decimais';
     return 'Valor inválido';
+  }
+
+  /** Pré-visualização da data-limite contratual (RN-02), só leitura. */
+  previewContractualDeadline(): string | null {
+    const signing = this.form.controls.contractSigningDate.value;
+    const months = intOrNull(
+      this.form.controls.constructionDeadlineMonths.value,
+    );
+    return contractualDeadlineDate(orNull(signing), months);
+  }
+
+  /** Pré-visualização do deságio derivado das RAPs, só leitura. */
+  previewDiscountPercent(): string | null {
+    return discountPercent(
+      orNull(this.form.controls.maxRap.value),
+      orNull(this.form.controls.winningRap.value),
+    );
+  }
+
+  formatDiscount(discount: string): string {
+    return `${discount.replace('.', ',')}%`;
   }
 
   save(): void {
@@ -1225,6 +1460,11 @@ export class OfferFormComponent {
         baseCurrency: raw.baseCurrency.trim(),
         auctionName: raw.auctionName.trim(),
         lotName: raw.lotName.trim(),
+        auctionNumber: orNull(raw.auctionNumber),
+        lotNumber: intOrNull(raw.lotNumber),
+        subLotCode: orNull(raw.subLotCode?.toUpperCase()),
+        contractSigningDate: orNull(raw.contractSigningDate),
+        constructionDeadlineMonths: intOrNull(raw.constructionDeadlineMonths),
         offerDate: raw.offerDate.trim(),
         auctionDate: orNull(raw.auctionDate),
         scheduleStartDate: orNull(raw.scheduleStartDate),
