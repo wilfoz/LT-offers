@@ -7,6 +7,7 @@ import { vi } from 'vitest';
 import { OfferDetailComponent } from './offer-detail.component';
 import { OffersApi } from './offers-api.service';
 import { AuctionHistoryApi } from '../auction-history/auction-history-api.service';
+import { ViabilityApi } from '../catalogs/viability-api.service';
 
 import { provideHttpClient } from '@angular/common/http';
 import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
@@ -130,6 +131,52 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     benchmark: vi.fn(),
   };
 
+  // Parecer de viabilidade M13: resposta completa padrão (viável nos dois
+  // vereditos), sobrescrita por teste quando o cenário exige.
+  const viabilityResponse = {
+    assessment: {
+      investmentBase: '150000000.00',
+      investmentSource: 'ANEEL_ESTIMATE',
+      investmentAnnuity: '13324114.28',
+      minimumGrossRap: '18127366.37',
+      maxSupportableDiscountPercent: '27.49',
+      estimatedDiscountPercent: '16.00',
+      viableAtMaxRap: true,
+      viableAtEstimatedRap: true,
+      discountMarginPoints: '11.49',
+      missingInputs: [],
+    },
+    parameters: {
+      id: 1,
+      effectiveFrom: '2026-03-01',
+      waccRealAfterTaxPercent: '8.00',
+      concessionYears: 30,
+      pisCofinsPercent: '9.25',
+      operationMaintenancePercent: '10.00',
+      incomeTaxPercent: '10.00',
+      createdBy: 'seed',
+      createdAt: '2026-03-01T00:00:00.000Z',
+    },
+    auctionStats: {
+      lotCount: 12,
+      desertedLotCount: 0,
+      minDiscountPercent: '5.00',
+      avgDiscountPercent: '21.30',
+      maxDiscountPercent: '43.00',
+    },
+    overallStats: {
+      lotCount: 488,
+      desertedLotCount: 0,
+      minDiscountPercent: '0.00',
+      avgDiscountPercent: '30.00',
+      maxDiscountPercent: '70.00',
+    },
+  };
+
+  const viabilityApiMock = {
+    assessment: vi.fn(),
+  };
+
   async function mount(detail = mockDetail()) {
     apiMock.getById.mockReturnValue(of(detail));
 
@@ -139,6 +186,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
         provideRouter([]),
         { provide: OffersApi, useValue: apiMock },
         { provide: AuctionHistoryApi, useValue: auctionHistoryApiMock },
+        { provide: ViabilityApi, useValue: viabilityApiMock },
         { provide: MatSnackBar, useValue: snackBarMock },
         {
           provide: StakingApi,
@@ -284,6 +332,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     auctionHistoryApiMock.benchmark.mockReturnValue(of(emptyBenchmark));
+    viabilityApiMock.assessment.mockReturnValue(of(viabilityResponse));
   });
 
   it('exibe dados da proposta, cabeçalho, revisão ativa e totais de linha', async () => {
@@ -778,5 +827,184 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
       'form[class*="params-grid"] button[type="submit"]',
     ) as HTMLButtonElement | null;
     expect(button?.disabled).toBe(true);
+  });
+
+  it('viabilidade M13: painel completo com origem, vereditos e parâmetros vigentes', async () => {
+    const fixture = await mount();
+    expect(viabilityApiMock.assessment).toHaveBeenCalledWith(1, 10);
+
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Viabilidade do Lote (M13)');
+    expect(text).toContain('estimativa ANEEL');
+    expect(text).toContain('RAP bruta mínima');
+    expect(text).toContain('27,49%');
+    expect(text).toContain('viável no teto do edital');
+    expect(text).toContain('remunera o investimento com folga de 11,49 p.p.');
+    expect(text).toContain('Deságios praticados no leilão 004/2026');
+    expect(text).toContain('Base histórica completa (488');
+    expect(text).toContain('Parâmetros vigentes desde 2026-03-01');
+    expect(text).toContain('WACC real após impostos 8,00% a.a.');
+  });
+
+  it('viabilidade M13: deságio pretendido acima do suportado é destacado sem bloquear', async () => {
+    viabilityApiMock.assessment.mockReturnValue(
+      of({
+        ...viabilityResponse,
+        assessment: {
+          ...viabilityResponse.assessment,
+          estimatedDiscountPercent: '33.00',
+          viableAtEstimatedRap: false,
+          discountMarginPoints: '-5.51',
+        },
+      }),
+    );
+
+    const fixture = await mount();
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const verdict = el.querySelector(
+      '[data-testid="viability-estimated-verdict"]',
+    ) as HTMLElement;
+    expect(verdict.classList.contains('viability-bad')).toBe(true);
+    expect(verdict.textContent).toContain(
+      'não remunera o investimento nas premissas vigentes',
+    );
+    expect(verdict.textContent).toContain('excesso de 5,51 p.p.');
+  });
+
+  it('viabilidade M13: RAP mínima acima do teto sinaliza inviável e origem licitante é rotulada', async () => {
+    viabilityApiMock.assessment.mockReturnValue(
+      of({
+        ...viabilityResponse,
+        assessment: {
+          ...viabilityResponse.assessment,
+          investmentSource: 'BIDDER',
+          maxSupportableDiscountPercent: '-4.90',
+          viableAtMaxRap: false,
+          estimatedDiscountPercent: null,
+          viableAtEstimatedRap: null,
+          discountMarginPoints: null,
+        },
+      }),
+    );
+
+    const fixture = await mount();
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const verdict = el.querySelector(
+      '[data-testid="viability-max-verdict"]',
+    ) as HTMLElement;
+    expect(verdict.classList.contains('viability-bad')).toBe(true);
+    expect(verdict.textContent).toContain('-4,90%');
+    expect(verdict.textContent).toContain('inviável nas condições do edital');
+    expect(el.textContent).toContain('informado pelo licitante');
+  });
+
+  it('viabilidade M13: entradas faltantes orientadas sem inventar valores (RNF-09)', async () => {
+    viabilityApiMock.assessment.mockReturnValue(
+      of({
+        ...viabilityResponse,
+        assessment: {
+          investmentBase: null,
+          investmentSource: null,
+          investmentAnnuity: null,
+          minimumGrossRap: null,
+          maxSupportableDiscountPercent: null,
+          estimatedDiscountPercent: null,
+          viableAtMaxRap: null,
+          viableAtEstimatedRap: null,
+          discountMarginPoints: null,
+          missingInputs: ['INVESTMENT', 'MAX_RAP', 'ESTIMATED_WINNING_RAP'],
+        },
+        auctionStats: null,
+      }),
+    );
+
+    const fixture = await mount();
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Entradas faltantes para o parecer completo');
+    expect(text).toContain(
+      'Investimento (do licitante ou CAPEX estimado ANEEL)',
+    );
+    expect(text).toContain('RAP máxima do edital');
+    expect(text).toContain('RAP vencedora estimada');
+    expect(text).not.toContain('Deságio máximo suportado:');
+  });
+
+  it('viabilidade M13: erro de leitura vai para o snackbar sem quebrar a aba', async () => {
+    viabilityApiMock.assessment.mockReturnValue(
+      throwError(() => ({
+        error: {
+          message:
+            'Nenhuma versão de parâmetros de viabilidade vigente em 2026-03-01.',
+        },
+      })),
+    );
+
+    const fixture = await mount();
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      'Nenhuma versão de parâmetros de viabilidade vigente em 2026-03-01.',
+      'Fechar',
+      expect.anything(),
+    );
+    expect(fixture.componentInstance.viabilityLoading()).toBe(false);
+    expect(fixture.componentInstance.viabilityData()).toBeNull();
+
+    // A orientação permanece visível no painel após o snackbar expirar.
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain(
+      'Nenhuma versão de parâmetros de viabilidade vigente em 2026-03-01.',
+    );
+  });
+
+  it('investimento do licitante é enviado ao salvar e vazio vira null', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+    apiMock.updateRevision.mockReturnValue(of(mockDetail()));
+
+    comp.revParamsForm.patchValue({ bidderCapex: '4110000000.00' });
+    comp.saveRevisionChanges();
+    expect(apiMock.updateRevision).toHaveBeenCalledWith(
+      1,
+      10,
+      expect.objectContaining({ bidderCapex: '4110000000.00' }),
+    );
+
+    comp.revParamsForm.patchValue({ bidderCapex: '' });
+    comp.saveRevisionChanges();
+    expect(apiMock.updateRevision).toHaveBeenLastCalledWith(
+      1,
+      10,
+      expect.objectContaining({ bidderCapex: null }),
+    );
+  });
+
+  it('investimento do licitante inválido bloqueia o salvamento com mensagem em português', async () => {
+    const fixture = await mount();
+    const comp = fixture.componentInstance;
+
+    comp.revParamsForm.patchValue({ bidderCapex: '4110000000.005' });
+    comp.saveRevisionChanges();
+    fixture.detectChanges();
+
+    expect(apiMock.updateRevision).not.toHaveBeenCalled();
+
+    comp.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain(
+      'O investimento do licitante deve ser um número decimal não negativo com até 2 casas',
+    );
   });
 });

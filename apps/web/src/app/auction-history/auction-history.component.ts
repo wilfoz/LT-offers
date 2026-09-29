@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuctionResultImportItem, AuctionResultItem } from '@lt-offers/domain';
+import { formatMoney, formatPercent } from '../shared/format-utils';
 import {
   AuctionHistoryApi,
   AuctionResultsFilter,
@@ -318,17 +319,7 @@ export class AuctionHistoryComponent {
     });
   }
 
-  /** Formato monetário pt-BR; nulo permanece "não informado" (RNF-09). */
-  formatMoney(value: string | null): string {
-    if (value === null) return 'não informado';
-    return Number(value).toLocaleString('pt-BR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
-  formatPercent(value: string | null): string {
-    if (value === null) return 'não informado';
-    return `${value.replace('.', ',')}%`;
-  }
+  // Formatadores pt-BR compartilhados (extraídos na regra das três — M13).
+  readonly formatMoney = formatMoney;
+  readonly formatPercent = formatPercent;
 }

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { RainfallParametersComponent } from './rainfall-parameters.component';
+import { ViabilityParametersComponent } from './viability-parameters.component';
 import { WorkCalendarComponent } from './work-calendar.component';
 import { ConductorCableFormComponent } from './conductor-cable-form.component';
 import { ConductorCableHistoryComponent } from './conductor-cable-history.component';
@@ -136,5 +137,10 @@ export const CATALOGS_ROUTES: Routes = [
   {
     path: 'schedule-parameters/work-calendar',
     component: WorkCalendarComponent,
+  },
+  // Parâmetros de viabilidade (M13): mesmo padrão singleton versionado.
+  {
+    path: 'viability-parameters',
+    component: ViabilityParametersComponent,
   },
 ];

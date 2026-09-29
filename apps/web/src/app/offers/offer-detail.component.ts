@@ -35,6 +35,9 @@ import {
   ScopeResponsibleParty,
   TransmissionLineItem,
   UpdateOfferRevisionPayload,
+  ViabilityAssessmentResponse,
+  ViabilityInvestmentSource,
+  ViabilityMissingInput,
   contractualDeadlineDate,
   discountPercent,
   scheduleWarnings,
@@ -45,6 +48,12 @@ import {
   intOrNull,
   orNull,
 } from '../catalogs/form-utils';
+import {
+  formatMoney,
+  formatPercent,
+  formatPoints,
+} from '../shared/format-utils';
+import { ViabilityApi } from '../catalogs/viability-api.service';
 import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
 import { AuctionHistoryApi } from '../auction-history/auction-history-api.service';
@@ -1661,6 +1670,28 @@ const BRAZILIAN_UFS = [
                   />
                 </mat-form-field>
 
+                <mat-form-field
+                  appearance="outline"
+                  floatLabel="always"
+                  class="col-6"
+                >
+                  <mat-label>
+                    Investimento total estimado pelo licitante (lote inteiro)
+                  </mat-label>
+                  <input
+                    matInput
+                    id="revBidderCapex"
+                    formControlName="bidderCapex"
+                    [readonly]="!isDraft()"
+                  />
+                  @if (revParamsForm.controls.bidderCapex.invalid) {
+                    <mat-error>
+                      O investimento do licitante deve ser um número decimal não
+                      negativo com até 2 casas
+                    </mat-error>
+                  }
+                </mat-form-field>
+
                 <div
                   class="col-12 derived-inline"
                   [class.discount-negative]="isDiscountNegative()"
@@ -1778,6 +1809,212 @@ const BRAZILIAN_UFS = [
                         lotes).
                       </p>
                     }
+                  }
+                </div>
+
+                <!-- Viabilidade do Lote (M13): parecer informativo em termos
+                     reais ao WACC regulatório, comparado aos deságios
+                     praticados do snapshot ANEEL (RNF-09). -->
+                <div
+                  class="col-12 benchmark-panel"
+                  data-testid="viability-panel"
+                >
+                  <div class="benchmark-header">
+                    <mat-icon>query_stats</mat-icon>
+                    <h4>Viabilidade do Lote (M13)</h4>
+                  </div>
+
+                  @if (viabilityLoading()) {
+                    <mat-progress-bar
+                      mode="indeterminate"
+                      aria-label="Carregando viabilidade do lote"
+                    />
+                  } @else if (viabilityError()) {
+                    <p class="benchmark-hint" role="alert">
+                      {{ viabilityError() }}
+                    </p>
+                  } @else if (viabilityData(); as via) {
+                    @if (via.assessment.missingInputs.length > 0) {
+                      <div class="benchmark-line" role="status">
+                        <p>
+                          Entradas faltantes para o parecer completo (ausência
+                          não vira zero):
+                        </p>
+                        <ul class="warning-list">
+                          @for (
+                            missing of via.assessment.missingInputs;
+                            track missing
+                          ) {
+                            <li>{{ missingInputLabel(missing) }}</li>
+                          }
+                        </ul>
+                      </div>
+                    }
+
+                    @if (via.assessment.investmentBase !== null) {
+                      <p class="benchmark-line">
+                        Investimento base:
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkMoney(via.assessment.investmentBase)
+                        }}</strong>
+                        ({{
+                          investmentSourceLabel(
+                            via.assessment.investmentSource
+                          )
+                        }}) — anuidade do investimento
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkMoney(via.assessment.investmentAnnuity)
+                        }}</strong>
+                        — RAP bruta mínima
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkMoney(via.assessment.minimumGrossRap)
+                        }}</strong>
+                      </p>
+                    }
+
+                    @if (
+                      via.assessment.maxSupportableDiscountPercent !== null
+                    ) {
+                      <p
+                        class="benchmark-line"
+                        data-testid="viability-max-verdict"
+                        [class.viability-good]="
+                          via.assessment.viableAtMaxRap === true
+                        "
+                        [class.viability-bad]="
+                          via.assessment.viableAtMaxRap === false
+                        "
+                      >
+                        Deságio máximo suportado:
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkPercent(
+                            via.assessment.maxSupportableDiscountPercent
+                          )
+                        }}</strong>
+                        —
+                        @if (via.assessment.viableAtMaxRap) {
+                          viável no teto do edital
+                        } @else {
+                          inviável nas condições do edital (a RAP mínima excede
+                          a RAP máxima)
+                        }
+                      </p>
+                    }
+
+                    @if (
+                      via.assessment.estimatedDiscountPercent !== null &&
+                      via.assessment.discountMarginPoints !== null
+                    ) {
+                      <p
+                        class="benchmark-line"
+                        data-testid="viability-estimated-verdict"
+                        [class.viability-good]="
+                          via.assessment.viableAtEstimatedRap === true
+                        "
+                        [class.viability-bad]="
+                          via.assessment.viableAtEstimatedRap === false
+                        "
+                      >
+                        Deságio pretendido (RAP vencedora estimada):
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkPercent(
+                            via.assessment.estimatedDiscountPercent
+                          )
+                        }}</strong>
+                        —
+                        @if (via.assessment.viableAtEstimatedRap) {
+                          remunera o investimento com folga de
+                          {{
+                            formatPoints(
+                              marginMagnitude(
+                                via.assessment.discountMarginPoints
+                              )
+                            )
+                          }}
+                        } @else {
+                          não remunera o investimento nas premissas vigentes
+                          (excesso de
+                          {{
+                            formatPoints(
+                              marginMagnitude(
+                                via.assessment.discountMarginPoints
+                              )
+                            )
+                          }})
+                        }
+                      </p>
+                    }
+
+                    @if (via.auctionStats; as stats) {
+                      <p class="benchmark-line">
+                        Deságios praticados no leilão
+                        {{ currentRevision()?.auctionNumber }} ({{
+                          stats.lotCount
+                        }}
+                        lote(s)): mín/méd/máx
+                        <strong class="font-numeric-tabular">
+                          {{ formatBenchmarkPercent(stats.minDiscountPercent) }}
+                          /
+                          {{ formatBenchmarkPercent(stats.avgDiscountPercent) }}
+                          /
+                          {{ formatBenchmarkPercent(stats.maxDiscountPercent) }}
+                        </strong>
+                      </p>
+                    }
+
+                    <p class="benchmark-line">
+                      Base histórica completa ({{ via.overallStats.lotCount }}
+                      lote(s)): deságio mín/méd/máx
+                      <strong class="font-numeric-tabular">
+                        {{
+                          formatBenchmarkPercent(
+                            via.overallStats.minDiscountPercent
+                          )
+                        }}
+                        /
+                        {{
+                          formatBenchmarkPercent(
+                            via.overallStats.avgDiscountPercent
+                          )
+                        }}
+                        /
+                        {{
+                          formatBenchmarkPercent(
+                            via.overallStats.maxDiscountPercent
+                          )
+                        }}
+                      </strong>
+                      — frente ao máximo suportado
+                      <strong class="font-numeric-tabular">{{
+                        formatBenchmarkPercent(
+                          via.assessment.maxSupportableDiscountPercent
+                        )
+                      }}</strong>
+                    </p>
+
+                    <p class="benchmark-line benchmark-meta">
+                      Parâmetros vigentes desde
+                      {{ via.parameters.effectiveFrom }}: WACC real após
+                      impostos
+                      {{
+                        formatBenchmarkPercent(
+                          via.parameters.waccRealAfterTaxPercent
+                        )
+                      }}
+                      a.a., prazo {{ via.parameters.concessionYears }} anos,
+                      PIS/COFINS
+                      {{
+                        formatBenchmarkPercent(via.parameters.pisCofinsPercent)
+                      }}, O&amp;M
+                      {{
+                        formatBenchmarkPercent(
+                          via.parameters.operationMaintenancePercent
+                        )
+                      }}, IR/CSLL
+                      {{
+                        formatBenchmarkPercent(via.parameters.incomeTaxPercent)
+                      }}.
+                    </p>
                   }
                 </div>
 
@@ -2301,6 +2538,12 @@ const BRAZILIAN_UFS = [
       margin: 0.25rem 0;
       color: var(--solaris-on-surface-variant);
     }
+    .benchmark-line.viability-good {
+      color: var(--solaris-primary);
+    }
+    .benchmark-line.viability-bad {
+      color: var(--solaris-error);
+    }
     .actions-right {
       display: flex;
       justify-content: flex-end;
@@ -2387,6 +2630,7 @@ const BRAZILIAN_UFS = [
 export class OfferDetailComponent {
   private readonly api = inject(OffersApi);
   private readonly auctionHistoryApi = inject(AuctionHistoryApi);
+  private readonly viabilityApi = inject(ViabilityApi);
   private readonly checksApi = inject(ChecksApiService);
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -2412,6 +2656,11 @@ export class OfferDetailComponent {
   // tem a identidade normalizada do leilão.
   readonly benchmarkLoading = signal(false);
   readonly auctionBenchmarkData = signal<AuctionBenchmarkResponse | null>(null);
+
+  // Viabilidade do Lote (M13): parecer informativo derivado em leitura.
+  readonly viabilityLoading = signal(false);
+  readonly viabilityData = signal<ViabilityAssessmentResponse | null>(null);
+  readonly viabilityError = signal('');
 
   // Line inline form state
   readonly isEditingLine = signal(false);
@@ -2581,6 +2830,10 @@ export class OfferDetailComponent {
       decimalScaleValidator(2),
     ]),
     winningRap: new FormControl('', [
+      Validators.pattern(POSITIVE_DECIMAL_PATTERN),
+      decimalScaleValidator(2),
+    ]),
+    bidderCapex: new FormControl('', [
       Validators.pattern(POSITIVE_DECIMAL_PATTERN),
       decimalScaleValidator(2),
     ]),
@@ -2809,6 +3062,7 @@ export class OfferDetailComponent {
       estimatedCapex: orNull(raw.estimatedCapex),
       maxRap: orNull(raw.maxRap),
       winningRap: orNull(raw.winningRap),
+      bidderCapex: orNull(raw.bidderCapex),
       notes: orNull(raw.notes),
       scopeMatrixItems: this.scopeItems(),
     });
@@ -3085,24 +3339,67 @@ export class OfferDetailComponent {
       });
   }
 
-  /** Formato monetário pt-BR só para exibição; nulo = "não informado". */
-  formatBenchmarkMoney(value: string | null): string {
-    if (value === null) return 'não informado';
-    return Number(value).toLocaleString('pt-BR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+  // Formatadores pt-BR compartilhados (extraídos na regra das três — M13).
+  readonly formatBenchmarkMoney = formatMoney;
+  readonly formatBenchmarkPercent = formatPercent;
+  readonly formatPoints = formatPoints;
+
+  /** Carrega o parecer de viabilidade (M13) da revisão selecionada. */
+  private loadViability(): void {
+    const off = this.offer();
+    const rev = this.currentRevision();
+    if (!off || !rev) {
+      this.viabilityData.set(null);
+      return;
+    }
+    this.viabilityLoading.set(true);
+    this.viabilityError.set('');
+    this.viabilityApi.assessment(off.id, rev.id).subscribe({
+      next: (response) => {
+        this.viabilityData.set(response);
+        this.viabilityLoading.set(false);
+      },
+      error: (err) => {
+        this.viabilityLoading.set(false);
+        this.viabilityData.set(null);
+        const msg =
+          err.error?.message ||
+          'Não foi possível carregar a viabilidade do lote.';
+        // Snackbar avisa na hora; o painel mantém a orientação visível.
+        this.viabilityError.set(msg);
+        this.snackBar.open(msg, 'Fechar', { duration: 5000 });
+      },
     });
   }
 
-  formatBenchmarkPercent(value: string | null): string {
-    if (value === null) return 'não informado';
-    return `${value.replace('.', ',')}%`;
+  investmentSourceLabel(source: ViabilityInvestmentSource | null): string {
+    if (source === null) return 'não informado';
+    return source === 'BIDDER'
+      ? 'informado pelo licitante'
+      : 'estimativa ANEEL';
+  }
+
+  missingInputLabel(missing: ViabilityMissingInput): string {
+    switch (missing) {
+      case 'INVESTMENT':
+        return 'Investimento (do licitante ou CAPEX estimado ANEEL)';
+      case 'MAX_RAP':
+        return 'RAP máxima do edital';
+      case 'ESTIMATED_WINNING_RAP':
+        return 'RAP vencedora estimada';
+    }
+  }
+
+  /** Magnitude da folga/excesso em p.p. (o sinal vira texto no painel). */
+  marginMagnitude(points: string): string {
+    return points.startsWith('-') ? points.slice(1) : points;
   }
 
   private syncRevisionToForm(): void {
     const rev = this.currentRevision();
     if (!rev) return;
     this.loadAuctionBenchmark();
+    this.loadViability();
     this.revParamsForm.patchValue({
       auctionName: rev.auctionName,
       lotName: rev.lotName,
@@ -3121,6 +3418,7 @@ export class OfferDetailComponent {
       estimatedCapex: rev.estimatedCapex ?? '',
       maxRap: rev.maxRap ?? '',
       winningRap: rev.winningRap ?? '',
+      bidderCapex: rev.bidderCapex ?? '',
       notes: rev.notes ?? '',
     });
     this.scopeItems.set(rev.scopeMatrixItems ?? []);

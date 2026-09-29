@@ -124,6 +124,11 @@ export class App {
       label: 'Calendário de trabalho',
       icon: 'event_available',
     },
+    {
+      path: '/catalogs/viability-parameters',
+      label: 'Parâmetros de viabilidade',
+      icon: 'query_stats',
+    },
   ];
 
   protected toggleMenu(): void {
