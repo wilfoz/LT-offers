@@ -17,6 +17,8 @@ export * from './lib/offers/offers';
 export * from './lib/offers/offer-derivations';
 export * from './lib/auction-history/auction-history';
 export * from './lib/auction-history/auction-normalization';
+export * from './lib/viability/viability';
+export * from './lib/viability/viability-derivations';
 export * from './lib/staking/staking';
 export * from './lib/foundations/foundation-quantities';
 export * from './lib/pricing/quote';

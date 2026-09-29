@@ -84,6 +84,8 @@ export interface OfferRevisionItem {
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
+  // Investimento total estimado pelo licitante (lote inteiro — M13).
+  bidderCapex?: string | null;
   notes?: string | null;
   // Derivados em leitura (nunca persistidos nem aceitos como entrada).
   contractualDeadlineDate: string | null;
@@ -149,6 +151,7 @@ export interface CreateOfferPayload {
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
+  bidderCapex?: string | null;
   notes?: string | null;
   transmissionLines?: TransmissionLineItem[];
   scopeMatrixItems?: ScopeMatrixItemPayload[];
@@ -176,6 +179,7 @@ export interface UpdateOfferRevisionPayload {
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
+  bidderCapex?: string | null;
   notes?: string | null;
   status?: OfferRevisionStatus;
   transmissionLines?: TransmissionLineItem[];

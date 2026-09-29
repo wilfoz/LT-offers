@@ -616,6 +616,8 @@ model OfferRevision {
   estimatedCapex             Decimal?            @map("estimated_capex") @db.Decimal(16, 2)
   maxRap                     Decimal?            @map("max_rap") @db.Decimal(16, 2)
   winningRap                 Decimal?            @map("winning_rap") @db.Decimal(16, 2)
+  // Investimento total estimado pelo licitante (lote inteiro — M13).
+  bidderCapex                Decimal?            @map("bidder_capex") @db.Decimal(16, 2)
   notes                      String?
   closedAt                   DateTime?           @map("closed_at")
   deliveredAt                DateTime?           @map("delivered_at")
@@ -843,4 +845,23 @@ model AuctionResult {
 
   @@index([auctionNumber, lotNumber])
   @@map("auction_result")
+}
+
+// Parâmetros de viabilidade do lote (M13, RNF-05): catálogo singleton
+// versionado por vigência — WACC regulatório real após impostos, prazo de
+// recebimento da RAP e fatores de dedução da RAP bruta. A avaliação resolve
+// a versão vigente pela data da oferta; os fatores tributários do seed são
+// hipótese a calibrar (§02).
+model ViabilityParameterVersion {
+  id                          Int      @id @default(autoincrement())
+  effectiveFrom               DateTime @unique @map("effective_from") @db.Date
+  waccRealAfterTaxPercent     Decimal  @map("wacc_real_after_tax_percent") @db.Decimal(5, 2)
+  concessionYears             Int      @map("concession_years")
+  pisCofinsPercent            Decimal  @map("pis_cofins_percent") @db.Decimal(5, 2)
+  operationMaintenancePercent Decimal  @map("operation_maintenance_percent") @db.Decimal(5, 2)
+  incomeTaxPercent            Decimal  @map("income_tax_percent") @db.Decimal(5, 2)
+  createdBy                   String   @map("created_by")
+  createdAt                   DateTime @default(now()) @map("created_at")
+
+  @@map("viability_parameter_version")
 }

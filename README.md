@@ -290,6 +290,17 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | extensão de linha do lote (km)                      | `lineLengthKm` / `line_length_km`                                                                       |
 | potência de subestação (MVA)                        | `substationMva` / `substation_mva`                                                                      |
 | deságio publicado (%)                               | `discountPercent` / `discount_percent` (histórico de leilões)                                           |
+| parâmetros de viabilidade                           | `ViabilityParameterVersion` / `viability_parameter_version`                                             |
+| WACC real após impostos (% a.a.)                    | `waccRealAfterTaxPercent` / `wacc_real_after_tax_percent`                                               |
+| prazo de recebimento da RAP (anos)                  | `concessionYears` / `concession_years`                                                                  |
+| PIS/COFINS (% da RAP)                               | `pisCofinsPercent` / `pis_cofins_percent`                                                               |
+| O&M (% da RAP)                                      | `operationMaintenancePercent` / `operation_maintenance_percent`                                         |
+| IR/CSLL (%)                                         | `incomeTaxPercent` / `income_tax_percent`                                                               |
+| investimento do licitante (R$)                      | `bidderCapex` / `bidder_capex`                                                                          |
+| anuidade do investimento (derivada)                 | `investmentAnnuity`                                                                                     |
+| RAP bruta mínima (derivada)                         | `minimumGrossRap`                                                                                       |
+| deságio máximo suportado (derivado, %)              | `maxSupportableDiscountPercent`                                                                         |
+| avaliação de viabilidade (M13)                      | `ViabilityAssessment` / `viability`                                                                     |
 | cliente / concessionária                            | `clientName` / `client_name`                                                                            |
 | entrada em operação comercial (edital)              | `commercialOperationDate` / `commercial_operation_date`                                                 |
 | início do cronograma                                | `scheduleStartDate` / `schedule_start_date`                                                             |
