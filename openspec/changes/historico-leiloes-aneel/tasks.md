@@ -14,9 +14,9 @@
 
 ## 3. Interface web
 
-- [ ] 3.1 Tela "Histórico de Leilões ANEEL" (`apps/web/src/app/auction-history/`): tabela do snapshot com busca e filtros por leilão/UF/ano, metadados da última importação, botão "Sincronizar com a ANEEL" com confirmação e snackbar de resultado (contagem) ou erro pt-BR, estado vazio orientando a primeira sincronização, valores em formato pt-BR e "não informado" para nulos (design D5); rota + item no menu da casca (atualizar o `app.spec` que asserta a lista exata)
-- [ ] 3.2 Painel de benchmark na aba "Parâmetros e Datas da Revisão" do `offer-detail.component.ts` (design D4): resultado oficial do lote quando publicado, estatísticas do leilão e da base completa, deságio derivado lado a lado; estados sem identidade (orientação, sem chamada), leilão sem resultado publicado e erro de leitura em snackbar
-- [ ] 3.3 Testes dos componentes: filtros e busca da tela, sincronização com sucesso/erro, estado vazio, painel de benchmark nos três estados, callbacks de erro em toda leitura, botão refletindo estado desabilitado; conferir ausência de BOM nos arquivos editados
+- [x] 3.1 Tela "Histórico de Leilões ANEEL" (`apps/web/src/app/auction-history/`): tabela do snapshot com busca e filtros por leilão/UF/ano, metadados da última importação, botão "Sincronizar com a ANEEL" com confirmação e snackbar de resultado (contagem) ou erro pt-BR, estado vazio orientando a primeira sincronização, valores em formato pt-BR e "não informado" para nulos (design D5); rota + item no menu da casca (atualizar o `app.spec` que asserta a lista exata)
+- [x] 3.2 Painel de benchmark na aba "Parâmetros e Datas da Revisão" do `offer-detail.component.ts` (design D4): resultado oficial do lote quando publicado, estatísticas do leilão e da base completa, deságio derivado lado a lado; estados sem identidade (orientação, sem chamada), leilão sem resultado publicado e erro de leitura em snackbar
+- [x] 3.3 Testes dos componentes: filtros e busca da tela, sincronização com sucesso/erro, estado vazio, painel de benchmark nos três estados, callbacks de erro em toda leitura, botão refletindo estado desabilitado; conferir ausência de BOM nos arquivos editados
 
 ## 4. Seed, fixture e verificação
 

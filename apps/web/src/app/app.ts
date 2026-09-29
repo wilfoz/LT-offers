@@ -58,6 +58,11 @@ export class App {
   protected readonly links = [
     { path: '/offers', label: 'Ofertas', icon: 'topic' },
     {
+      path: '/auction-history',
+      label: 'Histórico de leilões',
+      icon: 'gavel',
+    },
+    {
       path: '/catalogs/conductor-cables',
       label: 'Cabos condutores',
       icon: 'cable',

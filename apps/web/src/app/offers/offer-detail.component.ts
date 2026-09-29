@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormControl,
@@ -22,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AUCTION_NUMBER_PATTERN,
+  AuctionBenchmarkResponse,
   CANONICAL_SCOPE_ITEMS,
   DATE_PATTERN,
   OfferDetail,
@@ -45,6 +47,7 @@ import {
 } from '../catalogs/form-utils';
 import { REVISION_STATUS_LABELS } from './offer-list.component';
 import { OffersApi } from './offers-api.service';
+import { AuctionHistoryApi } from '../auction-history/auction-history-api.service';
 import { StakingTableComponent } from './staking-table.component';
 import { FoundationQuantitiesComponent } from './foundation-quantities.component';
 import { ElectromechanicalQuantitiesComponent } from './electromechanical-quantities.component';
@@ -97,6 +100,7 @@ const BRAZILIAN_UFS = [
 @Component({
   selector: 'app-offer-detail',
   imports: [
+    DatePipe,
     ReactiveFormsModule,
     RouterLink,
     MatTabsModule,
@@ -1675,6 +1679,108 @@ const BRAZILIAN_UFS = [
                   </span>
                 </div>
 
+                <!-- Benchmark ANEEL (RF-11): resultado oficial e deságios
+                     históricos do snapshot local, lado a lado com o deságio
+                     derivado da oferta. -->
+                <div
+                  class="col-12 benchmark-panel"
+                  data-testid="auction-benchmark"
+                >
+                  <div class="benchmark-header">
+                    <mat-icon>gavel</mat-icon>
+                    <h4>Benchmark ANEEL — histórico de leilões</h4>
+                  </div>
+
+                  @if (!hasAuctionIdentity()) {
+                    <p class="benchmark-hint">
+                      Informe o número do leilão e o número do lote para
+                      comparar com o histórico oficial da ANEEL.
+                    </p>
+                  } @else if (benchmarkLoading()) {
+                    <mat-progress-bar
+                      mode="indeterminate"
+                      aria-label="Carregando benchmark"
+                    />
+                  } @else if (auctionBenchmarkData(); as bench) {
+                    @if (bench.lotResult; as lot) {
+                      <p class="benchmark-line">
+                        Resultado oficial do lote
+                        {{ currentRevision()?.lotNumber }} do Leilão
+                        {{ currentRevision()?.auctionNumber }}: vencedor
+                        <strong>{{ lot.winnerName ?? 'deserto' }}</strong
+                        >, RAP vencedora
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkMoney(lot.winningRap)
+                        }}</strong
+                        >, deságio publicado
+                        <strong class="font-numeric-tabular">{{
+                          formatBenchmarkPercent(lot.discountPercent)
+                        }}</strong>
+                      </p>
+                    } @else {
+                      <p class="benchmark-line">
+                        Não há resultado publicado para o Leilão
+                        {{ currentRevision()?.auctionNumber }} no snapshot
+                        local.
+                      </p>
+                    }
+
+                    @if (bench.auctionStats; as stats) {
+                      <p class="benchmark-line">
+                        Leilão {{ currentRevision()?.auctionNumber }}:
+                        {{ stats.lotCount }} lote(s),
+                        {{ stats.desertedLotCount }} deserto(s) — deságio
+                        mín/méd/máx:
+                        <strong class="font-numeric-tabular">
+                          {{ formatBenchmarkPercent(stats.minDiscountPercent) }}
+                          /
+                          {{ formatBenchmarkPercent(stats.avgDiscountPercent) }}
+                          /
+                          {{ formatBenchmarkPercent(stats.maxDiscountPercent) }}
+                        </strong>
+                      </p>
+                    }
+
+                    <p class="benchmark-line">
+                      Base histórica completa:
+                      {{ bench.overallStats.lotCount }} lote(s) — deságio
+                      mín/méd/máx:
+                      <strong class="font-numeric-tabular">
+                        {{
+                          formatBenchmarkPercent(
+                            bench.overallStats.minDiscountPercent
+                          )
+                        }}
+                        /
+                        {{
+                          formatBenchmarkPercent(
+                            bench.overallStats.avgDiscountPercent
+                          )
+                        }}
+                        /
+                        {{
+                          formatBenchmarkPercent(
+                            bench.overallStats.maxDiscountPercent
+                          )
+                        }}
+                      </strong>
+                      — deságio derivado desta oferta:
+                      <strong class="font-numeric-tabular">{{
+                        discountDisplay()
+                      }}</strong>
+                    </p>
+                    @if (bench.lastImport; as imp) {
+                      <p class="benchmark-line benchmark-meta">
+                        Snapshot importado em
+                        {{ imp.importedAt | date: 'dd/MM/yyyy HH:mm' }} ({{
+                          imp.rowCount
+                        }}
+                        lotes).
+                      </p>
+                    }
+                  }
+                </div>
+
                 <mat-form-field
                   appearance="outline"
                   floatLabel="always"
@@ -2170,6 +2276,31 @@ const BRAZILIAN_UFS = [
     .derived-inline.discount-negative .derived-icon {
       color: #b91c1c;
     }
+    .benchmark-panel {
+      border: 1px solid var(--solaris-outline-variant);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      background: var(--solaris-surface-container-low);
+      font-size: 0.875rem;
+    }
+    .benchmark-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .benchmark-header h4 {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+    .benchmark-header mat-icon {
+      color: var(--solaris-primary);
+    }
+    .benchmark-hint,
+    .benchmark-line {
+      margin: 0.25rem 0;
+      color: var(--solaris-on-surface-variant);
+    }
     .actions-right {
       display: flex;
       justify-content: flex-end;
@@ -2255,6 +2386,7 @@ const BRAZILIAN_UFS = [
 })
 export class OfferDetailComponent {
   private readonly api = inject(OffersApi);
+  private readonly auctionHistoryApi = inject(AuctionHistoryApi);
   private readonly checksApi = inject(ChecksApiService);
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -2275,6 +2407,11 @@ export class OfferDetailComponent {
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal('');
+
+  // Benchmark ANEEL do lote (RF-11): carregado quando a revisão selecionada
+  // tem a identidade normalizada do leilão.
+  readonly benchmarkLoading = signal(false);
+  readonly auctionBenchmarkData = signal<AuctionBenchmarkResponse | null>(null);
 
   // Line inline form state
   readonly isEditingLine = signal(false);
@@ -2916,9 +3053,56 @@ export class OfferDetailComponent {
     }
   }
 
+  /** Revisão tem número do leilão e número do lote informados. */
+  hasAuctionIdentity(): boolean {
+    const rev = this.currentRevision();
+    return !!rev?.auctionNumber && rev.lotNumber != null;
+  }
+
+  /** Carrega o benchmark ANEEL quando a revisão tem a identidade do leilão. */
+  private loadAuctionBenchmark(): void {
+    const rev = this.currentRevision();
+    if (!rev?.auctionNumber || rev.lotNumber == null) {
+      this.auctionBenchmarkData.set(null);
+      return;
+    }
+    this.benchmarkLoading.set(true);
+    this.auctionHistoryApi
+      .benchmark(rev.auctionNumber, rev.lotNumber)
+      .subscribe({
+        next: (response) => {
+          this.auctionBenchmarkData.set(response);
+          this.benchmarkLoading.set(false);
+        },
+        error: (err) => {
+          this.benchmarkLoading.set(false);
+          this.auctionBenchmarkData.set(null);
+          const msg =
+            err.error?.message ||
+            'Não foi possível carregar o benchmark de leilões da ANEEL.';
+          this.snackBar.open(msg, 'Fechar', { duration: 5000 });
+        },
+      });
+  }
+
+  /** Formato monetário pt-BR só para exibição; nulo = "não informado". */
+  formatBenchmarkMoney(value: string | null): string {
+    if (value === null) return 'não informado';
+    return Number(value).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  formatBenchmarkPercent(value: string | null): string {
+    if (value === null) return 'não informado';
+    return `${value.replace('.', ',')}%`;
+  }
+
   private syncRevisionToForm(): void {
     const rev = this.currentRevision();
     if (!rev) return;
+    this.loadAuctionBenchmark();
     this.revParamsForm.patchValue({
       auctionName: rev.auctionName,
       lotName: rev.lotName,

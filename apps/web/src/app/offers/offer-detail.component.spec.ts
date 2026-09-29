@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { OfferDetailComponent } from './offer-detail.component';
 import { OffersApi } from './offers-api.service';
+import { AuctionHistoryApi } from '../auction-history/auction-history-api.service';
 
 import { provideHttpClient } from '@angular/common/http';
 import { FoundationTypesApi } from '../catalogs/foundation-types-api.service';
@@ -112,6 +113,23 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
     open: vi.fn(),
   };
 
+  const emptyBenchmark = {
+    lotResult: null,
+    auctionStats: null,
+    overallStats: {
+      lotCount: 0,
+      desertedLotCount: 0,
+      minDiscountPercent: null,
+      avgDiscountPercent: null,
+      maxDiscountPercent: null,
+    },
+    lastImport: null,
+  };
+
+  const auctionHistoryApiMock = {
+    benchmark: vi.fn(),
+  };
+
   async function mount(detail = mockDetail()) {
     apiMock.getById.mockReturnValue(of(detail));
 
@@ -120,6 +138,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
       providers: [
         provideRouter([]),
         { provide: OffersApi, useValue: apiMock },
+        { provide: AuctionHistoryApi, useValue: auctionHistoryApiMock },
         { provide: MatSnackBar, useValue: snackBarMock },
         {
           provide: StakingApi,
@@ -264,6 +283,7 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    auctionHistoryApiMock.benchmark.mockReturnValue(of(emptyBenchmark));
   });
 
   it('exibe dados da proposta, cabeçalho, revisão ativa e totais de linha', async () => {
@@ -640,6 +660,111 @@ describe('OfferDetailComponent', { timeout: 15000 }, () => {
       expect.anything(),
     );
     expect(apiMock.clone).not.toHaveBeenCalled();
+  });
+
+  it('benchmark ANEEL: lote com resultado publicado exibido lado a lado com o deságio derivado', async () => {
+    auctionHistoryApiMock.benchmark.mockReturnValue(
+      of({
+        lotResult: {
+          id: 1,
+          auctionYear: 2026,
+          auctionDate: '2026-10-30',
+          auctionNumber: '004/2026',
+          lotNumber: 4,
+          projectName: 'Lote 4',
+          mainUf: 'PR/MS/GO',
+          constructionDeadlineMonths: 60,
+          lineLengthKm: null,
+          substationMva: null,
+          estimatedInvestment: null,
+          maxRap: '762630000.00',
+          winnerName: 'Transmissora Vencedora S.A.',
+          winningRap: '381315000.00',
+          discountPercent: '50.00',
+        },
+        auctionStats: {
+          lotCount: 8,
+          desertedLotCount: 1,
+          minDiscountPercent: '37.89',
+          avgDiscountPercent: '47.00',
+          maxDiscountPercent: '56.20',
+        },
+        overallStats: {
+          lotCount: 488,
+          desertedLotCount: 20,
+          minDiscountPercent: '0.00',
+          avgDiscountPercent: '32.10',
+          maxDiscountPercent: '73.50',
+        },
+        lastImport: null,
+      }),
+    );
+
+    const fixture = await mount();
+    expect(auctionHistoryApiMock.benchmark).toHaveBeenCalledWith('004/2026', 4);
+
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Transmissora Vencedora S.A.');
+    expect(text).toContain('381.315.000,00');
+    expect(text).toContain('50,00%');
+    expect(text).toContain('37,89%');
+    expect(text).toContain('488 lote(s)');
+    expect(text).toContain('deságio derivado desta oferta');
+  });
+
+  it('benchmark ANEEL: leilão sem resultado publicado exibe aviso e base completa', async () => {
+    auctionHistoryApiMock.benchmark.mockReturnValue(
+      of({
+        ...emptyBenchmark,
+        overallStats: {
+          lotCount: 488,
+          desertedLotCount: 20,
+          minDiscountPercent: '0.00',
+          avgDiscountPercent: '32.10',
+          maxDiscountPercent: '73.50',
+        },
+      }),
+    );
+
+    const fixture = await mount();
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Não há resultado publicado para o Leilão 004/2026');
+    expect(text).toContain('Base histórica completa');
+  });
+
+  it('benchmark ANEEL: sem identidade normalizada exibe orientação e não consulta a API', async () => {
+    const detail = mockDetail();
+    detail.revisions[0].auctionNumber = null;
+    detail.revisions[0].lotNumber = null;
+
+    const fixture = await mount(detail);
+    expect(auctionHistoryApiMock.benchmark).not.toHaveBeenCalled();
+
+    fixture.componentInstance.activeTabIndex.set(13);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain(
+      'Informe o número do leilão e o número do lote para comparar com o histórico oficial da ANEEL.',
+    );
+  });
+
+  it('benchmark ANEEL: erro de leitura vai para o snackbar sem quebrar a aba', async () => {
+    auctionHistoryApiMock.benchmark.mockReturnValue(
+      throwError(() => ({ error: { message: 'Falha no benchmark' } })),
+    );
+
+    const fixture = await mount();
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      'Falha no benchmark',
+      'Fechar',
+      expect.anything(),
+    );
+    expect(fixture.componentInstance.benchmarkLoading()).toBe(false);
+    expect(fixture.componentInstance.auctionBenchmarkData()).toBeNull();
   });
 
   it('botão de salvar parâmetros reflete o estado desabilitado do formulário', async () => {

@@ -24,6 +24,13 @@ export const appRoutes: Route[] = [
       import('./offers/offers.routes').then((m) => m.OFFERS_ROUTES),
   },
   {
+    path: 'auction-history',
+    loadComponent: () =>
+      import('./auction-history/auction-history.component').then(
+        (m) => m.AuctionHistoryComponent,
+      ),
+  },
+  {
     path: 'catalogs',
     loadChildren: () =>
       import('./catalogs/catalogs.routes').then((m) => m.CATALOGS_ROUTES),
