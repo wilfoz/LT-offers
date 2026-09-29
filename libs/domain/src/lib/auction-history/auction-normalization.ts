@@ -51,16 +51,21 @@ export function fractionToPercent(
 }
 
 /**
- * Normaliza o número do leilão para NNN/AAAA (ex.: "2/2024" → "002/2024").
- * Formato irreconhecível → null.
+ * Normaliza o número do leilão para NNN/AAAA (ex.: "2/2024" → "002/2024"),
+ * preservando sufixo de etapa quando publicado (ex.: "013/2015-2º" — o
+ * Leilão 013/2015 saiu em duas etapas com lotes repetidos entre elas;
+ * colapsar o sufixo criaria identidades ambíguas). Formato sem o prefixo
+ * NNN/AAAA → null. O padrão estrito das ofertas (AUCTION_NUMBER_PATTERN)
+ * não muda: oferta referencia leilão sem etapa.
  */
 export function normalizeAuctionNumber(
   value: string | null | undefined,
 ): string | null {
   if (value === null || value === undefined) return null;
-  const match = value.trim().match(/^(\d{1,3})\/(\d{4})$/);
+  const match = value.trim().match(/^(\d{1,3})\/(\d{4})(.*)$/);
   if (!match) return null;
-  return `${match[1].padStart(3, '0')}/${match[2]}`;
+  const suffix = match[3].trim();
+  return `${match[1].padStart(3, '0')}/${match[2]}${suffix}`;
 }
 
 /** Inteiro publicado como número ou texto de dígitos; resto → null. */

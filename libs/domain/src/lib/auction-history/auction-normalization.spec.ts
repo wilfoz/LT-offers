@@ -62,8 +62,19 @@ describe('Normalização do histórico de leilões da ANEEL (RNF-08, RNF-09)', (
       expect(normalizeAuctionNumber(input)).toBe(expected);
     });
 
+    // Regressão do BUG-1 do QA: o Leilão 013/2015 foi publicado em duas
+    // etapas ("013/2015-1º"/"013/2015-2º", 48 lotes reais) e o padrão
+    // estrito abortava a sincronização inteira.
+    it.each([
+      ['013/2015-1º', '013/2015-1º'],
+      ['013/2015-2º', '013/2015-2º'],
+      ['13/2015-2º', '013/2015-2º'],
+    ])('preserva sufixo de etapa publicado (%s → %s)', (input, expected) => {
+      expect(normalizeAuctionNumber(input)).toBe(expected);
+    });
+
     it.each([['2024-002'], ['leilão 2'], [''], [null]])(
-      'formato irreconhecível (%s) vira null',
+      'formato sem o prefixo NNN/AAAA (%s) vira null',
       (input) => {
         expect(normalizeAuctionNumber(input as string | null)).toBeNull();
       },
