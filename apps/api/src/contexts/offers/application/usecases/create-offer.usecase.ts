@@ -98,6 +98,7 @@ export class CreateOfferUseCase {
         estimatedCapex: payload.estimatedCapex ?? null,
         maxRap: payload.maxRap ?? null,
         winningRap: payload.winningRap ?? null,
+        bidderCapex: payload.bidderCapex ?? null,
         notes: payload.notes?.trim() || null,
         createdBy: payload.createdBy?.trim() || userEmail,
         transmissionLines: lines,

@@ -101,6 +101,7 @@ export class CloneOfferUseCase {
         estimatedCapex: sourceRevision.estimatedCapex ?? null,
         maxRap: sourceRevision.maxRap ?? null,
         winningRap: sourceRevision.winningRap ?? null,
+        bidderCapex: sourceRevision.bidderCapex ?? null,
         notes: `Clonado a partir de ${sourceOffer.code} (R${sourceRevision.revisionNumber})`,
         createdBy: payload.createdBy?.trim() || userEmail,
         transmissionLines: clonedLines,

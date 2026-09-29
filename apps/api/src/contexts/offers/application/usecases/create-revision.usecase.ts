@@ -80,6 +80,7 @@ export class CreateRevisionUseCase {
         estimatedCapex: latestRevision?.estimatedCapex ?? null,
         maxRap: latestRevision?.maxRap ?? null,
         winningRap: latestRevision?.winningRap ?? null,
+        bidderCapex: latestRevision?.bidderCapex ?? null,
         notes:
           payload.notes?.trim() ||
           `Revisão R${nextRevisionNumber} criada a partir de R${latestRevision?.revisionNumber ?? 0}`,

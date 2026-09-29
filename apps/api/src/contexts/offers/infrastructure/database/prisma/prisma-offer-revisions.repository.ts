@@ -91,6 +91,9 @@ export class PrismaOfferRevisionsRepository implements OfferRevisionsRepository 
           winningRap: revision.winningRap
             ? new Decimal(revision.winningRap)
             : null,
+          bidderCapex: revision.bidderCapex
+            ? new Decimal(revision.bidderCapex)
+            : null,
           notes: revision.notes,
           closedAt: revision.closedAt,
           deliveredAt: revision.deliveredAt,
@@ -142,6 +145,9 @@ export class PrismaOfferRevisionsRepository implements OfferRevisionsRepository 
         maxRap: revision.maxRap ? new Decimal(revision.maxRap) : null,
         winningRap: revision.winningRap
           ? new Decimal(revision.winningRap)
+          : null,
+        bidderCapex: revision.bidderCapex
+          ? new Decimal(revision.bidderCapex)
           : null,
         notes: revision.notes,
         createdBy: revision.createdBy,

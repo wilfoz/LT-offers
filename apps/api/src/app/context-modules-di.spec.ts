@@ -17,6 +17,7 @@ import { RisksModule } from '../contexts/risks/infrastructure/risks.module';
 import { ChecksModule } from '../contexts/checks/infrastructure/checks.module';
 import { ExportModule } from '../contexts/export/infrastructure/export.module';
 import { AuctionHistoryModule } from '../contexts/auction-history/infrastructure/auction-history.module';
+import { ViabilityModule } from '../contexts/viability/infrastructure/viability.module';
 
 // Regressão de DI real: testes puros mockam as portas e o build só checa
 // tipos, então um provider irresolvível (ex.: construtor com tipo de união,
@@ -43,6 +44,7 @@ describe('Módulos de contexto compilam com injeção de dependência real', () 
     ['ChecksModule', ChecksModule],
     ['ExportModule', ExportModule],
     ['AuctionHistoryModule', AuctionHistoryModule],
+    ['ViabilityModule', ViabilityModule],
   ];
 
   it.each(cases)('%s resolve todos os providers', async (_name, module) => {

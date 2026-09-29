@@ -179,6 +179,7 @@ export class PrismaOffersRepository implements OffersRepository {
             : null,
           maxRap: rev.maxRap ? new Decimal(rev.maxRap) : null,
           winningRap: rev.winningRap ? new Decimal(rev.winningRap) : null,
+          bidderCapex: rev.bidderCapex ? new Decimal(rev.bidderCapex) : null,
           notes: rev.notes,
           createdBy: rev.createdBy,
         },

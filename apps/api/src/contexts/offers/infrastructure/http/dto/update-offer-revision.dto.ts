@@ -16,8 +16,10 @@ import {
   Max,
   MaxLength,
   Min,
+  Validate,
   ValidateNested,
 } from 'class-validator';
+import { DecimalWithScale } from '../../../../catalogs/infrastructure/http/dto/decimal-scale.validators';
 import { IsCivilDate } from './civil-date.validator';
 import { ScopeMatrixItemDto } from './scope-matrix-item.dto';
 import { TransmissionLineItemDto } from './transmission-line-item.dto';
@@ -112,6 +114,13 @@ export class UpdateOfferRevisionDto {
     message: 'A RAP vencedora deve ser um número decimal não negativo',
   })
   winningRap?: string | null;
+
+  @IsOptional()
+  @Validate(DecimalWithScale, [2], {
+    message:
+      'O investimento do licitante deve ser um número decimal não negativo com até 2 casas',
+  })
+  bidderCapex?: string | null;
 
   @IsOptional()
   @IsString({ message: 'As notas devem ser texto' })

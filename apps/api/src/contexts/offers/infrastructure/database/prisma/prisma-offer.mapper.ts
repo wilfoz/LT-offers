@@ -83,6 +83,7 @@ export class PrismaOfferMapper {
       estimatedCapex: raw.estimatedCapex ? raw.estimatedCapex.toFixed(2) : null,
       maxRap: raw.maxRap ? raw.maxRap.toFixed(2) : null,
       winningRap: raw.winningRap ? raw.winningRap.toFixed(2) : null,
+      bidderCapex: raw.bidderCapex ? raw.bidderCapex.toFixed(2) : null,
       notes: raw.notes,
       closedAt: raw.closedAt,
       deliveredAt: raw.deliveredAt,

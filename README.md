@@ -300,7 +300,7 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | anuidade do investimento (derivada)                 | `investmentAnnuity`                                                                                     |
 | RAP bruta mínima (derivada)                         | `minimumGrossRap`                                                                                       |
 | deságio máximo suportado (derivado, %)              | `maxSupportableDiscountPercent`                                                                         |
-| avaliação de viabilidade (M13)                      | `ViabilityAssessment` / `viability`                                                                     |
+| avaliação de viabilidade (M13)                      | `ViabilityAssessment` / rota `/viability`                                                               |
 | cliente / concessionária                            | `clientName` / `client_name`                                                                            |
 | entrada em operação comercial (edital)              | `commercialOperationDate` / `commercial_operation_date`                                                 |
 | início do cronograma                                | `scheduleStartDate` / `schedule_start_date`                                                             |

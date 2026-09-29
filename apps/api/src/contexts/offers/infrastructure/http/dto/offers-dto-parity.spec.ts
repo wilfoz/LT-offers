@@ -16,6 +16,8 @@ describe('Paridade DTO × contrato (identidade do leilão e prazos do edital)', 
     subLotCode: '4ABC',
     contractSigningDate: '2027-02-30',
     constructionDeadlineMonths: 241,
+    // Campo da change viabilidade-lote-licitante (M13).
+    bidderCapex: 'quatro bilhões',
   };
 
   async function expectOneErrorPerField(
@@ -59,6 +61,18 @@ describe('Paridade DTO × contrato (identidade do leilão e prazos do edital)', 
       'targetLotNumber',
       'targetSubLotCode',
     ]);
+  });
+
+  it('bidderCapex com mais de 2 casas decimais é rejeitado (escala da coluna)', async () => {
+    const dto = plainToInstance(UpdateOfferRevisionDto, {
+      bidderCapex: '4110000000.005',
+    });
+    const errors = await validate(dto);
+    expect(errors.map((e) => e.property)).toEqual(['bidderCapex']);
+    expect(errors[0].constraints).toEqual({
+      decimalWithScale:
+        'O investimento do licitante deve ser um número decimal não negativo com até 2 casas',
+    });
   });
 
   it('discountPercent enviado no payload é descartado pela whitelist (derivado, nunca entrada)', async () => {

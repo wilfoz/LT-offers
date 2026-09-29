@@ -136,6 +136,9 @@ export class OfferPresenter {
       winningRap: rev.winningRap
         ? DecimalValue.of(rev.winningRap).toFixed(2)
         : null,
+      bidderCapex: rev.bidderCapex
+        ? DecimalValue.of(rev.bidderCapex).toFixed(2)
+        : null,
       notes: rev.notes ?? null,
       closedAt: toIsoOrNull(rev.closedAt),
       deliveredAt: toIsoOrNull(rev.deliveredAt),

@@ -31,6 +31,7 @@ export interface OfferRevisionProps {
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
+  bidderCapex?: string | null;
   notes?: string | null;
   closedAt?: Date | null;
   deliveredAt?: Date | null;
@@ -60,6 +61,7 @@ export interface OfferRevisionRawProps {
   estimatedCapex?: string | null;
   maxRap?: string | null;
   winningRap?: string | null;
+  bidderCapex?: string | null;
   notes?: string | null;
   closedAt?: Date | null;
   deliveredAt?: Date | null;
@@ -176,6 +178,10 @@ export class OfferRevision {
 
   get winningRap(): string | null | undefined {
     return this._props.winningRap;
+  }
+
+  get bidderCapex(): string | null | undefined {
+    return this._props.bidderCapex;
   }
 
   get notes(): string | null | undefined {
@@ -314,6 +320,8 @@ export class OfferRevision {
     if (params.maxRap !== undefined) this._props.maxRap = params.maxRap;
     if (params.winningRap !== undefined)
       this._props.winningRap = params.winningRap;
+    if (params.bidderCapex !== undefined)
+      this._props.bidderCapex = params.bidderCapex;
     if (params.notes !== undefined) this._props.notes = params.notes;
     this._props.updatedAt = new Date();
   }

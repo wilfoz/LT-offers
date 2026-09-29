@@ -90,6 +90,12 @@ export class UpdateRevisionUseCase {
           estimatedCapex: payload.estimatedCapex ?? undefined,
           maxRap: payload.maxRap ?? undefined,
           winningRap: payload.winningRap ?? undefined,
+          // Campo novo: undefined ignora, null limpa, texto vazio vira null
+          // (RNF-09 — mesma normalização dos campos da change A).
+          bidderCapex:
+            payload.bidderCapex === undefined
+              ? undefined
+              : payload.bidderCapex?.trim() || null,
           notes: payload.notes?.trim() || undefined,
         });
       }
