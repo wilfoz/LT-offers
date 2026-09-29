@@ -4,7 +4,7 @@ Gestão centralizada de ofertas de leilão de linhas de transmissão (origem: ab
 ## Requirements
 ### Requirement: Manter cadastro de ofertas
 
-O sistema SHALL permitir criar e editar ofertas com leilão (ex.: `Leilão 01/2026`), lote (ex.: `Lote 1`), cliente/concessionária (ex.: `Axia Energia`), data da oferta, data do leilão, data de início do cronograma, data prevista de entrada em operação do edital, CAPEX estimado ANEEL (decimal monetário ≥ 0), RAP máxima (decimal monetário ≥ 0), RAP vencedora estimada (decimal monetário ≥ 0) e moeda base (código ISO ex.: `BRL`, `USD`). O sistema SHALL registrar automaticamente autor e data/hora da última alteração (RF-01, RF-03).
+O sistema SHALL permitir criar e editar ofertas com leilão (ex.: `Leilão 01/2026`), lote (ex.: `Lote 1`), cliente/concessionária (ex.: `Axia Energia`), data da oferta, data do leilão, data de início do cronograma, data prevista de entrada em operação do edital, CAPEX estimado ANEEL (decimal monetário ≥ 0), RAP máxima (decimal monetário ≥ 0), RAP vencedora estimada (decimal monetário ≥ 0), **investimento total estimado pelo licitante** (decimal monetário ≥ 0, anulável — base da viabilidade do lote, M13) e moeda base (código ISO ex.: `BRL`, `USD`). O sistema SHALL registrar automaticamente autor e data/hora da última alteração (RF-01, RF-03).
 
 Além dos rótulos livres de leilão e lote, o sistema SHALL aceitar a **identidade normalizada do leilão** publicada pela ANEEL — número do leilão no formato `NNN/AAAA` (ex.: `004/2026`), número do lote (inteiro ≥ 1) e código do sublote (ex.: `4A`, até 3 caracteres) — e os **prazos do edital**: data de assinatura do contrato de concessão (data civil) e prazo de construção em meses (inteiro ≥ 1). Todos esses campos são opcionais e, quando não informados, permanecem como "não informado", nunca convertidos em zero ou texto vazio (RNF-09). O CAPEX estimado ANEEL refere-se à estimativa oficial do **lote inteiro** (linhas, subestações e compensações), distinta do custo EPC calculado pelo sistema.
 
@@ -41,6 +41,10 @@ Quando a data de assinatura do contrato e o prazo de construção estiverem info
 #### Scenario: Alerta de cronograma iniciado antes da assinatura do contrato (RN-02)
 - **WHEN** a data de início do cronograma é anterior à data de assinatura do contrato de concessão
 - **THEN** o sistema exibe alerta informando que o cronograma começa antes da assinatura do contrato, sem impedir a gravação do rascunho
+
+#### Scenario: Investimento do licitante aceito e limpo como os demais campos financeiros
+- **WHEN** um usuário informa `4110000000.00` como investimento total estimado pelo licitante em uma revisão rascunho, e depois o limpa
+- **THEN** o sistema grava o valor como decimal exato, e após a limpeza o campo volta a "não informado" — nunca zero ou texto vazio (RNF-09)
 
 ---
 
