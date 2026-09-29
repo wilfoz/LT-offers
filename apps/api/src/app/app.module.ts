@@ -14,6 +14,7 @@ import { RisksModule } from '../contexts/risks/infrastructure/risks.module';
 import { ChecksModule } from '../contexts/checks/infrastructure/checks.module';
 import { ExportModule } from '../contexts/export/infrastructure/export.module';
 import { BaselineModule } from '../contexts/baseline/infrastructure/baseline.module';
+import { AuctionHistoryModule } from '../contexts/auction-history/infrastructure/auction-history.module';
 import { ParityModule } from '../parity/parity.module';
 import { FieldFactorsModule } from '../field-factors/field-factors.module';
 import { AuthModule } from '../auth/auth.module';
@@ -42,6 +43,7 @@ import { PrismaModule } from './prisma.module';
     ChecksModule,
     ExportModule,
     BaselineModule,
+    AuctionHistoryModule,
     ParityModule,
     FieldFactorsModule,
   ],

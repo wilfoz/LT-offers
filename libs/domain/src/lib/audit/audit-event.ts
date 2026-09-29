@@ -22,7 +22,8 @@ export type AuditResource =
   | 'ECONOMIC_RESULT'
   | 'RISKS'
   | 'CATALOG'
-  | 'EXPORT';
+  | 'EXPORT'
+  | 'AUCTION_HISTORY';
 
 /**
  * Registro de diferença entre estado anterior e novo (RF-65, RNF-12).
