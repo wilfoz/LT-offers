@@ -17,6 +17,8 @@ import {
   DEFAULT_RAINFALL_SEVERITY_BANDS,
 } from '../libs/domain/src/lib/schedule/rainfall-parameters';
 import { DEFAULT_WORK_CALENDAR } from '../libs/domain/src/lib/calendar/work-calendar';
+import { normalizeAuctionResult } from '../libs/domain/src/lib/auction-history/auction-normalization';
+import type { RawAuctionResultRecord } from '../libs/domain/src/lib/auction-history/auction-history';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as xlsx from 'xlsx';
@@ -1190,6 +1192,72 @@ async function main() {
     });
     console.log(
       `  ✓ Calendário de trabalho cadastrado (sáb/dom não laborais, ${DEFAULT_WORK_CALENDAR.holidays.length} feriados nacionais recorrentes).`,
+    );
+  }
+
+  // =========================================================================
+  // 1.x HISTÓRICO DE LEILÕES DA ANEEL (snapshot inicial, fonte "seed")
+  // =========================================================================
+  // Subconjunto real do datastore CKAN (lotes 2022–2024) commitado em
+  // formato cru; o seed passa pelo MESMO pipeline de normalização da domain
+  // usado pela sincronização (RNF-04/RNF-08). Idempotente: só grava se não
+  // houver nenhuma importação registrada (design D6).
+  console.log('\n[+] Processando Histórico de Leilões da ANEEL...');
+  const existingImports = await prisma.auctionResultImport.count();
+  if (existingImports > 0) {
+    console.log(
+      '  ℹ️ Histórico de leilões já importado. Mantendo snapshot existente.',
+    );
+  } else {
+    const fixturePath = path.join(
+      __dirname,
+      'fixtures',
+      'aneel-auction-results.json',
+    );
+    const rawRecords = JSON.parse(
+      fs.readFileSync(fixturePath, 'utf-8'),
+    ) as RawAuctionResultRecord[];
+    const normalized = rawRecords.map(normalizeAuctionResult);
+    const validItems = normalized.filter(
+      (item): item is NonNullable<(typeof normalized)[number]> => item !== null,
+    );
+    const invalidCount = normalized.length - validItems.length;
+    if (invalidCount > 0) {
+      throw new Error(
+        `Fixture do histórico de leilões com ${invalidCount} registro(s) sem identidade mínima — corrigir o fixture antes do seed.`,
+      );
+    }
+    const auctionImport = await prisma.auctionResultImport.create({
+      data: {
+        source:
+          'seed: prisma/fixtures/aneel-auction-results.json (CKAN 2022–2024)',
+        rowCount: validItems.length,
+        importedBy: user,
+      },
+    });
+    await prisma.auctionResult.createMany({
+      data: validItems.map((item) => ({
+        importId: auctionImport.id,
+        auctionYear: item.auctionYear,
+        auctionDate: item.auctionDate
+          ? new Date(`${item.auctionDate}T00:00:00.000Z`)
+          : null,
+        auctionNumber: item.auctionNumber,
+        lotNumber: item.lotNumber,
+        projectName: item.projectName,
+        mainUf: item.mainUf,
+        constructionDeadlineMonths: item.constructionDeadlineMonths,
+        lineLengthKm: item.lineLengthKm,
+        substationMva: item.substationMva,
+        estimatedInvestment: item.estimatedInvestment,
+        maxRap: item.maxRap,
+        winnerName: item.winnerName,
+        winningRap: item.winningRap,
+        discountPercent: item.discountPercent,
+      })),
+    });
+    console.log(
+      `  ✓ Snapshot inicial do histórico de leilões gravado (${rawRecords.length} lotes de 2022–2024, fonte seed).`,
     );
   }
 
