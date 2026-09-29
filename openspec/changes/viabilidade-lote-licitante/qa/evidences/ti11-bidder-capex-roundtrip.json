@@ -1,0 +1,12 @@
+﻿{
+    "aposLimpar":  {
+                       "source":  "ANEEL_ESTIMATE",
+                       "bidderCapex":  null,
+                       "base":  "4110000000.00"
+                   },
+    "aposInformar":  {
+                         "source":  "BIDDER",
+                         "bidderCapex":  "3000000000.00",
+                         "base":  "3000000000.00"
+                     }
+}

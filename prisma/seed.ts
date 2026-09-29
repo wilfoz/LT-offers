@@ -1262,6 +1262,37 @@ async function main() {
   }
 
   // =========================================================================
+  // 1.y PARÂMETROS DE VIABILIDADE (M13, versão inicial vigente)
+  // =========================================================================
+  // WACC regulatório real após impostos de transmissão: 8,00% a.a., vigente
+  // desde 01/03/2026 (ANEEL). Os fatores de dedução da RAP bruta (PIS/COFINS
+  // 9,25%, O&M 10%, IR/CSLL 10%) são HIPÓTESE DE TRABALHO a calibrar (§02).
+  // Idempotente: só grava se não houver nenhuma versão (RNF-05).
+  console.log('\n[+] Processando Parâmetros de Viabilidade (M13)...');
+  const existingViabilityVersions =
+    await prisma.viabilityParameterVersion.count();
+  if (existingViabilityVersions > 0) {
+    console.log(
+      '  ℹ️ Parâmetros de viabilidade já versionados. Mantendo histórico existente.',
+    );
+  } else {
+    await prisma.viabilityParameterVersion.create({
+      data: {
+        effectiveFrom: new Date('2026-03-01T00:00:00.000Z'),
+        waccRealAfterTaxPercent: '8.00',
+        concessionYears: 30,
+        pisCofinsPercent: '9.25',
+        operationMaintenancePercent: '10.00',
+        incomeTaxPercent: '10.00',
+        createdBy: user,
+      },
+    });
+    console.log(
+      '  ✓ Versão inicial dos parâmetros de viabilidade gravada (WACC 8,00% a.a. real após impostos, ANEEL, vigente desde 01/03/2026; prazo 30 anos; fatores de dedução como hipótese a calibrar).',
+    );
+  }
+
+  // =========================================================================
   // 2. OFERTA PRINCIPAL (CELEO LOTE 04 - 2026)
   // =========================================================================
   console.log(

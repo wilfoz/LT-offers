@@ -1,0 +1,12 @@
+﻿{
+    "dataCivilInvalida":  {
+                              "ok":  false,
+                              "body":  "{\"message\":\"Data inválida: \\\"2028-02-30\\\"; informe uma data real no formato AAAA-MM-DD\",\"error\":\"Bad Request\",\"statusCode\":400}",
+                              "status":  400
+                          },
+    "camposInvalidos":  {
+                            "ok":  false,
+                            "body":  "{\"message\":[\"A data de vigência deve estar no formato AAAA-MM-DD\",\"O WACC real após impostos deve ser um decimal maior que zero com até 2 casas\",\"O prazo de recebimento da RAP deve ser de ao menos 1 ano\",\"O PIS/COFINS deve ser de no máximo 100%\",\"O O\u0026M deve ser um decimal não negativo com até 2 casas\",\"O IR/CSLL deve ser um decimal não negativo com até 2 casas\"],\"error\":\"Bad Request\",\"statusCode\":400}",
+                            "status":  400
+                        }
+}

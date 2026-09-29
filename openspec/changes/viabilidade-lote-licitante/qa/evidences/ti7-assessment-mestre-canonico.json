@@ -1,0 +1,35 @@
+﻿{
+    "assessment":  {
+                       "investmentBase":  "4110000000.00",
+                       "investmentSource":  "ANEEL_ESTIMATE",
+                       "investmentAnnuity":  "365080751.22",
+                       "minimumGrossRap":  "496657825.69",
+                       "maxSupportableDiscountPercent":  "34.88",
+                       "estimatedDiscountPercent":  null,
+                       "viableAtMaxRap":  true,
+                       "viableAtEstimatedRap":  null,
+                       "discountMarginPoints":  null,
+                       "missingInputs":  [
+                                             "ESTIMATED_WINNING_RAP"
+                                         ]
+                   },
+    "parameters":  {
+                       "id":  1,
+                       "effectiveFrom":  "2026-03-01",
+                       "waccRealAfterTaxPercent":  "8.00",
+                       "concessionYears":  30,
+                       "pisCofinsPercent":  "9.25",
+                       "operationMaintenancePercent":  "10.00",
+                       "incomeTaxPercent":  "10.00",
+                       "createdBy":  "sistema@celeoredes.com.br",
+                       "createdAt":  "2026-09-29T10:59:40.298Z"
+                   },
+    "auctionStats":  null,
+    "overallStats":  {
+                         "lotCount":  49,
+                         "desertedLotCount":  0,
+                         "minDiscountPercent":  "5.00",
+                         "avgDiscountPercent":  "42.98",
+                         "maxDiscountPercent":  "60.00"
+                     }
+}

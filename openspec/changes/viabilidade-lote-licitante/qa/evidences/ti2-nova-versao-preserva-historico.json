@@ -1,0 +1,18 @@
+﻿{
+    "vigente20260901":  "8.00",
+    "vigente20270601":  "7.50",
+    "post":  {
+                 "body":  {
+                              "id":  2,
+                              "effectiveFrom":  "2027-03-01",
+                              "waccRealAfterTaxPercent":  "7.50",
+                              "concessionYears":  30,
+                              "pisCofinsPercent":  "9.25",
+                              "operationMaintenancePercent":  "10.00",
+                              "incomeTaxPercent":  "10.00",
+                              "createdBy":  "qa@celeoredes.com.br",
+                              "createdAt":  "2026-09-29T11:02:40.486Z"
+                          },
+                 "ok":  true
+             }
+}

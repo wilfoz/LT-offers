@@ -1,0 +1,5 @@
+﻿{
+    "ok":  false,
+    "body":  "{\"message\":\"Já existe uma versão de parâmetros de viabilidade com vigência a partir de 2027-03-01.\",\"error\":\"Conflict\",\"statusCode\":409}",
+    "status":  409
+}
