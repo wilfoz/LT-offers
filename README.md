@@ -280,6 +280,16 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | prazo de construção (meses)                         | `constructionDeadlineMonths` / `construction_deadline_months`                                           |
 | data-limite contratual (derivada)                   | `contractualDeadlineDate`                                                                               |
 | deságio (derivado, %)                               | `discountPercent`                                                                                       |
+| resultado de leilão (histórico ANEEL)               | `AuctionResult` / `auction_result` / `auction-history`                                                  |
+| importação do histórico de leilões                  | `AuctionResultImport` / `auction_result_import`                                                         |
+| ano do leilão                                       | `auctionYear` / `auction_year`                                                                          |
+| empreendimento                                      | `projectName` / `project_name`                                                                          |
+| UF principal (do lote)                              | `mainUf` / `main_uf`                                                                                    |
+| investimento previsto (R$)                          | `estimatedInvestment` / `estimated_investment`                                                          |
+| vencedor do leilão                                  | `winnerName` / `winner_name`                                                                            |
+| extensão de linha do lote (km)                      | `lineLengthKm` / `line_length_km`                                                                       |
+| potência de subestação (MVA)                        | `substationMva` / `substation_mva`                                                                      |
+| deságio publicado (%)                               | `discountPercent` / `discount_percent` (histórico de leilões)                                           |
 | cliente / concessionária                            | `clientName` / `client_name`                                                                            |
 | entrada em operação comercial (edital)              | `commercialOperationDate` / `commercial_operation_date`                                                 |
 | início do cronograma                                | `scheduleStartDate` / `schedule_start_date`                                                             |
@@ -327,3 +337,14 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
   variável chegam sempre como parâmetro.
 - Ausência de valor é estado de primeira classe: `null` = não informado,
   distinto de zero (RNF-09).
+
+## Integrações externas
+
+- **Histórico de leilões de transmissão da ANEEL** (contexto
+  `auction-history`): sincronização sob demanda com o datastore aberto
+  (`dadosabertos.aneel.gov.br`, CKAN `datastore_search`, resource
+  `453cb742-8089-4c16-aaf2-42088b5553dc`). Os dados são gravados como
+  snapshot local — consultas e cálculos nunca dependem da fonte ao vivo
+  (RNF-04). Valores publicados chegam como texto com vírgula decimal e o
+  deságio como fração; a normalização vive em
+  `libs/domain/src/lib/auction-history/auction-normalization.ts`.

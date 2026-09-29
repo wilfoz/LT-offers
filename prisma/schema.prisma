@@ -805,3 +805,42 @@ model PreliminaryStakingDistribution {
 
   @@map("preliminary_staking_distribution")
 }
+
+// Histórico oficial de leilões de transmissão da ANEEL (RF-11, RNF-04):
+// snapshot local do dataset aberto, substituído atomicamente a cada
+// sincronização; o log de importações é imutável (somente inserção).
+// O snapshot é referencial informativo — nunca entrada de cálculo de
+// ofertas fechadas (design D1 da change historico-leiloes-aneel).
+model AuctionResultImport {
+  id         Int             @id @default(autoincrement())
+  source     String
+  rowCount   Int             @map("row_count")
+  importedBy String          @map("imported_by")
+  importedAt DateTime        @default(now()) @map("imported_at")
+  results    AuctionResult[]
+
+  @@map("auction_result_import")
+}
+
+model AuctionResult {
+  id                         Int                 @id @default(autoincrement())
+  importId                   Int                 @map("import_id")
+  import                     AuctionResultImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+  auctionYear                Int                 @map("auction_year")
+  auctionDate                DateTime?           @map("auction_date") @db.Date
+  auctionNumber              String              @map("auction_number") @db.VarChar(15)
+  lotNumber                  Int                 @map("lot_number")
+  projectName                String              @map("project_name")
+  mainUf                     String?             @map("main_uf") @db.VarChar(30)
+  constructionDeadlineMonths Int?                @map("construction_deadline_months")
+  lineLengthKm               Decimal?            @map("line_length_km") @db.Decimal(12, 3)
+  substationMva              Decimal?            @map("substation_mva") @db.Decimal(12, 2)
+  estimatedInvestment        Decimal?            @map("estimated_investment") @db.Decimal(16, 2)
+  maxRap                     Decimal?            @map("max_rap") @db.Decimal(16, 2)
+  winnerName                 String?             @map("winner_name")
+  winningRap                 Decimal?            @map("winning_rap") @db.Decimal(16, 2)
+  discountPercent            Decimal?            @map("discount_percent") @db.Decimal(5, 2)
+
+  @@index([auctionNumber, lotNumber])
+  @@map("auction_result")
+}
