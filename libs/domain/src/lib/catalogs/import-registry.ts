@@ -430,8 +430,11 @@ function isBlank(raw: ImportCellInput): boolean {
 const COMBINING_MARKS_FIRST = 0x300;
 const COMBINING_MARKS_LAST = 0x36f;
 
-/** Minúsculas sem acentos, para casar sim/não e rótulos de enumeração. */
-function foldText(text: string): string {
+/**
+ * Minúsculas sem acentos, para casar sim/não, rótulos de enumeração e
+ * títulos de coluna com rótulos de campo ("Diámetro" ≡ "Diâmetro").
+ */
+export function foldImportText(text: string): string {
   return Array.from(text.trim().toLowerCase().normalize('NFD'))
     .filter((char) => {
       const code = char.codePointAt(0) ?? 0;
@@ -486,7 +489,7 @@ function parseBooleanCell(raw: ImportCellInput): boolean | null {
   if (typeof raw === 'boolean') {
     return raw;
   }
-  const word = foldText(String(raw));
+  const word = foldImportText(String(raw));
   if (word === '1' || TRUE_WORDS.includes(word)) {
     return true;
   }
@@ -508,12 +511,12 @@ function parseEnumCell(
   field: CatalogImportField,
   raw: ImportCellInput,
 ): string | null {
-  const wanted = foldText(String(raw));
+  const wanted = foldImportText(String(raw));
   const labels = field.enumLabels ?? {};
   const match = (field.enumValues ?? []).find(
     (value) =>
-      foldText(value) === wanted ||
-      (labels[value] !== undefined && foldText(labels[value]) === wanted),
+      foldImportText(value) === wanted ||
+      (labels[value] !== undefined && foldImportText(labels[value]) === wanted),
   );
   return match ?? null;
 }

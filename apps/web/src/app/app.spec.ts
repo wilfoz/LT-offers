@@ -60,6 +60,24 @@ describe('App (casca de navegação)', () => {
     ]);
   });
 
+  it('itens de sistema: a Importação Analítica substitui o antigo "Upload & OCR" na rota /upload', async () => {
+    const fixture = await mount(true);
+    const links = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        'a.system-nav-link',
+      ),
+    ).map((a) => [
+      a.querySelector('span')?.textContent?.trim(),
+      a.querySelector('mat-icon')?.textContent?.trim(),
+      a.getAttribute('href'),
+    ]);
+
+    expect(links).toEqual([
+      ['Dashboard', 'dashboard', '/dashboard'],
+      ['Importação Analítica', 'upload_file', '/upload'],
+    ]);
+  });
+
   it('destaca o item da rota ativa mantendo os demais acessíveis', async () => {
     const fixture = await mount(true);
     await TestBed.inject(Router).navigateByUrl('/catalogs/guy-wires');

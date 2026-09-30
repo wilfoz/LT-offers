@@ -13,10 +13,10 @@
 
 ## 3. Web — assistente Importação Analítica
 
-- [ ] 3.1 Substituir o mockup de `apps/web/src/app/upload/` pelo componente `analytic-import` (rota `/upload` preservada): stepper arquivo → catálogo → aba/cabeçalho → mapeamento + vigência → prévia → relatório (design D5), estado em signals, service `CatalogImportApi` (inspect/preview/commit), callbacks de erro em toda chamada, botões refletindo estado, mensagens pt-BR; renomear o item de menu de sistema "Upload & OCR" para "Importação Analítica" (atualizar `app.spec.ts`)
-- [ ] 3.2 Etapa de mapeamento dirigida pelo registro D1 (via API ou export da domain): lista de campos com rótulo pt-BR e badge de requerido, seletor de coluna OU valor fixo por campo, bloqueio com orientação para requerido sem associação, aviso "ficará sem dados" para opcional sem associação, campo de vigência com validação de data civil
-- [ ] 3.3 Etapa de prévia e relatório: tabela com classificação por linha (a importar/ignorada/duplicada/inválida com motivo), contagens, confirmação de importação e relatório final com link para o catálogo de destino
-- [ ] 3.4 Testes dos componentes: fluxo completo com mocks (arquivo → relatório), bloqueio de requerido, aviso de opcional, valor fixo, erro de servidor em cada etapa (snackbar/mensagem persistente), prévia refletindo a resposta da API; conferir ausência de BOM
+- [x] 3.1 Substituir o mockup de `apps/web/src/app/upload/` pelo componente `analytic-import` (rota `/upload` preservada): stepper arquivo → catálogo → aba/cabeçalho → mapeamento + vigência → prévia → relatório (design D5), estado em signals, service `CatalogImportApi` (inspect/preview/commit), callbacks de erro em toda chamada, botões refletindo estado, mensagens pt-BR; renomear o item de menu de sistema "Upload & OCR" para "Importação Analítica" (atualizar `app.spec.ts`)
+- [x] 3.2 Etapa de mapeamento dirigida pelo registro D1 (via API ou export da domain): lista de campos com rótulo pt-BR e badge de requerido, seletor de coluna OU valor fixo por campo, bloqueio com orientação para requerido sem associação, aviso "ficará sem dados" para opcional sem associação, campo de vigência com validação de data civil
+- [x] 3.3 Etapa de prévia e relatório: tabela com classificação por linha (a importar/ignorada/duplicada/inválida com motivo), contagens, confirmação de importação e relatório final com link para o catálogo de destino
+- [x] 3.4 Testes dos componentes: fluxo completo com mocks (arquivo → relatório), bloqueio de requerido, aviso de opcional, valor fixo, erro de servidor em cada etapa (snackbar/mensagem persistente), prévia refletindo a resposta da API; conferir ausência de BOM
 
 ## 4. Verificação e QA
 
