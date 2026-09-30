@@ -1,0 +1,2 @@
+{"message":"Nenhum arquivo foi enviado; selecione uma planilha .xlsx, .xlsm, .xls ou .csv","error":"Bad Request","statusCode":400}
+HTTP 400

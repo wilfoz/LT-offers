@@ -1,0 +1,2 @@
+{"statusCode":400,"message":"Envie uma única planilha no campo \"file\" e as opções no campo \"options\"","error":"Bad Request"}
+HTTP 400

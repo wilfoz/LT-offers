@@ -279,7 +279,8 @@ describe('CatalogImportController', () => {
     } as unknown as ArgumentsHost;
     const filter = new ImportUploadExceptionFilter();
 
-    filter.catch(new BadRequestException('Unexpected field'), host);
+    // Forma real produzida pelo Nest: nome do campo anexado (BUG-1 do QA)
+    filter.catch(new BadRequestException('Unexpected field - arquivo'), host);
     expect(json).toHaveBeenLastCalledWith({
       statusCode: 400,
       message:

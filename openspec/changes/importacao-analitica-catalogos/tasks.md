@@ -20,5 +20,5 @@
 
 ## 4. Verificação e QA
 
-- [ ] 4.1 Rodar `npx nx run-many -t test lint build -p api web domain --skip-nx-cache` e `npx nx format:check --all`; corrigir pendências
-- [ ] 4.2 QA E2E com a planilha template real (`template/Calculo LT-...-v03.xlsm`): importar `DB_CAL` para cabos condutores (aba com 2 linhas de título antes do cabeçalho), `DB_OPGW` para cabos de guarda com valor fixo de tipo OPGW, reimportar a mesma aba e ver todos ignorados (dedup), linha inválida reportada sem bloquear as demais, campo requerido sem mapeamento bloqueado, campo opcional com aviso, relatório final conferido nos catálogos; TI dos 3 endpoints (arquivo não suportado, vigência inválida, limites); acessibilidade e responsividade da tela nova
+- [x] 4.1 Rodar `npx nx run-many -t test lint build -p api web domain --skip-nx-cache` e `npx nx format:check --all`; corrigir pendências
+- [x] 4.2 QA E2E com a planilha template real (`template/Calculo LT-...-v03.xlsm`): importar `DB_CAL` para cabos condutores (aba com 2 linhas de título antes do cabeçalho), `DB_OPGW` para cabos de guarda com valor fixo de tipo OPGW, reimportar a mesma aba e ver todos ignorados (dedup), linha inválida reportada sem bloquear as demais, campo requerido sem mapeamento bloqueado, campo opcional com aviso, relatório final conferido nos catálogos; TI dos 3 endpoints (arquivo não suportado, vigência inválida, limites); acessibilidade e responsividade da tela nova

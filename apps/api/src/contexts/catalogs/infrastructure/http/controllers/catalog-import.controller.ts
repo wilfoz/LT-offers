@@ -85,7 +85,10 @@ export class ImportUploadExceptionFilter implements ExceptionFilter {
       });
       return;
     }
-    const translated = MULTER_MESSAGES[error.message];
+    // O Nest acrescenta o nome do campo ("Unexpected field - arquivo")
+    const translated = Object.entries(MULTER_MESSAGES).find(([english]) =>
+      error.message.startsWith(english),
+    )?.[1];
     response
       .status(status)
       .json(
