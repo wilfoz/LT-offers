@@ -25,6 +25,22 @@ export const CATALOG_IMPORT_KEYS = [
 
 export type CatalogImportKey = (typeof CATALOG_IMPORT_KEYS)[number];
 
+/** Formatos aceitos; de .xlsm só os valores são lidos — macros nunca executam. */
+export const CATALOG_IMPORT_FILE_EXTENSIONS = [
+  '.xlsx',
+  '.xlsm',
+  '.xls',
+  '.csv',
+] as const;
+
+/** Limite de upload (design D2): o template legado tem ~30 MB. */
+export const CATALOG_IMPORT_MAX_FILE_BYTES = 40 * 1024 * 1024;
+
+export function isSupportedImportFileName(fileName: string): boolean {
+  const lower = fileName.trim().toLowerCase();
+  return CATALOG_IMPORT_FILE_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
+
 export type CatalogImportFieldKind =
   'text' | 'decimal' | 'int' | 'boolean' | 'enum';
 

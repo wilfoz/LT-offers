@@ -3,6 +3,7 @@ import {
   CATALOG_IMPORT_REGISTRY,
   CatalogImportField,
   isCatalogImportKey,
+  isSupportedImportFileName,
   missingRequiredMappings,
   naturalKeyOf,
   normalizeDecimalCell,
@@ -346,5 +347,19 @@ describe('naturalKeyOf', () => {
       naturalKeyOf('aaac 63,36 mcm'),
     );
     expect(naturalKeyOf(null)).toBe('');
+  });
+});
+
+describe('isSupportedImportFileName', () => {
+  it('aceita .xlsx, .xlsm, .xls e .csv sem diferenciar caixa', () => {
+    for (const name of ['a.xlsx', 'B.XLSM', 'c.xls', 'dados.CSV']) {
+      expect(isSupportedImportFileName(name)).toBe(true);
+    }
+  });
+
+  it('rejeita outros formatos e nomes que só contêm a extensão no meio', () => {
+    for (const name of ['projeto.pdf', 'planilha.xlsx.exe', 'xlsx', '']) {
+      expect(isSupportedImportFileName(name)).toBe(false);
+    }
   });
 });

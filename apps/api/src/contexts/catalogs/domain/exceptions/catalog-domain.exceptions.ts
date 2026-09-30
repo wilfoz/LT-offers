@@ -71,3 +71,17 @@ export class InvalidCatalogDataException extends CatalogDomainException {
     super(message);
   }
 }
+
+/** Arquivo de importação ausente, em formato não suportado ou ilegível. */
+export class InvalidImportFileException extends CatalogDomainException {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/** Parâmetros da importação (catálogo, aba, cabeçalho, mapeamento) inválidos. */
+export class InvalidImportRequestException extends CatalogDomainException {
+  constructor(message: string) {
+    super(message);
+  }
+}

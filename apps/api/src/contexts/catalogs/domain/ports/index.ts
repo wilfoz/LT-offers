@@ -12,3 +12,4 @@ export * from './equipment.repository';
 export * from './labor-roles.repository';
 export * from './work-crews.repository';
 export * from './catalogs-unit-of-work';
+export * from './catalog-import.ports';
