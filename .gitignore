@@ -46,4 +46,6 @@ vitest.config.*.timestamp*
 .gemini/
 
 # Templates legados locais
-template/
+template/
+# Scripts temporários gerados pela playwright-skill (podem conter tokens)
+.claude/skills/playwright-skill/.temp-execution-*.js
