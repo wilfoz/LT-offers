@@ -1,0 +1,68 @@
+[
+  {
+    "id": "E2E-1",
+    "description": "Menu \"Importação Analítica\" abre /upload sem restos do mockup de OCR",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-2",
+    "description": "Arquivo .pdf rejeitado com formatos aceitos, sem iniciar o assistente",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-3a",
+    "description": "Destinos = 8 catálogos planos, sem hierárquicos/compostos",
+    "result": "PASSOU",
+    "detail": "[\"Cabos condutores\",\"Cabos de guarda\",\"Cabos de tirante\",\"Isoladores\",\"Tipos de solo\",\"Mão de obra\",\"Equipamentos\",\"Custos fixos\"]"
+  },
+  {
+    "id": "E2E-3b",
+    "description": "Colunas da linha de cabeçalho exibidas para associação",
+    "result": "PASSOU",
+    "detail": "[\"— sem associação —\",\"A · (sem título)\",\"B · id\",\"C · Código de conductor\",\"D · Peso (ton/km)\",\"E · Bobina (m)\",\"F · Diámetro (mm)\",\"G · UTS (kN)\",\"Valor fixo…\"]"
+  },
+  {
+    "id": "E2E-4",
+    "description": "Código sem coluna nem valor fixo bloqueia com orientação em português",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-5",
+    "description": "Opcional sem associação (Descrição) gera aviso de \"sem dados\"",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-6",
+    "description": "Vigência 2027-02-30 recusada na interface",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-7",
+    "description": "Prévia classifica as linhas e aponta inválidas com motivo",
+    "result": "PASSOU",
+    "detail": "305 a importar 0 ignoradas (já cadastradas) 2 duplicadas no arquivo 43 inválidas"
+  },
+  {
+    "id": "E2E-8",
+    "description": "Relatório final com contagens",
+    "result": "PASSOU",
+    "detail": "305 importados, 0 ignorados (já cadastrados), 43 inválidos, 2 duplicados no arquivo"
+  },
+  {
+    "id": "E2E-9",
+    "description": "Item importado aparece no catálogo com a vigência informada e opcional não informado",
+    "result": "PASSOU",
+    "detail": "{\"id\":17,\"description\":null,\"weightTonPerKm\":\"0.092\",\"reelLengthM\":\"1800\",\"diameterMm\":\"7.41\",\"utsKn\":\"10.66\",\"effectiveFrom\":\"2026-01-01T00:00:00.000Z\",\"createdBy\":\"lucas.admin@orcamento-lt.com.br\",\"createdAt\":\"2026-09-30T10:07:44.035Z\"}"
+  },
+  {
+    "id": "E2E-10",
+    "description": "Reimportação: nenhum item a importar, já cadastrados ignorados, botão desabilitado",
+    "result": "PASSOU",
+    "detail": "0 a importar 307 ignoradas (já cadastradas) 0 duplicadas no arquivo 43 inválidas"
+  }
+]

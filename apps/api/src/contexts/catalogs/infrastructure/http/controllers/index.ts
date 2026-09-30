@@ -11,3 +11,4 @@ export * from './fixed-costs.controller';
 export * from './equipment.controller';
 export * from './labor-roles.controller';
 export * from './work-crews.controller';
+export * from './catalog-import.controller';

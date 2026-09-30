@@ -52,7 +52,7 @@ export class App {
 
   protected readonly systemLinks = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-    { path: '/upload', label: 'Upload & OCR', icon: 'cloud_upload' },
+    { path: '/upload', label: 'Importação Analítica', icon: 'upload_file' },
   ];
 
   protected readonly links = [

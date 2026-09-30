@@ -1,0 +1,2 @@
+{"message":"O campo Tipo é requerido: associe uma coluna do arquivo ou informe um valor fixo","error":"Bad Request","statusCode":400}
+HTTP 400

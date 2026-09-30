@@ -1,0 +1,443 @@
+<section class="analytic-import">
+  <h2>Importação Analítica</h2>
+  <p class="intro">
+    Importe itens para os catálogos a partir de uma planilha: escolha o
+    catálogo, aponte a aba e a linha de cabeçalho, associe as colunas aos campos
+    do cadastro e confira a prévia. Somente itens ainda não cadastrados são
+    criados; itens existentes nunca são alterados.
+  </p>
+
+  <ol class="steps" aria-label="Etapas da importação">
+    @for (label of steps; track label; let i = $index) {
+      <li
+        [class.current]="step() === i"
+        [class.done]="step() > i"
+        [attr.aria-current]="step() === i ? 'step' : null"
+      >
+        <span class="step-number">{{ i + 1 }}</span>
+        <span class="step-label">{{ label }}</span>
+      </li>
+    }
+  </ol>
+
+  <h3 #stepHeading class="step-title" tabindex="-1">
+    Etapa {{ step() + 1 }} de {{ steps.length }}: {{ steps[step()] }}
+  </h3>
+
+  @if (busy()) {
+    <div class="busy" role="status">
+      <mat-progress-bar mode="indeterminate" />
+      <span>{{ busyLabel() }}</span>
+    </div>
+  }
+
+  @if (serverError()) {
+    <p class="error" role="alert">{{ serverError() }}</p>
+  }
+
+  @switch (step()) {
+    @case (0) {
+      <div
+        class="dropzone"
+        [class.dragging]="isDragging()"
+        (dragover)="$event.preventDefault(); isDragging.set(true)"
+        (dragleave)="isDragging.set(false)"
+        (drop)="onDrop($event)"
+      >
+        <mat-icon aria-hidden="true">upload_file</mat-icon>
+        <p>Arraste a planilha aqui ou selecione o arquivo</p>
+        <p class="hint">
+          Formatos aceitos: {{ acceptedLabel }} — até {{ maxFileMb }} MB. De
+          arquivos .xlsm só os valores das células são lidos; macros nunca são
+          executadas.
+        </p>
+        <input
+          #fileInput
+          id="import-file"
+          type="file"
+          class="visually-hidden"
+          [attr.accept]="acceptAttribute"
+          tabindex="-1"
+          aria-hidden="true"
+          (change)="onFileSelected($event)"
+        />
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="busy()"
+          (click)="fileInput.click()"
+        >
+          Selecionar arquivo
+        </button>
+      </div>
+    }
+
+    @case (1) {
+      <p>
+        Arquivo: <strong class="mono">{{ file()?.name }}</strong> ·
+        {{ inspection()?.sheets?.length }} aba(s)
+      </p>
+      <mat-form-field appearance="outline" floatLabel="always" class="field">
+        <mat-label>Catálogo de destino</mat-label>
+        <mat-select
+          id="catalog"
+          [value]="catalogKey()"
+          (selectionChange)="selectCatalog($event.value)"
+        >
+          @for (option of catalogOptions; track option.key) {
+            <mat-option [value]="option.key">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="back()">
+          Voltar
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="!catalogKey()"
+          (click)="step.set(2)"
+        >
+          Avançar
+        </button>
+      </div>
+    }
+
+    @case (2) {
+      <div class="form-grid">
+        <mat-form-field appearance="outline" floatLabel="always" class="col-6">
+          <mat-label>Aba da planilha</mat-label>
+          <mat-select
+            id="sheet"
+            [value]="sheetName()"
+            (selectionChange)="selectSheet($event.value)"
+          >
+            @for (sheet of inspection()?.sheets ?? []; track sheet.name) {
+              <mat-option [value]="sheet.name">{{ sheet.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel="always" class="col-6">
+          <mat-label>Linha de cabeçalho</mat-label>
+          <mat-select
+            id="header-row"
+            [value]="headerRow()"
+            (selectionChange)="selectHeaderRow($event.value)"
+          >
+            @for (row of currentSheet()?.rows ?? []; track $index) {
+              <mat-option [value]="$index + 1">
+                Linha {{ $index + 1 }}: {{ rowSummary(row) }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <p class="hint">
+        Primeiras linhas da aba. Os dados importados são as linhas logo abaixo
+        do cabeçalho, até a primeira linha totalmente vazia.
+      </p>
+      <div class="table-scroll">
+        <table class="dense sample">
+          <caption class="visually-hidden">
+            Amostra da aba
+            {{
+              sheetName()
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Linha</th>
+              @for (letter of sampleColumns(); track letter) {
+                <th scope="col">{{ letter }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of currentSheet()?.rows ?? []; track $index) {
+              <tr [class.header-row]="headerRow() === $index + 1">
+                <th scope="row">{{ $index + 1 }}</th>
+                @for (letter of sampleColumns(); track letter; let c = $index) {
+                  <td>{{ row[c] }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="back()">
+          Voltar
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="headerRow() === null"
+          (click)="goToMapping()"
+        >
+          Avançar
+        </button>
+      </div>
+    }
+
+    @case (3) {
+      <p>
+        Associe cada campo de <strong>{{ definition()?.label }}</strong> a uma
+        coluna da linha {{ headerRow() }} ou a um valor fixo aplicado a todas as
+        linhas.
+      </p>
+
+      <div class="mapping">
+        @for (field of definition()?.fields ?? []; track field.key) {
+          <div class="mapping-row" [class.missing]="mapping.isMissing(field)">
+            <div class="mapping-label">
+              <span>{{ field.label }}</span>
+              @if (field.required) {
+                <span class="badge badge-pending">Requerido</span>
+              }
+            </div>
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              class="mapping-source"
+            >
+              <mat-label>Origem de {{ field.label }}</mat-label>
+              <mat-select
+                [id]="'source-' + field.key"
+                [value]="mapping.sourceOf(field.key)"
+                (selectionChange)="mapping.setSource(field.key, $event.value)"
+              >
+                <mat-option [value]="null">— sem associação —</mat-option>
+                @for (option of columnOptions(); track option.index) {
+                  <mat-option [value]="option.index">{{
+                    option.label
+                  }}</mat-option>
+                }
+                <mat-option value="fixed">Valor fixo…</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            @if (mapping.sourceOf(field.key) === 'fixed') {
+              <mat-form-field
+                appearance="outline"
+                subscriptSizing="dynamic"
+                class="mapping-fixed"
+              >
+                <mat-label>Valor fixo de {{ field.label }}</mat-label>
+                @switch (field.kind) {
+                  @case ('enum') {
+                    <mat-select
+                      [id]="'fixed-' + field.key"
+                      [value]="mapping.fixedValueOf(field.key)"
+                      (selectionChange)="
+                        mapping.setFixedValue(field.key, $event.value)
+                      "
+                    >
+                      @for (option of enumOptions(field); track option.value) {
+                        <mat-option [value]="option.value">{{
+                          option.label
+                        }}</mat-option>
+                      }
+                    </mat-select>
+                  }
+                  @case ('boolean') {
+                    <mat-select
+                      [id]="'fixed-' + field.key"
+                      [value]="mapping.fixedValueOf(field.key)"
+                      (selectionChange)="
+                        mapping.setFixedValue(field.key, $event.value)
+                      "
+                    >
+                      <mat-option value="sim">Sim</mat-option>
+                      <mat-option value="não">Não</mat-option>
+                    </mat-select>
+                  }
+                  @default {
+                    <input
+                      #fixedInput
+                      matInput
+                      [id]="'fixed-' + field.key"
+                      [value]="mapping.fixedValueOf(field.key)"
+                      (input)="
+                        mapping.setFixedValue(field.key, fixedInput.value)
+                      "
+                    />
+                  }
+                }
+              </mat-form-field>
+            }
+          </div>
+        }
+      </div>
+
+      @if (mapping.errors().length > 0) {
+        <ul class="error" role="alert">
+          @for (message of mapping.errors(); track message) {
+            <li>{{ message }}</li>
+          }
+        </ul>
+      }
+
+      @if (mapping.unmappedOptionalLabels()) {
+        <p class="warning" role="note">
+          Os campos a seguir ficarão sem dados (não informado, nunca zero):
+          {{ mapping.unmappedOptionalLabels() }}.
+        </p>
+      }
+
+      <mat-form-field appearance="outline" floatLabel="always" class="field">
+        <mat-label>Início de vigência das versões</mat-label>
+        <input
+          matInput
+          id="effective-from"
+          placeholder="AAAA-MM-DD"
+          [formControl]="effectiveFrom"
+        />
+        @if (effectiveFromError()) {
+          <mat-error>{{ effectiveFromError() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="back()">
+          Voltar
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          [disabled]="busy()"
+          (click)="requestPreview()"
+        >
+          Gerar prévia
+        </button>
+      </div>
+    }
+
+    @case (4) {
+      @if (preview(); as result) {
+        <p>
+          Aba <strong>{{ result.sheetName }}</strong
+          >, cabeçalho na linha {{ result.headerRow }}.
+          @if (result.firstDataRow !== null) {
+            Linhas lidas: {{ result.firstDataRow }} a {{ result.lastDataRow }}.
+          } @else {
+            Nenhuma linha de dados abaixo do cabeçalho.
+          }
+        </p>
+        <ul class="counts" aria-label="Resumo da prévia">
+          <li>
+            <span class="badge badge-success">{{
+              result.counts.TO_IMPORT
+            }}</span>
+            a importar
+          </li>
+          <li>
+            <span class="badge badge-analysis">{{
+              result.counts.SKIPPED_EXISTING
+            }}</span>
+            ignoradas (já cadastradas)
+          </li>
+          <li>
+            <span class="badge badge-pending">{{
+              result.counts.DUPLICATE_IN_FILE
+            }}</span>
+            duplicadas no arquivo
+          </li>
+          <li>
+            <span class="badge badge-critical">{{
+              result.counts.INVALID
+            }}</span>
+            inválidas
+          </li>
+        </ul>
+
+        <div class="table-scroll">
+          <table class="dense">
+            <caption class="visually-hidden">
+              Classificação das linhas da prévia
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Linha</th>
+                <th scope="col">Código</th>
+                <th scope="col">Situação</th>
+                <th scope="col">Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of result.rows; track row.rowNumber) {
+                <tr>
+                  <td class="mono">{{ row.rowNumber }}</td>
+                  <td class="mono">{{ row.code ?? '—' }}</td>
+                  <td>
+                    <span class="badge" [class]="statusBadges[row.status]">{{
+                      statusLabels[row.status]
+                    }}</span>
+                  </td>
+                  <td>{{ row.reasons.join('; ') }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="empty-state">
+                    Nenhuma linha encontrada abaixo do cabeçalho.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="busy()"
+            (click)="back()"
+          >
+            Voltar ao mapeamento
+          </button>
+          <button
+            mat-flat-button
+            type="button"
+            [disabled]="busy() || toImport().length === 0"
+            (click)="confirmImport()"
+          >
+            Importar {{ toImport().length }} item(ns)
+          </button>
+        </div>
+      }
+    }
+
+    @case (5) {
+      @if (report(); as final) {
+        <p class="summary" role="status">{{ final.summary }}</p>
+        @if (final.failures.length > 0) {
+          <p>Itens não gravados na confirmação:</p>
+          <ul>
+            @for (row of final.failures; track $index) {
+              <li>
+                <span class="mono">{{ row.code ?? '—' }}</span
+                >:
+                {{ commitStatusLabels[row.status] }}
+                @if (row.reason) {
+                  — {{ row.reason }}
+                }
+              </li>
+            }
+          </ul>
+        }
+        <div class="actions">
+          <a mat-stroked-button [routerLink]="catalogRoute()">
+            Ver {{ definition()?.label }}
+          </a>
+          <button mat-flat-button type="button" (click)="restart()">
+            Nova importação
+          </button>
+        </div>
+      }
+    }
+  }
+</section>

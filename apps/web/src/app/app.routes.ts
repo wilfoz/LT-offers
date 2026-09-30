@@ -16,7 +16,9 @@ export const appRoutes: Route[] = [
   {
     path: 'upload',
     loadComponent: () =>
-      import('./upload/upload.component').then((m) => m.UploadComponent),
+      import('./upload/analytic-import.component').then(
+        (m) => m.AnalyticImportComponent,
+      ),
   },
   {
     path: 'offers',

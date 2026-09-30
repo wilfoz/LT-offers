@@ -1,0 +1,50 @@
+[
+  {
+    "id": "E2E-1",
+    "description": "Menu \"Importação Analítica\" abre /upload sem restos do mockup de OCR",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-2",
+    "description": "Arquivo .pdf rejeitado com formatos aceitos, sem iniciar o assistente",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "E2E-12",
+    "description": "Linha com \"12-48\" em campo inteiro é inválida sem bloquear as demais",
+    "result": "PASSOU",
+    "detail": "9 a importar 0 ignoradas (já cadastradas) 0 duplicadas no arquivo 41 inválidas"
+  },
+  {
+    "id": "E2E-13",
+    "description": "Itens OPGW criados com o tipo do valor fixo, sem coluna de tipo no arquivo",
+    "result": "PASSOU",
+    "detail": "9 importados, 0 ignorados (já cadastrados), 41 inválidos | [[\"DS1.049.124 49 kA2s (12,4 mm)\",\"OPGW\"]]"
+  },
+  {
+    "id": "A11Y-1",
+    "description": "Troca de etapa move o foco para o título da etapa",
+    "result": "PASSOU",
+    "detail": "Etapa 2 de 6: Catálogo"
+  },
+  {
+    "id": "A11Y-2",
+    "description": "Seletor de catálogo operável por teclado (Tab + Enter + Esc)",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "RESP-1",
+    "description": "Mapeamento em 375px sem rolagem horizontal da página",
+    "result": "PASSOU",
+    "detail": ""
+  },
+  {
+    "id": "CONSOLE",
+    "description": "Sem erros no console do navegador",
+    "result": "PASSOU",
+    "detail": "[]"
+  }
+]

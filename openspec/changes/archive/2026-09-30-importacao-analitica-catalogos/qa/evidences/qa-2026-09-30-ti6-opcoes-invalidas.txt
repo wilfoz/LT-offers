@@ -1,0 +1,2 @@
+{"message":["Catálogo de destino inválido para importação","Informe a aba da planilha","A linha de cabeçalho deve ser um número inteiro maior ou igual a 1","O mapeamento de colunas deve associar cada campo a um índice de coluna (inteiro maior ou igual a 0)","A data de início de vigência deve estar no formato AAAA-MM-DD"],"error":"Bad Request","statusCode":400}
+HTTP 400

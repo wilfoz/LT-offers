@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AuthModule } from '../auth/auth.module';
 import { CatalogsModule } from '../contexts/catalogs/infrastructure/catalogs.module';
+import { CatalogImportModule } from '../contexts/catalogs/infrastructure/catalog-import.module';
 import { FoundationsModule } from '../contexts/foundations/infrastructure/foundations.module';
 import { OffersModule } from '../contexts/offers/infrastructure/offers.module';
 import { StakingModule } from '../contexts/staking/infrastructure/staking.module';
@@ -27,6 +28,8 @@ import { ViabilityModule } from '../contexts/viability/infrastructure/viability.
 describe('Módulos de contexto compilam com injeção de dependência real', () => {
   const cases: Array<[string, unknown]> = [
     ['CatalogsModule', CatalogsModule],
+    // Importação Analítica: consome os casos de uso exportados pelo CatalogsModule
+    ['CatalogImportModule', CatalogImportModule],
     ['OffersModule', OffersModule],
     ['StakingModule', StakingModule],
     ['FoundationsModule', FoundationsModule],

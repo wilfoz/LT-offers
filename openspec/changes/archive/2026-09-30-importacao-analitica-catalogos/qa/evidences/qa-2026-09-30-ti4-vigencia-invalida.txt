@@ -1,0 +1,2 @@
+{"message":"Data inválida: \"2027-02-30\"; informe uma data real no formato AAAA-MM-DD","error":"Bad Request","statusCode":400}
+HTTP 400

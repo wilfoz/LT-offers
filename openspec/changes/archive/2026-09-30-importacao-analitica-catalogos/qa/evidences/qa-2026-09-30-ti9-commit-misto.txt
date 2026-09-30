@@ -1,0 +1,2 @@
+{"catalogKey":"labor-roles","imported":2,"skippedExisting":1,"invalid":1,"rows":[{"code":"QA-IMP-01","status":"IMPORTED","reason":null},{"code":"qa-imp-01","status":"SKIPPED_EXISTING","reason":null},{"code":"QA-IMP-03","status":"INVALID","reason":"O nome do cargo deve ter no máximo 100 caracteres; O nome do cargo é obrigatório; O nome do cargo deve ser um texto"},{"code":"AAAC 63,36 MCM","status":"IMPORTED","reason":null}]}
+HTTP 200

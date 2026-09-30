@@ -1,0 +1,2 @@
+{"message":["A importação aceita no máximo 5000 itens por vez"],"error":"Bad Request","statusCode":400}
+HTTP 400

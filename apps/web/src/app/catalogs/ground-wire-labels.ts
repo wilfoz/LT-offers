@@ -1,10 +1,7 @@
-import { GroundWireSummary, GroundWireType } from '@lt-offers/domain';
+import { GroundWireSummary } from '@lt-offers/domain';
 
-/** Rótulos de exibição dos tipos de cabo de guarda (RNF-14). */
-export const GROUND_WIRE_TYPE_LABELS: Record<GroundWireType, string> = {
-  STEEL: 'Aço',
-  OPGW: 'OPGW',
-};
+/** Rótulos de exibição dos tipos de cabo de guarda (RNF-14), vindos da domain. */
+export { GROUND_WIRE_TYPE_LABELS } from '@lt-offers/domain';
 
 /**
  * Resumo dos atributos específicos do tipo para a listagem; campo não

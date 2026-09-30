@@ -9,6 +9,13 @@
 export const GROUND_WIRE_TYPES = ['STEEL', 'OPGW'] as const;
 export type GroundWireType = (typeof GROUND_WIRE_TYPES)[number];
 
+/** Rótulos de exibição dos tipos (RNF-14), fonte única para api e web. */
+export const GROUND_WIRE_TYPE_LABELS: Readonly<Record<GroundWireType, string>> =
+  {
+    STEEL: 'Aço',
+    OPGW: 'OPGW',
+  };
+
 export interface GroundWireVersion {
   id: number;
   description: string | null;

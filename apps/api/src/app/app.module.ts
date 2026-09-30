@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CatalogsModule } from '../contexts/catalogs/infrastructure/catalogs.module';
+import { CatalogImportModule } from '../contexts/catalogs/infrastructure/catalog-import.module';
 import { FoundationsModule } from '../contexts/foundations/infrastructure/foundations.module';
 import { OffersModule } from '../contexts/offers/infrastructure/offers.module';
 import { StakingModule } from '../contexts/staking/infrastructure/staking.module';
@@ -31,6 +32,7 @@ import { PrismaModule } from './prisma.module';
     AuthModule,
     AuditModule,
     CatalogsModule,
+    CatalogImportModule,
     OffersModule,
     StakingModule,
     FoundationsModule,

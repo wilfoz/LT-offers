@@ -16,6 +16,8 @@ import {
   InvalidCivilDateException,
   InvalidCatalogDataException,
   InvalidEffectiveDateRangeException,
+  InvalidImportFileException,
+  InvalidImportRequestException,
   VersionImmutableException,
 } from '../../domain';
 
@@ -70,7 +72,9 @@ export function handleCatalogDomainError(error: any): never {
   if (
     error instanceof InvalidCivilDateException ||
     error instanceof InvalidCatalogDataException ||
-    error instanceof InvalidEffectiveDateRangeException
+    error instanceof InvalidEffectiveDateRangeException ||
+    error instanceof InvalidImportFileException ||
+    error instanceof InvalidImportRequestException
   ) {
     throw new BadRequestException(error.message);
   }

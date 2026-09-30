@@ -104,11 +104,25 @@ export class GroundWireVersionEntity implements HasEffectivePeriod {
   }
 
   public validateTypeApplicability(type: GroundWireType): void {
+    GroundWireVersionEntity.assertTypeApplicability(
+      this as unknown as Record<string, unknown>,
+      type,
+    );
+  }
+
+  /**
+   * Regra de aplicabilidade por tipo sobre valores soltos (ex.: payload da
+   * importação analítica), sem montar uma versão descartável.
+   */
+  public static assertTypeApplicability(
+    values: Record<string, unknown>,
+    type: GroundWireType,
+  ): void {
     const foreign = (
       type === 'STEEL' ? OPGW_ONLY_LABELS : STEEL_ONLY_LABELS
     ) as Record<string, string>;
     const offending = Object.keys(foreign)
-      .filter((field) => !PendingFieldDetector.isMissing((this as any)[field]))
+      .filter((field) => !PendingFieldDetector.isMissing(values[field]))
       .map((field) => foreign[field]);
 
     if (offending.length > 0) {

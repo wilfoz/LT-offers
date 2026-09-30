@@ -1,0 +1,2 @@
+{"message":"Formato de arquivo não suportado; envie uma planilha .xlsx, .xlsm, .xls ou .csv","error":"Bad Request","statusCode":400}
+HTTP 400
