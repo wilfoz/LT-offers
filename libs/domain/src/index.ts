@@ -6,6 +6,7 @@ export * from './lib/catalogs/foundation-types';
 export * from './lib/catalogs/foundation-volumes';
 export * from './lib/catalogs/ground-wires';
 export * from './lib/catalogs/guy-wires';
+export * from './lib/catalogs/import-registry';
 export * from './lib/catalogs/insulators';
 export * from './lib/catalogs/labor-roles';
 export * from './lib/catalogs/soil-types';

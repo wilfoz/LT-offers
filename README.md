@@ -337,6 +337,14 @@ de serem usados. Siglas consagradas do setor (UTS, OPGW, LT) não se traduzem.
 | dias úteis padrão por mês                           | `standardWorkingDaysPerMonth` / `standard_working_days_per_month`                                       |
 | dias úteis                                          | `workingDays` / `working_days`                                                                          |
 | fator de calendário                                 | `calendarFactor` / `calendar_factor`                                                                    |
+| importação analítica                                | `analytic import` / rota `/catalogs/import`                                                             |
+| registro de importação (metadados por catálogo)     | `CATALOG_IMPORT_REGISTRY`                                                                               |
+| chave natural                                       | `naturalKey`                                                                                            |
+| valor fixo (aplicado a todas as linhas)             | `fixedValue`                                                                                            |
+| linha de cabeçalho                                  | `headerRow`                                                                                             |
+| prévia de importação                                | `import preview`                                                                                        |
+| a importar / ignorado (já cadastrado)               | `TO_IMPORT` / `SKIPPED_EXISTING`                                                                        |
+| duplicado no arquivo / inválido                     | `DUPLICATE_IN_FILE` / `INVALID`                                                                         |
 
 ### Demais convenções
 
